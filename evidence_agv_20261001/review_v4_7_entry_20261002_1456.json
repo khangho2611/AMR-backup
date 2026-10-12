@@ -1,0 +1,220 @@
+{
+  "time_local": "2026-10-02T14:56:51.370698",
+  "timezone": "Asia/Bangkok",
+  "source_before": "0fd97a2a87dfb29735653c9f077d26265d8bc7da046ff9412a337046cabe0a16",
+  "source_after": "0fd97a2a87dfb29735653c9f077d26265d8bc7da046ff9412a337046cabe0a16",
+  "hardware": false,
+  "ROS": false,
+  "clock": "real unscaled no flags/backdating/count writes",
+  "fixes_limited": {
+    "fresh_sensor_error_immediate_three_STOP": {
+      "tx": [
+        {
+          "mono": 369741.281,
+          "line": "V 0.04 0.00",
+          "attempted": 13,
+          "written": 13
+        },
+        {
+          "mono": 369741.281,
+          "line": "STOP",
+          "attempted": 6,
+          "written": 6
+        },
+        {
+          "mono": 369741.281,
+          "line": "STOP",
+          "attempted": 6,
+          "written": 6
+        },
+        {
+          "mono": 369741.281,
+          "line": "STOP",
+          "attempted": 6,
+          "written": 6
+        }
+      ],
+      "first_fault": "HARDWARE_FAULT_OBSERVED: I2C_FAULT"
+    },
+    "late_fullzero_updates_confirmation_retains_FAULT": {
+      "reply": [
+        false,
+        "STOP_UNCONFIRMED_TIMEOUT"
+      ],
+      "confirmed": true,
+      "first_fault": "STOP_UNCONFIRMED_TIMEOUT",
+      "deadline": 369741.331
+    },
+    "map_origin_NaN_HOLD_actual_step": {
+      "fsm": "EXPLORING",
+      "tx": [
+        {
+          "mono": 369741.39,
+          "line": "V 0.00 0.00",
+          "attempted": 13,
+          "written": 13
+        }
+      ]
+    },
+    "actual_MAIN_organic10s82_missing_banners_ARM_refused": {
+      "count": 82,
+      "span": 10.14100000000326,
+      "reply": {
+        "code": 422,
+        "body": "{\"status\": \"FAILED\", \"reason\": \"REFUSED_PREFLIGHT_NOT_MET: banner=False, i2c=False, count=82/80, dur=10.2/10.0s, age=0.01s\"}"
+      },
+      "tx": []
+    }
+  },
+  "residuals": {
+    "fault_STOP_missing_shared_request_deadline": {
+      "requested": 0.0,
+      "deadline": 0.0,
+      "confirmed": false
+    },
+    "new_late_handler_false_CONFIRMED_after_persistent_partial_fault_STOP": {
+      "tx": [
+        {
+          "mono": 369741.39,
+          "line": "STOP",
+          "attempted": 6,
+          "written": 1
+        },
+        {
+          "mono": 369741.39,
+          "line": "STOP",
+          "attempted": 6,
+          "written": 1
+        },
+        {
+          "mono": 369741.39,
+          "line": "STOP",
+          "attempted": 6,
+          "written": 1
+        }
+      ],
+      "confirmed": true,
+      "requested": 0.0,
+      "deadline": 0.0,
+      "first_fault": "HARDWARE_FAULT_OBSERVED: I2C_FAULT"
+    },
+    "reader_FAULT_STOP_races_inflight_DRIVE": {
+      "tx": [
+        {
+          "mono": 369741.39,
+          "line": "STOP",
+          "attempted": 6,
+          "written": 6
+        },
+        {
+          "mono": 369741.39,
+          "line": "STOP",
+          "attempted": 6,
+          "written": 6
+        },
+        {
+          "mono": 369741.39,
+          "line": "STOP",
+          "attempted": 6,
+          "written": 6
+        },
+        {
+          "mono": 369741.39,
+          "line": "V 0.04 0.00",
+          "attempted": 13,
+          "written": 13
+        }
+      ],
+      "drive_result": {
+        "reply": [
+          true,
+          "OK"
+        ]
+      },
+      "latched": true,
+      "is_moving": true,
+      "scope": "FakeUART completion order, not physical motor proof"
+    },
+    "actual_MAIN_late_reversed_error_banner_preboot_window_ARM_noACK": {
+      "preboot_span": 10.14100000000326,
+      "preboot_count": 82,
+      "banners_elapsed": 10.155999999959022,
+      "postbanner_before_ARM": 0.07900000002700835,
+      "preflight_count": 83,
+      "passed": true,
+      "reply": {
+        "code": 200,
+        "body": "{\"status\": \"ok\", \"action\": \"ARMED\"}"
+      },
+      "tx": [
+        {
+          "mono": 369751.593,
+          "line": "ARM",
+          "attempted": 5,
+          "written": 5
+        }
+      ],
+      "boot_seen": true,
+      "i2c_seen": true,
+      "settling": true,
+      "i2c_found": false,
+      "ARM_ACK_received": false,
+      "MCU_session_bound": false
+    },
+    "actual_reader_FAULT_zero_CONFIRMED_without_STOP_operation": {
+      "tx": [
+        {
+          "mono": 369751.593,
+          "line": "ARM",
+          "attempted": 5,
+          "written": 5
+        },
+        {
+          "mono": 369751.625,
+          "line": "STOP",
+          "attempted": 6,
+          "written": 6
+        },
+        {
+          "mono": 369751.625,
+          "line": "STOP",
+          "attempted": 6,
+          "written": 6
+        },
+        {
+          "mono": 369751.625,
+          "line": "STOP",
+          "attempted": 6,
+          "written": 6
+        }
+      ],
+      "confirmed": true,
+      "requested": 0.0,
+      "deadline": 0.0,
+      "first_fault": "HARDWARE_FAULT_OBSERVED: I2C_FAULT"
+    }
+  },
+  "audited_imports": [
+    {
+      "module": "agv_preflight_static_collector",
+      "names": [
+        "EXACT_BOOT_BANNER",
+        "EXACT_I2C_SCAN_BANNER",
+        "STARTUP_DEADLINE_S"
+      ]
+    }
+  ],
+  "imported_constants_load_count": {
+    "EXACT_BOOT_BANNER": 0,
+    "EXACT_I2C_SCAN_BANNER": 0,
+    "STARTUP_DEADLINE_S": 0
+  },
+  "normal_cleanup_limited": {
+    "main_alive": false,
+    "UART_closed": true,
+    "errors": [],
+    "nav_alive": false,
+    "watchdog_alive": false
+  },
+  "scope": "actual MAIN-reader-HTTP FakeUART + changed component parser/write/map seams; no full typed-stream/lockownership/physicalgoal acceptance"
+}

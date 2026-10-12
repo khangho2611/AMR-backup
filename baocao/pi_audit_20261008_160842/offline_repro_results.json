@@ -1,0 +1,82 @@
+{
+  "source": "captured Pi source",
+  "hardware_opened": false,
+  "results": [
+    {
+      "name": "no_autonomous_motion_after_confirmed_user_stop",
+      "safety_expectation_passed": false,
+      "details": {
+        "stop_confirmed_before": true,
+        "accepted": true,
+        "reason": "SENT",
+        "writes": [
+          "STOP\n",
+          "ARM\nV 0.000 0.350\n"
+        ],
+        "autonomy_allowed": true
+      }
+    },
+    {
+      "name": "unconfirmed_stop_blocks_motion",
+      "safety_expectation_passed": false,
+      "details": {
+        "accepted": true,
+        "fault_after": null,
+        "writes": [
+          "ARM\nV 0.000 0.350\n"
+        ]
+      }
+    },
+    {
+      "name": "drive_and_watchdog_share_scan_freshness",
+      "safety_expectation_passed": false,
+      "details": {
+        "accepted_with_scan_age_s": 0.5,
+        "accepted": true,
+        "fault_after_watchdog": "SCAN_TIMEOUT",
+        "writes": [
+          "ARM\nV 0.000 0.350\n",
+          "STOP\n"
+        ]
+      }
+    },
+    {
+      "name": "stop_confirmation_requires_post_write_telemetry",
+      "safety_expectation_passed": false,
+      "details": {
+        "stop_confirmed": true,
+        "d0_age_s": 10.299999999999997,
+        "writes": [
+          "STOP\n"
+        ]
+      }
+    },
+    {
+      "name": "stale_motor_telemetry_blocks_motion",
+      "safety_expectation_passed": false,
+      "details": {
+        "accepted": true,
+        "d0_age_s": 10,
+        "writes": [
+          "ARM\nV 0.000 0.350\n"
+        ]
+      }
+    },
+    {
+      "name": "escape_rotation_checks_lidar_against_rotated_body",
+      "safety_expectation_passed": false,
+      "details": {
+        "accepted": true,
+        "scan_angle_deg": 152,
+        "scan_distance_m": 0.19235384061671346,
+        "point_inside_rotated_body": true,
+        "point_at_final_body_frame": [
+          -0.1515215651087448,
+          0.11849563412631038
+        ],
+        "map": "synthetic known-free; obstacle only in fresh lidar"
+      }
+    }
+  ],
+  "failed_safety_expectations": 6
+}

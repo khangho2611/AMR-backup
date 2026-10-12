@@ -1,0 +1,18 @@
+--- 
++++ 
+@@ -279,7 +279,14 @@
+                 if stamp and not 0 <= self.get_clock().now().nanoseconds*1e-9-stamp <= .25:
+                     raise ValueError('Stale scan TF')
+             except Exception:
+-                self.control.request_stop('MISSING_SCAN_TF',wait=False)
++                with self.control.lock:
++                    active=self.control.armed or self.control.motion or self.control.arm_sent is not None
++                    self.control.scan_time=None
++                with state.lock:
++                    state.scan_mono=0.
++                    state.explore_phase='CHỜ TRANSFORM LIDAR'
++                if active:
++                    self.control.request_stop('MISSING_SCAN_TF',wait=False)
+                 return
+         if hasattr(self,'pub_slam_scan'):
+             import copy

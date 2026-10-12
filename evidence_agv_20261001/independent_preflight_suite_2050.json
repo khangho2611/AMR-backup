@@ -1,0 +1,51 @@
+{
+  "timestamp": "2026-10-01T20:50:47.326997+07:00",
+  "before": {
+    "agv_preflight_static_collector.py": "4069daef1abffcae49730d29cddb415b256d28f96c976466367605956277dcd5",
+    "test_preflight_collector_independent.py": "b08e5c550feb736caf4423c22690306f425c72f479dfd08c233fb798f2ac64ae",
+    "agv_serial_arbiter_bridge_v3.py": "6f4a2106622e99fe60212199b621cdcbbd2a76b2e639519796b15d5a703e3d1d",
+    "agv_ros2_runtime_adapter.py": "02ff0683f49e6f546606c4e7743fc4d978245f155ca0232dc34e88657025c6ec"
+  },
+  "results": [
+    {
+      "command": [
+        "python",
+        "-X",
+        "utf8",
+        "agv_preflight_static_collector.py",
+        "--mock"
+      ],
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"D:\\HoMinhKhang\\PROJECT\\GITHUB_PROJECT\\CODE XE TU HANH\\agv_preflight_static_collector.py\", line 136, in <module>\n    def validate_telemetry_sample(payload: Dict[str, Any]) -> Tuple[bool, str]:\n                                                              ^^^^^\nNameError: name 'Tuple' is not defined. Did you mean: 'tuple'?\n"
+    },
+    {
+      "command": [
+        "python",
+        "-X",
+        "utf8",
+        "test_preflight_collector_independent.py"
+      ],
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"D:\\HoMinhKhang\\PROJECT\\GITHUB_PROJECT\\CODE XE TU HANH\\test_preflight_collector_independent.py\", line 20, in <module>\n    from agv_preflight_static_collector import (\n  File \"D:\\HoMinhKhang\\PROJECT\\GITHUB_PROJECT\\CODE XE TU HANH\\agv_preflight_static_collector.py\", line 136, in <module>\n    def validate_telemetry_sample(payload: Dict[str, Any]) -> Tuple[bool, str]:\n                                                              ^^^^^\nNameError: name 'Tuple' is not defined. Did you mean: 'tuple'?\n"
+    },
+    {
+      "command": [
+        "python",
+        "-X",
+        "utf8",
+        "test_full_integration_slice.py"
+      ],
+      "exit_code": 0,
+      "stdout": "[PASS TEST 3] Real Watchdog Thread: Đã trip thành công sau khi caller im lặng (1 lần)\n[PASS TEST 4] W1 Escalation: Watchdog bắt lỗi write failure và báo cáo unconfirmed chính xác 100%.\n",
+      "stderr": "...[SerialArbiterGateV3] LỖI GHI SERIAL THỰC TẾ: mock write failure\n.\n----------------------------------------------------------------------\nRan 4 tests in 0.123s\n\nOK\n"
+    }
+  ],
+  "after": {
+    "agv_preflight_static_collector.py": "4069daef1abffcae49730d29cddb415b256d28f96c976466367605956277dcd5",
+    "test_preflight_collector_independent.py": "b08e5c550feb736caf4423c22690306f425c72f479dfd08c233fb798f2ac64ae",
+    "agv_serial_arbiter_bridge_v3.py": "6f4a2106622e99fe60212199b621cdcbbd2a76b2e639519796b15d5a703e3d1d",
+    "agv_ros2_runtime_adapter.py": "02ff0683f49e6f546606c4e7743fc4d978245f155ca0232dc34e88657025c6ec"
+  }
+}

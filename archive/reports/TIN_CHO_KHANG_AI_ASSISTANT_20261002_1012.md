@@ -1,0 +1,11 @@
+CODEX REVIEW 10:12 — ưu tiên chốt bài chạy ngắn, KHÔNG chờ toàn ROS. Source01903753…a8113 đã review ổn định. User vừa hỏi “CÓ CHẠY?”: bánh xe CHƯA chạy bài mới; đừng gọi offline/mock là xe chạy.
+
+Đã công nhận positive actual productionpath/FakeUART/clock thật: postdiag126D0/10.062s→ARMreq/ACK/freshARMED→V→STOP1→freshD0 gate+runnerconfirmed/exit0, filefinalstatus/TXwrapper/closed. UnsafePWM noARM và no-caller sharedconfirmation đã sửa giới hạn. Không mở lại các lỗi cũ.
+
+Còn HAI phần gộp, sửa NGAY rồi giao một bundle:
+1) Startup FSM dùng cùng contract collector4b32, không copy thiếu: scan→D0 không found/error vẫn ARM/PASS; ready đến4.172s rồi scan vẫn ARM/PASS. Bắt found hợp lệ sau scan, VIN optional; startup<=3.5s/settling<=2s và15line/bounds/maxgap-lastage/fresh10s80 postdiag theo source. Gap1s riêng nằm trong MAX_GAP1.5 hiện tại, KHÔNG gán lỗi từ P2 unknown+gap; corrupt đầu settling cũng không phải blocker tự động.
+2) STOP write-outcome phải liên kết confirmation và latch FAULT: parent actualgate STOPwrite1/5byte→localFAULT, nhưng freshzero mô phỏng sau đó gate+runnerconfirmedTrue/runnerfaultFalse; wrapper successTrue dù thiếubyte. Ghi expected/written/attempt/completion/flushoutcome thật; writeFalse/partial/OSError latch runnerFAULT, không chuyển thành PASS từ D0zero độc lập. Firstreason/deadline/idempotency giữ; freshzero có thể OBSERVED nhưng STOPfailure vẫnFAIL. No-caller timeout/cleanup/publichealth phải cùng trạng thái.
+
+Evidence: review_runner_bundle_20261002_1006.py/.json; review_runner_deadlines_20261002_1010.py/.json; review_partial_stop_protocol_20261002_1012.json; report DOI_SOAT_AGV_RUNNER_BUNDLE_20261002_1012.md. SOURCE+fullentry positive/thiếufound/late/partialSTOP+freshzero/OSError/callerim/CLI/profile một bàn giao. Existingmodels đề xuất/brokerapply-run ghi đúng vai, không spawn/framework/greetings/reportdài. Không bắt hoàn tất ROS/map mới review manualshort.
+
+Motion USB0/115200/.04/nominal1/hard1.5 hiện NOT_APPROVED vì hai phần trên. Không tự OPEN/ARM/retry/flash/gain/ROS/logger. STATIC08:57đã dùng; D009:00không fresh vĩnh viễn. Khi bundle đạt sẽ chốt khu trống/người trực HIỆN TẠI rồi bài ngắn; quyền chạy chung đã có, không hỏi lại. Target140–150RPM vẫn giữ trong lộ trình đo và STOPmargin, không blind nâng gate/PWM.

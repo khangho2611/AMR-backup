@@ -1,0 +1,131 @@
+{
+  "time_local": "2026-10-02T14:46:54.135900",
+  "timezone": "Asia/Bangkok",
+  "source_before": "854813b8288254c845e05e5ce9a34be745b7709bdeaebe62ef298b1de45643c3",
+  "source_after": "854813b8288254c845e05e5ce9a34be745b7709bdeaebe62ef298b1de45643c3",
+  "hardware": false,
+  "ROS": false,
+  "fixes_limited": {
+    "mixed_error_reset_and_FAULT_latch": {
+      "count": 0,
+      "latch": true,
+      "fault": "HARDWARE_FAULT_OBSERVED: I2C_FAULT"
+    },
+    "STOP_timeout_False_fault": {
+      "reply": [
+        false,
+        "STOP_UNCONFIRMED_TIMEOUT"
+      ],
+      "confirmed": false
+    },
+    "nonzero_targets_vw_fresh_D0_not_confirmed": {
+      "reply": [
+        false,
+        "STOP_UNCONFIRMED_TIMEOUT"
+      ],
+      "observed": true,
+      "confirmed": false
+    },
+    "fresh_full_zero_after_STOP_confirmed": {
+      "reply": [
+        true,
+        "STOP_CONFIRMED_ZERO"
+      ]
+    },
+    "map_NaN_resolution_HOLD": true,
+    "actual_HTTP_ARM_stale_after_TX_lock_refused": {
+      "window": {
+        "count": 82,
+        "span": 10.14100000000326,
+        "clock": "real unscaled, no flags/backdate"
+      },
+      "lastage_at_unlock": 0.6709999999729916,
+      "reply": {
+        "code": 422,
+        "body": "{\"status\": \"FAILED\", \"reason\": \"REFUSED_PREFLIGHT_NOT_MET: count 82/80, dur 10.8/10.0s, age 0.67s\"}"
+      },
+      "tx": []
+    },
+    "actual_HTTP_STOP_500_unconfirmed": {
+      "reply": {
+        "code": 500,
+        "body": "{\"status\": \"PARTIAL_FAULT\", \"action\": \"STOP_LATCHED\", \"reason\": \"STOP_UNCONFIRMED_TIMEOUT\"}"
+      },
+      "confirmed": false,
+      "fault": "STOP_UNCONFIRMED_TIMEOUT"
+    },
+    "actual_HTTP_auto_STOP_500_unconfirmed": {
+      "code": 500,
+      "body": "{\"status\": \"PARTIAL_FAULT\", \"auto\": false, \"reason\": \"STOP_UNCONFIRMED_TIMEOUT\"}"
+    },
+    "actual_HTTP_fullzero_STOP_200_confirmed": {
+      "reply": {
+        "code": 200,
+        "body": "{\"status\": \"ok\", \"action\": \"STOP_LATCHED\", \"reason\": \"STOP_CONFIRMED_ZERO\"}"
+      },
+      "confirmed": true
+    }
+  },
+  "residuals": {
+    "map_origin_NaN_crashes_despite_header": "cannot convert float NaN to integer",
+    "fresh_sensor_I2C_FAULT_latch_without_immediate_STOP": {
+      "tx": [
+        {
+          "mono": 369130.296,
+          "line": "V 0.04 0.00",
+          "attempted": 13,
+          "written": 13
+        }
+      ],
+      "latch": true,
+      "is_moving": true,
+      "fault": "HARDWARE_FAULT_OBSERVED: I2C_FAULT",
+      "elapsed": 0.18
+    },
+    "watchdog_not_monitoring_latched_pending_late_zero": {
+      "stop_count": 3,
+      "later_stop_count": 3,
+      "auto": false,
+      "is_moving": false,
+      "confirmed": false,
+      "MCU_state": "DISARMED",
+      "fault": "STALE_SENSOR_TIMEOUT"
+    },
+    "actual_MAIN_missing_bootdiag_ARMACK_session_still_ARM200": {
+      "window": {
+        "count": 82,
+        "span": 10.15700000000652,
+        "clock": "real unscaled, no flags/backdate"
+      },
+      "reply": {
+        "code": 200,
+        "body": "{\"status\": \"ok\", \"action\": \"ARMED\"}"
+      },
+      "boot_diagnostic_seen": false,
+      "ARM_ACK_received": false,
+      "MCU_session_bound": false,
+      "tx": [
+        {
+          "mono": 369152.578,
+          "line": "ARM",
+          "attempted": 5,
+          "written": 5
+        }
+      ],
+      "fixture": "only fresh ARMED D0 from fake transport"
+    }
+  },
+  "unchanged_source_seams": {
+    "STOP_helper_executable_body": true,
+    "main_only_banner_changes": "source diff inspected",
+    "normal_cleanup_observed": {
+      "main_alive": false,
+      "UART_closed": true,
+      "errors": [],
+      "nav_alive": false,
+      "watchdog_alive": false
+    }
+  },
+  "audited_imports": [],
+  "scope": "actual MAIN-reader-HTTP real clock + new component watchdog/map validation; no typed streams/owner lock/physical goal/crash cleanup acceptance"
+}

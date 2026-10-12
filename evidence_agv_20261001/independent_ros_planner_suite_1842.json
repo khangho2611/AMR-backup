@@ -1,0 +1,30 @@
+{
+  "scope": "offline mocks only",
+  "before": {
+    "agv_ros2_arbiter_bridge.py": "f1b7a1e3ebee060ff94e91e81abd2a45310491ffcaf41df58b79323aa05e89c9",
+    "agv_reachability_costmap_planner_v2.py": "c7047ff715914475f1d130136582ddbf7ad7ece68ea25726865d5955bab5e7da",
+    "test_ros2_arbiter_bridge.py": "b36a1a1ebb5381957ce2ebea71e688caa718c77c9bf76aa9d2827612a62dcfb0",
+    "test_costmap_planner_v2.py": "4336cb5c7d9df73420f7c2916c6d55907a7a91dbba6ba5752ac91c6abbd872a5"
+  },
+  "after": {
+    "agv_ros2_arbiter_bridge.py": "f1b7a1e3ebee060ff94e91e81abd2a45310491ffcaf41df58b79323aa05e89c9",
+    "agv_reachability_costmap_planner_v2.py": "c7047ff715914475f1d130136582ddbf7ad7ece68ea25726865d5955bab5e7da",
+    "test_ros2_arbiter_bridge.py": "b36a1a1ebb5381957ce2ebea71e688caa718c77c9bf76aa9d2827612a62dcfb0",
+    "test_costmap_planner_v2.py": "4336cb5c7d9df73420f7c2916c6d55907a7a91dbba6ba5752ac91c6abbd872a5"
+  },
+  "stable": true,
+  "tests": [
+    {
+      "file": "test_ros2_arbiter_bridge.py",
+      "exit": 0,
+      "stdout": "=== BẮT ĐẦU KIỂM THỬ AGV ROS 2 ARBITER BRIDGE (OFFLINE/MOCK BUS) ===\n\n--- [TEST 1] TELEMETRY INGESTION & TF BROADCAST ---\n[PASS TEST 1] Telemetry hợp lệ được ingest thành công, phát đúng TF odom->base_footprint theo chuẩn REP-105.\n\n--- [TEST 2] FRESHNESS GUARD & STALE TELEMETRY REJECTION ---\n[PASS TEST 2] Freshness Guard chặn đứng mẫu cũ (stale), tương lai (future) và dữ liệu NaN/Inf.\n\n--- [TEST 3] LASERSCAN FRESHNESS GUARD ---\n[PASS TEST 3] LaserScan Freshness Guard hoạt động chuẩn xác.\n\n--- [TEST 4] PRIORITY QUEUE & LEASE PREEMPTION ---\n[PASS TEST 4] Priority Queue phân cấp hoàn hảo: EMERGENCY_STOP > MANUAL > AUTONOMOUS.\n\n=================================================================\n=== TẤT CẢ 4 BÀI TEST AGV ROS 2 ARBITER BRIDGE ĐỀU PASS 100%! ===\n=================================================================\n",
+      "stderr": ""
+    },
+    {
+      "file": "test_costmap_planner_v2.py",
+      "exit": 1,
+      "stdout": "================================================================================\n=== BAT DAU KIEM THU BO LAP KE HOACH REACHABILITY COSTMAP & FRONTIER PLANNER V2 ===\n=== TUAN THU DAY DU YEU CAU F06-F14 VA LOAI TRU COUNTEREXAMPLES CODEX ===\n================================================================================\n\n--- [TEST 1: F12/F09] FAIL-CLOSED & ANTI-SPOOFING KHI CHUA CO MAP ---\n[PASS TEST 1] Fail-Closed hoan hao: Reject frame_id rong, data sai lech va boolean spoofing.\n\n--- [TEST 2: F09] FOOTPRINT INFLATION CHẶN HÀNH LANG HẸP 1 Ô (50mm) ---\n[PASS TEST 2] Footprint Inflation: Khe 50mm bi chan hoan toan vi nho hon be rong xe 192.5mm.\n\n--- [TEST 3: F09] CỔNG RỘNG (350mm) SINH ĐƯỜNG ĐI THÀNH CÔNG ---\n[PASS TEST 3] Cổng rộng (350mm) sinh đường đi an toàn thành công (15 điểm).\n\n--- [TEST 4: F09 COUNTEREXAMPLE] TỰ ĐỘNG TÌM ĐƯỜNG VÒNG KHI KHE HẸP BỊ CHẶN ---\n[PASS TEST 4] Khắc phục Counterexample Codex: Tìm được đường vòng an toàn (17 điểm), hoàn toàn né khe hẹp (5, 10).\n\n--- [TEST 5: F06] FOOTPRINT CLEARANCE & NON-BLOCKING RECOVERY ---\n[PASS TEST 5-1] Backward Clearance: Phát hiện chính xác vật cản phía sau, giới hạn safe_dist=0.025m\n[PASS TEST 5-2] Backward Clearance: Vùng sau trống -> Cho phép lùi 0.30m an toàn\n[PASS TEST 5-3] Rotation Clearance: Chặn quay tại chỗ khi có vật cản trong bán kính quét xoay\n[PASS TEST 5-4] Non-blocking Recovery: Đề xuất hành động 'BACKWARD' (0.30m trong 6.0s)\n\n--- [TEST 6: F07] NON-BLOCKING & MONOTONIC DEADLINE TIMEOUT ---\n",
+      "stderr": "Traceback (most recent call last):\n  File \"D:\\HoMinhKhang\\PROJECT\\GITHUB_PROJECT\\CODE XE TU HANH\\test_costmap_planner_v2.py\", line 396, in <module>\n    if not run_all_planner_tests():\n           ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"D:\\HoMinhKhang\\PROJECT\\GITHUB_PROJECT\\CODE XE TU HANH\\test_costmap_planner_v2.py\", line 218, in run_all_planner_tests\n    assert p_timeout_micro is None, \"Lỗi F07: Hết deadline vi mô nhưng vẫn tiếp tục tính toán!\"\n           ^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: Lỗi F07: Hết deadline vi mô nhưng vẫn tiếp tục tính toán!\n"
+    }
+  ]
+}

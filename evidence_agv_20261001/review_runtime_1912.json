@@ -1,0 +1,72 @@
+{
+  "scope": "OFFLINE SOURCE + FAKE SERIAL ONLY",
+  "before": {
+    "agv_ros2_runtime_adapter.py": "15f460b1f81a566b7381307de275d1434722302d9ebe3d95d7de4db748930a9b",
+    "agv_ros2_arbiter_bridge.py": "b5c17f8e84329bd0f54b3cfa8e30c8752f6de3bcbaaccec4c9f66a516949ece8",
+    "agv_serial_arbiter_bridge_v3.py": "e7967eec69b12b97cef93ea12cc08cdcd2ac34735b740539214f81ecad9ca7bd"
+  },
+  "after": {
+    "agv_ros2_runtime_adapter.py": "15f460b1f81a566b7381307de275d1434722302d9ebe3d95d7de4db748930a9b",
+    "agv_ros2_arbiter_bridge.py": "b5c17f8e84329bd0f54b3cfa8e30c8752f6de3bcbaaccec4c9f66a516949ece8",
+    "agv_serial_arbiter_bridge_v3.py": "e7967eec69b12b97cef93ea12cc08cdcd2ac34735b740539214f81ecad9ca7bd"
+  },
+  "stable": true,
+  "cases": [
+    {
+      "id": "A1",
+      "scenario": "explicit invalid receive timestamp NaN",
+      "observed": false,
+      "resulting_stamp": 0.0,
+      "expected": false
+    },
+    {
+      "id": "A2",
+      "scenario": "corrupt numeric JSON field",
+      "observed": false,
+      "expected": "structured rejection without exception"
+    },
+    {
+      "id": "W1",
+      "scenario": "real watchdog thread, actual gate, STOP write failure",
+      "attempts": [
+        "STOP\n"
+      ],
+      "trip_count": 1,
+      "active_lease": null,
+      "gate_state": "FAULT",
+      "gate_stop_confirmed": false,
+      "watchdog_public_state": {
+        "check_interval_s": 0.005,
+        "running": false,
+        "watchdog_tripped_count": 1,
+        "last_stop_result": "REJECT_STOP_WRITE_FAILED",
+        "last_stop_confirmed": false,
+        "last_stop_write_failed": true,
+        "last_trip_time": 298851.187
+      },
+      "expected": "retain/report failed STOP outcome and unconfirmed stop to supervisor"
+    }
+  ],
+  "runtime": {
+    "classes": [
+      "_FakeClock",
+      "_FakeTime",
+      "_FakePublisher",
+      "_FakeSubscription",
+      "_FakeTimer",
+      "_BaseNode",
+      "FirmwarePacketAdapter",
+      "ActiveLeaseWatchdogThread",
+      "AGVRos2RuntimeNode",
+      "MockRos2RuntimeExecutor"
+    ],
+    "ros_runtime_calls": [
+      "create_publisher",
+      "create_publisher",
+      "create_subscription",
+      "create_subscription",
+      "create_subscription",
+      "create_timer"
+    ]
+  }
+}

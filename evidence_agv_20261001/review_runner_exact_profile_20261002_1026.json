@@ -1,0 +1,559 @@
+{
+  "scope": "OFFLINE unscaled full production lifecycle exact .04/1/1.5 profile: UART and OPEN/lock replaced only; no hardware or ownership proof; partialSTOP freshzero simulated independent MCU stopping",
+  "before": "15cdfc6c6d86582df3ae219b8f301eb1dbb7bbdd0da742d43052242cda50f928",
+  "after": "15cdfc6c6d86582df3ae219b8f301eb1dbb7bbdd0da742d43052242cda50f928",
+  "stable": true,
+  "cases": [
+    {
+      "case": "exact_profile_positive",
+      "exit": 0,
+      "report": {
+        "preflight_status": "PASS_PREFLIGHT_VERIFIED",
+        "status": "PASS_MOTION_VERIFIED",
+        "evidence_file": "C:\\Users\\Khang\\AppData\\Local\\Temp\\agv_OFFLINE_exact1026_oc9svho4\\motion_evidence_1790911578703_23784.json"
+      },
+      "elapsed": 11.672000000020489,
+      "firstV": 353519.25,
+      "firstSTOP": 353520.25,
+      "motionspan_firstV_STOP": 1.0,
+      "peakV": 0.04,
+      "runner_fault": false,
+      "runner_confirmed": true,
+      "write_success": true,
+      "write_failed": false,
+      "gate_local_fault": false,
+      "gate_confirmed": true,
+      "closed": true,
+      "reader_alive": false,
+      "watchdog_alive": false,
+      "metadata_status": "PASS_MOTION_VERIFIED",
+      "tx": [
+        {
+          "t": 353519.14,
+          "bytes": "ARM\n",
+          "expected": 4,
+          "written": 4,
+          "success": true
+        },
+        {
+          "t": 353519.25,
+          "bytes": "V 0.007 0.000\n",
+          "expected": 14,
+          "written": 14,
+          "success": true
+        },
+        {
+          "t": 353519.296,
+          "bytes": "V 0.014 0.000\n",
+          "expected": 14,
+          "written": 14,
+          "success": true
+        },
+        {
+          "t": 353519.343,
+          "bytes": "V 0.021 0.000\n",
+          "expected": 14,
+          "written": 14,
+          "success": true
+        },
+        {
+          "t": 353519.406,
+          "bytes": "V 0.031 0.000\n",
+          "expected": 14,
+          "written": 14,
+          "success": true
+        },
+        {
+          "t": 353519.453,
+          "bytes": "V 0.038 0.000\n",
+          "expected": 14,
+          "written": 14,
+          "success": true
+        },
+        {
+          "t": 353519.5,
+          "bytes": "V 0.040 0.000\n",
+          "expected": 14,
+          "written": 14,
+          "success": true
+        },
+        {
+          "t": 353519.546,
+          "bytes": "V 0.040 0.000\n",
+          "expected": 14,
+          "written": 14,
+          "success": true
+        },
+        {
+          "t": 353519.609,
+          "bytes": "V 0.040 0.000\n",
+          "expected": 14,
+          "written": 14,
+          "success": true
+        },
+        {
+          "t": 353519.656,
+          "bytes": "V 0.040 0.000\n",
+          "expected": 14,
+          "written": 14,
+          "success": true
+        },
+        {
+          "t": 353519.703,
+          "bytes": "V 0.040 0.000\n",
+          "expected": 14,
+          "written": 14,
+          "success": true
+        },
+        {
+          "t": 353519.75,
+          "bytes": "V 0.040 0.000\n",
+          "expected": 14,
+          "written": 14,
+          "success": true
+        },
+        {
+          "t": 353519.796,
+          "bytes": "V 0.040 0.000\n",
+          "expected": 14,
+          "written": 14,
+          "success": true
+        },
+        {
+          "t": 353519.859,
+          "bytes": "V 0.040 0.000\n",
+          "expected": 14,
+          "written": 14,
+          "success": true
+        },
+        {
+          "t": 353519.906,
+          "bytes": "V 0.040 0.000\n",
+          "expected": 14,
+          "written": 14,
+          "success": true
+        },
+        {
+          "t": 353519.953,
+          "bytes": "V 0.040 0.000\n",
+          "expected": 14,
+          "written": 14,
+          "success": true
+        },
+        {
+          "t": 353520.0,
+          "bytes": "V 0.040 0.000\n",
+          "expected": 14,
+          "written": 14,
+          "success": true
+        },
+        {
+          "t": 353520.062,
+          "bytes": "V 0.040 0.000\n",
+          "expected": 14,
+          "written": 14,
+          "success": true
+        },
+        {
+          "t": 353520.109,
+          "bytes": "V 0.040 0.000\n",
+          "expected": 14,
+          "written": 14,
+          "success": true
+        },
+        {
+          "t": 353520.156,
+          "bytes": "V 0.040 0.000\n",
+          "expected": 14,
+          "written": 14,
+          "success": true
+        },
+        {
+          "t": 353520.203,
+          "bytes": "V 0.040 0.000\n",
+          "expected": 14,
+          "written": 14,
+          "success": true
+        },
+        {
+          "t": 353520.25,
+          "bytes": "STOP\n",
+          "expected": 5,
+          "written": 5,
+          "success": true
+        }
+      ],
+      "writes": [
+        {
+          "t": 353519.14,
+          "bytes": "ARM\n"
+        },
+        {
+          "t": 353519.25,
+          "bytes": "V 0.007 0.000\n"
+        },
+        {
+          "t": 353519.296,
+          "bytes": "V 0.014 0.000\n"
+        },
+        {
+          "t": 353519.343,
+          "bytes": "V 0.021 0.000\n"
+        },
+        {
+          "t": 353519.406,
+          "bytes": "V 0.031 0.000\n"
+        },
+        {
+          "t": 353519.453,
+          "bytes": "V 0.038 0.000\n"
+        },
+        {
+          "t": 353519.5,
+          "bytes": "V 0.040 0.000\n"
+        },
+        {
+          "t": 353519.546,
+          "bytes": "V 0.040 0.000\n"
+        },
+        {
+          "t": 353519.609,
+          "bytes": "V 0.040 0.000\n"
+        },
+        {
+          "t": 353519.656,
+          "bytes": "V 0.040 0.000\n"
+        },
+        {
+          "t": 353519.703,
+          "bytes": "V 0.040 0.000\n"
+        },
+        {
+          "t": 353519.75,
+          "bytes": "V 0.040 0.000\n"
+        },
+        {
+          "t": 353519.796,
+          "bytes": "V 0.040 0.000\n"
+        },
+        {
+          "t": 353519.859,
+          "bytes": "V 0.040 0.000\n"
+        },
+        {
+          "t": 353519.906,
+          "bytes": "V 0.040 0.000\n"
+        },
+        {
+          "t": 353519.953,
+          "bytes": "V 0.040 0.000\n"
+        },
+        {
+          "t": 353520.0,
+          "bytes": "V 0.040 0.000\n"
+        },
+        {
+          "t": 353520.062,
+          "bytes": "V 0.040 0.000\n"
+        },
+        {
+          "t": 353520.109,
+          "bytes": "V 0.040 0.000\n"
+        },
+        {
+          "t": 353520.156,
+          "bytes": "V 0.040 0.000\n"
+        },
+        {
+          "t": 353520.203,
+          "bytes": "V 0.040 0.000\n"
+        },
+        {
+          "t": 353520.25,
+          "bytes": "STOP\n"
+        }
+      ]
+    },
+    {
+      "case": "partialSTOP_independent_zero",
+      "exit": 1,
+      "report": {
+        "preflight_status": "PASS_PREFLIGHT_VERIFIED",
+        "status": "FAIL_STOP_UNCONFIRMED",
+        "evidence_file": "C:\\Users\\Khang\\AppData\\Local\\Temp\\agv_OFFLINE_exact1026_k2vygfjq\\motion_evidence_1790911579024_23784.json"
+      },
+      "elapsed": 12.0,
+      "firstV": 353519.25,
+      "firstSTOP": 353520.25,
+      "motionspan_firstV_STOP": 1.0,
+      "peakV": 0.04,
+      "runner_fault": true,
+      "runner_confirmed": false,
+      "write_success": false,
+      "write_failed": true,
+      "gate_local_fault": true,
+      "gate_confirmed": true,
+      "closed": true,
+      "reader_alive": false,
+      "watchdog_alive": false,
+      "metadata_status": "FAIL_STOP_UNCONFIRMED",
+      "tx": [
+        {
+          "t": 353519.14,
+          "bytes": "ARM\n",
+          "expected": 4,
+          "written": 4,
+          "success": true
+        },
+        {
+          "t": 353519.25,
+          "bytes": "V 0.007 0.000\n",
+          "expected": 14,
+          "written": 14,
+          "success": true
+        },
+        {
+          "t": 353519.296,
+          "bytes": "V 0.014 0.000\n",
+          "expected": 14,
+          "written": 14,
+          "success": true
+        },
+        {
+          "t": 353519.343,
+          "bytes": "V 0.021 0.000\n",
+          "expected": 14,
+          "written": 14,
+          "success": true
+        },
+        {
+          "t": 353519.406,
+          "bytes": "V 0.031 0.000\n",
+          "expected": 14,
+          "written": 14,
+          "success": true
+        },
+        {
+          "t": 353519.453,
+          "bytes": "V 0.038 0.000\n",
+          "expected": 14,
+          "written": 14,
+          "success": true
+        },
+        {
+          "t": 353519.5,
+          "bytes": "V 0.040 0.000\n",
+          "expected": 14,
+          "written": 14,
+          "success": true
+        },
+        {
+          "t": 353519.546,
+          "bytes": "V 0.040 0.000\n",
+          "expected": 14,
+          "written": 14,
+          "success": true
+        },
+        {
+          "t": 353519.609,
+          "bytes": "V 0.040 0.000\n",
+          "expected": 14,
+          "written": 14,
+          "success": true
+        },
+        {
+          "t": 353519.656,
+          "bytes": "V 0.040 0.000\n",
+          "expected": 14,
+          "written": 14,
+          "success": true
+        },
+        {
+          "t": 353519.703,
+          "bytes": "V 0.040 0.000\n",
+          "expected": 14,
+          "written": 14,
+          "success": true
+        },
+        {
+          "t": 353519.75,
+          "bytes": "V 0.040 0.000\n",
+          "expected": 14,
+          "written": 14,
+          "success": true
+        },
+        {
+          "t": 353519.796,
+          "bytes": "V 0.040 0.000\n",
+          "expected": 14,
+          "written": 14,
+          "success": true
+        },
+        {
+          "t": 353519.859,
+          "bytes": "V 0.040 0.000\n",
+          "expected": 14,
+          "written": 14,
+          "success": true
+        },
+        {
+          "t": 353519.906,
+          "bytes": "V 0.040 0.000\n",
+          "expected": 14,
+          "written": 14,
+          "success": true
+        },
+        {
+          "t": 353519.953,
+          "bytes": "V 0.040 0.000\n",
+          "expected": 14,
+          "written": 14,
+          "success": true
+        },
+        {
+          "t": 353520.0,
+          "bytes": "V 0.040 0.000\n",
+          "expected": 14,
+          "written": 14,
+          "success": true
+        },
+        {
+          "t": 353520.062,
+          "bytes": "V 0.040 0.000\n",
+          "expected": 14,
+          "written": 14,
+          "success": true
+        },
+        {
+          "t": 353520.109,
+          "bytes": "V 0.040 0.000\n",
+          "expected": 14,
+          "written": 14,
+          "success": true
+        },
+        {
+          "t": 353520.156,
+          "bytes": "V 0.040 0.000\n",
+          "expected": 14,
+          "written": 14,
+          "success": true
+        },
+        {
+          "t": 353520.203,
+          "bytes": "V 0.040 0.000\n",
+          "expected": 14,
+          "written": 14,
+          "success": true
+        },
+        {
+          "t": 353520.25,
+          "bytes": "STOP\n",
+          "expected": 5,
+          "written": 1,
+          "success": false
+        },
+        {
+          "t": 353520.625,
+          "bytes": "STOP\n",
+          "expected": 5,
+          "written": 1,
+          "success": false
+        }
+      ],
+      "writes": [
+        {
+          "t": 353519.14,
+          "bytes": "ARM\n"
+        },
+        {
+          "t": 353519.25,
+          "bytes": "V 0.007 0.000\n"
+        },
+        {
+          "t": 353519.296,
+          "bytes": "V 0.014 0.000\n"
+        },
+        {
+          "t": 353519.343,
+          "bytes": "V 0.021 0.000\n"
+        },
+        {
+          "t": 353519.406,
+          "bytes": "V 0.031 0.000\n"
+        },
+        {
+          "t": 353519.453,
+          "bytes": "V 0.038 0.000\n"
+        },
+        {
+          "t": 353519.5,
+          "bytes": "V 0.040 0.000\n"
+        },
+        {
+          "t": 353519.546,
+          "bytes": "V 0.040 0.000\n"
+        },
+        {
+          "t": 353519.609,
+          "bytes": "V 0.040 0.000\n"
+        },
+        {
+          "t": 353519.656,
+          "bytes": "V 0.040 0.000\n"
+        },
+        {
+          "t": 353519.703,
+          "bytes": "V 0.040 0.000\n"
+        },
+        {
+          "t": 353519.75,
+          "bytes": "V 0.040 0.000\n"
+        },
+        {
+          "t": 353519.796,
+          "bytes": "V 0.040 0.000\n"
+        },
+        {
+          "t": 353519.859,
+          "bytes": "V 0.040 0.000\n"
+        },
+        {
+          "t": 353519.906,
+          "bytes": "V 0.040 0.000\n"
+        },
+        {
+          "t": 353519.953,
+          "bytes": "V 0.040 0.000\n"
+        },
+        {
+          "t": 353520.0,
+          "bytes": "V 0.040 0.000\n"
+        },
+        {
+          "t": 353520.062,
+          "bytes": "V 0.040 0.000\n"
+        },
+        {
+          "t": 353520.109,
+          "bytes": "V 0.040 0.000\n"
+        },
+        {
+          "t": 353520.156,
+          "bytes": "V 0.040 0.000\n"
+        },
+        {
+          "t": 353520.203,
+          "bytes": "V 0.040 0.000\n"
+        },
+        {
+          "t": 353520.25,
+          "bytes": "STOP\n"
+        },
+        {
+          "t": 353520.625,
+          "bytes": "STOP\n"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+--- body/agv_navigation.py
++++ manual_cruise/agv_navigation.py
+@@ -29,7 +29,7 @@
+     command horizon, not a measured physical braking-distance guarantee.
+     """
+     if (not all(finite(x) for x in (v,w,horizon,spatial_step)) or
+-            abs(v) > .08 or abs(w) > .35 or not 0 < horizon <= .5 or spatial_step <= 0):
++            abs(v) > .20 or abs(w) > .35 or not 0 < horizon <= .5 or spatial_step <= 0):
+         return None
+     steps=max(1,math.ceil(abs(v)*horizon/spatial_step))
+     if steps > 1000:return None

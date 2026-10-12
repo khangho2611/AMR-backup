@@ -1,0 +1,11 @@
+{
+  "status": "FAIL_TELEMETRY_INVARIANT_VIOLATION",
+  "valid_samples_count": 0,
+  "corrupt_lines_count": 10,
+  "elapsed_time_s": 0.499,
+  "observation_time_s": 0.0,
+  "rejection_reason": "MISSING_KEY_safety",
+  "evidence_file": "/home/khangho/evidence_preflight_live/preflight_raw_evidence_1790868029770_2625_0.json",
+  "first_sample": null,
+  "last_sample": null
+}

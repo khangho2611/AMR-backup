@@ -1,0 +1,266 @@
+--- agv_unified_brain.py.before
++++ agv_unified_brain.py
+@@ -165,7 +165,8 @@
+             self.ser.dtr = False
+             self.ser.port = SERIAL_PORT
+             self.ser.open()
+-            self.control = CommandSession(self.ser,motion_window_s=motion_window_s_config,require_transport_sync=True)
++            self.control = CommandSession(self.ser,motion_window_s=motion_window_s_config,require_transport_sync=True,
++                                          operator_idle_lease_s=2. if motion_window_s_config is None else 0.)
+             self.control.autonomy_allowed = False
+             self.control.arc_validator = self._forward_arc_clear
+             self.control.escape_validator = self._escape_clear
+@@ -267,14 +268,24 @@
+         except Exception as exc:
+             self.control.request_stop('READER_ERROR:' + type(exc).__name__,wait=False)
+ 
++    def _scan_unavailable(self, reason):
++        with self.control.lock:
++            self.control.scan_time=None
++            active=(self.control.armed or self.control.motion or self.control.arm_sent is not None)
++            needs_scan=self.control.autonomy_allowed is not False
++        with state.lock:
++            state.scan_mono=0.
++            state.explore_phase='CHỜ LIDAR: '+reason
++        if active and needs_scan:self.control.request_stop(reason,wait=False)
++
+     def scan_cb(self, msg):
+         if not self._fresh_ros_header(msg.header,.25):
+-            self.control.request_stop('STALE_SCAN_STAMP',wait=False)
++            self._scan_unavailable('STALE_SCAN_STAMP')
+             return
+         if (not finite(msg.angle_min) or not finite(msg.angle_increment) or msg.angle_increment == 0 or
+                 not finite(msg.range_min) or not finite(msg.range_max) or msg.range_min < 0 or
+                 msg.range_max <= msg.range_min):
+-            self.control.request_stop('INVALID_SCAN', wait=False)
++            self._scan_unavailable('INVALID_SCAN')
+             return
+         angle = msg.angle_min
+         step = msg.angle_increment
+@@ -292,14 +303,7 @@
+                 if stamp and not 0 <= self.get_clock().now().nanoseconds*1e-9-stamp <= .25:
+                     raise ValueError('Stale scan TF')
+             except Exception:
+-                with self.control.lock:
+-                    active=self.control.armed or self.control.motion or self.control.arm_sent is not None
+-                    self.control.scan_time=None
+-                with state.lock:
+-                    state.scan_mono=0.
+-                    state.explore_phase='CHỜ TRANSFORM LIDAR'
+-                if active:
+-                    self.control.request_stop('MISSING_SCAN_TF',wait=False)
++                self._scan_unavailable('MISSING_SCAN_TF')
+                 return
+         if hasattr(self,'pub_slam_scan'):
+             import copy
+@@ -307,7 +311,7 @@
+             try:
+                 filtered.ranges = slam_censored_ranges(msg.ranges,msg.range_min,msg.range_max)
+             except ValueError:
+-                self.control.request_stop('INVALID_SLAM_SCAN_LIMITS',wait=False)
++                self._scan_unavailable('INVALID_SLAM_SCAN_LIMITS')
+                 return
+             self.pub_slam_scan.publish(filtered)
+         points = [0.0] * 360
+@@ -436,24 +440,57 @@
+         self.blocked_regions = []
+         self.progress = deque()
+         self._planner_key,self._planner = None,None
++        self._planners = {}
+         self._home_stop_sent = False
+-
+-    def _grid(self):
++        self._cautious = False
++        self._normal_clear_since = None
++
++    def _grid(self, margin=None):
+         with state.lock:
+             now = time.monotonic()
+             if not state.map_received or not 0 <= now-state.map_mono <= 2.:
+                 return None
+-            key = (state.map_version,state.body_radius_m,state.wall_margin_m)
++            if margin is None:
++                margin = .03 if getattr(self,'_cautious',False) else state.wall_margin_m
++            key = (state.map_version,state.body_radius_m,margin)
+             args = (state.map_width,state.map_height,state.map_resolution,
+                     (state.map_origin_x,state.map_origin_y,state.map_origin_yaw),
+-                    tuple(state.map_data),state.body_radius_m,state.wall_margin_m)
+-        if getattr(self,'_planner_key',None) != key:
++                    tuple(state.map_data),state.body_radius_m,margin)
++        cache=getattr(self,'_planners',{})
++        cache={k:p for k,p in cache.items() if k[:2]==key[:2]}
++        if key not in cache:
+             try:
+                 planner = GridPlanner(*args, budget_s=.05)
+             except (ValueError,TypeError,TimeoutError):
+                 return None
+-            self._planner_key,self._planner = key,planner
+-        return self._planner
++            cache[key]=planner
++        self._planners=cache
++        self._planner_key,self._planner=key,cache[key]
++        return cache[key]
++
++    def _enter_cautious(self, pose):
++        """Yellow corridor: keep the enclosing body, reduce only the slow buffer."""
++        if getattr(self,'_cautious',False):return False
++        grid = self._grid(margin=.03)
++        if grid is None or not grid.swept_clear(pose,0.,0.):return False
++        self._cautious=True
++        self._normal_clear_since=None
++        self.blocked_regions=[]
++        self.progress.clear()
++        with state.lock:state.explore_phase='VÙNG VÀNG: đi chậm theo khoảng trống đủ thân xe'
++        return True
++
++    def _restore_normal_clearance(self, pose):
++        if not getattr(self,'_cautious',False):return
++        grid=self._grid(margin=state.wall_margin_m)
++        # Require room ahead as well as the current footprint, with hysteresis.
++        clear=grid is not None and grid.swept_clear(pose,.20,0.)
++        now=time.monotonic()
++        if not clear:self._normal_clear_since=None
++        elif self._normal_clear_since is None:self._normal_clear_since=now
++        elif now-self._normal_clear_since>=2.:
++            self._cautious=False
++            self._normal_clear_since=None
+ 
+     def plan_astar_path(self, rx,ry,gx,gy):
+         grid = self._grid()
+@@ -491,14 +528,25 @@
+             return None
+ 
+     def _forward_arc_clear(self, v, w):
++        def failed(reason):
++            self._last_arc_reason=reason
++            if getattr(self,'control',None) is not None:
++                self.control._event('arc_rejected',reason=reason,v=v,w=w)
++            return False
++        self._last_arc_reason=None
++        if getattr(self,'_cautious',False) and finite(v) and v>.040001:
++            return failed('CAUTIOUS_SPEED_LIMIT')
+         grid,pose=self._grid(),self._pose_map()
+-        if grid is None or pose is None or not finite(v) or v <= 0:return False
++        if grid is None or pose is None:return failed('MAP_OR_TF_UNAVAILABLE')
++        if not finite(v) or v <= 0:return failed('INVALID_TWIST')
+         with state.lock:
+             epoch=(state.map_version,state.map_frame,state.body_radius_m,state.wall_margin_m,state.scan_mono)
+             points=list(state.ranges)
+-            if not 0 <= time.monotonic()-state.scan_mono <= .25:return False
++            if not 0 <= time.monotonic()-state.scan_mono <= .25:return failed('SCAN_STALE')
+         samples=twist_centres(v,w)
+-        if samples is None or not grid.swept_clear(pose,v,w):return False
++        if samples is None:return failed('INVALID_TWIST')
++        clear,reason=grid.swept_clear_result(pose,v,w)
++        if not clear:return failed(reason)
+         centres,padding=samples
+         # Map and fresh scan must both clear the moving enclosing body. Missing
+         # rear bins are not invented as free rays: the full footprint there
+@@ -509,11 +557,12 @@
+             px,py=d*math.cos(angle),d*math.sin(angle)
+             # Account for the half-degree rounding used by scan_cb.
+             radius=grid.radius+padding+d*math.sin(math.radians(.5))
+-            if any(math.hypot(px-x,py-y) <= radius for x,y in centres):return False
+-        with state.lock:
+-            return (epoch==(state.map_version,state.map_frame,state.body_radius_m,state.wall_margin_m,state.scan_mono)
++            if any(math.hypot(px-x,py-y) <= radius for x,y in centres):return failed('SCAN_BODY_CLEARANCE')
++        with state.lock:
++            valid=(epoch==(state.map_version,state.map_frame,state.body_radius_m,state.wall_margin_m,state.scan_mono)
+                     and 0 <= time.monotonic()-state.scan_mono <= .25
+                     and 0 <= time.monotonic()-state.map_mono <= 2.)
++        return True if valid else failed('INPUT_CHANGED_DURING_SWEEP')
+ 
+     def _escape_clear(self, v, w):
+         grid,pose=self._grid(),self._pose_map()
+@@ -598,6 +647,8 @@
+         self.progress.clear()
+ 
+     def _follow(self, pose, goal):
++        self._last_arc_reason=None
++        self._follow_transient=False
+         grid = self._grid()
+         path = None if grid is None else grid.path(pose[:2],goal)
+         if not path:
+@@ -619,6 +670,7 @@
+         w = max(-.35,min(.35,error))
+         v = 0. if abs(error) > .25 else min(state.cruise_speed_mps,
+                   math.hypot(dx,dy)/.5,math.hypot(goal[0]-pose[0],goal[1]-pose[1])/.5)
++        if getattr(self,'_cautious',False):v=min(v,.04)
+         if v == 0 and abs(w) > 0 and not self._rotation_clear():
+             # Prefer a slow, geometrically checked escape over a blind spin.
+             # The writer repeats this validation with fresh map/TF/scan.
+@@ -632,7 +684,16 @@
+                 if getattr(self,'control',None) is not None:
+                     self.control._event('navigation_blocked',reason='NO_SAFE_FORWARD_SWEEP',pose=pose,goal=goal)
+                 return False
+-        return self.send_cmd(f'V {v:.3f} {w:.3f}',autonomous=True)[0]
++        ok=self.send_cmd(f'V {v:.3f} {w:.3f}',autonomous=True)[0]
++        if ok:return True
++        if getattr(self,'_last_arc_reason',None) in ('INPUT_CHANGED_DURING_SWEEP','SWEEP_BUDGET','SCAN_STALE','MAP_OR_TF_UNAVAILABLE'):
++            self._follow_transient=True
++            return False
++        # An A* segment can be valid while a curved shortcut cuts its corner.
++        # Align inside the current cleared footprint before advancing again.
++        if v>0 and abs(error)>.04 and self._rotation_clear():
++            return self.send_cmd(f'V 0.000 {math.copysign(.35,error):.3f}',autonomous=True)[0]
++        return False
+ 
+     def _rotation_clear(self):
+         with state.lock:
+@@ -641,7 +702,7 @@
+             age = time.monotonic()-state.scan_mono
+         returns=[p for p in points if finite(p) and 0<p<16.]
+         if not (radius is not None and 0<=age<=.25 and len(returns)>=30 and
+-                min(returns)>radius+.15):return False
++                min(returns)>radius+(.03 if getattr(self,'_cautious',False) else state.wall_margin_m)):return False
+         grid,pose=self._grid(),self._pose_map()
+         # A missing rounded radar bin is not an obstacle. The complete known-
+         # free map footprint covers those directions; unknown cells still block.
+@@ -668,8 +729,15 @@
+         if self.home is None:
+             self.home = pose
+             self.explore_state = 'EXPLORING'
++        self._restore_normal_clearance(pose)
++        grid=self._grid()
++        if grid is None:
++            self._hold('HOLD: chờ bản đồ mới')
++            return
+         if not grid.traversable(grid.world_to_cell(*pose[:2])) or not grid.swept_clear(pose,0.,0.):
+-            if not self._try_escape():
++            if self._enter_cautious(pose):
++                self._hold('VÙNG VÀNG: chọn đường chậm đủ thân xe')
++            elif not self._try_escape():
+                 self._hold('HOLD: chưa có đường thoát vùng đỏ đủ thân xe')
+             return
+         now = time.monotonic()
+@@ -696,6 +764,7 @@
+                     self.explore_state = 'WAIT_STOP'
+                 return
+             if not self._follow(pose,self.home[:2]):
++                self._enter_cautious(pose)
+                 self._hold('HOLD: chưa có đường an toàn về home')
+             return
+         if self.goal is None or math.hypot(pose[0]-self.goal[0],pose[1]-self.goal[1]) < .06:
+@@ -704,6 +773,9 @@
+             self.goal = self.find_best_frontier(*pose[:2])
+             self.progress.clear()
+         if self.goal is None:
++            if self._enter_cautious(pose):
++                self._hold('VÙNG VÀNG: tìm frontier qua hành lang hẹp')
++                return
+             with state.lock:
+                 remaining = state.frontier_reachable
+             if remaining == 0:
+@@ -716,6 +788,12 @@
+             state.target_goal_x,state.target_goal_y = self.goal
+             state.explore_phase = 'EXPLORING: bám đường A* known-free'
+         if not self._follow(pose,self.goal):
++            if getattr(self,'_follow_transient',False):
++                self._hold('CHỜ MẪU MỚI: '+str(getattr(self,'_last_arc_reason','INPUT_CHANGED')))
++                return
++            if self._enter_cautious(pose):
++                self._hold('VÙNG VÀNG: giữ mục tiêu, tính lại đường chậm')
++                return
+             self._exclude_goal(now)
+             self._hold('Đổi mục tiêu: đường bị chặn hoặc dữ liệu không hợp lệ')
+ 

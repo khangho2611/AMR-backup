@@ -1,0 +1,4 @@
+#|
+$JSON
+{"authURL":["ai2a.appinventor.mit.edu"],"YaVersion":"237","Source":"Form","Properties":{"$Name":"Screen1","$Type":"Form","$Version":"32","ActionBar":"True","AppName":"BT7","Title":"Screen1","Uuid":"0","$Components":[{"$Name":"Label1","$Type":"Label","$Version":"6","FontSize":"28","Width":"-2","Text":"00:00.0","TextAlignment":"1","Uuid":"525837133"},{"$Name":"HorizontalArrangement1","$Type":"HorizontalArrangement","$Version":"4","Uuid":"2040660098","$Components":[{"$Name":"Button1","$Type":"Button","$Version":"8","Text":"Start","Uuid":"1908197618"},{"$Name":"Button2","$Type":"Button","$Version":"8","Text":"Stop","Uuid":"1025798856"},{"$Name":"Button3","$Type":"Button","$Version":"8","Text":"Reset","Uuid":"1172142330"}]},{"$Name":"Clock1","$Type":"Clock","$Version":"4","TimerInterval":"100","Uuid":"-484945611"}]}}
+|#

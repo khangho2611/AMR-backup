@@ -1,0 +1,167 @@
+{
+  "time_local": "2026-10-02T13:59:03.112600",
+  "timezone": "Asia/Bangkok",
+  "source_SHA_before": "7953bef2af04338fc61d89dde3537b142103b952fdc7dfa814b6296684238bf1",
+  "source_SHA_after": "7953bef2af04338fc61d89dde3537b142103b952fdc7dfa814b6296684238bf1",
+  "hardware_OPEN_TX": false,
+  "ROS": false,
+  "clock": "real/unscaled",
+  "scope": "actual main-reader-HTTP-watchdog + components; NOT full typed/preflight acceptance",
+  "fixes_limited": {
+    "stale_drive_rejected": [
+      false,
+      "REJECTED_STALE_TELEMETRY"
+    ],
+    "partial_drive_FAULT_latched": [
+      false,
+      "PARTIAL_WRITE_FAULT: 1/10"
+    ],
+    "cmd_STOP_noUART_failure_exposed": {
+      "codes": [
+        500
+      ],
+      "body": "{\"status\": \"PARTIAL_FAULT\", \"action\": \"STOP_LATCHED\", \"reason\": \"SERIAL_PORT_UNAVAILABLE\"}"
+    },
+    "PID_firmware_error_immediate": [
+      [
+        "REJECTED",
+        "INVALID_TUNING_RANGE"
+      ]
+    ],
+    "late_ACK_no_active_tx_ignored": true,
+    "actual_main_manual_watchdog_no_SCAN_STOP": {
+      "reply": {
+        "status": 200,
+        "body": "{\"status\": \"ok\", \"cmd\": \"V 0.08 0\"}"
+      },
+      "tx": [
+        {
+          "mono": 366284.156,
+          "line": "ARM",
+          "expected": 5,
+          "written": 5
+        },
+        {
+          "mono": 366284.187,
+          "line": "V 0.08 0",
+          "expected": 10,
+          "written": 10
+        },
+        {
+          "mono": 366284.203,
+          "line": "STOP",
+          "expected": 6,
+          "written": 6
+        }
+      ],
+      "fault": null,
+      "last_scan_mono": 0.0
+    },
+    "main_NORMAL_return_closes_fakeUART_stops_running": {
+      "errors": [],
+      "note": "QA explicitly joins/ closes HTTP listener afterwards; no product join/deadline acceptance"
+    }
+  },
+  "residuals": {
+    "release_fresh_ARMED_zero_allowed": [
+      true,
+      "LATCH_RELEASED"
+    ],
+    "minimal_D0_defaults_missing_fields_can_release": {
+      "release": [
+        true,
+        "LATCH_RELEASED"
+      ],
+      "count": 1
+    },
+    "partial_fault_latch_without_STOP_then_watchdog_skips": {
+      "tx": [
+        {
+          "mono": 366283.828,
+          "line": "V 0.04 0",
+          "expected": 10,
+          "written": 10
+        },
+        {
+          "mono": 366283.828,
+          "line": "V 0.08 0",
+          "expected": 10,
+          "written": 1
+        }
+      ],
+      "result": [
+        false,
+        "PARTIAL_WRITE_FAULT: 1/10"
+      ],
+      "latch": true,
+      "is_moving": true,
+      "scope": "mock commands; NOT MCU watchdog/physical STOP"
+    },
+    "nonempty_bad_map_and_failed_STOP_completed": {
+      "mid": "RETURNING_HOME",
+      "final": "COMPLETED",
+      "map_len": 1,
+      "expected_map_len": 4,
+      "UART": false,
+      "postSTOP_D0": false
+    },
+    "auto_STOP_noUART_false_ok": {
+      "codes": [
+        200
+      ],
+      "body": "{\"status\": \"ok\", \"auto\": false}"
+    },
+    "history_CSV_unquoted_reason_columns": {
+      "header_columns": 8,
+      "mismatch_row_columns": 15,
+      "row": [
+        "3",
+        "13:59:02",
+        "0.5",
+        "1.5",
+        "0.0",
+        "0.45",
+        "REJECTED",
+        "ACK_MISMATCH: expected (0.5",
+        " 1.5",
+        " 0.0",
+        " 0.45)",
+        " got (19.0",
+        " 49.0",
+        " 4.0",
+        " 4.0)"
+      ]
+    },
+    "frontier_selected_with_body_overlap_unknown": {
+      "goal": [
+        1.55,
+        1.0
+      ],
+      "path_count": 27,
+      "frontier_count": 32,
+      "unknown_nearest_distance_m": 0.050000000000000044,
+      "radius_m": 0.16
+    },
+    "new_source_footprint_provenance_unverified": {
+      "source_lines": "33-35",
+      "claimed_width_m": 0.2425,
+      "claimed_length_m": 0.28,
+      "claimed_radius_m": 0.16,
+      "rectangle_corner_radius_m": 0.1852068100799752,
+      "note": "source newly labels MEASURED; no new human measurement in DB10611-10635; Word track is not body"
+    },
+    "actual_main_ARM_before_ANY_preflight_without_ACK": {
+      "reply": {
+        "status": 200,
+        "body": "{\"status\": \"ok\", \"action\": \"ARMED\"}"
+      },
+      "count_before": 0,
+      "count_after": 1,
+      "elapsed_s": 0.030999999959021807,
+      "startup_raw_diagnostic": false,
+      "ARM_ACK_received": false,
+      "boot_session": null,
+      "scope": "actual main/reader/HTTP with FakeUART; no hardware, no full typed-stream acceptance"
+    }
+  }
+}

@@ -1,0 +1,8 @@
+test_auto_rejection_returns_each_blocker_and_saves_the_exact_response (test_agv_brain_integration.BrainIntegration.test_auto_rejection_returns_each_blocker_and_saves_the_exact_response) ... ok
+test_observe_only_arm_rejection_is_journaled_without_uart_write (test_agv_brain_integration.BrainIntegration.test_observe_only_arm_rejection_is_journaled_without_uart_write) ... ok
+test_observe_mode_http_rejects_arm_drive_pid_auto_before_dispatch (test_agv_startup_lifecycle.Lifecycle.test_observe_mode_http_rejects_arm_drive_pid_auto_before_dispatch) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 1.756s
+
+OK

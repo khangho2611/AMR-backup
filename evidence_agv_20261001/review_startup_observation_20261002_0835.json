@@ -1,0 +1,64 @@
+{
+  "scope": "OFFLINE actual CLI, fake stream/clock, minobs10 same args; fresh observation after diagnostics",
+  "before": {
+    "agv_preflight_static_collector.py": "ca1c7390cad29c3f8d5812a4e0a38b7e5143fb05fce6e7d89e178060986785c3",
+    "agv_motion_supervisor_runner.py": "0b0ce17c2e1c7bc5de885103d6d1d92dd31f905797dfb3890a9f8b974a3b048d",
+    "agv_serial_arbiter_bridge_v3.py": "6f4a2106622e99fe60212199b621cdcbbd2a76b2e639519796b15d5a703e3d1d"
+  },
+  "after": {
+    "agv_preflight_static_collector.py": "ca1c7390cad29c3f8d5812a4e0a38b7e5143fb05fce6e7d89e178060986785c3",
+    "agv_motion_supervisor_runner.py": "0b0ce17c2e1c7bc5de885103d6d1d92dd31f905797dfb3890a9f8b974a3b048d",
+    "agv_serial_arbiter_bridge_v3.py": "6f4a2106622e99fe60212199b621cdcbbd2a76b2e639519796b15d5a703e3d1d"
+  },
+  "cases": [
+    {
+      "id": "C9_pre_diagnostic_D0_included_in_span",
+      "expected_exit": 1,
+      "actual_exit": 0,
+      "meets_expectation": false,
+      "report": {
+        "status": "PASS_PREFLIGHT_VERIFIED",
+        "valid_samples_count": 120,
+        "corrupt_lines_count": 0,
+        "elapsed_time_s": 12.4,
+        "observation_time_s": 12.2,
+        "rejection_reason": null,
+        "evidence_file": "D:\\HoMinhKhang\\PROJECT\\GITHUB_PROJECT\\CODE XE TU HANH\\evidence_agv_20261001\\parent_startup_0835_giyop9sf\\preflight_raw_evidence_1790905068113_3864_0.json",
+        "first_sample": {
+          "safety": "DISARMED",
+          "mode": "PID",
+          "l_tgt": 0,
+          "r_tgt": 0,
+          "l_pwm": 0,
+          "r_pwm": 0,
+          "l_rpm": 0,
+          "r_rpm": 0,
+          "v": 0,
+          "w": 0,
+          "x": 0,
+          "y": 0,
+          "th": 0
+        },
+        "last_sample": {
+          "safety": "DISARMED",
+          "mode": "PID",
+          "l_tgt": 0,
+          "r_tgt": 0,
+          "l_pwm": 0,
+          "r_pwm": 0,
+          "l_rpm": 0,
+          "r_rpm": 0,
+          "v": 0,
+          "w": 0,
+          "x": 0,
+          "y": 0,
+          "th": 0
+        }
+      },
+      "post_diagnostic_D0_span": 9.899999999999437,
+      "tx": [],
+      "closed": true,
+      "evidence_file": "D:\\HoMinhKhang\\PROJECT\\GITHUB_PROJECT\\CODE XE TU HANH\\evidence_agv_20261001\\parent_startup_0835_giyop9sf\\preflight_raw_evidence_1790905068113_3864_0.json"
+    }
+  ]
+}

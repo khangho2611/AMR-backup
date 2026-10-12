@@ -1,0 +1,186 @@
+{
+  "time_local": "2026-10-02T13:36:31.895545",
+  "timezone": "Asia/Bangkok",
+  "source": "D:\\HoMinhKhang\\PROJECT\\GITHUB_PROJECT\\CODE XE TU HANH\\candidate_agv_unified_brain_v4.py",
+  "sha_before": "ecf2fabc531cb201729670c056851bb142255203a455e2d0f809445e8e059bc5",
+  "sha_after": "ecf2fabc531cb201729670c056851bb142255203a455e2d0f809445e8e059bc5",
+  "hardware_open_or_tx": false,
+  "ROS_started": false,
+  "scope": "offline actual v4 components/protocol/HTTP method; NOT full production lifecycle",
+  "assertions": "reproduction confirmed, not product passing",
+  "cases": {
+    "entry_exits_without_runtime": {
+      "exit_code": 0,
+      "stdout": "=== AGV OFFLINE BUNDLE V4.0 INITIALIZED ===\n",
+      "source_main": "print only; no UART reader, scheduler/watchdog, HTTP serve, ROS/TF startup"
+    },
+    "partial_stop_false_success": {
+      "send_raw_return": true,
+      "tx": [
+        {
+          "time": 364932.843,
+          "line": "STOP",
+          "expected": 6,
+          "written": 1
+        }
+      ]
+    },
+    "actual_safety_ignored_stale_arm_no_uart": {
+      "ack_state": "ARMED",
+      "actual_D0_safety": [
+        "DISARMED",
+        "FAULT"
+      ],
+      "parsed_state": "ARMED",
+      "uart_present": false,
+      "request_arm_return": true
+    },
+    "non_d0_refresh_nan": {
+      "pong_age_s": 0.0,
+      "mcu_state": "UNKNOWN",
+      "pose_nan_accepted": true
+    },
+    "obstacle_turn_before_home_capture": {
+      "tx": [
+        {
+          "time": 364932.843,
+          "line": "V 0.0 -0.40",
+          "expected": 13,
+          "written": 13
+        }
+      ],
+      "home_captured": false,
+      "mcu_state": "UNKNOWN"
+    },
+    "no_map_no_uart_false_completion": {
+      "map_received": false,
+      "intermediate": "RETURNING_HOME",
+      "final": "COMPLETED",
+      "auto": false,
+      "mcu_state": "UNKNOWN",
+      "uart_present": false,
+      "fresh_post_STOP_D0": false
+    },
+    "stale_stop_unlatched_then_motion": {
+      "tx": [
+        {
+          "time": 364932.843,
+          "line": "STOP",
+          "expected": 6,
+          "written": 6
+        },
+        {
+          "time": 364932.843,
+          "line": "V 0.0 -0.40",
+          "expected": 13,
+          "written": 13
+        }
+      ],
+      "auto": true,
+      "latched": false,
+      "fsm": "WATCHDOG_STALE_STOP"
+    },
+    "no_caller_no_independent_watchdog": {
+      "wait_s": 0.65,
+      "tx": [
+        {
+          "time": 364932.843,
+          "line": "V 0.08 0.0",
+          "expected": 12,
+          "written": 12
+        }
+      ],
+      "scan_and_D0_age_s": 0.6511619091033936,
+      "scope": "actual components without caller; NOT firmware-watchdog or physical STOP test"
+    },
+    "actual_nav_V_after_latched_STOP": {
+      "tx": [
+        {
+          "time": 364933.5,
+          "line": "STOP",
+          "expected": 6,
+          "written": 6
+        },
+        {
+          "time": 364933.515,
+          "line": "STOP",
+          "expected": 6,
+          "written": 6
+        },
+        {
+          "time": 364933.531,
+          "line": "STOP",
+          "expected": 6,
+          "written": 6
+        },
+        {
+          "time": 364933.531,
+          "line": "V 0.12 0.00",
+          "expected": 13,
+          "written": 13
+        }
+      ],
+      "actual_planner_result": [
+        [
+          [
+            1.55,
+            1.0
+          ],
+          40
+        ]
+      ],
+      "latched": true,
+      "auto": false,
+      "scheduling_seam_only": true,
+      "errors": []
+    },
+    "wrong_pid_readback_APPLIED": {
+      "request": [
+        0.5,
+        1.5,
+        0.0,
+        0.45
+      ],
+      "result": [
+        [
+          "APPLIED",
+          "TUNING 19.000 49.000 4.0000 4.000"
+        ]
+      ],
+      "tx": [
+        {
+          "time": 364933.531,
+          "line": "TUNING 0.500 1.500 0.0000 0.450",
+          "expected": 33,
+          "written": 33
+        }
+      ],
+      "current_gains": {
+        "kp": 0.5,
+        "ki": 1.5,
+        "kd": 0.01,
+        "kf": 0.45
+      },
+      "history_count": 0
+    },
+    "http_drive_no_uart_false_ok": {
+      "reply": {
+        "http": [
+          200
+        ],
+        "body": "{\"status\":\"ok\"}"
+      },
+      "mcu_state": "UNKNOWN"
+    },
+    "http_release_without_fresh_DISARMED": {
+      "reply": {
+        "http": [
+          200
+        ],
+        "body": "{\"status\":\"ok\"}"
+      },
+      "mcu_state": "UNKNOWN",
+      "latch_after": false
+    }
+  }
+}

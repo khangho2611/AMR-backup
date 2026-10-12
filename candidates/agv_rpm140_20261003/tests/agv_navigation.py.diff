@@ -1,0 +1,30 @@
+--- D:\HoMinhKhang\PROJECT\GITHUB_PROJECT\CODE XE TU HANH\agv_navigation.py
++++ D:\HoMinhKhang\PROJECT\GITHUB_PROJECT\CODE XE TU HANH\candidates\agv_rpm140_20261003\agv_navigation.py
+@@ -8,6 +8,7 @@
+ import math
+ import time
+ from collections import deque
++from agv_speed_profile import MAX_LINEAR_MPS
+ 
+ 
+ def finite(value):
+@@ -21,15 +22,17 @@
+             max(math.hypot(x,y) for x in (bounds[0],bounds[2]) for y in (bounds[1],bounds[3]))<=radius+1e-9)
+ 
+ 
+-def twist_centres(v, w, horizon=.5, spatial_step=.005):
++def twist_centres(v, w, horizon=None, spatial_step=.005):
+     """Sample the centre's constant-twist path in the current base frame.
+ 
+     Half the distance between samples is added to the enclosing footprint by
+     callers, so an obstacle between samples cannot be skipped. This is a local
+     command horizon, not a measured physical braking-distance guarantee.
+     """
++    if horizon is None:
++        horizon = 1. if finite(v) and abs(v) > .20 else .5
+     if (not all(finite(x) for x in (v,w,horizon,spatial_step)) or
+-            abs(v) > .20 or abs(w) > .35 or not 0 < horizon <= .5 or spatial_step <= 0):
++            abs(v) > MAX_LINEAR_MPS or abs(w) > .35 or not 0 < horizon <= 1. or spatial_step <= 0):
+         return None
+     steps=max(1,math.ceil(abs(v)*horizon/spatial_step))
+     if steps > 1000:return None

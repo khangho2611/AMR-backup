@@ -1,0 +1,99 @@
+{
+  "archive": "C:\\Users\\Khang\\Downloads\\robot_stm32_f103.zip",
+  "archive_sha256": "4078ffb4f166833366187a2ae3fe4b6f0e49dc4fdfb7a8973e4aafc6a419341c",
+  "files": [
+    {
+      "archive_name": "robot_stm32_f103/platformio.ini",
+      "saved": "evidence_agv_20261001\\codex_pin_audit_20261002_200807\\zip_source\\platformio.ini",
+      "zip_sha256": "af6f299bf651ce04925e1c8c2545635b8c7fe898b2c327603aa4a8b6e0b4c47c",
+      "local_sha256": "af6f299bf651ce04925e1c8c2545635b8c7fe898b2c327603aa4a8b6e0b4c47c"
+    },
+    {
+      "archive_name": "robot_stm32_f103/src/main.cpp",
+      "saved": "evidence_agv_20261001\\codex_pin_audit_20261002_200807\\zip_source\\src\\main.cpp",
+      "zip_sha256": "ad0e263076bdc8738fe8c4e4a107d20a8855ebe9dbe56cf130db19eb341d2db4",
+      "local_sha256": "52ccb6c7646a075087e274b09e8e228ef2364cf000623bb66377b2181bdfe231"
+    },
+    {
+      "archive_name": "robot_stm32_f103/include/robot_motor.h",
+      "saved": "evidence_agv_20261001\\codex_pin_audit_20261002_200807\\zip_source\\include\\robot_motor.h",
+      "zip_sha256": "c1874640377abc56ca57c17ba8be2f3e1086c2610d07f0d8f2b7bdee3f4faf0a",
+      "local_sha256": "c1874640377abc56ca57c17ba8be2f3e1086c2610d07f0d8f2b7bdee3f4faf0a"
+    },
+    {
+      "archive_name": "robot_stm32_f103/src/robot_motor.cpp",
+      "saved": "evidence_agv_20261001\\codex_pin_audit_20261002_200807\\zip_source\\src\\robot_motor.cpp",
+      "zip_sha256": "982b250bdbbde8620db54111e98ec819639a30657e25d0a2b9c71535027d336c",
+      "local_sha256": "982b250bdbbde8620db54111e98ec819639a30657e25d0a2b9c71535027d336c"
+    },
+    {
+      "archive_name": "robot_stm32_f103/include/encoder.h",
+      "saved": "evidence_agv_20261001\\codex_pin_audit_20261002_200807\\zip_source\\include\\encoder.h",
+      "zip_sha256": "f340cde32afbc1d7064b45045f614761fb9cc8c5b03a88f43b32e97fdc241591",
+      "local_sha256": "f340cde32afbc1d7064b45045f614761fb9cc8c5b03a88f43b32e97fdc241591"
+    },
+    {
+      "archive_name": "robot_stm32_f103/src/encoder.cpp",
+      "saved": "evidence_agv_20261001\\codex_pin_audit_20261002_200807\\zip_source\\src\\encoder.cpp",
+      "zip_sha256": "7fc55c49ad71cbd01e0e0b040d2e77d15c2955d021ffa87ca865841354b631cb",
+      "local_sha256": "7fc55c49ad71cbd01e0e0b040d2e77d15c2955d021ffa87ca865841354b631cb"
+    },
+    {
+      "archive_name": "robot_stm32_f103/include/mke_m18.h",
+      "saved": "evidence_agv_20261001\\codex_pin_audit_20261002_200807\\zip_source\\include\\mke_m18.h",
+      "zip_sha256": "f0a3d64c3d166174db700b5948dbaf05022bfa6e538afc80721bd55bd98b4e8c",
+      "local_sha256": "15e7cfa33db6a3d4d82d5d22e9e4a4acf9048f9c0ac16a0bc429b5a5839c74a8"
+    },
+    {
+      "archive_name": "robot_stm32_f103/src/mke_m18.cpp",
+      "saved": "evidence_agv_20261001\\codex_pin_audit_20261002_200807\\zip_source\\src\\mke_m18.cpp",
+      "zip_sha256": "dc172ffcaca43a0b175d09df92a980d2051ac53d43037cf8a746eea0033a6460",
+      "local_sha256": "e4ad100ff15c60aae3d27e166476499cdfdd5a82f8526d2ea5440acb492374b0"
+    },
+    {
+      "archive_name": "robot_stm32_f103/src/mpu6050.cpp",
+      "saved": "evidence_agv_20261001\\codex_pin_audit_20261002_200807\\zip_source\\src\\mpu6050.cpp",
+      "zip_sha256": "7dbdb84b414cd24929ae3cfa6156fa62168fcae7f873f26586a9069389cd36ba",
+      "local_sha256": null
+    },
+    {
+      "archive_name": "robot_stm32_f103/Core/Src/main.c",
+      "saved": "evidence_agv_20261001\\codex_pin_audit_20261002_200807\\zip_source\\Core\\Src\\main.c",
+      "zip_sha256": "e91481ed34cc1289310db4eeaeed99e214227cf05423c295c99d3d93998fc163",
+      "local_sha256": null
+    },
+    {
+      "archive_name": "robot_stm32_f103/Core/Src/robot_motor.c",
+      "saved": "evidence_agv_20261001\\codex_pin_audit_20261002_200807\\zip_source\\Core\\Src\\robot_motor.c",
+      "zip_sha256": "860aea187cad13f91c0bfc2d6e24cabed12a7a369753281a350def7ec2c4f2b7",
+      "local_sha256": null
+    },
+    {
+      "archive_name": "robot_stm32_f103/Core/Src/stm32f1xx_hal_msp.c",
+      "saved": "evidence_agv_20261001\\codex_pin_audit_20261002_200807\\zip_source\\Core\\Src\\stm32f1xx_hal_msp.c",
+      "zip_sha256": "63229680026aafb125a66b32ee319d9c35373dcb19c0024e9261a93f9e130063",
+      "local_sha256": null
+    }
+  ],
+  "zip_pins": {
+    "PIN_I2C_SDA": 21,
+    "PIN_I2C_SCL": 22,
+    "PIN_MPU_SDA_P": 16,
+    "PIN_MPU_SCL_P": 17,
+    "PIN_ENC_LEFT_A": 18,
+    "PIN_ENC_LEFT_B": 19,
+    "PIN_ENC_RIGHT_A": 25,
+    "PIN_ENC_RIGHT_B": 26
+  },
+  "local_pins": {
+    "PIN_I2C_SDA": 21,
+    "PIN_I2C_SCL": 22,
+    "PIN_ENC_LEFT_A": 18,
+    "PIN_ENC_LEFT_B": 19,
+    "PIN_ENC_RIGHT_A": 25,
+    "PIN_ENC_RIGHT_B": 26
+  },
+  "motor_encoder_pins_match": true,
+  "checks": "ESP32 default build and all six motor/encoder GPIO declarations match",
+  "local_firmware_bin_sha256": "f5bf29a16ea297d746e7a18f14f66cd6bb2dab4d47b8a474a9e11aa956505050"
+}

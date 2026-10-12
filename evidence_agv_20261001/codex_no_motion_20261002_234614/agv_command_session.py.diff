@@ -1,0 +1,74 @@
+--- before/agv_command_session.py
++++ after/agv_command_session.py
+@@ -40,6 +40,9 @@
+         self.scan_time = None
+         self.scan_clear = False
+         self.rotation_clear = False
++        # Bound by the ROS node to fresh map/TF/scan geometry. Front clearance
++        # alone cannot authorize an arc whose body sweeps sideways.
++        self.arc_validator = None
+         self.latched = True
+         self.fault = None
+         self.generation = 0
+@@ -62,6 +65,7 @@
+         self.settling_lines = 0
+         # In-memory only: UART/watchdog paths never wait on disk or network IO.
+         self.events = deque(maxlen=256)
++        self.command_events = deque(maxlen=512)
+         self.event_sequence = 0
+         self.first_fault = None
+         self.first_fault_events = None
+@@ -72,6 +76,7 @@
+             event = dict(sequence=self.event_sequence, mono=self.clock(), kind=kind,
+                          generation=self.generation, stop_op=self.stop_op, **details)
+             self.events.append(event)
++            if kind != 'rx_d0':self.command_events.append(event)
+             return event
+ 
+     def _ages(self, now):
+@@ -82,7 +87,8 @@
+     def diagnostics(self):
+         with self.lock:
+             return copy.deepcopy(dict(event_capacity=self.events.maxlen,
+-                events=list(self.events), first_fault=self.first_fault,
++                events=list(self.events), command_event_capacity=self.command_events.maxlen,
++                command_events=list(self.command_events), first_fault=self.first_fault,
+                 first_fault_events=self.first_fault_events or []))
+ 
+     def _drive_result(self, command, accepted, reason, blockers=()):
+@@ -280,17 +286,23 @@
+             self.request_stop('WRITER_BUSY',wait=False)
+             return self._drive_result(command, False, 'WRITER_BUSY')
+         try:
++            is_arc = parts[0] == 'V' and values[0] > 0 and values[1] != 0
++            arc_ok = False
++            if is_arc:
++                # No state lock across geometry/TF work: STOP must be able to
++                # cancel this generation while it waits for the sole writer.
++                try:
++                    arc_ok = self.arc_validator is not None and self.arc_validator(*values) is True
++                except Exception as exc:
++                    self._event('arc_validation_error',error=type(exc).__name__)
+             with self.lock:
+                 now = self.clock()
+                 if parts[0] == 'V':
+                     needs_forward = values[0] > 0
+-                    # A positive-velocity arc advances through the clear front
+-                    # cone; it does not rotate the chassis in place.  Keep the
+-                    # full 360-degree sweep gate for reverse and pure turns.
+                     needs_sweep = values[0] <= 0 and (values[0] < 0 or values[1] != 0)
+                 else:
+                     needs_forward = values[0] > 0 and values[1] > 0
+-                    needs_sweep = not needs_forward and any(v != 0 for v in values)
++                    needs_sweep = (not needs_forward or values[0] != values[1]) and any(v != 0 for v in values)
+                 checks = (
+                     ('LATCHED',self.latched), ('NOT_ARMED',not self.armed),
+                     ('FAULT',bool(self.fault)), ('CANCELLED_GENERATION',generation != self.generation),
+@@ -298,6 +310,7 @@
+                     ('D0_STALE',self.last_d0 is None or not 0 <= now-self.last_d0 <= .25),
+                     ('SCAN_STALE',self.scan_time is None or not 0 <= now-self.scan_time <= .25),
+                     ('FORWARD_NOT_CLEAR',needs_forward and not self.scan_clear),
++                    ('ARC_NOT_VALIDATED',is_arc and not arc_ok),
+                     ('SWEEP_NOT_CLEAR',needs_sweep and not self.rotation_clear))
+                 blockers = [name for name,blocked in checks if blocked]
+                 if blockers:

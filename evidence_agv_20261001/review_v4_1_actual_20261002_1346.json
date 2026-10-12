@@ -1,0 +1,277 @@
+{
+  "time_local": "2026-10-02T13:46:16.520195",
+  "timezone": "Asia/Bangkok",
+  "source": "D:\\HoMinhKhang\\PROJECT\\GITHUB_PROJECT\\CODE XE TU HANH\\candidate_agv_unified_brain_v4_1.py",
+  "sha_before": "4f6e15627c36f1631fe52ebdaa51874c9abf483a1c8ef1004e80ffffa6d0fced",
+  "sha_after": "4f6e15627c36f1631fe52ebdaa51874c9abf483a1c8ef1004e80ffffa6d0fced",
+  "hardware_OPEN_TX": false,
+  "ROS_started": false,
+  "scope": "actual components/parser/HTTP method/main wiring; no full production entry acceptance",
+  "fixes_limited": {
+    "safety_field_PONG_pose_NaN": true,
+    "write_guard_post_latch_V": {
+      "result": [
+        false,
+        "REJECTED_LATCHED_STOP"
+      ],
+      "tx": [
+        {
+          "line": "STOP",
+          "expected": 6,
+          "written": 6
+        },
+        {
+          "line": "STOP",
+          "expected": 6,
+          "written": 6
+        },
+        {
+          "line": "STOP",
+          "expected": 6,
+          "written": 6
+        }
+      ]
+    },
+    "partial_byte_count_reported": [
+      false,
+      "PARTIAL_WRITE_FAULT: 1/6"
+    ],
+    "independent_auto_watchdog_latches_STOP": {
+      "tx": [
+        {
+          "line": "STOP",
+          "expected": 6,
+          "written": 6
+        },
+        {
+          "line": "STOP",
+          "expected": 6,
+          "written": 6
+        },
+        {
+          "line": "STOP",
+          "expected": 6,
+          "written": 6
+        }
+      ],
+      "latched": true,
+      "auto": false
+    },
+    "home_before_obstacle_branch": true
+  },
+  "residuals": {
+    "None_write_count_success": {
+      "result": [
+        true,
+        "OK"
+      ],
+      "tx": [
+        {
+          "line": "STOP",
+          "expected": 6,
+          "written": 1
+        },
+        {
+          "line": "STOP",
+          "expected": 6,
+          "written": null
+        }
+      ]
+    },
+    "stale_ARM_D0_no_ACK_preflight_and_manualV": {
+      "arm": [
+        true,
+        "ARMED_CONFIRMED"
+      ],
+      "drive": [
+        true,
+        "OK"
+      ],
+      "tx": [
+        {
+          "line": "ARM",
+          "expected": 5,
+          "written": 5
+        },
+        {
+          "line": "V 0.12 0",
+          "expected": 10,
+          "written": 10
+        }
+      ],
+      "d0_age_s": 100.0,
+      "fresh_count": 1,
+      "auto": false
+    },
+    "partial_drive_failure_not_FAULT_latched": {
+      "failed": [
+        false,
+        "PARTIAL_WRITE_FAULT: 1/10"
+      ],
+      "state_after_failure": {
+        "latched": false,
+        "auto": false,
+        "fsm": "IDLE"
+      },
+      "next_drive": [
+        true,
+        "OK"
+      ],
+      "tx": [
+        {
+          "line": "V 0.12 0",
+          "expected": 10,
+          "written": 1
+        },
+        {
+          "line": "V 0.12 0",
+          "expected": 10,
+          "written": 10
+        }
+      ]
+    },
+    "release_ARMED_FAULT_stale_nonzero": {
+      "ARMED": [
+        true,
+        "LATCH_RELEASED"
+      ],
+      "FAULT": [
+        true,
+        "LATCH_RELEASED"
+      ],
+      "DISARMED": [
+        true,
+        "LATCH_RELEASED"
+      ]
+    },
+    "minimal_D0_defaultzero_nonfinite_RPM_badPWM": {
+      "minimal_count": 1,
+      "total_count": 2,
+      "l_rpm_NaN": true,
+      "r_rpm_inf": true,
+      "l_pwm": 9999,
+      "mcu_state": "ARMED"
+    },
+    "manual_drive_ignored_by_watchdog": {
+      "drive": [
+        true,
+        "OK"
+      ],
+      "tx": [
+        {
+          "line": "V 0.12 0",
+          "expected": 10,
+          "written": 10
+        }
+      ],
+      "auto": false,
+      "latched": false
+    },
+    "invalid_received_map_no_UART_completed": {
+      "intermediate": "RETURNING_HOME",
+      "final": "COMPLETED",
+      "map_received": true,
+      "map_width": 0,
+      "postSTOPD0": false,
+      "uart_present": false
+    },
+    "HTTP_STOP_no_uart_reports_ok": {
+      "codes": [
+        200
+      ],
+      "body": "{\"status\": \"ok\", \"action\": \"STOP_LATCHED\"}"
+    },
+    "PID_error_ignored_timeout_late_ACK_APPLIED": {
+      "request_return": [
+        [
+          "FAILED",
+          "TIMEOUT_NO_MCU_ACK"
+        ]
+      ],
+      "after_late_ack": "APPLIED",
+      "history": [
+        {
+          "time": "13:46:16",
+          "kp": 0.5,
+          "ki": 1.5,
+          "kd": 0.0,
+          "kf": 0.45,
+          "status": "APPLIED"
+        }
+      ]
+    },
+    "concurrent_PID_B_ACK_APPLIES_A": {
+      "requestA": [
+        0.5,
+        1.5,
+        0.0,
+        0.45
+      ],
+      "requestB": [
+        1,
+        2,
+        0.1,
+        0.6
+      ],
+      "returnA": [
+        [
+          "APPLIED",
+          "TUNING 1.000 2.000 0.1000 0.600"
+        ]
+      ],
+      "returnB": [
+        [
+          "APPLIED",
+          "TUNING 1.000 2.000 0.1000 0.600"
+        ]
+      ],
+      "tx": [
+        {
+          "line": "TUNING 0.500 1.500 0.0000 0.450",
+          "expected": 33,
+          "written": 33
+        },
+        {
+          "line": "TUNING 1.000 2.000 0.1000 0.600",
+          "expected": 33,
+          "written": 33
+        }
+      ],
+      "history": [
+        {
+          "time": "13:46:16",
+          "kp": 1.0,
+          "ki": 2.0,
+          "kd": 0.1,
+          "kf": 0.6,
+          "status": "APPLIED"
+        }
+      ]
+    },
+    "actual_main_no_UART_reader_TF_unjoined_threads": {
+      "server": [
+        {
+          "bind_argument": [
+            "0.0.0.0",
+            8080
+          ],
+          "handler": "SafeWebHandler"
+        },
+        {
+          "main_UART": null,
+          "fresh_d0_count": 0,
+          "map_received": false
+        },
+        {
+          "shutdown": true
+        }
+      ],
+      "threads_alive_after_main_return": [
+        true,
+        true
+      ],
+      "running_after_main_return": true,
+      "scope": "main wiring/cleanup seam FakeHTTP; NOT full lifecycle acceptance"
+    }
+  }
+}

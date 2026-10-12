@@ -1,0 +1,188 @@
+{
+  "captured": "2026-10-02T20:42:49.9240998+07:00",
+  "controller_pid": 23834,
+  "remote_dir": "/home/khangho/agv_codex_diag_20261002_201411",
+  "telemetry": {
+    "status": "WARNING",
+    "auto": false,
+    "control": {
+      "latched": true,
+      "armed": false,
+      "fault": null,
+      "motion_window_s": 15.0,
+      "trial_used": false,
+      "trial_remaining_s": null,
+      "d0_age_s": 0.041599146999942604,
+      "latest_d0": {
+        "safety": "DISARMED",
+        "mode": "PID",
+        "l_tgt": 0.0,
+        "r_tgt": 0.0,
+        "l_rpm": 0.0,
+        "r_rpm": 0.0,
+        "l_pwm": 0,
+        "r_pwm": 0,
+        "x": 0.0,
+        "y": 0.0,
+        "th": 0.0,
+        "v": 0.0,
+        "w": 0.0
+      },
+      "startup_stage": 3,
+      "preflight_count": 1787,
+      "preflight_ready": true,
+      "stop_op": 0,
+      "stop_confirmed": false,
+      "stop_write_ok": false,
+      "zero_observed": true,
+      "escalation": null
+    },
+    "robot": {
+      "x": 0.0,
+      "y": 0.0,
+      "th": 0.0,
+      "l_rpm": 0.0,
+      "r_rpm": 0.0,
+      "l_pwm": 0,
+      "r_pwm": 0
+    },
+    "map_info": {
+      "has_map": true,
+      "w": 86,
+      "h": 86,
+      "res": 0.05000000074505806,
+      "ox": -0.5975175732969231,
+      "oy": -3.0199324216118035,
+      "yaw": 0.0,
+      "frame": "map",
+      "frontiers": 0,
+      "reachable_frontiers": null,
+      "unknown_cells": null,
+      "goal_x": 0.0,
+      "goal_y": 0.0,
+      "phase": "IDLE"
+    }
+  },
+  "diagnostics": {
+    "event_capacity": 256,
+    "event_count": 256,
+    "first_fault": null,
+    "last_events": [
+      {
+        "sequence": 1797,
+        "mono": 9046.409069678,
+        "kind": "rx_d0",
+        "generation": 0,
+        "stop_op": 0,
+        "gap_s": 0.09968221300005098,
+        "packet": {
+          "safety": "DISARMED",
+          "mode": "PID",
+          "l_tgt": 0.0,
+          "r_tgt": 0.0,
+          "l_rpm": 0.0,
+          "r_rpm": 0.0,
+          "l_pwm": 0,
+          "r_pwm": 0,
+          "x": 0.0,
+          "y": 0.0,
+          "th": 0.0,
+          "v": 0.0,
+          "w": 0.0
+        }
+      },
+      {
+        "sequence": 1798,
+        "mono": 9046.508185984,
+        "kind": "rx_d0",
+        "generation": 0,
+        "stop_op": 0,
+        "gap_s": 0.09913080600017565,
+        "packet": {
+          "safety": "DISARMED",
+          "mode": "PID",
+          "l_tgt": 0.0,
+          "r_tgt": 0.0,
+          "l_rpm": 0.0,
+          "r_rpm": 0.0,
+          "l_pwm": 0,
+          "r_pwm": 0,
+          "x": 0.0,
+          "y": 0.0,
+          "th": 0.0,
+          "v": 0.0,
+          "w": 0.0
+        }
+      },
+      {
+        "sequence": 1799,
+        "mono": 9046.609245471,
+        "kind": "rx_d0",
+        "generation": 0,
+        "stop_op": 0,
+        "gap_s": 0.10106231999998272,
+        "packet": {
+          "safety": "DISARMED",
+          "mode": "PID",
+          "l_tgt": 0.0,
+          "r_tgt": 0.0,
+          "l_rpm": 0.0,
+          "r_rpm": 0.0,
+          "l_pwm": 0,
+          "r_pwm": 0,
+          "x": 0.0,
+          "y": 0.0,
+          "th": 0.0,
+          "v": 0.0,
+          "w": 0.0
+        }
+      },
+      {
+        "sequence": 1800,
+        "mono": 9046.708327111,
+        "kind": "rx_d0",
+        "generation": 0,
+        "stop_op": 0,
+        "gap_s": 0.09906647299976612,
+        "packet": {
+          "safety": "DISARMED",
+          "mode": "PID",
+          "l_tgt": 0.0,
+          "r_tgt": 0.0,
+          "l_rpm": 0.0,
+          "r_rpm": 0.0,
+          "l_pwm": 0,
+          "r_pwm": 0,
+          "x": 0.0,
+          "y": 0.0,
+          "th": 0.0,
+          "v": 0.0,
+          "w": 0.0
+        }
+      },
+      {
+        "sequence": 1801,
+        "mono": 9046.80977754,
+        "kind": "rx_d0",
+        "generation": 0,
+        "stop_op": 0,
+        "gap_s": 0.1014487630000076,
+        "packet": {
+          "safety": "DISARMED",
+          "mode": "PID",
+          "l_tgt": 0.0,
+          "r_tgt": 0.0,
+          "l_rpm": 0.0,
+          "r_rpm": 0.0,
+          "l_pwm": 0,
+          "r_pwm": 0,
+          "x": 0.0,
+          "y": 0.0,
+          "th": 0.0,
+          "v": 0.0,
+          "w": 0.0
+        }
+      }
+    ]
+  }
+}

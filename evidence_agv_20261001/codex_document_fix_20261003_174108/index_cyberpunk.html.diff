@@ -1,0 +1,14 @@
+--- index_cyberpunk.html.before
++++ index_cyberpunk.html
+@@ -502,7 +502,10 @@
+         const active = c.armed && !c.latched && !c.fault;
+         document.querySelectorAll('.dpad-btn[id]').forEach(b => { b.disabled = !active; });
+         const pidButton = document.querySelector('button[onclick="applyPidMini()"]');
+-        if (pidButton) pidButton.disabled = Boolean(c.armed || c.fault);
++        if (pidButton) {
++          pidButton.disabled = Boolean(c.armed || c.fault);
++          pidButton.title = c.armed ? 'Dừng xe bằng STOP để nạp PID xuống MCU qua Pi' : 'Nạp PID xuống MCU qua Pi; chờ xác nhận áp dụng';
++        }
+         const arm = document.getElementById('btnArm');
+         arm.disabled = !c.preflight_ready || Boolean(c.armed || c.fault);
+         arm.innerText = c.armed ? 'ĐÃ MỞ ĐIỀU KHIỂN' : c.fault ? 'ĐANG CÓ LỖI: ' + c.fault : c.preflight_ready ? 'MỞ ĐIỀU KHIỂN' : 'ĐANG KIỂM TRA XE';

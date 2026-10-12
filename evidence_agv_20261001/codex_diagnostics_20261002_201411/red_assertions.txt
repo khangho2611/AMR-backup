@@ -1,0 +1,77 @@
+test_bounded_history_keeps_first_fault_after_idle_stream_overwrites_ring (test_agv_diagnostics.DiagnosticRegression.test_bounded_history_keeps_first_fault_after_idle_stream_overwrites_ring) ... FAIL
+test_diagnostic_reads_cannot_mutate_control_or_emit_commands (test_agv_diagnostics.DiagnosticRegression.test_diagnostic_reads_cannot_mutate_control_or_emit_commands) ... FAIL
+test_partial_stop_is_recorded_as_partial_and_not_confirmed (test_agv_diagnostics.DiagnosticRegression.test_partial_stop_is_recorded_as_partial_and_not_confirmed) ... FAIL
+test_rejected_drive_records_blocker_without_hardware_write (test_agv_diagnostics.DiagnosticRegression.test_rejected_drive_records_blocker_without_hardware_write) ... FAIL
+test_rx_gap_is_captured_before_last_timestamp_is_updated (test_agv_diagnostics.DiagnosticRegression.test_rx_gap_is_captured_before_last_timestamp_is_updated) ... FAIL
+test_timeout_freezes_original_gap_and_transmitted_command (test_agv_diagnostics.DiagnosticRegression.test_timeout_freezes_original_gap_and_transmitted_command) ... FAIL
+
+======================================================================
+FAIL: test_bounded_history_keeps_first_fault_after_idle_stream_overwrites_ring (test_agv_diagnostics.DiagnosticRegression.test_bounded_history_keeps_first_fault_after_idle_stream_overwrites_ring)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "D:\HoMinhKhang\PROJECT\GITHUB_PROJECT\CODE XE TU HANH\tests\test_agv_diagnostics.py", line 65, in test_bounded_history_keeps_first_fault_after_idle_stream_overwrites_ring
+    original = self.report()['first_fault_events']
+               ^^^^^^^^^^^^^
+  File "D:\HoMinhKhang\PROJECT\GITHUB_PROJECT\CODE XE TU HANH\tests\test_agv_diagnostics.py", line 14, in report
+    self.assertTrue(hasattr(self.s, 'diagnostics'), 'Session must expose bounded read-only diagnostic history')
+AssertionError: False is not true : Session must expose bounded read-only diagnostic history
+
+======================================================================
+FAIL: test_diagnostic_reads_cannot_mutate_control_or_emit_commands (test_agv_diagnostics.DiagnosticRegression.test_diagnostic_reads_cannot_mutate_control_or_emit_commands)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "D:\HoMinhKhang\PROJECT\GITHUB_PROJECT\CODE XE TU HANH\tests\test_agv_diagnostics.py", line 88, in test_diagnostic_reads_cannot_mutate_control_or_emit_commands
+    report = self.report()
+             ^^^^^^^^^^^^^
+  File "D:\HoMinhKhang\PROJECT\GITHUB_PROJECT\CODE XE TU HANH\tests\test_agv_diagnostics.py", line 14, in report
+    self.assertTrue(hasattr(self.s, 'diagnostics'), 'Session must expose bounded read-only diagnostic history')
+AssertionError: False is not true : Session must expose bounded read-only diagnostic history
+
+======================================================================
+FAIL: test_partial_stop_is_recorded_as_partial_and_not_confirmed (test_agv_diagnostics.DiagnosticRegression.test_partial_stop_is_recorded_as_partial_and_not_confirmed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "D:\HoMinhKhang\PROJECT\GITHUB_PROJECT\CODE XE TU HANH\tests\test_agv_diagnostics.py", line 42, in test_partial_stop_is_recorded_as_partial_and_not_confirmed
+    tx = [e for e in self.report()['events'] if e['kind'] == 'tx'][-1]
+                     ^^^^^^^^^^^^^
+  File "D:\HoMinhKhang\PROJECT\GITHUB_PROJECT\CODE XE TU HANH\tests\test_agv_diagnostics.py", line 14, in report
+    self.assertTrue(hasattr(self.s, 'diagnostics'), 'Session must expose bounded read-only diagnostic history')
+AssertionError: False is not true : Session must expose bounded read-only diagnostic history
+
+======================================================================
+FAIL: test_rejected_drive_records_blocker_without_hardware_write (test_agv_diagnostics.DiagnosticRegression.test_rejected_drive_records_blocker_without_hardware_write)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "D:\HoMinhKhang\PROJECT\GITHUB_PROJECT\CODE XE TU HANH\tests\test_agv_diagnostics.py", line 56, in test_rejected_drive_records_blocker_without_hardware_write
+    event = self.report()['events'][-1]
+            ^^^^^^^^^^^^^
+  File "D:\HoMinhKhang\PROJECT\GITHUB_PROJECT\CODE XE TU HANH\tests\test_agv_diagnostics.py", line 14, in report
+    self.assertTrue(hasattr(self.s, 'diagnostics'), 'Session must expose bounded read-only diagnostic history')
+AssertionError: False is not true : Session must expose bounded read-only diagnostic history
+
+======================================================================
+FAIL: test_rx_gap_is_captured_before_last_timestamp_is_updated (test_agv_diagnostics.DiagnosticRegression.test_rx_gap_is_captured_before_last_timestamp_is_updated)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "D:\HoMinhKhang\PROJECT\GITHUB_PROJECT\CODE XE TU HANH\tests\test_agv_diagnostics.py", line 79, in test_rx_gap_is_captured_before_last_timestamp_is_updated
+    event = self.report()['events'][-1]
+            ^^^^^^^^^^^^^
+  File "D:\HoMinhKhang\PROJECT\GITHUB_PROJECT\CODE XE TU HANH\tests\test_agv_diagnostics.py", line 14, in report
+    self.assertTrue(hasattr(self.s, 'diagnostics'), 'Session must expose bounded read-only diagnostic history')
+AssertionError: False is not true : Session must expose bounded read-only diagnostic history
+
+======================================================================
+FAIL: test_timeout_freezes_original_gap_and_transmitted_command (test_agv_diagnostics.DiagnosticRegression.test_timeout_freezes_original_gap_and_transmitted_command)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "D:\HoMinhKhang\PROJECT\GITHUB_PROJECT\CODE XE TU HANH\tests\test_agv_diagnostics.py", line 26, in test_timeout_freezes_original_gap_and_transmitted_command
+    report = self.report()
+             ^^^^^^^^^^^^^
+  File "D:\HoMinhKhang\PROJECT\GITHUB_PROJECT\CODE XE TU HANH\tests\test_agv_diagnostics.py", line 14, in report
+    self.assertTrue(hasattr(self.s, 'diagnostics'), 'Session must expose bounded read-only diagnostic history')
+AssertionError: False is not true : Session must expose bounded read-only diagnostic history
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.043s
+
+FAILED (failures=6)

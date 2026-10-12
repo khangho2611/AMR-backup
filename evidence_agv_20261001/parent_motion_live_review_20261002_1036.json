@@ -1,0 +1,112 @@
+{
+  "scope": "INDEPENDENT READONLY Pi raw file QA; no Serial OPEN/TX",
+  "raw_sha256": "c5c4a6d54fd7662e6b82556b9405efdce27b4c0d5f022fd526f62dea85827715",
+  "sources": {
+    "/home/khangho/agv_trial_20261002_1028/agv_motion_supervisor_runner.py": "15cdfc6c6d86582df3ae219b8f301eb1dbb7bbdd0da742d43052242cda50f928",
+    "/home/khangho/agv_trial_20261002_1028/agv_serial_arbiter_bridge_v3.py": "6f4a2106622e99fe60212199b621cdcbbd2a76b2e639519796b15d5a703e3d1d"
+  },
+  "boot": "b9714a2d-e109-47d0-a647-b9c032f241eb",
+  "report": {
+    "preflight_status": "PASS_PREFLIGHT_VERIFIED",
+    "status": "PASS_MOTION_VERIFIED"
+  },
+  "runner_confirmed": true,
+  "fault": false,
+  "tx_counts": {
+    "ARM": 1,
+    "V": 20,
+    "STOP": 1
+  },
+  "tx_all_success": true,
+  "raw_count": 137,
+  "d0_count": 115,
+  "motion_d0_count": 10,
+  "zeroRPM_motion": 10,
+  "firstV_STOP_s": 1.0071536529994773,
+  "first_zero_after_STOP_s": 0.07746615900032339,
+  "post_d0_count": 2,
+  "postzero_count": 2,
+  "rpm_peak": {
+    "l_rpm": 0.0,
+    "r_rpm": 0.0
+  },
+  "pwm_range": {
+    "l_pwm": [
+      1,
+      23
+    ],
+    "r_pwm": [
+      1,
+      23
+    ]
+  },
+  "run_first": {
+    "t": 9043.258794457,
+    "d": {
+      "safety": "ARMED",
+      "mode": "PID",
+      "l_tgt": 3.9,
+      "r_tgt": 3.9,
+      "l_rpm": 0.0,
+      "r_rpm": 0.0,
+      "l_pwm": 1,
+      "r_pwm": 1,
+      "x": 0.0,
+      "y": 0.0,
+      "th": 0.0,
+      "v": 0.0,
+      "w": 0.0
+    }
+  },
+  "run_last": {
+    "t": 9044.158014842,
+    "d": {
+      "safety": "ARMED",
+      "mode": "PID",
+      "l_tgt": 10.4,
+      "r_tgt": 10.4,
+      "l_rpm": 0.0,
+      "r_rpm": 0.0,
+      "l_pwm": 23,
+      "r_pwm": 23,
+      "x": 0.0,
+      "y": 0.0,
+      "th": 0.0,
+      "v": 0.0,
+      "w": 0.0
+    }
+  },
+  "postfirst": {
+    "t": 9044.257699492,
+    "d": {
+      "safety": "DISARMED",
+      "mode": "PID",
+      "l_tgt": 0.0,
+      "r_tgt": 0.0,
+      "l_rpm": 0.0,
+      "r_rpm": 0.0,
+      "l_pwm": 0,
+      "r_pwm": 0,
+      "x": 0.0,
+      "y": 0.0,
+      "th": 0.0,
+      "v": 0.0,
+      "w": 0.0
+    }
+  },
+  "ps": {
+    "exit": 1,
+    "stdout": "    PID COMMAND\n",
+    "stderr": ""
+  },
+  "fuser": {
+    "exit": 1,
+    "stdout": "",
+    "stderr": ""
+  },
+  "odom_delta": {
+    "x": 0.0,
+    "y": 0.0,
+    "th": 0.0
+  }
+}

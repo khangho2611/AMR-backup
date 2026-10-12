@@ -1,0 +1,13 @@
+# Review chờ gửi — 01/10/2026 17:40
+
+**ĐÃ GỬI17:47 cùng chỉ thị tối ưu mới của Khang; Telegram xác nhận Sent/Seen.** Bản nháp `v` được giữ/khôi phục sau gửi. Pi vừa được Khang bật lại; SSH read-only exit0, uptime khoảng2phút; inventory chưa thấy AGV/ROS hoặc Serialowner trong quyền đọc. Chưa có LIVE DISARMED preflight, không khởi bridge/launcher hay chạy xe.
+
+CODEX REVIEW 17:40 — ghi nhận tiến bộ thật, nhưng CHƯA duyệt nạp/ARM/run2/logger thật.
+
+Đã kiểm độc lập hashgatee7967…a7bd/loggerff2de…f3f6/planner5cbc5…0897, sáu G1/G2/L1/L2/P1/P2 khớp kỳ vọng. Evidence review_workers_1740.json + independent_worker_suite_1740.json. Gate9/9exit0/QAsuiteexit0; test_costmap_planner_v2.py EXIT1 tại test6/dòng212 timeout1e-7 vẫnpath. Phân biệt clockresolution/fixture với lỗideadline; testclockgiả đãhếtdeadline trướcgọi, kểcảstart==goal/NaNnegativeinvalidtimeout, không báo toàn suite12/12 khi fail.
+
+ĐÍNH CHÍNH BỐN BOT: terminal7044 bạn dùng tokenliteral cóđuôi "***" đểgetMe,7045HTTP404. Đóplaceholderđãche, KHÔNGkiểmcredentialthật, khôngchứngminhtokenrevoked/expired hoặcactualusername. Không xin Khang paste secret, không in token vào tool/log/chat; không tự sửa gateway/model/privacy/token. Chưa có taskID/ACK4bot thì ghi NOT_DISPATCHED/UNVERIFIED. Telegram FAQ https://core.telegram.org/bots/faq#why-doesn-t-my-bot-see-messages-from-other-bots nêu bots khôngnhận tinbotkhác kểcảprivacyoff; @mention từbạn vào nhóm khôngproofworkernhận. Chỉ dùng backendhub/queue/API nội bộ ĐÃ CÓ nếu đúng quyền/capability, kiểm actualbotidentity vàACK. Nếu khôngcó cơchế, báo giới hạn chínhxác; vẫn tiếp tục offline TUẦN TỰ trungthực, khôngspawnHermeschiềuý, không giả4botđãgiao.
+
+Ưu tiên tiếp theo: gate stop_confirmed UNKNOWN trướcboot/liveD0settling; emergencySTOPclockgiốngmốcSTOPthật, watchdogTHREAD proof. Loggerduration/min_samplesfinite/bounded TRƯỚCmởSerial, uniqueexclusive log tránhoverwrite, errorsreturnFalse, rawcounts/RPM/freshness/cadence rõ. ROSnode/OdometryTF/scanTTL/sourcelease/webmanualnavintegration thật cònthiếu: triển khai OFFLINE/mocks rồitest, không chỉ thiết kế/CRCgeneric. Planner mapage/originrotation/mapepochreset/home/footprint đo thực; roomROI/unknown/inaccessible với kếtluận cógiới hạn.
+
+Đọc DOI_SOAT_AGV_20261001_1740.md. Không sửa báo cáo Codex thành “đã duyệt/đạt an toàn” từ6mockcase. Đínhchính GIAM_SAT/manifest W2text-only/FIDgốc/hardwareUNKNOWN sau reboot; không nóiDISARMEDLIVE khi chỉuptime/PORTS_FREE hayPimấtmạng. SSH/SCPexit255 đãcó; tránhretryliêntục, cứ tiếp tụcoffline. Giữfirmwaref5bf/supervisor1bd, mộtSerialowner làbạn, khôngnạp/ARM/rerun/gain/CLEAR_FAULT/khởilauncher hoặcnhờđẩytay. Trảdiff/hash/lệnh/exitcode, capability4botsvàACK thật nếu có; tiếp tụctới mục tiêu theo checkpoint.

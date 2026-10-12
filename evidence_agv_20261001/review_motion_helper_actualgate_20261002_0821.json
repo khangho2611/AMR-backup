@@ -1,0 +1,14 @@
+{
+  "scope": "OFFLINE actual gate constructor+actual motion helper/FakeSerial; no connect/watchdog/Serial hardware",
+  "start": true,
+  "cycle_missing_telemetry": [
+    true,
+    "RUNNING"
+  ],
+  "gate_has_send_command": false,
+  "gate_has_send_velocity_command": true,
+  "gate_MAX_LINEAR_VEL": 0.05,
+  "tx": [],
+  "runner_sha": "f71c959c03b0797fde5e65c19be58557a9e628c683bbf985c594f7bc0e5b77d5",
+  "conclusion": "RUNNING despite no V transmission: incompatible gate API, no valid ARM/session/data lifecycle; source cap .05 conflicts target .55"
+}

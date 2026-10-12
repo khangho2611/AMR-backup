@@ -1,0 +1,181 @@
+{
+  "scope": "OFFLINE MOCK ONLY; no Serial connect, no Node launch",
+  "before": {
+    "agv_ros2_arbiter_bridge.py": "c3fa55c02c4f3d8b62ca2d0a5b0a2b8b298c0bd955b591c66d14a94f328248ab",
+    "agv_serial_arbiter_bridge_v3.py": "e7967eec69b12b97cef93ea12cc08cdcd2ac34735b740539214f81ecad9ca7bd",
+    "agv_reachability_costmap_planner_v2.py": "ed7bdda832e63b702a5648716aa8521cd98a588243ad5470d87360c08e84273b"
+  },
+  "after": {
+    "agv_ros2_arbiter_bridge.py": "c3fa55c02c4f3d8b62ca2d0a5b0a2b8b298c0bd955b591c66d14a94f328248ab",
+    "agv_serial_arbiter_bridge_v3.py": "e7967eec69b12b97cef93ea12cc08cdcd2ac34735b740539214f81ecad9ca7bd",
+    "agv_reachability_costmap_planner_v2.py": "ed7bdda832e63b702a5648716aa8521cd98a588243ad5470d87360c08e84273b"
+  },
+  "stable_snapshot": true,
+  "cases": [
+    {
+      "id": "B1",
+      "scenario": "bridge connected to actual gate with mock Serial",
+      "observed": {
+        "exception": "TypeError",
+        "message": "SerialArbiterGateV3.send_velocity_command() got an unexpected keyword argument 'linear_v'"
+      },
+      "expected": "structured rejection without exception",
+      "mock_writes": []
+    },
+    {
+      "id": "B2",
+      "scenario": "gate returns (False,REJECT_FAULT)",
+      "observed": [
+        true,
+        "COMMAND_ACCEPTED"
+      ],
+      "expected_accepted": false
+    },
+    {
+      "id": "B3",
+      "scenario": "STOP write fails",
+      "observed": [
+        true,
+        "EMERGENCY_STOP_ENFORCED"
+      ],
+      "expected_accepted": false
+    },
+    {
+      "id": "B4",
+      "scenario": "NaN current clock on telemetry",
+      "observed": true,
+      "expected": false
+    },
+    {
+      "id": "B5",
+      "scenario": "NaN angles/ranges and whitespace-only scan frame",
+      "observed": true,
+      "expected": false
+    },
+    {
+      "id": "B6",
+      "scenario": "command without any scan/odom/gate and NaN lease TTL",
+      "observed": [
+        true,
+        "COMMAND_ACCEPTED"
+      ],
+      "expected_accepted": false
+    },
+    {
+      "id": "B7",
+      "scenario": "invalid priority -1 preempts active manual lease",
+      "observed": [
+        true,
+        "COMMAND_ACCEPTED"
+      ],
+      "expected_accepted": false
+    },
+    {
+      "id": "P3",
+      "scenario": "deadline100.01 expired at actual clock101; now_mono freezes clock",
+      "observed_path": [
+        [
+          2.5,
+          5.5
+        ],
+        [
+          3.5,
+          5.5
+        ],
+        [
+          4.5,
+          5.5
+        ],
+        [
+          5.5,
+          5.5
+        ],
+        [
+          6.5,
+          5.5
+        ],
+        [
+          7.5,
+          5.5
+        ],
+        [
+          8.5,
+          5.5
+        ]
+      ],
+      "expected_path": null
+    },
+    {
+      "id": "P4",
+      "scenario": "nonfinite/bool timeout budget",
+      "budget_repr": "inf",
+      "observed_path": [
+        [
+          2.5,
+          5.5
+        ],
+        [
+          3.5,
+          5.5
+        ],
+        [
+          4.5,
+          5.5
+        ],
+        [
+          5.5,
+          5.5
+        ],
+        [
+          6.5,
+          5.5
+        ],
+        [
+          7.5,
+          5.5
+        ],
+        [
+          8.5,
+          5.5
+        ]
+      ],
+      "expected_path": null
+    },
+    {
+      "id": "P5",
+      "scenario": "nonfinite/bool timeout budget",
+      "budget_repr": "True",
+      "observed_path": [
+        [
+          2.5,
+          5.5
+        ],
+        [
+          3.5,
+          5.5
+        ],
+        [
+          4.5,
+          5.5
+        ],
+        [
+          5.5,
+          5.5
+        ],
+        [
+          6.5,
+          5.5
+        ],
+        [
+          7.5,
+          5.5
+        ],
+        [
+          8.5,
+          5.5
+        ]
+      ],
+      "expected_path": null
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "scope": "OFFLINE raw import only no transport",
+  "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+  "before": "2a30e7eeddf93190edc5b9540145132ae18b1bf44b0213961fea3f91a0f6f24e",
+  "after": "2a30e7eeddf93190edc5b9540145132ae18b1bf44b0213961fea3f91a0f6f24e",
+  "exit_code": 1,
+  "stdout": "",
+  "stderr": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n  File \"D:\\HoMinhKhang\\PROJECT\\GITHUB_PROJECT\\CODE XE TU HANH\\agv_motion_supervisor_runner.py\", line 18, in <module>\n    def is_valid_finite(val: Any) -> bool:\n                             ^^^\nNameError: name 'Any' is not defined. Did you mean: 'any'?\n"
+}

@@ -1,0 +1,46 @@
+{
+  "time": "2026-10-02T19:04:02.199788+07:00",
+  "scope": "OFFLINE_ONLY; actual reader/HTTP/typed callbacks; mocked Serial and ROS imports; no physical port open",
+  "source_sha_before": {
+    "agv_unified_brain.py": "b95f963afd8d457a6224004821acd1788fc7bcf6b1bbdb0de1de7d98fd9fd30e",
+    "agv_navigation.py": "f7ba0fd572293baafcb7db29f67dc123ad89fcdf5db000b67ada8434b3ac915d",
+    "agv_command_session.py": "ea4e0cac36441b6e1d698b908ca3b6de6f37565cfd398c1e3ca7b90ec9f7446f",
+    "index_cyberpunk.html": "97716ab0fb49c639d465ecc7c1a35b0e2444504c43ee66636a95c1584e6f7af7",
+    "tests/test_agv_navigation_fix.py": "013ed33031c9f2de2cc52c7a4680885cf684ae9804d35ad1dc144d34e1ba1053",
+    "tests/test_agv_brain_integration.py": "08987314c48d9670e2b55d3397b544f268479b38ed0866d526aba85e19a2f90d",
+    "tests/test_agv_pid_ui.cjs": "b36af3461e11c7124bd1dcbd7e8432c9d7dd0ff647317b9f771e34794e99cedc"
+  },
+  "source_sha_after": {
+    "agv_unified_brain.py": "b95f963afd8d457a6224004821acd1788fc7bcf6b1bbdb0de1de7d98fd9fd30e",
+    "agv_navigation.py": "f7ba0fd572293baafcb7db29f67dc123ad89fcdf5db000b67ada8434b3ac915d",
+    "agv_command_session.py": "ea4e0cac36441b6e1d698b908ca3b6de6f37565cfd398c1e3ca7b90ec9f7446f",
+    "index_cyberpunk.html": "97716ab0fb49c639d465ecc7c1a35b0e2444504c43ee66636a95c1584e6f7af7",
+    "tests/test_agv_navigation_fix.py": "013ed33031c9f2de2cc52c7a4680885cf684ae9804d35ad1dc144d34e1ba1053",
+    "tests/test_agv_brain_integration.py": "08987314c48d9670e2b55d3397b544f268479b38ed0866d526aba85e19a2f90d",
+    "tests/test_agv_pid_ui.cjs": "b36af3461e11c7124bd1dcbd7e8432c9d7dd0ff647317b9f771e34794e99cedc"
+  },
+  "stable": true,
+  "tests": [
+    {
+      "args": [
+        "C:\\Users\\Khang\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-B",
+        "-X",
+        "utf8",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_agv_*.py",
+        "-v"
+      ],
+      "exit": 0,
+      "output": "test_1.txt"
+    }
+  ],
+  "syntax_ast": "PASS",
+  "backup": "D:\\HoMinhKhang\\PROJECT\\GITHUB_PROJECT\\CODE XE TU HANH\\evidence_agv_20261001\\codex_prompt_fix_20261002_181609",
+  "hardware": "NOT_DEPLOYED_NOT_RUN"
+}

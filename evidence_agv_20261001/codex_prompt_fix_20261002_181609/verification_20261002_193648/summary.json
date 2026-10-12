@@ -1,0 +1,56 @@
+{
+  "time": "2026-10-02T19:37:04.066608+07:00",
+  "scope": "OFFLINE_ONLY; actual reader/HTTP/typed callbacks; mocked Serial and ROS imports; no physical port open",
+  "source_sha_before": {
+    "agv_unified_brain.py": "339850792be6e001eed5dd4fe3eed97e4e95b7d781938b21417bcf508eb03b5b",
+    "agv_navigation.py": "02b07d820d3c8f14771cc3ada036f81cd04a37c96f911ee44efe823a95029665",
+    "agv_command_session.py": "7f6a3c042ba0c737e20558fcd6d018047f000db82b6d3937748d58a12325e4fc",
+    "index_cyberpunk.html": "4829d95d5c84f7ec673987946b55acc938e6d25502ed20ccca40eddcad69076f",
+    "tests/test_agv_navigation_fix.py": "c5805a66878de95b398dc09152abf49a1720c517cfc763cf423804976cbc8d5b",
+    "tests/test_agv_brain_integration.py": "08987314c48d9670e2b55d3397b544f268479b38ed0866d526aba85e19a2f90d",
+    "tests/test_agv_startup_lifecycle.py": "6b926be86146e0fbc1df9fe26f1762888d148e446d57bc6dd6a85790ed820cce",
+    "tests/test_agv_pid_ui.cjs": "b36af3461e11c7124bd1dcbd7e8432c9d7dd0ff647317b9f771e34794e99cedc"
+  },
+  "source_sha_after": {
+    "agv_unified_brain.py": "339850792be6e001eed5dd4fe3eed97e4e95b7d781938b21417bcf508eb03b5b",
+    "agv_navigation.py": "02b07d820d3c8f14771cc3ada036f81cd04a37c96f911ee44efe823a95029665",
+    "agv_command_session.py": "7f6a3c042ba0c737e20558fcd6d018047f000db82b6d3937748d58a12325e4fc",
+    "index_cyberpunk.html": "4829d95d5c84f7ec673987946b55acc938e6d25502ed20ccca40eddcad69076f",
+    "tests/test_agv_navigation_fix.py": "c5805a66878de95b398dc09152abf49a1720c517cfc763cf423804976cbc8d5b",
+    "tests/test_agv_brain_integration.py": "08987314c48d9670e2b55d3397b544f268479b38ed0866d526aba85e19a2f90d",
+    "tests/test_agv_startup_lifecycle.py": "6b926be86146e0fbc1df9fe26f1762888d148e446d57bc6dd6a85790ed820cce",
+    "tests/test_agv_pid_ui.cjs": "b36af3461e11c7124bd1dcbd7e8432c9d7dd0ff647317b9f771e34794e99cedc"
+  },
+  "stable": true,
+  "tests": [
+    {
+      "args": [
+        "C:\\Users\\Khang\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "-B",
+        "-X",
+        "utf8",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_agv_*.py",
+        "-v"
+      ],
+      "exit": 0,
+      "output": "test_1.txt"
+    },
+    {
+      "args": [
+        "C:\\Users\\Khang\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\node\\bin\\node.exe",
+        "tests/test_agv_pid_ui.cjs"
+      ],
+      "exit": 0,
+      "output": "test_2.txt"
+    }
+  ],
+  "syntax_ast": "PASS",
+  "backup": "D:\\HoMinhKhang\\PROJECT\\GITHUB_PROJECT\\CODE XE TU HANH\\evidence_agv_20261001\\codex_prompt_fix_20261002_181609",
+  "hardware": "NOT_DEPLOYED_NOT_RUN"
+}

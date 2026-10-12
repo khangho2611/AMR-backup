@@ -1,0 +1,18 @@
+--- before/GIAO_VIEC_AGV.md
++++ after/GIAO_VIEC_AGV.md
+@@ -605,3 +605,15 @@
+ ### README bàn giao và current field confirmation — 02/10/2026
+ 
+ User yêu cầu README nhiệm vụ đã làm/cần làm vì token sắp hết. README_CODEX_AGV_TIEP_TUC.md đã tạo; links/hashmanifest verified. Human đã trả lời Có,khu thử trống/tôi đangtrựcnguồn cho kế hoạch diagnostic exactone15s/operatorARM-AUTO/startDISARMED, khôngpendingquestionnữa/khônghỏilại ngay. Chưa Pi staging/retire/deploy/OPEN/ARM/run mới; chỉ sourcecandidate main5114/session47e7 offline56tests. Điểmresume mục7README+KE_HOACH_CHAN_DOAN_XE_KHONG_CHAY_CODEX_20261002.md, read-onlycurrentowner/control trướcthao tác, khôngrepeatbot/oldtrial. Nếu gián đoạnlâu currentfieldcầnhệntrạnglại, khônggeneralpermissionrepeat.
++
++### Codex trực tiếp — 03/10/2026: SOURCE_OFFLINE_NO_MOTION
++
++Human mới nhất “tiếp tục đi đừng cho xe chạy nhé” supersede kế hoạch nạp/motion cũ. Không bot, không deploy/restart/Serial OPEN/ARM/AUTO/drive/STOP/flash/gain/PWM/timeout/reset/retry. Chỉ SSH đọc:23:51 boot6c0476e0-29bf-4510-a153-b7708dcbbec7/noAGVROS/USB0fuserexit1empty/no8080; không freshD0/physicalSTOPproof. PID23834/boot305c đã hết hiệu lực. Automation đọc file statusPAUSED, không resume.
++
++Sửa offline: swept enclosing-body+.15 disk trên v/w/map exactcellrectangle/unknown/edge/originyaw/subcell/boundedwork, scan side +freshmapTF; writer gọi validator rồi recheckages/generation. Giữ radius.20/margin.15, không frontflag-only authorizearc. STOP trong validator vẫn latch/cancel trước V TX. Bản front-only mục15README không đủ geometryproof và chưa deploy; cause past no-motion vẫnUNKNOWN.
++
++CommandEvents512 táchD0ring256; HTTP JSONL outcome bounded2MiB+rotation1/RAM32/exactblockers/status/health/ACKTXhistory, diskIO chỉHTTP khôngUARTwatchdog; savedFalse nếuIOerror. AUTO gate typedblockers+snapshot/atomicstate-controlcommit, UI commandNotice giữ lỗi qua100mstelemetry, ARMCONFIRMEDlabelcorrect. Không autoARM, không unlockMANPID/trialUSED.
++
++Final75Pythonexit0/17.613s+11JSgroups exit0/AST/nodecheck/hashstableSTATIC; actualreader/watchdog/HTTPtypedFakeUARTreal10s80/nohardwareROSphysical. Evidence codex_no_motion_20261002_234614/verification.json+RED/GREEN/diffs/backups; fullfirst errors generation/fixture được sửa, log giữ. Mainbec4f77…add56e/session097380b…805c6/nav0f106a4…6f923/newjournal08513da…aafe6/HTMLcf5af33…5fcab. Source manifest fullSHA tạiREADME mục17. No physicalStop/braking/whole-room/home acceptance.
++
++README_CODEX_AGV_TIEP_TUC.md cập nhật đầu+mục17; report DOI_SOAT_OFFLINE_KHONG_CHAY_XE_CODEX_20261003.md. Resume SOURCEOFFLINE: actualcapturedgeometry/timeepochs/manualownerlease/crash/reversepath/coverage; không gọi hardware khỏe/lỗi final từ missingtimeline. Nếu user yêu cầu test sau này cầnplan mới/currentboot-owner/conditions, bundle phải có agv_command_journal.py; không thực hiện lúc này. Goalwhole-room/map/homeposheadingunfinished.

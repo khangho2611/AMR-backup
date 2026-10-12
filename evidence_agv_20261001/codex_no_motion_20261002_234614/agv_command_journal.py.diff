@@ -1,0 +1,64 @@
+--- before/agv_command_journal.py
++++ after/agv_command_journal.py
+@@ -0,0 +1,61 @@
++"""Bounded HTTP outcome journal. Never called from UART/watchdog threads.
++
++File close confirms a completed write, not survival of a sudden power loss.
++Failure to write is exposed to the operator; it never changes control outcome.
++"""
++import copy
++import json
++import threading
++import uuid
++from collections import deque
++from datetime import datetime, timezone
++from pathlib import Path
++
++
++class CommandOutcomeJournal:
++    def __init__(self,path,max_bytes=2*1024*1024,capacity=32):
++        if type(max_bytes) is not int or max_bytes < 4096 or type(capacity) is not int or not 1 <= capacity <= 128:
++            raise ValueError('Invalid journal bounds')
++        self.path=Path(path)
++        self.max_bytes=max_bytes
++        self.recent=deque(maxlen=capacity)
++        self.lock=threading.Lock()
++        self.error=None
++        try:
++            # Read a bounded tail; corrupted/truncated lines are never presented
++            # as successfully recovered outcomes.
++            with self.path.open('rb') as stream:
++                stream.seek(0,2);size=stream.tell();stream.seek(max(0,size-max_bytes))
++                for line in stream.read(max_bytes).splitlines():
++                    try:
++                        entry=json.loads(line)
++                        if isinstance(entry,dict) and 'id' in entry:self.recent.append(entry)
++                    except (ValueError,UnicodeError):pass
++        except FileNotFoundError:pass
++        except OSError as exc:self.error=type(exc).__name__
++
++    def record(self,operation,arguments,http_status,response,control):
++        entry=copy.deepcopy(dict(id=uuid.uuid4().hex,
++            utc=datetime.now(timezone.utc).isoformat(),operation=operation,
++            arguments=arguments,http_status=http_status,response=response,
++            control=control,saved=True))
++        with self.lock:
++            try:
++                raw=(json.dumps(entry,ensure_ascii=False,allow_nan=False,separators=(',',':'))+'\n').encode('utf8')
++                if len(raw)>self.max_bytes:raise ValueError('RECORD_TOO_LARGE')
++                self.path.parent.mkdir(parents=True,exist_ok=True)
++                if self.path.exists() and self.path.stat().st_size+len(raw)>self.max_bytes:
++                    self.path.replace(self.path.with_suffix(self.path.suffix+'.1'))
++                with self.path.open('ab') as stream:
++                    if stream.write(raw)!=len(raw):raise OSError('PARTIAL_JOURNAL_WRITE')
++                self.error=None
++            except (OSError,ValueError,TypeError) as exc:
++                self.error=type(exc).__name__
++                entry.update(saved=False,error=self.error)
++            self.recent.append(entry)
++            return dict(id=entry['id'],saved=entry['saved'],error=self.error)
++
++    def snapshot(self):
++        with self.lock:
++            return copy.deepcopy(dict(path=str(self.path),max_bytes=self.max_bytes,
++                                      capacity=self.recent.maxlen,error=self.error,recent=list(self.recent)))

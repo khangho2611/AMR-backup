@@ -1,0 +1,52 @@
+--- before/agv_navigation.py
++++ after/agv_navigation.py
+@@ -64,6 +64,7 @@
+             raise ValueError('Invalid map or unconfigured body radius')
+         self.w, self.h, self.res = width, height, resolution
+         self.origin, self.data = tuple(origin), tuple(data)
++        self.body_radius = body_radius
+         self.radius = body_radius + margin
+         self.budget_s = budget_s
+         self.safe = bytearray(width * height)
+@@ -161,6 +162,41 @@
+                     dy=max(y*self.res-py,0.,py-(y+1)*self.res)
+                     if math.hypot(dx,dy) <= r:return False
+         return True
++
++    def escape_swept_clear(self, pose, v, w):
++        """Leave an existing clearance-margin violation without entering collision.
++
++        The normal A* margin stays unchanged. This recovery is available only
++        when already inside that margin: the enclosing body must remain wholly
++        known-free, minimum clearance cannot decrease, and the endpoint must
++        improve it. Unknown cells and map boundaries remain obstacles.
++        """
++        if len(pose)!=3 or not all(finite(x) for x in pose) or v==0:return False
++        samples=twist_centres(v,w,spatial_step=min(.005,self.res/4))
++        if samples is None:return False
++        centres,padding=samples
++        ox,oy,yaw=self.origin
++        c,s=math.cos(yaw),math.sin(yaw)
++        pc,ps=math.cos(pose[2]),math.sin(pose[2])
++        deadline=time.monotonic()+min(self.budget_s,.025)
++        clearances=[]
++        for bx,by in centres:
++            wx,wy=pose[0]+pc*bx-ps*by,pose[1]+ps*bx+pc*by
++            px,py=c*(wx-ox)+s*(wy-oy),-s*(wx-ox)+c*(wy-oy)
++            clearance=min(self.radius+.01,px,py,self.w*self.res-px,self.h*self.res-py)
++            if clearance<=self.body_radius+padding:return False
++            search=self.radius+.01
++            for y in range(max(0,math.floor((py-search)/self.res)),min(self.h-1,math.floor((py+search)/self.res))+1):
++                if time.monotonic()>deadline:return False
++                for x in range(max(0,math.floor((px-search)/self.res)),min(self.w-1,math.floor((px+search)/self.res))+1):
++                    if self.data[y*self.w+x]==0:continue
++                    dx=max(x*self.res-px,0.,px-(x+1)*self.res)
++                    dy=max(y*self.res-py,0.,py-(y+1)*self.res)
++                    clearance=min(clearance,math.hypot(dx,dy))
++            if clearance<=self.body_radius+padding:return False
++            if clearances and clearance<clearances[-1]-1e-7:return False
++            clearances.append(clearance)
++        return clearances[0]<self.radius and clearances[-1]>clearances[0]+.0001
+ 
+     def neighbours(self, cell):
+         x, y = cell

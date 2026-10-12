@@ -1,0 +1,95 @@
+{
+  "scope": "OFFLINE only; no annotation override or hardware; product suites separate",
+  "before": {
+    "agv_preflight_static_collector.py": "edc927d81b696eeb37f933b0721efc5245c40eb19e6cd6814aa2cb89aad45b2d",
+    "agv_ros2_runtime_adapter.py": "7a80382871aeceb8bf6cc30c69bdcdb441db409e71e897b1651e3d5eaf6b796d",
+    "agv_serial_arbiter_bridge_v3.py": "6f4a2106622e99fe60212199b621cdcbbd2a76b2e639519796b15d5a703e3d1d"
+  },
+  "after": {
+    "agv_preflight_static_collector.py": "edc927d81b696eeb37f933b0721efc5245c40eb19e6cd6814aa2cb89aad45b2d",
+    "agv_ros2_runtime_adapter.py": "7a80382871aeceb8bf6cc30c69bdcdb441db409e71e897b1651e3d5eaf6b796d",
+    "agv_serial_arbiter_bridge_v3.py": "6f4a2106622e99fe60212199b621cdcbbd2a76b2e639519796b15d5a703e3d1d"
+  },
+  "stable": true,
+  "cases": [
+    {
+      "id": "C1_burst_gap",
+      "code": 1,
+      "report": {
+        "status": "FAIL_TELEMETRY_STREAM_GAP",
+        "valid_samples_count": 30,
+        "corrupt_lines_count": 0,
+        "elapsed_time_s": 2.1,
+        "rejection_reason": "Mất kết nối telemetry: gap 1.500s > 1.5s",
+        "first_sample": null,
+        "last_sample": null
+      }
+    },
+    {
+      "id": "C2_corrupt_after_safe",
+      "code": 1,
+      "report": {
+        "status": "FAIL_CORRUPT_LINE_AFTER_SETTLING",
+        "valid_samples_count": 0,
+        "corrupt_lines_count": 0,
+        "elapsed_time_s": 0.62,
+        "rejection_reason": "Dòng dữ liệu hỏng sau settling (line 31): {\"safety\":\"ARMED\"",
+        "first_sample": null,
+        "last_sample": null
+      }
+    },
+    {
+      "id": "C4_NaN_gap_age",
+      "code": 1,
+      "report": {
+        "status": "FAIL_INVALID_ARGUMENT",
+        "valid_samples_count": 0,
+        "corrupt_lines_count": 0,
+        "elapsed_time_s": 0.0,
+        "rejection_reason": "INVALID_MAX_GAP_S: nan must be positive finite",
+        "first_sample": null,
+        "last_sample": null
+      }
+    },
+    {
+      "id": "C3_invalid_primary_duration",
+      "code": 1,
+      "opens": []
+    },
+    {
+      "id": "C5_read_and_open_budget",
+      "code": 1,
+      "report": {
+        "status": "FAIL_OPEN_TIMEOUT_EXCEEDED",
+        "valid_samples_count": 0,
+        "corrupt_lines_count": 0,
+        "elapsed_time_s": 2.0,
+        "rejection_reason": "Thời gian mở port vượt quá wall_timeout_s (0.1s)",
+        "first_sample": null,
+        "last_sample": null
+      },
+      "total_wall": 2.0,
+      "opens": [
+        "open"
+      ]
+    },
+    {
+      "id": "S1_fixed_adapter_D0",
+      "accepted": true,
+      "gate_confirmed": true,
+      "public_confirmed": true
+    },
+    {
+      "id": "P1_whole_adapter_ARM_ACK",
+      "first_D0": true,
+      "request": true,
+      "ack_accepted": true,
+      "armed_accepted": true,
+      "gate_ACK": true,
+      "gate_stop_latched": false,
+      "writes": [
+        "ARM\n"
+      ]
+    }
+  ]
+}

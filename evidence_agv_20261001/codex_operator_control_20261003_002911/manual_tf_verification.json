@@ -1,0 +1,34 @@
+{
+  "remote": "/home/khangho/agv_codex_manual_tf_20261003_012944",
+  "hashes": {
+    "agv_unified_brain.py": "6b456696e7895895f3978ab5668ffd1a2e85bc3ab72f05238f30ebaf20f6caa3",
+    "agv_command_session.py": "de57ea9b13e71dd00d029f0f5c139949e34dd93b59e75bf098d14a4224b9a3cd",
+    "agv_navigation.py": "15f80ee258548051b04ed82aec3195c5144e2e7acdba60ae9e5926e9e98b5293",
+    "agv_command_journal.py": "08513da55966bd3c885f57a0245417e36a9b981bfb099c00809535b583a9afe6",
+    "agv_preflight_static_collector.py": "4b32ca76c0f253fdee228be7354281e8aec74adedcaf15897910a42a3463271a",
+    "index_cyberpunk.html": "3e49b9d566511adc6c6c5b0c7b67376e5e454830f4652d980ba9d9d202aa4ef5",
+    "slam_scan_fix.yaml": "09dd22eee3f667b98915dc3703c185dd699a6b33f35d083df81b8f5391158357"
+  },
+  "hash_stable": true,
+  "targeted_tests": [
+    {
+      "count": 8,
+      "exit": 0,
+      "log": "manual_tf_targeted_green.log"
+    },
+    {
+      "count": 45,
+      "exit": 0,
+      "log": "manual_tf_navigation_green.log"
+    }
+  ],
+  "baseline_full_suite": {
+    "count": 90,
+    "exit": 0,
+    "log": "speed_manual_final_python.log",
+    "applies_to": "bundle_manual_cruise"
+  },
+  "full_retest": "rejected by user; not claimed as 92 passing",
+  "unchanged_js": "13 assertion groups in manual_cruise_verification.json",
+  "limitations": "Not physical cruise/coverage acceptance."
+}

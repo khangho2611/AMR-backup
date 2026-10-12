@@ -1,0 +1,76 @@
+{
+  "scope": "OFFLINE MOCK ONLY; no physical Serial, no hardware action",
+  "source_hash_before": {
+    "agv_serial_arbiter_bridge_v3.py": "e7967eec69b12b97cef93ea12cc08cdcd2ac34735b740539214f81ecad9ca7bd",
+    "agv_passive_encoder_logger_v2.py": "ff2de4d2ff4922c46fb2a9d3bc76ec15fda9aa8a7486d1a91a3de9bf02c6f3f6",
+    "agv_reachability_costmap_planner_v2.py": "ed7bdda832e63b702a5648716aa8521cd98a588243ad5470d87360c08e84273b"
+  },
+  "source_hash_after": {
+    "agv_serial_arbiter_bridge_v3.py": "e7967eec69b12b97cef93ea12cc08cdcd2ac34735b740539214f81ecad9ca7bd",
+    "agv_passive_encoder_logger_v2.py": "ff2de4d2ff4922c46fb2a9d3bc76ec15fda9aa8a7486d1a91a3de9bf02c6f3f6",
+    "agv_reachability_costmap_planner_v2.py": "ed7bdda832e63b702a5648716aa8521cd98a588243ad5470d87360c08e84273b"
+  },
+  "stable_snapshot": true,
+  "cases": [
+    {
+      "id": "G1",
+      "scenario": "STOP at real mock clock101; buffered D0 stamped100.5",
+      "stop_anchor": 101.0,
+      "actual_stop_clock": 101.0,
+      "observed_confirmed": false,
+      "expected_confirmed": false
+    },
+    {
+      "id": "G2",
+      "scenario": "nonzero fractional PWM preflight",
+      "observed_arm_requested": false,
+      "expected_arm_requested": false,
+      "result": [
+        false,
+        "REJECT_PREFLIGHT_NONZERO_D0: Telemetry DISARMED chứa cơ cấu chấp hành phi zero (l_tgt=0.0, r_tgt=0.0, l_pwm=0.5, r_pwm=-0.5, v=0.0, w=0.0, l_rpm=0.0, r_rpm=0.0)"
+      ],
+      "mock_writes": []
+    },
+    {
+      "id": "L1",
+      "scenario": "fractional PWM",
+      "observed_success": false,
+      "expected_success": false,
+      "mock_writes": [],
+      "output": "=== KHỞI ĐỘNG PASSIVE READ-ONLY LOGGER V2 ===\nCổng: /dev/ttyUSB0, Baud: 115200, Giới hạn: 2.0s, Mẫu tối thiểu: 10\nTập tin ghi: C:\\Users\\Khang\\AppData\\Local\\Temp\\agv_offline_3qnekywg\\passive_hand_push_20261001_175202.log\nCHẾ ĐỘ: 100% READ-ONLY (TUYỆT ĐỐI KHÔNG GỬI LỆNH XUỐNG SERIAL)\n\nGiai đoạn 1: Thực hiện Preflight Gate (Kiểm tra an toàn tĩnh DISARMED 0)...\nCẢNH BÁO PREFLIGHT: Nhận mẫu không an toàn: {\"safety\": \"DISARMED\", \"mode\": \"PID\", \"l_tgt\": 0, \"r_tgt\": 0, \"l_pwm\": 0.5, \"r_pwm\": -0.5, \"l_rpm\": 0, \"r_rpm\": 0, \"x\": 0, \"y\": 0, \"th\": 0, \"v\": 0, \"w\": 0}\nCẢNH BÁO PREFLIGHT: Nhận mẫu không an toàn: {\"safety\": \"DISARMED\", \"mode\": \"PID\", \"l_tgt\": 0, \"r_tgt\": 0, \"l_pwm\": 0.5, \"r_pwm\": -0.5, \"l_rpm\": 0, \"r_rpm\": 0, \"x\": 0, \"y\": 0, \"th\": 0, \"v\": 0, \"w\": 0}\nCẢNH BÁO PREFLIGHT: Nhận mẫu không an toàn: {\"safety\": \"DISARMED\", \"mode\": \"PID\", \"l_tgt\": 0, \"r_tgt\": 0, \"l_pwm\": 0.5, \"r_pwm\": -0.5, \"l_rpm\": 0, \"r_rpm\": 0, \"x\": 0, \"y\": 0, \"th\": 0, \"v\": 0, \"w\": 0}\nCẢNH BÁO PREFLIGHT: Nhận mẫu không an toàn: {\"safety\": \"DISARMED\", \"mode\": \"PID\", \"l_tgt\": 0, \"r_tgt\": 0, \"l_pwm\": 0.5, \"r_pwm\": -0.5, \"l_rpm\": 0, \"r_rpm\": 0, \"x\": 0, \"y\": 0, \"th\": 0, \"v\": 0, \"w\": 0}\nCẢNH BÁO PREFLIGHT: Nhận mẫu không an toàn: {\"safety\": \"DISARMED\", \"mode\": \"PID\", \"l_tgt\": 0, \"r_tgt\": 0, \"l_pwm\": 0.5, \"r_pwm\": -0.5, \"l_rpm\": 0, \"r_rpm\": 0, \"x\": 0, \"y\": 0, \"th\": 0, \"v\": 0, \"w\": 0}\nCẢNH BÁO PREFLIGHT: Nhận mẫu không an toàn: {\"safety\": \"DISARMED\", \"mode\": \"PID\", \"l_tgt\": 0, \"r_tgt\": 0, \"l_pwm\": 0.5, \"r_pwm\": -0.5, \"l_rpm\": 0, \"r_rpm\": 0, \"x\": 0, \"y\": 0, \"th\": 0, \"v\": 0, \"w\": 0}\nCẢNH BÁO PREFLIGHT: Nhận mẫu không an toàn: {\"safety\": \"DISARMED\", \"mode\": \"PID\", \"l_tgt\": 0, \"r_tgt\": 0, \"l_pwm\": 0.5, \"r_pwm\": -0.5, \"l_rpm\": 0, \"r_rpm\": 0, \"x\": 0, \"y\": 0, \"th\": 0, \"v\": 0, \"w\": 0}\nCẢNH BÁO PREFLIGHT: Nhận mẫu không an toàn: {\"safety\": \"DISARMED\", \"mode\": \"PID\", \"l_tgt\": 0, \"r_tgt\": 0, \"l_pwm\": 0.5, \"r_pwm\": -0.5, \"l_rpm\": 0, \"r_rpm\": 0, \"x\": 0, \"y\": 0, \"th\": 0, \"v\": 0, \"w\": 0}\nCẢNH BÁO PREFLIGHT: Nhận mẫu không an toàn: {\"safety\": \"DISARMED\", \"mode\": \"PID\", \"l_tgt\": 0, \"r_tgt\": 0, \"l_pwm\": 0.5, \"r_pwm\": -0.5, \"l_rpm\": 0, \"r_rpm\": 0, \"x\": 0, \"y\": 0, \"th\": 0, \"v\": 0, \"w\": 0}\nCẢNH BÁO PREFLIGHT: Nhận mẫu không an toàn: {\"safety\": \"DISARMED\", \"mode\": \"PID\", \"l_tgt\": 0, \"r_tgt\": 0, \"l_pwm\": 0.5, \"r_pwm\": -0.5, \"l_rpm\": 0, \"r_rpm\": 0, \"x\": 0, \"y\": 0, \"th\": 0, \"v\": 0, \"w\": 0}\nCẢNH BÁO PREFLIGHT: Nhận mẫu không an toàn: {\"safety\": \"DISARMED\", \"mode\": \"PID\", \"l_tgt\": 0, \"r_tgt\": 0, \"l_pwm\": 0.5, \"r_pwm\": -0.5, \"l_rpm\": 0, \"r_rpm\": 0, \"x\": 0, \"y\": 0, \"th\": 0, \"v\": 0, \"w\": 0}\nCẢNH BÁO PREFLIGHT: Nhận mẫu không an toàn: {\"safety\": \"DISARMED\", \"mode\": \"PID\", \"l_tgt\": 0, \"r_tgt\": 0, \"l_pwm\": 0.5, \"r_pwm\": -0.5, \"l_rpm\": 0, \"r_rpm\": 0, \"x\": 0, \"y\": 0, \"th\": 0, \"v\": 0, \"w\": 0}\nCẢNH BÁO PREFLIGHT: Nhận mẫu không an toàn: {\"safety\": \"DISARMED\", \"mode\": \"PID\", \"l_tgt\": 0, \"r_tgt\": 0, \"l_pwm\": 0.5, \"r_pwm\": -0.5, \"l_rpm\": 0, \"r_rpm\": 0, \"x\": 0, \"y\": 0, \"th\": 0, \"v\": 0, \"w\": 0}\nPREFLIGHT THẤT BẠI: Không nhận đủ 3 mẫu DISARMED 0 an toàn liên tiếp! Abort.\nYÊU CẦU: Kiểm tra xe và KHÔNG thực hiện thao tác đẩy tay.\n"
+    },
+    {
+      "id": "L2",
+      "scenario": "Serial read error after10 valid collection samples",
+      "observed_success": false,
+      "expected_success": false,
+      "mock_writes": [],
+      "output": "=== KHỞI ĐỘNG PASSIVE READ-ONLY LOGGER V2 ===\nCổng: /dev/ttyUSB0, Baud: 115200, Giới hạn: 2.0s, Mẫu tối thiểu: 10\nTập tin ghi: C:\\Users\\Khang\\AppData\\Local\\Temp\\agv_offline_qc8vwngh\\passive_hand_push_20261001_175205.log\nCHẾ ĐỘ: 100% READ-ONLY (TUYỆT ĐỐI KHÔNG GỬI LỆNH XUỐNG SERIAL)\n\nGiai đoạn 1: Thực hiện Preflight Gate (Kiểm tra an toàn tĩnh DISARMED 0)...\n-> PREFLIGHT PASS: Xác nhận xe ở trạng thái tĩnh an toàn.\n\nGiai đoạn 2: Sẵn sàng ghi nhận dữ liệu đẩy tay...\nLỖI ĐỌC DỮ LIỆU SERIAL (OSError/IOError): injected offline read failure\nTHẤT BẠI: Quá trình dừng do phát hiện dữ liệu Odometry/Pose bị lỗi hoặc chứa NaN/Inf!\n"
+    },
+    {
+      "id": "P1",
+      "scenario": "closed-wall separated unknown area; coverage below threshold; at home",
+      "observed": {
+        "state": "PARTIAL_EXPLORATION_AT_HOME",
+        "completed": false,
+        "coverage": 0.3157894736842105,
+        "reason": "Da ve Home nhung do phu chua dat (31.6% < 85.0%) vi co vung unknown bi co lap/khong the toi"
+      },
+      "expected_completed": false,
+      "all_frontiers_count": 0
+    },
+    {
+      "id": "P2",
+      "scenario": "home remains after map frame changed without TF",
+      "observed": {
+        "state": "EXPLORATION_STUCK",
+        "completed": false,
+        "coverage": 1.0,
+        "reason": "Het frontier nhung chua duoc cau hinh vi tri Home"
+      },
+      "expected_completed": false,
+      "frame": "different_map",
+      "home": null
+    }
+  ]
+}

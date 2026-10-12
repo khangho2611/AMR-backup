@@ -1,0 +1,90 @@
+{
+  "scope": "OFFLINE only actual runtime/gate/FakeUART",
+  "hash_before": "af3d727819c5e40a061929176a8e8c29d89eef304059456018194aab2f50f5eb",
+  "hash_after": "af3d727819c5e40a061929176a8e8c29d89eef304059456018194aab2f50f5eb",
+  "cases": [
+    {
+      "case": "sink_failure",
+      "exit": 0,
+      "report": {
+        "status": "PASS_MOTION_VERIFIED",
+        "evidence_save_error": "[WinError 183] Cannot create a file when that file already exists: 'C:\\\\Users\\\\Khang\\\\AppData\\\\Local\\\\Temp\\\\agv_OFFLINE_residual_0926_lujv9_iw\\\\file_not_directory'"
+      },
+      "gate_stop_confirmed": true,
+      "gate_fault": false,
+      "runner_stop_confirmed": true,
+      "closed": true,
+      "first_arm_time": 350317.156,
+      "writes": [
+        {
+          "t": 350317.156,
+          "bytes": "ARM\n"
+        },
+        {
+          "t": 350317.218,
+          "bytes": "V 0.007 0.000\n"
+        },
+        {
+          "t": 350317.265,
+          "bytes": "V 0.015 0.000\n"
+        },
+        {
+          "t": 350317.312,
+          "bytes": "V 0.022 0.000\n"
+        },
+        {
+          "t": 350317.359,
+          "bytes": "V 0.029 0.000\n"
+        },
+        {
+          "t": 350317.421,
+          "bytes": "STOP\n"
+        },
+        {
+          "t": 350317.468,
+          "bytes": "STOP\n"
+        }
+      ]
+    },
+    {
+      "case": "cleanup_stop_write_failure",
+      "exit": 0,
+      "report": {
+        "status": "PASS_MOTION_VERIFIED",
+        "evidence_file": "C:\\Users\\Khang\\AppData\\Local\\Temp\\agv_OFFLINE_residual_0926_jxedvpls\\motion_evidence_1790908376147_13096.json"
+      },
+      "gate_stop_confirmed": true,
+      "gate_fault": false,
+      "runner_stop_confirmed": true,
+      "closed": true,
+      "first_arm_time": 350317.515,
+      "writes": [
+        {
+          "t": 350317.515,
+          "bytes": "ARM\n"
+        },
+        {
+          "t": 350317.546,
+          "bytes": "V 0.007 0.000\n"
+        },
+        {
+          "t": 350317.593,
+          "bytes": "V 0.015 0.000\n"
+        },
+        {
+          "t": 350317.656,
+          "bytes": "V 0.024 0.000\n"
+        },
+        {
+          "t": 350317.703,
+          "bytes": "STOP\n"
+        },
+        {
+          "t": 350317.75,
+          "bytes": "STOP\n",
+          "failed": true
+        }
+      ]
+    }
+  ]
+}

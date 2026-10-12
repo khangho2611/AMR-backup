@@ -1,0 +1,436 @@
+{
+  "time_local": "2026-10-02T15:11:35.477941",
+  "timezone": "Asia/Bangkok",
+  "source_before": "6034babff1c72211c20b01624cbe7b433686f3993f2eff554759ceb560b1bd9e",
+  "source_after": "6034babff1c72211c20b01624cbe7b433686f3993f2eff554759ceb560b1bd9e",
+  "hardware": false,
+  "ROS": false,
+  "clock": "real unscaled no flags/timestamp backdating/count assignments",
+  "actual_imported_validator": "agv_preflight_static_collector",
+  "fixes_limited": {
+    "preboot_D0_ignored_error_substring_not_banner": {
+      "count": 0,
+      "stage": 0,
+      "tx": [
+        {
+          "mono": 370610.906,
+          "line": "STOP",
+          "attempted": 6,
+          "written": 6
+        },
+        {
+          "mono": 370610.906,
+          "line": "STOP",
+          "attempted": 6,
+          "written": 6
+        },
+        {
+          "mono": 370610.906,
+          "line": "STOP",
+          "attempted": 6,
+          "written": 6
+        }
+      ]
+    },
+    "unregistered_hardware_STOP_zero_OBSERVED_not_CONFIRMED": {
+      "tx": [
+        {
+          "mono": 370610.906,
+          "line": "STOP",
+          "attempted": 6,
+          "written": 1
+        },
+        {
+          "mono": 370610.906,
+          "line": "STOP",
+          "attempted": 6,
+          "written": 1
+        },
+        {
+          "mono": 370610.906,
+          "line": "STOP",
+          "attempted": 6,
+          "written": 1
+        }
+      ],
+      "observed": true,
+      "confirmed": false,
+      "op": 0,
+      "write_fault": false
+    },
+    "registered_partial_STOP_retains_writefault": {
+      "reply": [
+        false,
+        "STOP_WRITE_FAILED: PARTIAL_WRITE_FAULT: 1/6"
+      ],
+      "confirmed": false,
+      "write_fault": true,
+      "tx": [
+        {
+          "mono": 370610.906,
+          "line": "STOP",
+          "attempted": 6,
+          "written": 1
+        },
+        {
+          "mono": 370610.906,
+          "line": "STOP",
+          "attempted": 6,
+          "written": 1
+        },
+        {
+          "mono": 370610.906,
+          "line": "STOP",
+          "attempted": 6,
+          "written": 1
+        },
+        {
+          "mono": 370610.906,
+          "line": "STOP",
+          "attempted": 6,
+          "written": 1
+        },
+        {
+          "mono": 370610.906,
+          "line": "STOP",
+          "attempted": 6,
+          "written": 1
+        },
+        {
+          "mono": 370610.906,
+          "line": "STOP",
+          "attempted": 6,
+          "written": 1
+        },
+        {
+          "mono": 370610.906,
+          "line": "STOP",
+          "attempted": 6,
+          "written": 1
+        },
+        {
+          "mono": 370610.906,
+          "line": "STOP",
+          "attempted": 6,
+          "written": 1
+        },
+        {
+          "mono": 370610.921,
+          "line": "STOP",
+          "attempted": 6,
+          "written": 1
+        },
+        {
+          "mono": 370610.921,
+          "line": "STOP",
+          "attempted": 6,
+          "written": 1
+        },
+        {
+          "mono": 370610.921,
+          "line": "STOP",
+          "attempted": 6,
+          "written": 1
+        },
+        {
+          "mono": 370610.921,
+          "line": "STOP",
+          "attempted": 6,
+          "written": 1
+        }
+      ]
+    },
+    "shared_TXmutex_removes_original_STOP_then_V_order": {
+      "tx": [
+        {
+          "mono": 370611.0,
+          "line": "V 0.04 0.00",
+          "attempted": 13,
+          "written": 13
+        },
+        {
+          "mono": 370611.0,
+          "line": "STOP",
+          "attempted": 6,
+          "written": 6
+        },
+        {
+          "mono": 370611.0,
+          "line": "STOP",
+          "attempted": 6,
+          "written": 6
+        },
+        {
+          "mono": 370611.0,
+          "line": "STOP",
+          "attempted": 6,
+          "written": 6
+        }
+      ],
+      "reply": {
+        "drive": [
+          true,
+          "OK"
+        ]
+      },
+      "pending_while_write_blocked": {
+        "fault_thread_alive": true,
+        "latched": false,
+        "fault": null,
+        "tx": []
+      },
+      "scope": "FakeUART completion order; not cancellation of a write already in progress or physical byte proof"
+    },
+    "actual_MAIN_reader_FAULT_zero_OBSERVED_no_op_CONFIRMED": {
+      "op": 0,
+      "observed": true,
+      "confirmed": false,
+      "tx": [
+        {
+          "mono": 370621.375,
+          "line": "ARM",
+          "attempted": 5,
+          "written": 5
+        },
+        {
+          "mono": 370621.39,
+          "line": "STOP",
+          "attempted": 6,
+          "written": 6
+        },
+        {
+          "mono": 370621.39,
+          "line": "STOP",
+          "attempted": 6,
+          "written": 6
+        },
+        {
+          "mono": 370621.39,
+          "line": "STOP",
+          "attempted": 6,
+          "written": 6
+        }
+      ]
+    }
+  },
+  "residuals": {
+    "new_operation_CONFIRMED_before_first_STOP_TX": {
+      "before_TX": {
+        "confirmed": true,
+        "observed": true,
+        "op": 1,
+        "tx": []
+      },
+      "final_reply": {
+        "stop": [
+          true,
+          "STOP_CONFIRMED_ZERO"
+        ]
+      },
+      "tx": [
+        {
+          "mono": 370611.0,
+          "line": "STOP",
+          "attempted": 6,
+          "written": 6
+        },
+        {
+          "mono": 370611.0,
+          "line": "STOP",
+          "attempted": 6,
+          "written": 6
+        },
+        {
+          "mono": 370611.015,
+          "line": "STOP",
+          "attempted": 6,
+          "written": 6
+        }
+      ]
+    },
+    "old_operation_reused_new_partial_reader_STOP_false_CONFIRMED": {
+      "previous": [
+        false,
+        "STOP_UNCONFIRMED_TIMEOUT"
+      ],
+      "new_fault_tx": [
+        {
+          "mono": 370611.093,
+          "line": "STOP",
+          "attempted": 6,
+          "written": 1
+        },
+        {
+          "mono": 370611.093,
+          "line": "STOP",
+          "attempted": 6,
+          "written": 1
+        },
+        {
+          "mono": 370611.093,
+          "line": "STOP",
+          "attempted": 6,
+          "written": 1
+        }
+      ],
+      "op": 1,
+      "write_fault": false,
+      "confirmed": true,
+      "first_fault": "STOP_UNCONFIRMED_TIMEOUT",
+      "fault": "HARDWARE_FAULT_OBSERVED: I2C_FAULT"
+    },
+    "tuning_explicit_REJECTED_error_now_timeout_FAILED": {
+      "reply": {
+        "tuning": [
+          "FAILED",
+          "TIMEOUT_NO_MCU_ACK"
+        ]
+      },
+      "history": [
+        {
+          "tx_id": 1,
+          "time": "15:11:09",
+          "kp": 0.5,
+          "ki": 1.5,
+          "kd": 0.01,
+          "kf": 0.45,
+          "status": "FAILED",
+          "reason": "TIMEOUT_NO_MCU_ACK"
+        }
+      ],
+      "fault": "HARDWARE_FAULT_OBSERVED: INVALID_TUNING_RANGE",
+      "tx": [
+        {
+          "mono": 370611.093,
+          "line": "TUNING 0.500 1.500 0.0100 0.450",
+          "attempted": 33,
+          "written": 33
+        },
+        {
+          "mono": 370611.093,
+          "line": "STOP",
+          "attempted": 6,
+          "written": 6
+        },
+        {
+          "mono": 370611.093,
+          "line": "STOP",
+          "attempted": 6,
+          "written": 6
+        },
+        {
+          "mono": 370611.093,
+          "line": "STOP",
+          "attempted": 6,
+          "written": 6
+        }
+      ]
+    },
+    "VIN_without_found_accepted_stage3": {
+      "input": {
+        "vin_mv": 0
+      },
+      "stage": 3,
+      "found_seen": true,
+      "settling": true
+    },
+    "invalid_I2C_address_accepted_stage3": {
+      "input": {
+        "i2c_found": "0x00"
+      },
+      "stage": 3,
+      "found_seen": true,
+      "settling": true
+    },
+    "actual_MAIN_valid_diagnostic_organic10s_ARM_without_ACK": {
+      "preARM": {
+        "count": 82,
+        "span": 10.15600000001723,
+        "stage": 3,
+        "passed": true,
+        "boot_delay": 0.0,
+        "after_found": 0.01600000000325963
+      },
+      "reply": {
+        "code": 200,
+        "body": "{\"status\": \"ok\", \"action\": \"ARMED\"}"
+      },
+      "tx": [
+        {
+          "mono": 370621.375,
+          "line": "ARM",
+          "attempted": 5,
+          "written": 5
+        }
+      ],
+      "ARM_ACK_received": false,
+      "MCU_session_bound": false,
+      "scope": "Actual MAIN reader HTTP, FakeUART only; ARM reply injects fresh ARMED D0 without ACK"
+    },
+    "actual_MAIN_late_mixed_boot_VIN0_without_found_organic10s_ARM": {
+      "preARM": {
+        "count": 82,
+        "span": 10.14100000000326,
+        "stage": 3,
+        "passed": true,
+        "boot_delay": 3.6089999999967404,
+        "after_found": 0.0
+      },
+      "reply": {
+        "code": 200,
+        "body": "{\"status\": \"ok\", \"action\": \"ARMED\"}"
+      },
+      "tx": [
+        {
+          "mono": 370636.562,
+          "line": "ARM",
+          "attempted": 5,
+          "written": 5
+        }
+      ],
+      "ARM_ACK_received": false,
+      "MCU_session_bound": false,
+      "scope": "Actual MAIN reader HTTP, FakeUART only; ARM reply injects fresh ARMED D0 without ACK"
+    }
+  },
+  "audited_imports": [
+    {
+      "module": "agv_preflight_static_collector",
+      "names": [
+        "validate_telemetry_sample",
+        "EXACT_BOOT_BANNER",
+        "EXACT_I2C_SCAN_BANNER",
+        "STARTUP_DEADLINE_S"
+      ]
+    }
+  ],
+  "imported_load_count": {
+    "validate_telemetry_sample": 1,
+    "EXACT_BOOT_BANNER": 1,
+    "EXACT_I2C_SCAN_BANNER": 1,
+    "STARTUP_DEADLINE_S": 0
+  },
+  "main_runs": [
+    {
+      "label": "actual_MAIN_valid_diagnostic_organic10s_ARM_without_ACK",
+      "normal_cleanup_limited": {
+        "main_alive": false,
+        "UART_closed": true,
+        "errors": [],
+        "nav_alive": false,
+        "watchdog_alive": false
+      }
+    },
+    {
+      "label": "actual_MAIN_late_mixed_boot_VIN0_without_found_organic10s_ARM",
+      "normal_cleanup_limited": {
+        "main_alive": false,
+        "UART_closed": true,
+        "errors": [],
+        "nav_alive": false,
+        "watchdog_alive": false
+      }
+    }
+  ],
+  "scope": "Actual MAIN-reader-localhost HTTP FakeUART plus NEW component seams; not full typed-stream/owner/crash cleanup/physicalgoal acceptance"
+}

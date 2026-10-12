@@ -1,0 +1,48 @@
+--- D:\HoMinhKhang\PROJECT\GITHUB_PROJECT\CODE XE TU HANH\robot_stm32_f103\src\main.cpp
++++ D:\HoMinhKhang\PROJECT\GITHUB_PROJECT\CODE XE TU HANH\candidates\agv_rpm140_20261003\robot_stm32_f103\src\main.cpp
+@@ -7,6 +7,7 @@
+ #include "robot_motor.h"
+ #include "wifi_controller.h"
+ #include "odometry.h"
++#include "agv_speed_limits.h"
+ 
+ /* Biến toàn cục Odometry */
+ Odometry_t g_odometry;
+@@ -198,20 +199,17 @@
+                 return;
+             }
+ 
+-            /* Giới hạn trần an toàn phần cứng: v <= 0.15 m/s, w <= 0.60 rad/s */
+-            if (v_req > 0.15f) v_req = 0.15f;
+-            if (v_req < -0.15f) v_req = -0.15f;
++            /* Giới hạn trần an toàn phần cứng: candidate 140 RPM, w <= 0.60 rad/s */
++            if (v_req > AGV_MAX_LINEAR_MPS) v_req = AGV_MAX_LINEAR_MPS;
++            if (v_req < -AGV_MAX_LINEAR_MPS) v_req = -AGV_MAX_LINEAR_MPS;
+             if (w_req > 0.60f) w_req = 0.60f;
+             if (w_req < -0.60f) w_req = -0.60f;
+ 
+             float target_l_rpm = 0.0f, target_r_rpm = 0.0f;
+             Kinematics_Inverse(v_req, w_req, &target_l_rpm, &target_r_rpm);
+ 
+-            /* Giới hạn tốc độ trong dải an toàn RPM tối đa 65 RPM */
+-            if (target_l_rpm > 65.0f) target_l_rpm = 65.0f;
+-            if (target_l_rpm < -65.0f) target_l_rpm = -65.0f;
+-            if (target_r_rpm > 65.0f) target_r_rpm = 65.0f;
+-            if (target_r_rpm < -65.0f) target_r_rpm = -65.0f;
++            /* Preserve curvature when either wheel reaches the candidate limit. */
++            AGV_LimitWheelRPM(&target_l_rpm, &target_r_rpm);
+ 
+             g_target_rpm_left  = target_l_rpm;
+             g_target_rpm_right = target_r_rpm;
+@@ -269,10 +267,7 @@
+                 return;
+             }
+ 
+-            if (l_rpm > 65.0f) l_rpm = 65.0f;
+-            if (l_rpm < -65.0f) l_rpm = -65.0f;
+-            if (r_rpm > 65.0f) r_rpm = 65.0f;
+-            if (r_rpm < -65.0f) r_rpm = -65.0f;
++            AGV_LimitWheelRPM(&l_rpm, &r_rpm);
+ 
+             g_target_rpm_left  = l_rpm;
+             g_target_rpm_right = r_rpm;

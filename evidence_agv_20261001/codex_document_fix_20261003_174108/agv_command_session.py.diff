@@ -1,0 +1,116 @@
+--- agv_command_session.py.before
++++ agv_command_session.py
+@@ -22,11 +22,15 @@
+ 
+ 
+ class CommandSession:
+-    def __init__(self, serial_stream, clock=time.perf_counter, motion_window_s=None, require_transport_sync=False):
++    def __init__(self, serial_stream, clock=time.perf_counter, motion_window_s=None, require_transport_sync=False, operator_idle_lease_s=0.):
+         if motion_window_s is not None and (not finite(motion_window_s) or not 0 < motion_window_s <= 15):
+             raise ValueError('Motion window must be finite and at most 15 seconds')
+         self.ser, self.clock = serial_stream, clock
+         self.motion_window_s = motion_window_s
++        if not finite(operator_idle_lease_s) or not 0 <= operator_idle_lease_s <= 3:
++            raise ValueError('Invalid operator idle lease')
++        self.operator_idle_lease_s = operator_idle_lease_s
++        self.last_manual_input = None
+         self.trial_deadline = None
+         self.trial_armed_once = False
+         self.lock, self.writer, self.pid_lock = threading.RLock(), threading.Lock(), threading.Lock()
+@@ -226,6 +230,7 @@
+                             packet['safety'] == 'ARMED' and not self.fault):
+                         self.armed, self.latched = True, False
+                         self.last_command = now
++                        self.last_manual_input = now
+                         if self.motion_window_s is not None and self.trial_deadline is None:
+                             self.trial_deadline = now+self.motion_window_s
+                         self.arm_event.set()
+@@ -378,7 +383,7 @@
+                     ('AUTONOMY_CANCELLED',autonomous and self.autonomy_allowed is False),
+                     ('TRIAL_EXPIRED',self.trial_deadline is not None and now >= self.trial_deadline),
+                     ('D0_STALE',self.last_d0 is None or not 0 <= now-self.last_d0 <= .25),
+-                    ('SCAN_STALE',self.scan_time is None or not 0 <= now-self.scan_time <= .25),
++                    ('SCAN_STALE',autonomous and (self.scan_time is None or not 0 <= now-self.scan_time <= .25)),
+                     ('FORWARD_NOT_CLEAR',autonomous and not escape and needs_forward and not self.scan_clear),
+                     ('ARC_NOT_VALIDATED',not escape and is_arc and not arc_ok),
+                     ('SWEEP_NOT_CLEAR',autonomous and not escape and needs_sweep and not self.rotation_clear),
+@@ -397,6 +402,7 @@
+                     if generation != self.generation or self.latched:
+                         return self._drive_result(command, False, 'CANCELLED_BY_STOP')
+                     self.last_command, self.motion = self.clock(), any(v != 0 for v in values)
++                    if not autonomous:self.last_manual_input = self.last_command
+                     failed = False
+         finally:
+             self.writer.release()
+@@ -418,7 +424,7 @@
+             self.stop_observed_zero = False
+             self.stop_event.clear()
+             self.stop_deadline = self.clock()+.25
+-            if reason != 'USER_STOP' and reason != 'HOME_STOP':
++            if reason not in ('USER_STOP','HOME_STOP','IDLE_SESSION_EXPIRED'):
+                 self._fault(reason)
+             self.arm_sent = None
+         if not self.writer.acquire(timeout=.2):
+@@ -446,7 +452,29 @@
+             if not confirmed: self._fault('STOP_UNCONFIRMED')
+             return confirmed, 'STOP_CONFIRMED' if confirmed else 'STOP_UNCONFIRMED'
+ 
++    def _idle_keepalive(self):
++        # Only repeat zero, never a previous motion command. A browser lease
++        # cannot renew itself through this Pi-side MCU keepalive.
++        if not self.writer.acquire(blocking=False):return
++        failed=False
++        try:
++            with self.lock:
++                now=self.clock()
++                if (not self.armed or self.latched or self.fault or self.motion or
++                        self.autonomy_allowed is not False or self.last_manual_input is None or
++                        not 0 <= now-self.last_manual_input <= self.operator_idle_lease_s or
++                        self.last_d0 is None or not 0 <= now-self.last_d0 <= .25):return
++                generation=self.generation
++            ok=self._write(b'V 0.000 0.000\n')
++            with self.lock:
++                if ok and generation==self.generation and not self.latched:self.last_command=self.clock()
++                elif not ok:failed=True
++        finally:
++            self.writer.release()
++        if failed:self.request_stop('IDLE_WRITE_FAILED',wait=False)
++
+     def watchdog_tick(self):
++        keepalive=False
+         with self.lock:
+             now = self.clock()
+             reason = None
+@@ -457,14 +485,22 @@
+                     reason = 'TRIAL_WINDOW_COMPLETE'
+                 elif self.last_d0 is None or not 0 <= now-self.last_d0 <= .25:
+                     reason = 'TELEMETRY_TIMEOUT'
+-                elif self.scan_time is None or not 0 <= now-self.scan_time <= .25:
++                elif (self.autonomy_allowed is not False and
++                        (self.scan_time is None or not 0 <= now-self.scan_time <= .25)):
+                     reason = 'SCAN_TIMEOUT'
++                elif (self.operator_idle_lease_s > 0 and self.motion_window_s is None and
++                        self.autonomy_allowed is False and not self.motion):
++                    if self.last_manual_input is None or not 0 <= now-self.last_manual_input <= self.operator_idle_lease_s:
++                        reason='IDLE_SESSION_EXPIRED'
++                    else:
++                        keepalive=self.last_command is None or now-self.last_command>=.10
+                 elif self.last_command is None or not 0 <= now-self.last_command <= .2:
+                     reason = 'CALLER_TIMEOUT'
+             if self.stop_deadline is not None and now > self.stop_deadline and not self.stop_confirmed:
+                 self._fault('STOP_UNCONFIRMED')
+         if reason:
+             self.request_stop(reason,wait=False)
++        elif keepalive:self._idle_keepalive()
+ 
+     def tuning(self, kp,ki,kd):
+         if self.motion_window_s is not None:
+@@ -527,6 +563,8 @@
+     def health(self):
+         with self.lock:
+             return {'latched':self.latched,'armed':self.armed,'fault':self.fault,
++                    'owner':'AUTO' if self.autonomy_allowed is True else 'MANUAL',
++                    'idle_lease_remaining_s':None if self.last_manual_input is None or not self.operator_idle_lease_s else max(0.,self.operator_idle_lease_s-(self.clock()-self.last_manual_input)),
+                     'motion_window_s':self.motion_window_s,
+                     'trial_used':self.trial_armed_once,
+                     'trial_remaining_s':None if self.trial_deadline is None else max(0.,self.trial_deadline-self.clock()),

@@ -1,0 +1,88 @@
+{
+  "scope": "OFFLINE MOCK ONLY; no Serial connect, no Node launch",
+  "hashes": {
+    "agv_ros2_arbiter_bridge.py": "dc4d1e95c751a31a68df98b845b18624838764c8a4968eebc4d61e473d4cfe67",
+    "agv_serial_arbiter_bridge_v3.py": "e7967eec69b12b97cef93ea12cc08cdcd2ac34735b740539214f81ecad9ca7bd",
+    "agv_reachability_costmap_planner_v2.py": "76b9b41f6be07e5c35018d236a392879f7e7cb7c794b62ee95b403ee19cfb686"
+  },
+  "cases": [
+    {
+      "id": "B1",
+      "scenario": "bridge connected to actual gate with mock Serial",
+      "observed": [
+        false,
+        "REJECT_BY_SERIAL_ARBITER_GATE: REJECT_NO_ACTIVE_SESSION: Chưa có phiên điều khiển được cấp quyền hoặc đang bị khóa STOP"
+      ],
+      "expected": "structured rejection without exception",
+      "mock_writes": []
+    },
+    {
+      "id": "B2",
+      "scenario": "gate returns (False,REJECT_FAULT)",
+      "observed": [
+        false,
+        "REJECT_BY_SERIAL_ARBITER_GATE: REJECT_FAULT"
+      ],
+      "expected_accepted": false
+    },
+    {
+      "id": "B3",
+      "scenario": "STOP write fails",
+      "observed": [
+        false,
+        "REJECT_STOP_WRITE_FAILED"
+      ],
+      "expected_accepted": false
+    },
+    {
+      "id": "B4",
+      "scenario": "NaN current clock on telemetry",
+      "observed": false,
+      "expected": false
+    },
+    {
+      "id": "B5",
+      "scenario": "NaN angles/ranges and whitespace-only scan frame",
+      "observed": false,
+      "expected": false
+    },
+    {
+      "id": "B6",
+      "scenario": "command without any scan/odom/gate and NaN lease TTL",
+      "observed": [
+        false,
+        "REJECT_INVALID_DEADLINE_TTL"
+      ],
+      "expected_accepted": false
+    },
+    {
+      "id": "B7",
+      "scenario": "invalid priority -1 preempts active manual lease",
+      "observed": [
+        false,
+        "REJECT_INVALID_SOURCE_ENUM"
+      ],
+      "expected_accepted": false
+    },
+    {
+      "id": "P3",
+      "scenario": "deadline100.01 expired at actual clock101; now_mono freezes clock",
+      "observed_path": null,
+      "expected_path": null
+    },
+    {
+      "id": "P4",
+      "scenario": "nonfinite/bool timeout budget",
+      "budget_repr": "inf",
+      "observed_path": null,
+      "expected_path": null
+    },
+    {
+      "id": "P5",
+      "scenario": "nonfinite/bool timeout budget",
+      "budget_repr": "True",
+      "observed_path": null,
+      "expected_path": null
+    }
+  ]
+}

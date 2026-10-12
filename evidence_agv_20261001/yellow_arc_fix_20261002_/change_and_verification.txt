@@ -1,0 +1,10 @@
+Changed behavior:
+- CommandSession V positive arc no longer requires full rotation clearance; reverse and in-place turn still do.
+- _follow emits slow V 0.020 with |w|<=0.120 when front scan is fresh/clear and only rotation_clear is false.
+- rotation_clear threshold remains body_radius + 0.15m; no PWM/gain/firmware changes.
+
+Verification:
+python -B -X utf8 -m unittest discover -s tests -p test_agv_navigation_fix.py -v -> 37/37 OK
+python -B -X utf8 -m unittest discover -s tests -p test_agv_*.py -v -> 59/59 OK
+python -B -m py_compile agv_command_session.py agv_unified_brain.py agv_navigation.py -> exit 0
+Pi read-only status: old PID23834, trial_used=true, DISARMED, STOP confirmed, zero motion; new source not deployed.

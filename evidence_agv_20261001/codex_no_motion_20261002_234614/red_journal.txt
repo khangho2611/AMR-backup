@@ -1,0 +1,29 @@
+test_history_is_bounded_and_failed_write_is_reported_truthfully (test_agv_command_journal.CommandJournal.test_history_is_bounded_and_failed_write_is_reported_truthfully) ... FAIL
+test_written_response_survives_reopen_with_exact_blockers (test_agv_command_journal.CommandJournal.test_written_response_survives_reopen_with_exact_blockers) ... FAIL
+
+======================================================================
+FAIL: test_history_is_bounded_and_failed_write_is_reported_truthfully (test_agv_command_journal.CommandJournal.test_history_is_bounded_and_failed_write_is_reported_truthfully)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "D:\HoMinhKhang\PROJECT\GITHUB_PROJECT\CODE XE TU HANH\tests\test_agv_command_journal.py", line 34, in test_history_is_bounded_and_failed_write_is_reported_truthfully
+    journal=self.journal(path,max_bytes=4096,capacity=3)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\HoMinhKhang\PROJECT\GITHUB_PROJECT\CODE XE TU HANH\tests\test_agv_command_journal.py", line 14, in journal
+    self.assertIsNotNone(spec,'HTTP command responses need a retained file journal')
+AssertionError: unexpectedly None : HTTP command responses need a retained file journal
+
+======================================================================
+FAIL: test_written_response_survives_reopen_with_exact_blockers (test_agv_command_journal.CommandJournal.test_written_response_survives_reopen_with_exact_blockers)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "D:\HoMinhKhang\PROJECT\GITHUB_PROJECT\CODE XE TU HANH\tests\test_agv_command_journal.py", line 21, in test_written_response_survives_reopen_with_exact_blockers
+    journal=self.journal(path)
+            ^^^^^^^^^^^^^^^^^^
+  File "D:\HoMinhKhang\PROJECT\GITHUB_PROJECT\CODE XE TU HANH\tests\test_agv_command_journal.py", line 14, in journal
+    self.assertIsNotNone(spec,'HTTP command responses need a retained file journal')
+AssertionError: unexpectedly None : HTTP command responses need a retained file journal
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.005s
+
+FAILED (failures=2)

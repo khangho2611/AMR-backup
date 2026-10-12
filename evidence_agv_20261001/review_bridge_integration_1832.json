@@ -1,0 +1,76 @@
+{
+  "scope": "OFFLINE SOURCE + MOCK SERIAL ONLY",
+  "before": {
+    "agv_ros2_arbiter_bridge.py": "34ac93630a7581af63c324d57c67203ecdea826fce014f6544271b0381213f53",
+    "agv_serial_arbiter_bridge_v3.py": "e7967eec69b12b97cef93ea12cc08cdcd2ac34735b740539214f81ecad9ca7bd",
+    "agv_reachability_costmap_planner_v2.py": "c7047ff715914475f1d130136582ddbf7ad7ece68ea25726865d5955bab5e7da"
+  },
+  "after": {
+    "agv_ros2_arbiter_bridge.py": "34ac93630a7581af63c324d57c67203ecdea826fce014f6544271b0381213f53",
+    "agv_serial_arbiter_bridge_v3.py": "e7967eec69b12b97cef93ea12cc08cdcd2ac34735b740539214f81ecad9ca7bd",
+    "agv_reachability_costmap_planner_v2.py": "c7047ff715914475f1d130136582ddbf7ad7ece68ea25726865d5955bab5e7da"
+  },
+  "stable_snapshot": true,
+  "cases": [
+    {
+      "id": "I1",
+      "scenario": "arbitrary source lease inherits active gate token, no scan/odom",
+      "observed": [
+        false,
+        "REJECT_NO_FRESH_ODOMETRY_DATA"
+      ],
+      "mock_writes": [],
+      "expected_accepted": false
+    },
+    {
+      "id": "I2",
+      "scenario": "100-second lease bypasses documented 200ms source TTL",
+      "observed": [
+        false,
+        "REJECT_INVALID_DEADLINE_TTL_EXCEEDED_BOUND"
+      ],
+      "lease_deadline": 0.0,
+      "mock_writes": [],
+      "expected_accepted": false
+    },
+    {
+      "id": "I3",
+      "scenario": "production flag with missing gate and no sensor data",
+      "observed": [
+        false,
+        "REJECT_FAIL_CLOSED_NO_GATE"
+      ],
+      "expected_accepted": false,
+      "publisher_type": "MockRos2Publisher"
+    },
+    {
+      "id": "I4",
+      "scenario": "STOP without any actual gate/transport",
+      "observed": [
+        false,
+        "REJECT_STOP_UNAVAILABLE_NO_GATE"
+      ],
+      "expected": "unconfirmed / unavailable, never hardware ENFORCED"
+    },
+    {
+      "id": "I5",
+      "scenario": "negative ranges and reversed angles accepted scan",
+      "observed": false,
+      "expected": false
+    },
+    {
+      "id": "I6",
+      "scenario": "start==goal bypass expired/NaN now_mono",
+      "clock_repr": "100",
+      "observed_path": null,
+      "expected_path": null
+    },
+    {
+      "id": "I7",
+      "scenario": "start==goal bypass expired/NaN now_mono",
+      "clock_repr": "nan",
+      "observed_path": null,
+      "expected_path": null
+    }
+  ]
+}

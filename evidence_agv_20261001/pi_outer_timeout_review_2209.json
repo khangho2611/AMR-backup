@@ -1,0 +1,5 @@
+{
+  "ssh_exit": 0,
+  "stdout": "{\"scope\": \"fake blocked user process only/no Serial\", \"cmd\": [\"/usr/bin/timeout\", \"--kill-after=0.2s\", \"0.2s\", \"/usr/bin/python3\", \"-c\", \"import os,signal,time; signal.signal(signal.SIGTERM,signal.SIG_IGN); print(os.getpid(),flush=True); time.sleep(10)\"], \"returncode\": -9, \"elapsed_s\": 0.40901977900011843, \"pid\": 2362, \"pid_exists_after\": true, \"stderr\": \"\", \"fuser_exit\": 1, \"fuser_stdout\": \"\", \"fuser_stderr\": \"\", \"collector_sha\": \"b548d38bb02ffe067d78e768d927d18d1be068b73557cd1c6231cf278db2a078\"}\n",
+  "stderr": ""
+}

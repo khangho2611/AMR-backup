@@ -1,0 +1,60 @@
+{
+  "scope": "OFFLINE actual Node constructors/callbacks + FakeSerial only; no real ROS bus or hardware",
+  "before": {
+    "agv_ros2_runtime_adapter.py": "943f6e6d38748cf516a984fce46f8fac91e51a06c95500a162c4fd513122524f",
+    "agv_ros2_arbiter_bridge.py": "fa85d141da8ea7013e17ea3d24bc4e35687d69ebd8db7a6f78c9fc840d08e534"
+  },
+  "after": {
+    "agv_ros2_runtime_adapter.py": "943f6e6d38748cf516a984fce46f8fac91e51a06c95500a162c4fd513122524f",
+    "agv_ros2_arbiter_bridge.py": "fa85d141da8ea7013e17ea3d24bc4e35687d69ebd8db7a6f78c9fc840d08e534"
+  },
+  "stable": true,
+  "cases": [
+    {
+      "id": "N1_constructor",
+      "observed": "constructed"
+    },
+    {
+      "id": "Q1_fresh_ROS_epoch_clock",
+      "observed": {
+        "accepted": false
+      }
+    },
+    {
+      "id": "Q2_missing_header",
+      "observed": {
+        "accepted": true
+      }
+    },
+    {
+      "id": "Q3_unconfigured_camera_frame",
+      "observed": {
+        "accepted": true
+      }
+    },
+    {
+      "id": "Q4_corrupt_header_sec",
+      "observed": {
+        "exception": "ValueError"
+      }
+    },
+    {
+      "id": "Q5_stale_stamp_wrong_epoch_valid_token",
+      "mock_writes": [
+        "V 0.040 0.000\n"
+      ]
+    },
+    {
+      "id": "Q6_Node_publisher_payload",
+      "odom_type": "dict",
+      "tf_type": "dict",
+      "stamp": 100.03
+    },
+    {
+      "id": "Q7_destroy_node_armed_mock",
+      "mock_writes": [],
+      "gate_state": "ARMED",
+      "lease_active": true
+    }
+  ]
+}

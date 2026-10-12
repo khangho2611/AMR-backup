@@ -1,0 +1,1920 @@
+--- before/agv_unified_brain.py
++++ after/agv_unified_brain.py
+@@ -1,952 +1,965 @@
+-#!/usr/bin/env python3
+-# -*- coding: utf-8 -*-
+-# ==============================================================================
+-# agv_unified_brain.py - BỘ NÃO ĐIỀU PHỐI TRUNG TÂM HỢP NHẤT XE AGV
+-# Tích hợp: ROS 2 Jazzy + SLAM Toolbox Map + RPLIDAR C1 + Điều khiển ESP32 Serial
+-# ==============================================================================
+-
+-import os
+-import sys
+-import json
+-import time
+-import math
+-import serial
+-import threading
+-from agv_navigation import GridPlanner, finite, slam_censored_ranges, twist_centres, valid_body_bounds
+-from agv_command_session import CommandSession
+-from agv_command_journal import CommandOutcomeJournal
+-from agv_preflight_static_collector import acquire_port_lock, cleanup_lock
+-from collections import deque
+-import rclpy
+-from rclpy.node import Node
+-from rclpy.qos import QoSProfile, ReliabilityPolicy, HistoryPolicy, DurabilityPolicy
+-from sensor_msgs.msg import LaserScan
+-from nav_msgs.msg import OccupancyGrid
+-from geometry_msgs.msg import TransformStamped
+-from tf2_ros import TransformBroadcaster, Buffer, TransformListener
+-from rclpy.time import Time
+-from http.server import HTTPServer, BaseHTTPRequestHandler
+-from socketserver import ThreadingMixIn
+-
+-PORT = 8080
+-SERIAL_PORT = '/dev/ttyUSB0'
+-BAUDRATE = 115200
+-motion_window_s_config = None
+-
+-class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
+-    daemon_threads = True
+-
+-    def __init__(self,*args,journal_path=None,**kwargs):
+-        super().__init__(*args,**kwargs)
+-        self.command_journal=CommandOutcomeJournal(journal_path or os.path.join(
+-            os.path.dirname(os.path.abspath(__file__)),'logs','command_outcomes.jsonl'))
+-
+-class AGVSharedState:
+-    def __init__(self):
+-        self.lock = threading.RLock()
+-        # Trạng thái an toàn & chế độ
+-        self.auto_mode = False
+-        # Body radius is an enclosing measured radius, NOT half the wheel track.
+-        self.body_radius_m = None
+-        self.body_bounds_m = None
+-        self.wall_margin_m = .15
+-        self.cruise_speed_mps = .20
+-        self.map_mono = 0.
+-        self.map_version = 0
+-        self.map_origin_yaw = 0.
+-        self.map_frame = ''
+-        self.scan_mono = 0.
+-        self.scan_frame = ''
+-        self.frontier_reachable = None
+-        self.unknown_cells = None
+-        self.safety_status = "SAFE"
+-        self.hz = 10.0
+-        
+-        # Dữ liệu Radar 360 độ
+-        self.ranges = [0.0] * 360
+-        self.valid_points = 0
+-        self.min_dist_m = 9.99
+-        self.min_angle_deg = 0
+-        
+-        # Phân tích 8 hướng (cm)
+-        self.zones = {
+-            "front": 999, "front_right": 999, "right": 999, "back_right": 999,
+-            "back": 999, "back_left": 999, "left": 999, "front_left": 999
+-        }
+-        
+-        # Dữ liệu Bản đồ SLAM (/map)
+-        self.map_width = 0
+-        self.map_height = 0
+-        self.map_resolution = 0.05
+-        self.map_origin_x = 0.0
+-        self.map_origin_y = 0.0
+-        self.map_data = [] # Mảng nén pixel bản đồ
+-        self.map_received = False
+-        self.frontier_count = 0
+-        self.target_goal_x = 0.0
+-        self.target_goal_y = 0.0
+-        self.nav_mode = "FRONTIER" # "FRONTIER" hoặc "REACTIVE"
+-        self.explore_phase = "IDLE"
+-        
+-        # Telemetry từ ESP32
+-        self.robot_x = 0.0
+-        self.robot_y = 0.0
+-        self.robot_th = 0.0
+-        self.left_rpm = 0.0
+-        self.right_rpm = 0.0
+-        self.left_pwm = 0
+-        self.right_pwm = 0
+-
+-state = AGVSharedState()
+-
+-class AGVROSNode(Node):
+-    def __init__(self):
+-        super().__init__('agv_unified_brain')
+-        
+-        # Finish ROS setup before opening hardware; constructor failures must
+-        # never leave an unmonitored UART or reader behind.
+-        self.ser = None
+-        self._port_lock = None
+-        self._port_lock_path = None
+-        self._rx_line = b''
+-        self.initialize_navigation()
+-        self._reader_stop = threading.Event()
+-        self._reader_thread = threading.Thread(target=self._reader_worker, daemon=True)
+-        self._watchdog_thread = threading.Thread(target=self._watchdog_worker, daemon=True)
+-
+-        # 1b. Khởi tạo TF Broadcaster cho SLAM Toolbox (odom -> base_footprint -> laser)
+-        self.tf_broadcaster = TransformBroadcaster(self)
+-        self.tf_buffer = Buffer()
+-        self.tf_listener = TransformListener(self.tf_buffer, self)
+-        try:
+-            radius = float(os.environ.get('AGV_BODY_RADIUS_M', 'nan'))
+-            if math.isfinite(radius) and radius > 0:
+-                state.body_radius_m = radius
+-        except ValueError:
+-            pass
+-        try:
+-            bounds=tuple(float(v) for v in os.environ.get('AGV_BODY_BOUNDS_M','').split(','))
+-            if valid_body_bounds(bounds,state.body_radius_m):state.body_bounds_m=bounds
+-        except ValueError:
+-            pass
+-        self.create_timer(0.05, self.broadcast_tf) # 20Hz
+-
+-        # 2. Đăng ký LaserScan (/scan)
+-        qos_scan = QoSProfile(
+-            reliability=ReliabilityPolicy.BEST_EFFORT,
+-            history=HistoryPolicy.KEEP_LAST,
+-            depth=1
+-        )
+-        self.create_subscription(LaserScan, '/scan', self.scan_cb, qos_scan)
+-        self.pub_slam_scan = self.create_publisher(LaserScan, '/scan_slam', qos_scan)
+-
+-        # 3. Đăng ký SLAM Map (/map)
+-        qos_map = QoSProfile(
+-            reliability=ReliabilityPolicy.RELIABLE,
+-            durability=DurabilityPolicy.TRANSIENT_LOCAL,
+-            history=HistoryPolicy.KEEP_LAST,
+-            depth=1
+-        )
+-        self.create_subscription(OccupancyGrid, '/map', self.map_cb, qos_map)
+-
+-        # 4. Timer định kỳ đọc Serial từ ESP32 (20Hz)
+-        # The sole reader has a separate thread; ROS callbacks never block it.
+-
+-        # 5. Timer vòng lặp tự hành né vật cản thông minh (10Hz)
+-        self.create_timer(0.10, self.auto_nav_loop)
+-
+-        self._port_lock, self._port_lock_path = acquire_port_lock(SERIAL_PORT)
+-        try:
+-            # Setting these before OPEN reduces reset edges; it cannot prove
+-            # that every USB adapter avoids a reset. Startup still fails closed.
+-            self.ser = serial.Serial(port=None, baudrate=BAUDRATE, timeout=.05,
+-                                     write_timeout=.2, exclusive=True)
+-            self.ser.rts = False
+-            self.ser.dtr = False
+-            self.ser.port = SERIAL_PORT
+-            self.ser.open()
+-            self.control = CommandSession(self.ser,motion_window_s=motion_window_s_config,require_transport_sync=True)
+-            self.control.autonomy_allowed = False
+-            self.control.arc_validator = self._forward_arc_clear
+-            self.control.escape_validator = self._escape_clear
+-            self._reader_thread.start()
+-            self._watchdog_thread.start()
+-            self.get_logger().info(f'ĐÃ MỞ CỔNG SERIAL {SERIAL_PORT}; DISARMED, KHÔNG AUTO ARM')
+-        except Exception:
+-            self._reader_stop.set()
+-            for thread in (self._reader_thread,self._watchdog_thread):
+-                if thread.ident is not None: thread.join(.5)
+-            if self.ser is not None: self.ser.close()
+-            cleanup_lock(self._port_lock,self._port_lock_path)
+-            self._port_lock = None
+-            raise
+-
+-    def broadcast_tf(self):
+-        with self.control.lock:
+-            if self.control.last_d0 is None or not 0 <= self.control.clock()-self.control.last_d0 <= .25:
+-                return
+-        with state.lock:
+-            rx = state.robot_x
+-            ry = state.robot_y
+-            rth = state.robot_th
+-
+-        now = self.get_clock().now().to_msg()
+-
+-        # TF 1: odom -> base_footprint (theo Odometry thực tế của xe)
+-        t1 = TransformStamped()
+-        t1.header.stamp = now
+-        t1.header.frame_id = 'odom'
+-        t1.child_frame_id = 'base_footprint'
+-        t1.transform.translation.x = rx
+-        t1.transform.translation.y = ry
+-        t1.transform.translation.z = 0.0
+-        t1.transform.rotation.z = math.sin(rth / 2.0)
+-        t1.transform.rotation.w = math.cos(rth / 2.0)
+-        self.tf_broadcaster.sendTransform(t1)
+-
+-        # The measured LiDAR mounting TF must be supplied by robot_state_publisher
+-        # or a calibrated static transform. Do not invent offsets from a drawing.
+-
+-    def send_cmd(self, cmd_str, autonomous=False):
+-        clean = cmd_str.strip()
+-        if clean == 'STOP':
+-            with state.lock:
+-                state.auto_mode = False
+-            self.explore_state = 'IDLE'
+-            return self.control.request_stop()
+-        if clean == 'ARM':
+-            return self.control.request_arm()
+-        return self.control.drive(clean, autonomous=autonomous)
+-
+-    def _reader_worker(self):
+-        while not self._reader_stop.is_set():
+-            self.serial_read_loop()
+-            self._reader_stop.wait(.01)
+-
+-    def _watchdog_worker(self):
+-        while not self._reader_stop.wait(.02):
+-            self.control.watchdog_tick()
+-            if self.control.latched:
+-                with state.lock:
+-                    state.auto_mode = False
+-
+-    def serial_read_loop(self):
+-        if not self.ser or not self.ser.is_open:
+-            return
+-        try:
+-            for _ in range(20):
+-                if self.ser.in_waiting <= 0:
+-                    break
+-                self._rx_line = getattr(self,'_rx_line',b'') + self.ser.readline(1024)
+-                if len(self._rx_line) > 1024:
+-                    self._rx_line = b''
+-                    self.control.request_stop('SERIAL_LINE_TOO_LONG',wait=False)
+-                    break
+-                if not self._rx_line.endswith(b'\n'):
+-                    continue
+-                packet = self.control.ingest_line(self._rx_line.strip())
+-                self._rx_line = b''
+-                if self.control.latest is not None and packet == self.control.latest:
+-                    with state.lock:
+-                        state.robot_x, state.robot_y, state.robot_th = packet['x'], packet['y'], packet['th']
+-                        state.left_rpm, state.right_rpm = packet['l_rpm'], packet['r_rpm']
+-                        state.left_pwm, state.right_pwm = packet['l_pwm'], packet['r_pwm']
+-        except Exception as exc:
+-            self.control.request_stop('READER_ERROR:' + type(exc).__name__, wait=False)
+-
+-    def scan_cb(self, msg):
+-        if not self._fresh_ros_header(msg.header,.25):
+-            self.control.request_stop('STALE_SCAN_STAMP',wait=False)
+-            return
+-        if (not finite(msg.angle_min) or not finite(msg.angle_increment) or msg.angle_increment == 0 or
+-                not finite(msg.range_min) or not finite(msg.range_max) or msg.range_min < 0 or
+-                msg.range_max <= msg.range_min):
+-            self.control.request_stop('INVALID_SCAN', wait=False)
+-            return
+-        angle = msg.angle_min
+-        step = msg.angle_increment
+-        if msg.header.frame_id == 'base_footprint':
+-            mount_x, mount_y, mount_yaw = 0., 0., 0.
+-        else:
+-            try:
+-                mount = self.tf_buffer.lookup_transform('base_footprint',msg.header.frame_id,Time())
+-                mount_x, mount_y = mount.transform.translation.x,mount.transform.translation.y
+-                mount_yaw = self._yaw(mount.transform.rotation)
+-                if not finite(mount_x) or not finite(mount_y):
+-                    raise ValueError('Invalid scan TF')
+-                stamp = mount.header.stamp.sec+mount.header.stamp.nanosec*1e-9
+-                # Static TF stamp zero is timeless; dynamic transforms expire.
+-                if stamp and not 0 <= self.get_clock().now().nanoseconds*1e-9-stamp <= .25:
+-                    raise ValueError('Stale scan TF')
+-            except Exception:
+-                with self.control.lock:
+-                    active=self.control.armed or self.control.motion or self.control.arm_sent is not None
+-                    self.control.scan_time=None
+-                with state.lock:
+-                    state.scan_mono=0.
+-                    state.explore_phase='CHỜ TRANSFORM LIDAR'
+-                if active:
+-                    self.control.request_stop('MISSING_SCAN_TF',wait=False)
+-                return
+-        if hasattr(self,'pub_slam_scan'):
+-            import copy
+-            filtered = copy.deepcopy(msg)
+-            try:
+-                filtered.ranges = slam_censored_ranges(msg.ranges,msg.range_min,msg.range_max)
+-            except ValueError:
+-                self.control.request_stop('INVALID_SLAM_SCAN_LIMITS',wait=False)
+-                return
+-            self.pub_slam_scan.publish(filtered)
+-        points = [0.0] * 360
+-        valid_cnt = 0
+-        min_d = 99.0
+-        min_ang = 0
+-        zone_mins = {k: 99.0 for k in state.zones.keys()}
+-
+-        for r in msg.ranges:
+-            # A positive infinite beam is a no-return ray up to range_max;
+-            # NaN/negative infinity is invalid, never treated as free space.
+-            if r == math.inf:
+-                r = msg.range_max
+-            if math.isfinite(r) and msg.range_min <= r <= msg.range_max:
+-                x = mount_x + r*math.cos(angle+mount_yaw)
+-                y = mount_y + r*math.sin(angle+mount_yaw)
+-                deg = round(math.degrees(math.atan2(y,x))) % 360
+-                d = math.hypot(x,y)
+-                if points[deg] == 0.0 or d < points[deg]:
+-                    points[deg] = d
+-
+-                if 0.05 <= d <= 12.0:
+-                    valid_cnt += 1
+-                    if d < min_d:
+-                        min_d = d
+-                        min_ang = deg
+-
+-                    # Phân bổ vào 8 vùng
+-                    if deg >= 338 or deg < 23: zone = "front"
+-                    elif 23 <= deg < 68: zone = "front_left"
+-                    elif 68 <= deg < 113: zone = "left"
+-                    elif 113 <= deg < 158: zone = "back_left"
+-                    elif 158 <= deg < 203: zone = "back"
+-                    elif 203 <= deg < 248: zone = "back_right"
+-                    elif 248 <= deg < 293: zone = "right"
+-                    else: zone = "front_right"
+-
+-                    if d < zone_mins[zone]:
+-                        zone_mins[zone] = d
+-
+-            angle += step
+-
+-        with state.lock:
+-            state.scan_mono = time.monotonic()
+-            state.scan_frame = msg.header.frame_id
+-            state.ranges = points
+-            state.valid_points = valid_cnt
+-            state.min_dist_m = round(min_d if min_d < 90.0 else 9.99, 2)
+-            state.min_angle_deg = min_ang
+-            for k in state.zones.keys():
+-                state.zones[k] = int(zone_mins[k] * 100) if zone_mins[k] < 90.0 else 999
+-
+-            if state.min_dist_m <= 0.35:
+-                state.safety_status = "DANGER_STOP"
+-            elif state.min_dist_m <= 0.70:
+-                state.safety_status = "WARNING"
+-            else:
+-                state.safety_status = "SAFE"
+-
+-        rotation_clear = self._rotation_clear()
+-        with self.control.lock:
+-            self.control.scan_time = self.control.clock()
+-            # Front drive needs actual returns in the forward cone. Unknown rays
+-            # do not become an artificial 999cm free direction.
+-            forward = [points[d % 360] for d in range(-22,23)]
+-            self.control.scan_clear = sum(d > 0 for d in forward) >= 30 and min(d for d in forward if d > 0) >= .40
+-            self.control.rotation_clear = rotation_clear
+-        # Forward/rotation commands are independently guarded at write time.
+-        # The navigator may HOLD and select another goal while the scan is fresh.
+-
+-    @staticmethod
+-    def _yaw(q):
+-        vals = (q.x,q.y,q.z,q.w)
+-        if not all(finite(v) for v in vals) or abs(sum(v*v for v in vals)-1.) > .01:
+-            raise ValueError('Invalid orientation')
+-        # This planner only accepts planar grids/transforms.
+-        if abs(q.x) > 1e-5 or abs(q.y) > 1e-5:
+-            raise ValueError('Non-planar transform')
+-        return math.atan2(2*q.w*q.z, 1-2*q.z*q.z)
+-
+-    def _fresh_ros_header(self, header, max_age):
+-        try:
+-            stamp = header.stamp.sec+header.stamp.nanosec*1e-9
+-            now = self.get_clock().now().nanoseconds*1e-9
+-            return finite(stamp) and 0 <= now-stamp <= max_age
+-        except (TypeError,AttributeError):
+-            return False
+-
+-    def map_cb(self, msg):
+-        try:
+-            yaw = self._yaw(msg.info.origin.orientation)
+-            w,h,res = msg.info.width,msg.info.height,msg.info.resolution
+-            ox,oy = msg.info.origin.position.x,msg.info.origin.position.y
+-            data = list(msg.data)
+-            frame = msg.header.frame_id
+-            valid = (type(w) is int and type(h) is int and 0 < w*h <= 2_000_000 and
+-                     w > 0 and h > 0 and finite(res) and .001 <= res <= 1. and
+-                     finite(ox) and finite(oy) and isinstance(frame,str) and bool(frame) and
+-                     len(data) == w*h and all(type(v) is int and -1 <= v <= 100 for v in data) and
+-                     self._fresh_ros_header(msg.header,2.))
+-            if not valid:
+-                raise ValueError('Invalid OccupancyGrid')
+-        except (ValueError, TypeError, AttributeError):
+-            with state.lock: state.map_received = False
+-            return
+-        with state.lock:
+-            identity = (frame,w,h,res,ox,oy,yaw)
+-            old = (state.map_frame,state.map_width,state.map_height,state.map_resolution,
+-                   state.map_origin_x,state.map_origin_y,state.map_origin_yaw)
+-            if state.map_frame and state.map_frame != frame:
+-                self.initialize_navigation()
+-                # Reframed map cannot silently move the captured home.
+-                state.auto_mode = False
+-            state.map_width,state.map_height,state.map_resolution = w,h,res
+-            state.map_origin_x,state.map_origin_y,state.map_origin_yaw = ox,oy,yaw
+-            state.map_frame = frame
+-            if state.map_data != data or old != identity:
+-                state.map_version += 1
+-            state.map_data,state.map_received,state.map_mono = data,True,time.monotonic()
+-
+-    def initialize_navigation(self):
+-        self.explore_state = 'IDLE'
+-        self.home = None
+-        self.goal = None
+-        self.blocked_goals = []
+-        self.blocked_regions = []
+-        self.progress = deque()
+-        self._planner_key,self._planner = None,None
+-        self._home_stop_sent = False
+-
+-    def _grid(self):
+-        with state.lock:
+-            now = time.monotonic()
+-            if not state.map_received or not 0 <= now-state.map_mono <= 2.:
+-                return None
+-            key = (state.map_version,state.body_radius_m,state.wall_margin_m)
+-            args = (state.map_width,state.map_height,state.map_resolution,
+-                    (state.map_origin_x,state.map_origin_y,state.map_origin_yaw),
+-                    tuple(state.map_data),state.body_radius_m,state.wall_margin_m)
+-        if getattr(self,'_planner_key',None) != key:
+-            try:
+-                planner = GridPlanner(*args, budget_s=.05)
+-            except (ValueError,TypeError,TimeoutError):
+-                return None
+-            self._planner_key,self._planner = key,planner
+-        return self._planner
+-
+-    def plan_astar_path(self, rx,ry,gx,gy):
+-        grid = self._grid()
+-        return None if grid is None else grid.path((rx,ry),(gx,gy))
+-
+-    def find_best_frontier(self, rx,ry):
+-        grid = self._grid()
+-        if grid is None:
+-            with state.lock: state.frontier_reachable = None
+-            return None
+-        now = time.monotonic()
+-        self.blocked_goals = [b for b in getattr(self,'blocked_goals',[]) if b[3] > now]
+-        self.blocked_regions = [b for b in getattr(self,'blocked_regions',[]) if b[3] > now]
+-        summary = grid.frontiers((rx,ry),[b[:3] for b in self.blocked_goals],
+-                                [b[:3] for b in self.blocked_regions])
+-        with state.lock:
+-            state.frontier_reachable = None if summary is None else summary['reachable_frontiers']
+-            state.frontier_count = 0 if summary is None else len(summary['goals'])
+-            state.unknown_cells = None if summary is None else summary['unknown_cells']
+-        return summary['goals'][0] if summary and summary['goals'] else None
+-
+-    def _pose_map(self):
+-        try:
+-            with state.lock:
+-                frame = state.map_frame
+-            t = self.tf_buffer.lookup_transform(frame,'base_footprint',Time())
+-            stamp = t.header.stamp.sec+t.header.stamp.nanosec*1e-9
+-            age = self.get_clock().now().nanoseconds*1e-9-stamp
+-            if not 0 <= age <= .25:
+-                return None
+-            p,q = t.transform.translation,t.transform.rotation
+-            yaw = self._yaw(q)
+-            return (p.x,p.y,yaw) if finite(p.x) and finite(p.y) else None
+-        except Exception:
+-            return None
+-
+-    def _forward_arc_clear(self, v, w):
+-        grid,pose=self._grid(),self._pose_map()
+-        if grid is None or pose is None or not finite(v) or v <= 0:return False
+-        with state.lock:
+-            epoch=(state.map_version,state.map_frame,state.body_radius_m,state.wall_margin_m,state.scan_mono)
+-            points=list(state.ranges)
+-            if not 0 <= time.monotonic()-state.scan_mono <= .25:return False
+-        samples=twist_centres(v,w)
+-        if samples is None or not grid.swept_clear(pose,v,w):return False
+-        centres,padding=samples
+-        # Map and fresh scan must both clear the moving enclosing body. Missing
+-        # rear bins are not invented as free rays: the full footprint there
+-        # must be known-free in the map. Front coverage remains a writer gate.
+-        for deg,d in enumerate(points):
+-            if not finite(d) or d <= 0:continue
+-            angle=math.radians(deg)
+-            px,py=d*math.cos(angle),d*math.sin(angle)
+-            # Account for the half-degree rounding used by scan_cb.
+-            radius=grid.radius+padding+d*math.sin(math.radians(.5))
+-            if any(math.hypot(px-x,py-y) <= radius for x,y in centres):return False
+-        with state.lock:
+-            return (epoch==(state.map_version,state.map_frame,state.body_radius_m,state.wall_margin_m,state.scan_mono)
+-                    and 0 <= time.monotonic()-state.scan_mono <= .25
+-                    and 0 <= time.monotonic()-state.map_mono <= 2.)
+-
+-    def _escape_clear(self, v, w):
+-        grid,pose=self._grid(),self._pose_map()
+-        if grid is None or pose is None:return False
+-        with state.lock:
+-            epoch=(state.map_version,state.map_frame,state.body_radius_m,state.body_bounds_m,state.wall_margin_m,state.scan_mono)
+-            bounds=state.body_bounds_m
+-            points=list(state.ranges)
+-            if not 0 <= time.monotonic()-state.scan_mono <= .25:return False
+-        samples=twist_centres(v,w)
+-        if samples is None or not grid.escape_swept_clear(pose,v,w,bounds=bounds):return False
+-        centres,padding=samples
+-        obstacles=[(d*math.cos(math.radians(deg)),d*math.sin(math.radians(deg)),d)
+-                   for deg,d in enumerate(points) if finite(d) and 0<d<16.]
+-        if not obstacles:return False
+-        distances=[]
+-        for x,y in centres:
+-            clearance=math.inf
+-            for px,py,d in obstacles:
+-                gap=math.hypot(px-x,py-y)-d*math.sin(math.radians(.5))
+-                if gap<=grid.body_radius+padding:return False
+-                clearance=min(clearance,gap)
+-            if distances and clearance<distances[-1]-1e-7:return False
+-            distances.append(clearance)
+-        if distances[-1]<=distances[0]+.0001:return False
+-        with state.lock:
+-            return (epoch==(state.map_version,state.map_frame,state.body_radius_m,state.body_bounds_m,state.wall_margin_m,state.scan_mono)
+-                    and 0 <= time.monotonic()-state.scan_mono <= .25
+-                    and 0 <= time.monotonic()-state.map_mono <= 2.)
+-
+-    def _try_escape(self):
+-        # No timed blind reverse or spin: each tick and the sole writer check
+-        # a short known-free swept body and increasing map+scan clearance.
+-        for v,w in ((.04,.35),(.04,-.35),(.04,0.),(-.04,0.),(-.04,-.35),(-.04,.35)):
+-            if self._escape_clear(v,w):
+-                ok,reason=self.control.drive(f'V {v:.3f} {w:.3f}',autonomous=True,escape=True)
+-                if ok:
+-                    self.control._event('navigation_red_escape',v=v,w=w,reason='CLEARANCE_INCREASING')
+-                    with state.lock:state.explore_phase='NÉ VÙNG ĐỎ: tiến ra xa vật cản' if v>0 else 'NÉ VÙNG ĐỎ: lùi theo hành lang trống'
+-                return ok
+-        return False
+-
+-    def start_auto(self):
+-        """Expose each failed START gate at the moment of the decision."""
+-        pose,grid=self._pose_map(),self._grid()
+-        # Same lock order as telemetry; STOP cannot interleave the final ARM
+-        # check and AUTO commit. No UART or disk IO happens under these locks.
+-        with state.lock,self.control.lock:
+-            now=self.control.clock()
+-            ages=self.control._ages(now)
+-            map_age=time.monotonic()-state.map_mono
+-            checks=(('NOT_ARMED',not self.control.armed),('LATCHED',self.control.latched),
+-                    ('FAULT',self.control.fault is not None),
+-                    ('D0_STALE',ages['d0_age_s'] is None or not 0 <= ages['d0_age_s'] <= .25),
+-                    ('SCAN_STALE',ages['scan_age_s'] is None or not 0 <= ages['scan_age_s'] <= .25),
+-                    ('CALLER_STALE',self.control.armed and (ages['caller_age_s'] is None or not 0 <= ages['caller_age_s'] <= .2)),
+-                    ('TRIAL_EXPIRED',self.control.trial_deadline is not None and now >= self.control.trial_deadline),
+-                    ('BODY_RADIUS_UNCONFIGURED',not finite(state.body_radius_m) or state.body_radius_m <= 0),
+-                    ('MAP_NOT_READY',grid is None),('TF_NOT_READY',pose is None))
+-            blockers=[name for name,blocked in checks if blocked]
+-            snapshot=dict(**ages,map_age_s=map_age,map_frame=state.map_frame,
+-                          body_radius_m=state.body_radius_m,pose=pose,generation=self.control.generation)
+-            if not blockers:
+-                self.initialize_navigation()
+-                self.control.autonomy_allowed = True
+-                self.control.generation += 1
+-                self.home=pose;self.explore_state='EXPLORING';state.auto_mode=True
+-            self.control._event('auto_gate',accepted=not blockers,blockers=blockers,gate=snapshot)
+-            return not blockers,('STARTED' if not blockers else 'EXPLICIT_ARM_FRESH_MAP_TF_AND_BODY_RADIUS_REQUIRED'),blockers,snapshot
+-
+-    def _hold(self, phase):
+-        with state.lock: state.explore_phase = phase
+-        # V0 keeps a valid explicit session without asserting physical STOP.
+-        self.send_cmd('V 0.000 0.000',autonomous=True)
+-
+-    def _exclude_goal(self, now, failed=True):
+-        if self.goal is not None:
+-            radius = max(.30,state.map_resolution*3)
+-            target = self.blocked_regions if failed else self.blocked_goals
+-            target.append((*self.goal,radius,now+30.))
+-            self.goal = None
+-        self.progress.clear()
+-
+-    def _follow(self, pose, goal):
+-        grid = self._grid()
+-        path = None if grid is None else grid.path(pose[:2],goal)
+-        if not path:
+-            if getattr(self,'control',None) is not None:
+-                self.control._event('navigation_blocked',reason='NO_SAFE_PATH',pose=pose,goal=goal)
+-            return False
+-        # Extend the carrot only along one straight run of A*. Do not skip a
+-        # bend; the writer still checks the actual swept body before each TX.
+-        wp = path[1] if len(path) > 1 else path[0]
+-        if len(path)>2:
+-            direction=(path[2][0]-wp[0],path[2][1]-wp[1])
+-            for candidate in path[2:]:
+-                offset=(candidate[0]-wp[0],candidate[1]-wp[1])
+-                if abs(direction[0]*offset[1]-direction[1]*offset[0])>1e-8:break
+-                if math.hypot(candidate[0]-pose[0],candidate[1]-pose[1])>.25:break
+-                wp=candidate
+-        dx,dy = wp[0]-pose[0],wp[1]-pose[1]
+-        error = (math.atan2(dy,dx)-pose[2]+math.pi)%(2*math.pi)-math.pi
+-        w = max(-.35,min(.35,error))
+-        v = 0. if abs(error) > .25 else min(state.cruise_speed_mps,
+-                  math.hypot(dx,dy)/.5,math.hypot(goal[0]-pose[0],goal[1]-pose[1])/.5)
+-        if v == 0 and abs(w) > 0 and not self._rotation_clear():
+-            # Prefer a slow, geometrically checked escape over a blind spin.
+-            # The writer repeats this validation with fresh map/TF/scan.
+-            scan_clear = bool(getattr(self.control,'scan_clear',False))
+-            v = min(.02, math.hypot(dx,dy))
+-            w = max(-.12,min(.12,error))
+-            if scan_clear and self._forward_arc_clear(v,w):
+-                self.control._event('navigation_yellow_escape',reason='FORWARD_SWEEP_CLEAR',
+-                                    pose=pose,goal=goal,v=v,w=w)
+-            else:
+-                if getattr(self,'control',None) is not None:
+-                    self.control._event('navigation_blocked',reason='NO_SAFE_FORWARD_SWEEP',pose=pose,goal=goal)
+-                return False
+-        return self.send_cmd(f'V {v:.3f} {w:.3f}',autonomous=True)[0]
+-
+-    def _rotation_clear(self):
+-        with state.lock:
+-            radius = state.body_radius_m
+-            points = list(state.ranges)
+-            age = time.monotonic()-state.scan_mono
+-        returns=[p for p in points if finite(p) and 0<p<16.]
+-        if not (radius is not None and 0<=age<=.25 and len(returns)>=30 and
+-                min(returns)>radius+.15):return False
+-        grid,pose=self._grid(),self._pose_map()
+-        # A missing rounded radar bin is not an obstacle. The complete known-
+-        # free map footprint covers those directions; unknown cells still block.
+-        return grid is not None and pose is not None and grid.swept_clear(pose,0.,.35)
+-
+-    def auto_nav_loop(self):
+-        if self.explore_state == 'WAIT_STOP':
+-            health = self.control.health()
+-            with state.lock:
+-                state.explore_phase = 'HOME: đã xác nhận D0 dừng' if health['stop_confirmed'] else 'HOME: chờ xác nhận dừng'
+-                if health['stop_confirmed']:
+-                    state.auto_mode = False
+-                    self.explore_state = 'COMPLETED'
+-            return
+-        with state.lock:
+-            auto = state.auto_mode
+-            scan_age = time.monotonic()-state.scan_mono
+-        if not auto:
+-            return
+-        pose,grid = self._pose_map(),self._grid()
+-        if pose is None or grid is None or not 0 <= scan_age <= .25:
+-            self._hold('HOLD: chờ map, TF, scan hoặc kích thước thân xe')
+-            return
+-        if self.home is None:
+-            self.home = pose
+-            self.explore_state = 'EXPLORING'
+-        if not grid.traversable(grid.world_to_cell(*pose[:2])) or not grid.swept_clear(pose,0.,0.):
+-            if not self._try_escape():
+-                self._hold('HOLD: chưa có đường thoát vùng đỏ đủ thân xe')
+-            return
+-        now = time.monotonic()
+-        self.progress.append((now,pose))
+-        while self.progress and now-self.progress[0][0] > 2.:
+-            self.progress.popleft()
+-        if (self.goal is not None and self.progress and now-self.progress[0][0] >= 1.5 and
+-                math.hypot(pose[0]-self.progress[0][1][0],pose[1]-self.progress[0][1][1]) < .02 and
+-                abs((pose[2]-self.progress[0][1][2]+math.pi)%(2*math.pi)-math.pi) < .10):
+-            self._exclude_goal(now)
+-            self._hold('Đổi vùng khám phá: mục tiêu không có tiến triển')
+-            return
+-        if self.explore_state == 'RETURNING_HOME':
+-            dist = math.hypot(pose[0]-self.home[0],pose[1]-self.home[1])
+-            if dist <= .04:
+-                angle = (self.home[2]-pose[2]+math.pi)%(2*math.pi)-math.pi
+-                if abs(angle) > .08:
+-                    if self._rotation_clear():
+-                        self.send_cmd(f'V 0.000 {max(-.35,min(.35,angle)):.3f}',autonomous=True)
+-                    else:
+-                        self._hold('HOME: chưa đủ khoảng trống để chỉnh hướng')
+-                else:
+-                    self.control.request_stop('HOME_STOP',wait=False)
+-                    self.explore_state = 'WAIT_STOP'
+-                return
+-            if not self._follow(pose,self.home[:2]):
+-                self._hold('HOLD: chưa có đường an toàn về home')
+-            return
+-        if self.goal is None or math.hypot(pose[0]-self.goal[0],pose[1]-self.goal[1]) < .06:
+-            if self.goal is not None:
+-                self._exclude_goal(now,failed=False)
+-            self.goal = self.find_best_frontier(*pose[:2])
+-            self.progress.clear()
+-        if self.goal is None:
+-            with state.lock:
+-                remaining = state.frontier_reachable
+-            if remaining == 0:
+-                self.explore_state = 'RETURNING_HOME'
+-                self._hold('Hết frontier reachable; về home, unknown khác còn chưa nghiệm thu')
+-            else:
+-                self._hold('HOLD: frontier còn nhưng chưa có mục tiêu an toàn mới')
+-            return
+-        with state.lock:
+-            state.target_goal_x,state.target_goal_y = self.goal
+-            state.explore_phase = 'EXPLORING: bám đường A* known-free'
+-        if not self._follow(pose,self.goal):
+-            self._exclude_goal(now)
+-            self._hold('Đổi mục tiêu: đường bị chặn hoặc dữ liệu không hợp lệ')
+-
+-    def close_control(self):
+-        self.control.request_stop('SHUTDOWN',wait=False)
+-        self.control.stop_event.wait(.25)
+-        self._reader_stop.set()
+-        for thread in (self._reader_thread,self._watchdog_thread):
+-            thread.join(.5)
+-        ok = not self._reader_thread.is_alive() and not self._watchdog_thread.is_alive()
+-        try:
+-            if self.ser: self.ser.close()
+-        except Exception:
+-            ok = False
+-        if ok:
+-            cleanup_lock(getattr(self,'_port_lock',None),getattr(self,'_port_lock_path',None))
+-            self._port_lock = None
+-        return ok and self.control.stop_confirmed and self.control.stop_write_ok
+-
+-
+-ros_node = None
+-observe_only = False
+-
+-class WebHandler(BaseHTTPRequestHandler):
+-    def log_message(self, format, *args):
+-        return
+-
+-    def _cors(self):
+-        self.send_header('Access-Control-Allow-Origin', '*')
+-        self.send_header('Access-Control-Allow-Methods', 'GET, OPTIONS')
+-        self.send_header('Access-Control-Allow-Headers', 'Content-Type')
+-
+-    def _json(self, code, data):
+-        self.send_response(code)
+-        self.send_header('Content-Type','application/json; charset=utf-8')
+-        self._cors()
+-        self.end_headers()
+-        self.wfile.write(json.dumps(data,allow_nan=False).encode('utf8'))
+-
+-    def _command_reply(self,code,data,operation,arguments):
+-        # Only HTTP response threads write files; reader/watchdog paths keep
+-        # their own bounded RAM history and never wait for this journal lock.
+-        control=ros_node.control.health() if ros_node else {}
+-        if ros_node:
+-            ros_node.control._event('http_outcome',operation=operation,http_status=code,response=data)
+-            control['command_events']=ros_node.control.diagnostics()['command_events']
+-        outcome=self.server.command_journal.record(operation,arguments,code,data,control)
+-        self._json(code,dict(data,journal=outcome))
+-
+-    def do_OPTIONS(self):
+-        self.send_response(200)
+-        self._cors()
+-        self.end_headers()
+-
+-    def do_GET(self):
+-        p = self.path.split('?')
+-        path = p[0]
+-        q = p[1] if len(p) > 1 else ''
+-
+-        if observe_only:
+-            import urllib.parse
+-            params=urllib.parse.parse_qs(q)
+-            stop=(path=='/api/cmd' and params.get('val',[''])[0]=='STOP') or (
+-                  path=='/api/auto' and params.get('act',[''])[0].upper()=='STOP')
+-            if path in ('/api/cmd','/api/pid','/api/auto') and not stop:
+-                self._command_reply(423,{'status':'FAILED','reason':'OBSERVE_ONLY'},path,params)
+-                return
+-
+-        if path == '/api/diagnostics':
+-            report=ros_node.control.diagnostics() if ros_node else {'status':'NO_TRANSPORT'}
+-            report['command_journal']=self.server.command_journal.snapshot()
+-            self._json(200 if ros_node else 503,report)
+-            return
+-
+-        if path == '/api/telemetry':
+-            if ros_node is None:
+-                self._json(503,{'status':'NO_TRANSPORT','mode':'DASHBOARD_ONLY',
+-                                'reason':'Chỉ xem giao diện; chưa kết nối điều khiển xe'})
+-                return
+-            with state.lock:
+-                d = {
+-                    "auto": state.auto_mode,
+-                    "status": 'OBSERVE_ONLY' if observe_only else state.safety_status,
+-                    "hz": state.hz,
+-                    "control": ros_node.control.health() if ros_node else {},
+-                    "min_m": state.min_dist_m,
+-                    "min_ang": state.min_angle_deg,
+-                    "zones": state.zones,
+-                    "ranges": state.ranges,
+-                    "robot": {
+-                        "x": state.robot_x, "y": state.robot_y, "th": state.robot_th,
+-                        "l_rpm": state.left_rpm, "r_rpm": state.right_rpm,
+-                        "l_pwm": state.left_pwm, "r_pwm": state.right_pwm
+-                    },
+-                    "map_info": {
+-                        "has_map": state.map_received,
+-                        "w": state.map_width, "h": state.map_height,
+-                        "res": state.map_resolution,
+-                        "ox": state.map_origin_x, "oy": state.map_origin_y,
+-                        "yaw": state.map_origin_yaw, "frame": state.map_frame,
+-                        "frontiers": state.frontier_count,
+-                        "reachable_frontiers": state.frontier_reachable,
+-                        "unknown_cells": state.unknown_cells,
+-                        "goal_x": state.target_goal_x, "goal_y": state.target_goal_y,
+-                        "phase": state.explore_phase
+-                    }
+-                }
+-            payload = json.dumps(d).encode('utf-8')
+-            self.send_response(200)
+-            self.send_header('Content-Type', 'application/json')
+-            self._cors()
+-            self.end_headers()
+-            self.wfile.write(payload)
+-            return
+-
+-        elif path == '/api/map_full':
+-            with state.lock:
+-                d = {
+-                    "w": state.map_width, "h": state.map_height,
+-                    "res": state.map_resolution,
+-                    "ox": state.map_origin_x, "oy": state.map_origin_y,
+-                    "yaw": state.map_origin_yaw, "frame": state.map_frame,
+-                    "data": state.map_data
+-                }
+-            payload = json.dumps(d).encode('utf-8')
+-            self.send_response(200)
+-            self.send_header('Content-Type', 'application/json')
+-            self._cors()
+-            self.end_headers()
+-            self.wfile.write(payload)
+-            return
+-
+-        elif path == '/api/cmd':
+-            import urllib.parse
+-            params = urllib.parse.parse_qs(q)
+-            val = params.get('val',[''])[0]
+-            if ros_node:
+-                if val != 'STOP':
+-                    with state.lock: state.auto_mode = False
+-                ok,reason = ros_node.send_cmd(val)
+-            else:
+-                ok,reason = False,'NO_TRANSPORT'
+-            self._command_reply(200 if ok else 422, {'status':'SENT' if ok else 'FAILED','reason':reason},'COMMAND',{'val':val})
+-            return
+-
+-        elif path == '/api/pid':
+-            import urllib.parse
+-            params = urllib.parse.parse_qs(q)
+-            try:
+-                kp,ki,kd = [float(params[k][0]) for k in ('kp','ki','kd')]
+-                result = ros_node.control.tuning(kp,ki,kd) if ros_node else {'status':'FAILED','reason':'NO_TRANSPORT'}
+-            except (ValueError,KeyError,IndexError):
+-                result = {'status':'REJECTED','reason':'INVALID_INPUT'}
+-            self._command_reply(200 if result['status']=='APPLIED' else 422,result,'PID',params)
+-            return
+-
+-        elif path == '/api/history_csv':
+-            payload = ros_node.control.history_csv() if ros_node else 'id,time,kp,ki,kd,kf,status,reason\r\n'
+-            self.send_response(200)
+-            self.send_header('Content-Type','text/csv; charset=utf-8')
+-            self.send_header('Content-Disposition','attachment; filename="agv_pid_history.csv"')
+-            self.end_headers()
+-            self.wfile.write(('\ufeff'+payload).encode('utf8'))
+-            return
+-
+-        elif path == '/api/auto':
+-            import urllib.parse
+-            act = urllib.parse.parse_qs(q).get('act',[''])[0].upper()
+-            ok,reason = False,'NO_TRANSPORT'
+-            blockers,snapshot=[],{}
+-            if ros_node and act == 'START':
+-                ok,reason,blockers,snapshot=ros_node.start_auto()
+-            elif ros_node and act == 'STOP':
+-                ok,reason = ros_node.send_cmd('STOP')
+-            self._command_reply(200 if ok else 422,{'status':'ok' if ok else 'FAILED',
+-                'auto':state.auto_mode,'reason':reason,'blockers':blockers,'gate':snapshot},'AUTO_'+act,{'act':act})
+-            return
+-
+-        else:
+-            # Phục vụ giao diện Dashboard chuẩn Cyberpunk Pro
+-            html_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'web', 'index_cyberpunk.html')
+-            if not os.path.exists(html_file):
+-                html_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'index_cyberpunk.html')
+-            if os.path.exists(html_file):
+-                with open(html_file, 'rb') as f:
+-                    content = f.read()
+-                self.send_response(200)
+-                self.send_header('Content-Type', 'text/html; charset=utf-8')
+-                self._cors()
+-                self.end_headers()
+-                self.wfile.write(content)
+-            else:
+-                self.send_error(404, 'File Not Found')
+-
+-def main(argv=None):
+-    import argparse
+-    parser=argparse.ArgumentParser(description='AGV web/ROS controller; no automatic ARM')
+-    modes=parser.add_mutually_exclusive_group(required=True)
+-    modes.add_argument('--dashboard-only',action='store_true',
+-                        help='Serve the real UI without opening UART or initializing ROS')
+-    modes.add_argument('--observe-only',action='store_true',
+-                        help='Live telemetry/STOP only; reject ARM, drive, tuning and AUTO START')
+-    modes.add_argument('--operator-control',action='store_true',
+-                       help='Continuous manual/AUTO operation with explicit ARM and sensor/caller watchdogs')
+-    modes.add_argument('--motion-window-s',type=float,
+-                       help='One operator-initiated trial, at most 15s, V<=.04; no MAN/PID/reARM')
+-    options=parser.parse_args(argv)
+-    if options.motion_window_s is not None and (not finite(options.motion_window_s) or not 0 < options.motion_window_s <= 15):
+-        parser.error('motion window must be finite, positive and at most 15 seconds')
+-    global ros_node, observe_only, motion_window_s_config
+-    ros_node = None
+-    observe_only = options.observe_only
+-    motion_window_s_config = options.motion_window_s
+-    # Reserve the HTTP port first: a bind failure must never open hardware.
+-    server = ThreadedHTTPServer(('0.0.0.0', PORT), WebHandler)
+-    ros_thread = None
+-    initialized = False
+-    stopped = True
+-    import signal
+-    previous_term = None
+-    try:
+-        if not options.dashboard_only:
+-            rclpy.init()
+-            initialized = True
+-            ros_node = AGVROSNode()
+-            ros_thread = threading.Thread(target=rclpy.spin, args=(ros_node,), daemon=True)
+-            ros_thread.start()
+-        if threading.current_thread() is threading.main_thread():
+-            previous_term = signal.signal(signal.SIGTERM,lambda *a:(_ for _ in ()).throw(KeyboardInterrupt()))
+-        print(f'=== AGV WEB PORT {PORT}; MODE={"DASHBOARD_ONLY" if options.dashboard_only else "OPERATOR_CONTROL" if options.operator_control else "DISARMED_STARTUP"} ===',flush=True)
+-        server.serve_forever()
+-    except KeyboardInterrupt:
+-        pass
+-    finally:
+-        try:
+-            if ros_node: stopped = ros_node.close_control()
+-        finally:
+-            server.server_close()
+-            if ros_node: ros_node.destroy_node()
+-            if initialized: rclpy.shutdown()
+-            if ros_thread: ros_thread.join(.5)
+-            if previous_term is not None: signal.signal(signal.SIGTERM,previous_term)
+-        if not stopped:
+-            raise RuntimeError('Shutdown STOP unconfirmed or cleanup failed; check vehicle / cut power if moving')
+-
+-if __name__ == '__main__':
+-    main()
++#!/usr/bin/env python3
++# -*- coding: utf-8 -*-
++# ==============================================================================
++# agv_unified_brain.py - BỘ NÃO ĐIỀU PHỐI TRUNG TÂM HỢP NHẤT XE AGV
++# Tích hợp: ROS 2 Jazzy + SLAM Toolbox Map + RPLIDAR C1 + Điều khiển ESP32 Serial
++# ==============================================================================
++
++import os
++import sys
++import json
++import time
++import math
++import serial
++import threading
++from agv_navigation import GridPlanner, finite, slam_censored_ranges, twist_centres, valid_body_bounds
++from agv_command_session import CommandSession
++from agv_command_journal import CommandOutcomeJournal
++from agv_preflight_static_collector import acquire_port_lock, cleanup_lock
++from collections import deque
++import rclpy
++from rclpy.node import Node
++from rclpy.qos import QoSProfile, ReliabilityPolicy, HistoryPolicy, DurabilityPolicy
++from sensor_msgs.msg import LaserScan
++from nav_msgs.msg import OccupancyGrid
++from geometry_msgs.msg import TransformStamped
++from tf2_ros import TransformBroadcaster, Buffer, TransformListener
++from rclpy.time import Time
++from http.server import HTTPServer, BaseHTTPRequestHandler
++from socketserver import ThreadingMixIn
++
++PORT = 8080
++SERIAL_PORT = '/dev/ttyUSB0'
++BAUDRATE = 115200
++motion_window_s_config = None
++
++class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
++    daemon_threads = True
++
++    def __init__(self,*args,journal_path=None,**kwargs):
++        super().__init__(*args,**kwargs)
++        self.command_journal=CommandOutcomeJournal(journal_path or os.path.join(
++            os.path.dirname(os.path.abspath(__file__)),'logs','command_outcomes.jsonl'))
++
++class AGVSharedState:
++    def __init__(self):
++        self.lock = threading.RLock()
++        # Trạng thái an toàn & chế độ
++        self.auto_mode = False
++        # Body radius is an enclosing measured radius, NOT half the wheel track.
++        self.body_radius_m = None
++        self.body_bounds_m = None
++        self.wall_margin_m = .15
++        self.cruise_speed_mps = .20
++        self.map_mono = 0.
++        self.map_version = 0
++        self.map_origin_yaw = 0.
++        self.map_frame = ''
++        self.scan_mono = 0.
++        self.scan_frame = ''
++        self.frontier_reachable = None
++        self.unknown_cells = None
++        self.safety_status = "SAFE"
++        self.hz = 10.0
++        
++        # Dữ liệu Radar 360 độ
++        self.ranges = [0.0] * 360
++        self.valid_points = 0
++        self.min_dist_m = 9.99
++        self.min_angle_deg = 0
++        
++        # Phân tích 8 hướng (cm)
++        self.zones = {
++            "front": 999, "front_right": 999, "right": 999, "back_right": 999,
++            "back": 999, "back_left": 999, "left": 999, "front_left": 999
++        }
++        
++        # Dữ liệu Bản đồ SLAM (/map)
++        self.map_width = 0
++        self.map_height = 0
++        self.map_resolution = 0.05
++        self.map_origin_x = 0.0
++        self.map_origin_y = 0.0
++        self.map_data = [] # Mảng nén pixel bản đồ
++        self.map_received = False
++        self.frontier_count = 0
++        self.target_goal_x = 0.0
++        self.target_goal_y = 0.0
++        self.nav_mode = "FRONTIER" # "FRONTIER" hoặc "REACTIVE"
++        self.explore_phase = "IDLE"
++        
++        # Telemetry từ ESP32
++        self.robot_x = 0.0
++        self.robot_y = 0.0
++        self.robot_th = 0.0
++        self.left_rpm = 0.0
++        self.right_rpm = 0.0
++        self.left_pwm = 0
++        self.right_pwm = 0
++
++state = AGVSharedState()
++
++class AGVROSNode(Node):
++    def __init__(self):
++        super().__init__('agv_unified_brain')
++        
++        # Finish ROS setup before opening hardware; constructor failures must
++        # never leave an unmonitored UART or reader behind.
++        self.ser = None
++        self._port_lock = None
++        self._port_lock_path = None
++        self._rx_line = b''
++        self.initialize_navigation()
++        self._reader_stop = threading.Event()
++        self._reader_thread = threading.Thread(target=self._reader_worker, daemon=True)
++        self._watchdog_thread = threading.Thread(target=self._watchdog_worker, daemon=True)
++
++        # 1b. Khởi tạo TF Broadcaster cho SLAM Toolbox (odom -> base_footprint -> laser)
++        self.tf_broadcaster = TransformBroadcaster(self)
++        self.tf_buffer = Buffer()
++        self.tf_listener = TransformListener(self.tf_buffer, self)
++        try:
++            radius = float(os.environ.get('AGV_BODY_RADIUS_M', 'nan'))
++            if math.isfinite(radius) and radius > 0:
++                state.body_radius_m = radius
++        except ValueError:
++            pass
++        try:
++            bounds=tuple(float(v) for v in os.environ.get('AGV_BODY_BOUNDS_M','').split(','))
++            if valid_body_bounds(bounds,state.body_radius_m):state.body_bounds_m=bounds
++        except ValueError:
++            pass
++        self.create_timer(0.05, self.broadcast_tf) # 20Hz
++
++        # 2. Đăng ký LaserScan (/scan)
++        qos_scan = QoSProfile(
++            reliability=ReliabilityPolicy.BEST_EFFORT,
++            history=HistoryPolicy.KEEP_LAST,
++            depth=1
++        )
++        self.create_subscription(LaserScan, '/scan', self.scan_cb, qos_scan)
++        self.pub_slam_scan = self.create_publisher(LaserScan, '/scan_slam', qos_scan)
++
++        # 3. Đăng ký SLAM Map (/map)
++        qos_map = QoSProfile(
++            reliability=ReliabilityPolicy.RELIABLE,
++            durability=DurabilityPolicy.TRANSIENT_LOCAL,
++            history=HistoryPolicy.KEEP_LAST,
++            depth=1
++        )
++        self.create_subscription(OccupancyGrid, '/map', self.map_cb, qos_map)
++
++        # 4. Timer định kỳ đọc Serial từ ESP32 (20Hz)
++        # The sole reader has a separate thread; ROS callbacks never block it.
++
++        # 5. Timer vòng lặp tự hành né vật cản thông minh (10Hz)
++        self.create_timer(0.10, self.auto_nav_loop)
++
++        self._port_lock, self._port_lock_path = acquire_port_lock(SERIAL_PORT)
++        try:
++            # Setting these before OPEN reduces reset edges; it cannot prove
++            # that every USB adapter avoids a reset. Startup still fails closed.
++            self.ser = serial.Serial(port=None, baudrate=BAUDRATE, timeout=.05,
++                                     write_timeout=.2, exclusive=True)
++            self.ser.rts = False
++            self.ser.dtr = False
++            self.ser.port = SERIAL_PORT
++            self.ser.open()
++            self.control = CommandSession(self.ser,motion_window_s=motion_window_s_config,require_transport_sync=True)
++            self.control.autonomy_allowed = False
++            self.control.arc_validator = self._forward_arc_clear
++            self.control.escape_validator = self._escape_clear
++            self._reader_thread.start()
++            self._watchdog_thread.start()
++            self.get_logger().info(f'ĐÃ MỞ CỔNG SERIAL {SERIAL_PORT}; DISARMED, KHÔNG AUTO ARM')
++        except Exception:
++            self._reader_stop.set()
++            for thread in (self._reader_thread,self._watchdog_thread):
++                if thread.ident is not None: thread.join(.5)
++            if self.ser is not None: self.ser.close()
++            cleanup_lock(self._port_lock,self._port_lock_path)
++            self._port_lock = None
++            raise
++
++    def broadcast_tf(self):
++        with self.control.lock:
++            if self.control.last_d0 is None or not 0 <= self.control.clock()-self.control.last_d0 <= .25:
++                return
++        with state.lock:
++            rx = state.robot_x
++            ry = state.robot_y
++            rth = state.robot_th
++
++        now = self.get_clock().now().to_msg()
++
++        # TF 1: odom -> base_footprint (theo Odometry thực tế của xe)
++        t1 = TransformStamped()
++        t1.header.stamp = now
++        t1.header.frame_id = 'odom'
++        t1.child_frame_id = 'base_footprint'
++        t1.transform.translation.x = rx
++        t1.transform.translation.y = ry
++        t1.transform.translation.z = 0.0
++        t1.transform.rotation.z = math.sin(rth / 2.0)
++        t1.transform.rotation.w = math.cos(rth / 2.0)
++        self.tf_broadcaster.sendTransform(t1)
++
++        # The measured LiDAR mounting TF must be supplied by robot_state_publisher
++        # or a calibrated static transform. Do not invent offsets from a drawing.
++
++    def send_cmd(self, cmd_str, autonomous=False):
++        clean = cmd_str.strip()
++        if clean == 'STOP':
++            with state.lock:
++                state.auto_mode = False
++            self.explore_state = 'IDLE'
++            return self.control.request_stop()
++        if clean == 'ARM':
++            return self.control.request_arm()
++        return self.control.drive(clean, autonomous=autonomous)
++
++    def _reader_worker(self):
++        while not self._reader_stop.is_set():
++            self.serial_read_loop()
++            self._reader_stop.wait(.01)
++
++    def _watchdog_worker(self):
++        while not self._reader_stop.wait(.02):
++            self.control.watchdog_tick()
++            if self.control.latched:
++                with state.lock:
++                    state.auto_mode = False
++
++    def serial_read_loop(self):
++        if not self.ser or not self.ser.is_open:
++            return
++        latest = None
++        try:
++            self._rx_line = getattr(self,'_rx_line',b'')
++            # Bulk reads avoid pyserial.readline's Python loop per byte under
++            # HTTP/JSON CPU load. Bound work while retaining incomplete frames.
++            for _ in range(40):
++                if b'\n' not in self._rx_line:
++                    waiting=self.ser.in_waiting
++                    if waiting <= 0:break
++                    self._rx_line += self.ser.read(min(waiting,4096))
++                if b'\n' not in self._rx_line:
++                    if len(self._rx_line)>1024:
++                        self._rx_line=b''
++                        self.control.request_stop('SERIAL_LINE_TOO_LONG',wait=False)
++                    break
++                raw,self._rx_line=self._rx_line.split(b'\n',1)
++                if len(raw)>1024:
++                    self._rx_line=b''
++                    self.control.request_stop('SERIAL_LINE_TOO_LONG',wait=False)
++                    break
++                if not raw.strip():continue
++                packet=self.control.ingest_line(raw.strip())
++                if packet is not None and packet == self.control.latest:latest=packet
++            # Dashboard consumers may wait on each other; never make UART
++            # freshness depend on the dashboard mutex. Next sample refreshes it.
++            if latest is not None and state.lock.acquire(blocking=False):
++                try:
++                    state.robot_x,state.robot_y,state.robot_th=latest['x'],latest['y'],latest['th']
++                    state.left_rpm,state.right_rpm=latest['l_rpm'],latest['r_rpm']
++                    state.left_pwm,state.right_pwm=latest['l_pwm'],latest['r_pwm']
++                finally:state.lock.release()
++        except Exception as exc:
++            self.control.request_stop('READER_ERROR:' + type(exc).__name__,wait=False)
++
++    def scan_cb(self, msg):
++        if not self._fresh_ros_header(msg.header,.25):
++            self.control.request_stop('STALE_SCAN_STAMP',wait=False)
++            return
++        if (not finite(msg.angle_min) or not finite(msg.angle_increment) or msg.angle_increment == 0 or
++                not finite(msg.range_min) or not finite(msg.range_max) or msg.range_min < 0 or
++                msg.range_max <= msg.range_min):
++            self.control.request_stop('INVALID_SCAN', wait=False)
++            return
++        angle = msg.angle_min
++        step = msg.angle_increment
++        if msg.header.frame_id == 'base_footprint':
++            mount_x, mount_y, mount_yaw = 0., 0., 0.
++        else:
++            try:
++                mount = self.tf_buffer.lookup_transform('base_footprint',msg.header.frame_id,Time())
++                mount_x, mount_y = mount.transform.translation.x,mount.transform.translation.y
++                mount_yaw = self._yaw(mount.transform.rotation)
++                if not finite(mount_x) or not finite(mount_y):
++                    raise ValueError('Invalid scan TF')
++                stamp = mount.header.stamp.sec+mount.header.stamp.nanosec*1e-9
++                # Static TF stamp zero is timeless; dynamic transforms expire.
++                if stamp and not 0 <= self.get_clock().now().nanoseconds*1e-9-stamp <= .25:
++                    raise ValueError('Stale scan TF')
++            except Exception:
++                with self.control.lock:
++                    active=self.control.armed or self.control.motion or self.control.arm_sent is not None
++                    self.control.scan_time=None
++                with state.lock:
++                    state.scan_mono=0.
++                    state.explore_phase='CHỜ TRANSFORM LIDAR'
++                if active:
++                    self.control.request_stop('MISSING_SCAN_TF',wait=False)
++                return
++        if hasattr(self,'pub_slam_scan'):
++            import copy
++            filtered = copy.deepcopy(msg)
++            try:
++                filtered.ranges = slam_censored_ranges(msg.ranges,msg.range_min,msg.range_max)
++            except ValueError:
++                self.control.request_stop('INVALID_SLAM_SCAN_LIMITS',wait=False)
++                return
++            self.pub_slam_scan.publish(filtered)
++        points = [0.0] * 360
++        valid_cnt = 0
++        min_d = 99.0
++        min_ang = 0
++        zone_mins = {k: 99.0 for k in state.zones.keys()}
++
++        for r in msg.ranges:
++            # A positive infinite beam is a no-return ray up to range_max;
++            # NaN/negative infinity is invalid, never treated as free space.
++            if r == math.inf:
++                r = msg.range_max
++            if math.isfinite(r) and msg.range_min <= r <= msg.range_max:
++                x = mount_x + r*math.cos(angle+mount_yaw)
++                y = mount_y + r*math.sin(angle+mount_yaw)
++                deg = round(math.degrees(math.atan2(y,x))) % 360
++                d = math.hypot(x,y)
++                if points[deg] == 0.0 or d < points[deg]:
++                    points[deg] = d
++
++                if 0.05 <= d <= 12.0:
++                    valid_cnt += 1
++                    if d < min_d:
++                        min_d = d
++                        min_ang = deg
++
++                    # Phân bổ vào 8 vùng
++                    if deg >= 338 or deg < 23: zone = "front"
++                    elif 23 <= deg < 68: zone = "front_left"
++                    elif 68 <= deg < 113: zone = "left"
++                    elif 113 <= deg < 158: zone = "back_left"
++                    elif 158 <= deg < 203: zone = "back"
++                    elif 203 <= deg < 248: zone = "back_right"
++                    elif 248 <= deg < 293: zone = "right"
++                    else: zone = "front_right"
++
++                    if d < zone_mins[zone]:
++                        zone_mins[zone] = d
++
++            angle += step
++
++        with state.lock:
++            state.scan_mono = time.monotonic()
++            state.scan_frame = msg.header.frame_id
++            state.ranges = points
++            state.valid_points = valid_cnt
++            state.min_dist_m = round(min_d if min_d < 90.0 else 9.99, 2)
++            state.min_angle_deg = min_ang
++            for k in state.zones.keys():
++                state.zones[k] = int(zone_mins[k] * 100) if zone_mins[k] < 90.0 else 999
++
++            if state.min_dist_m <= 0.35:
++                state.safety_status = "DANGER_STOP"
++            elif state.min_dist_m <= 0.70:
++                state.safety_status = "WARNING"
++            else:
++                state.safety_status = "SAFE"
++
++        rotation_clear = self._rotation_clear()
++        with self.control.lock:
++            self.control.scan_time = self.control.clock()
++            # Front drive needs actual returns in the forward cone. Unknown rays
++            # do not become an artificial 999cm free direction.
++            forward = [points[d % 360] for d in range(-22,23)]
++            self.control.scan_clear = sum(d > 0 for d in forward) >= 30 and min(d for d in forward if d > 0) >= .40
++            self.control.rotation_clear = rotation_clear
++        # Forward/rotation commands are independently guarded at write time.
++        # The navigator may HOLD and select another goal while the scan is fresh.
++
++    @staticmethod
++    def _yaw(q):
++        vals = (q.x,q.y,q.z,q.w)
++        if not all(finite(v) for v in vals) or abs(sum(v*v for v in vals)-1.) > .01:
++            raise ValueError('Invalid orientation')
++        # This planner only accepts planar grids/transforms.
++        if abs(q.x) > 1e-5 or abs(q.y) > 1e-5:
++            raise ValueError('Non-planar transform')
++        return math.atan2(2*q.w*q.z, 1-2*q.z*q.z)
++
++    def _fresh_ros_header(self, header, max_age):
++        try:
++            stamp = header.stamp.sec+header.stamp.nanosec*1e-9
++            now = self.get_clock().now().nanoseconds*1e-9
++            return finite(stamp) and 0 <= now-stamp <= max_age
++        except (TypeError,AttributeError):
++            return False
++
++    def map_cb(self, msg):
++        try:
++            yaw = self._yaw(msg.info.origin.orientation)
++            w,h,res = msg.info.width,msg.info.height,msg.info.resolution
++            ox,oy = msg.info.origin.position.x,msg.info.origin.position.y
++            data = list(msg.data)
++            frame = msg.header.frame_id
++            valid = (type(w) is int and type(h) is int and 0 < w*h <= 2_000_000 and
++                     w > 0 and h > 0 and finite(res) and .001 <= res <= 1. and
++                     finite(ox) and finite(oy) and isinstance(frame,str) and bool(frame) and
++                     len(data) == w*h and all(type(v) is int and -1 <= v <= 100 for v in data) and
++                     self._fresh_ros_header(msg.header,2.))
++            if not valid:
++                raise ValueError('Invalid OccupancyGrid')
++        except (ValueError, TypeError, AttributeError):
++            with state.lock: state.map_received = False
++            return
++        with state.lock:
++            identity = (frame,w,h,res,ox,oy,yaw)
++            old = (state.map_frame,state.map_width,state.map_height,state.map_resolution,
++                   state.map_origin_x,state.map_origin_y,state.map_origin_yaw)
++            if state.map_frame and state.map_frame != frame:
++                self.initialize_navigation()
++                # Reframed map cannot silently move the captured home.
++                state.auto_mode = False
++            state.map_width,state.map_height,state.map_resolution = w,h,res
++            state.map_origin_x,state.map_origin_y,state.map_origin_yaw = ox,oy,yaw
++            state.map_frame = frame
++            if state.map_data != data or old != identity:
++                state.map_version += 1
++            state.map_data,state.map_received,state.map_mono = data,True,time.monotonic()
++
++    def initialize_navigation(self):
++        self.explore_state = 'IDLE'
++        self.home = None
++        self.goal = None
++        self.blocked_goals = []
++        self.blocked_regions = []
++        self.progress = deque()
++        self._planner_key,self._planner = None,None
++        self._home_stop_sent = False
++
++    def _grid(self):
++        with state.lock:
++            now = time.monotonic()
++            if not state.map_received or not 0 <= now-state.map_mono <= 2.:
++                return None
++            key = (state.map_version,state.body_radius_m,state.wall_margin_m)
++            args = (state.map_width,state.map_height,state.map_resolution,
++                    (state.map_origin_x,state.map_origin_y,state.map_origin_yaw),
++                    tuple(state.map_data),state.body_radius_m,state.wall_margin_m)
++        if getattr(self,'_planner_key',None) != key:
++            try:
++                planner = GridPlanner(*args, budget_s=.05)
++            except (ValueError,TypeError,TimeoutError):
++                return None
++            self._planner_key,self._planner = key,planner
++        return self._planner
++
++    def plan_astar_path(self, rx,ry,gx,gy):
++        grid = self._grid()
++        return None if grid is None else grid.path((rx,ry),(gx,gy))
++
++    def find_best_frontier(self, rx,ry):
++        grid = self._grid()
++        if grid is None:
++            with state.lock: state.frontier_reachable = None
++            return None
++        now = time.monotonic()
++        self.blocked_goals = [b for b in getattr(self,'blocked_goals',[]) if b[3] > now]
++        self.blocked_regions = [b for b in getattr(self,'blocked_regions',[]) if b[3] > now]
++        summary = grid.frontiers((rx,ry),[b[:3] for b in self.blocked_goals],
++                                [b[:3] for b in self.blocked_regions])
++        with state.lock:
++            state.frontier_reachable = None if summary is None else summary['reachable_frontiers']
++            state.frontier_count = 0 if summary is None else len(summary['goals'])
++            state.unknown_cells = None if summary is None else summary['unknown_cells']
++        return summary['goals'][0] if summary and summary['goals'] else None
++
++    def _pose_map(self):
++        try:
++            with state.lock:
++                frame = state.map_frame
++            t = self.tf_buffer.lookup_transform(frame,'base_footprint',Time())
++            stamp = t.header.stamp.sec+t.header.stamp.nanosec*1e-9
++            age = self.get_clock().now().nanoseconds*1e-9-stamp
++            if not 0 <= age <= .25:
++                return None
++            p,q = t.transform.translation,t.transform.rotation
++            yaw = self._yaw(q)
++            return (p.x,p.y,yaw) if finite(p.x) and finite(p.y) else None
++        except Exception:
++            return None
++
++    def _forward_arc_clear(self, v, w):
++        grid,pose=self._grid(),self._pose_map()
++        if grid is None or pose is None or not finite(v) or v <= 0:return False
++        with state.lock:
++            epoch=(state.map_version,state.map_frame,state.body_radius_m,state.wall_margin_m,state.scan_mono)
++            points=list(state.ranges)
++            if not 0 <= time.monotonic()-state.scan_mono <= .25:return False
++        samples=twist_centres(v,w)
++        if samples is None or not grid.swept_clear(pose,v,w):return False
++        centres,padding=samples
++        # Map and fresh scan must both clear the moving enclosing body. Missing
++        # rear bins are not invented as free rays: the full footprint there
++        # must be known-free in the map. Front coverage remains a writer gate.
++        for deg,d in enumerate(points):
++            if not finite(d) or d <= 0:continue
++            angle=math.radians(deg)
++            px,py=d*math.cos(angle),d*math.sin(angle)
++            # Account for the half-degree rounding used by scan_cb.
++            radius=grid.radius+padding+d*math.sin(math.radians(.5))
++            if any(math.hypot(px-x,py-y) <= radius for x,y in centres):return False
++        with state.lock:
++            return (epoch==(state.map_version,state.map_frame,state.body_radius_m,state.wall_margin_m,state.scan_mono)
++                    and 0 <= time.monotonic()-state.scan_mono <= .25
++                    and 0 <= time.monotonic()-state.map_mono <= 2.)
++
++    def _escape_clear(self, v, w):
++        grid,pose=self._grid(),self._pose_map()
++        if grid is None or pose is None:return False
++        with state.lock:
++            epoch=(state.map_version,state.map_frame,state.body_radius_m,state.body_bounds_m,state.wall_margin_m,state.scan_mono)
++            bounds=state.body_bounds_m
++            points=list(state.ranges)
++            if not 0 <= time.monotonic()-state.scan_mono <= .25:return False
++        samples=twist_centres(v,w)
++        if samples is None or not grid.escape_swept_clear(pose,v,w,bounds=bounds):return False
++        centres,padding=samples
++        obstacles=[(d*math.cos(math.radians(deg)),d*math.sin(math.radians(deg)),d)
++                   for deg,d in enumerate(points) if finite(d) and 0<d<16.]
++        if not obstacles:return False
++        distances=[]
++        for x,y in centres:
++            clearance=math.inf
++            for px,py,d in obstacles:
++                gap=math.hypot(px-x,py-y)-d*math.sin(math.radians(.5))
++                if gap<=grid.body_radius+padding:return False
++                clearance=min(clearance,gap)
++            if distances and clearance<distances[-1]-1e-7:return False
++            distances.append(clearance)
++        if distances[-1]<=distances[0]+.0001:return False
++        with state.lock:
++            return (epoch==(state.map_version,state.map_frame,state.body_radius_m,state.body_bounds_m,state.wall_margin_m,state.scan_mono)
++                    and 0 <= time.monotonic()-state.scan_mono <= .25
++                    and 0 <= time.monotonic()-state.map_mono <= 2.)
++
++    def _try_escape(self):
++        # No timed blind reverse or spin: each tick and the sole writer check
++        # a short known-free swept body and increasing map+scan clearance.
++        for v,w in ((.04,.35),(.04,-.35),(.04,0.),(-.04,0.),(-.04,-.35),(-.04,.35)):
++            if self._escape_clear(v,w):
++                ok,reason=self.control.drive(f'V {v:.3f} {w:.3f}',autonomous=True,escape=True)
++                if ok:
++                    self.control._event('navigation_red_escape',v=v,w=w,reason='CLEARANCE_INCREASING')
++                    with state.lock:state.explore_phase='NÉ VÙNG ĐỎ: tiến ra xa vật cản' if v>0 else 'NÉ VÙNG ĐỎ: lùi theo hành lang trống'
++                return ok
++        return False
++
++    def start_auto(self):
++        """Expose each failed START gate at the moment of the decision."""
++        pose,grid=self._pose_map(),self._grid()
++        # Same lock order as telemetry; STOP cannot interleave the final ARM
++        # check and AUTO commit. No UART or disk IO happens under these locks.
++        with state.lock,self.control.lock:
++            now=self.control.clock()
++            ages=self.control._ages(now)
++            map_age=time.monotonic()-state.map_mono
++            checks=(('NOT_ARMED',not self.control.armed),('LATCHED',self.control.latched),
++                    ('FAULT',self.control.fault is not None),
++                    ('D0_STALE',ages['d0_age_s'] is None or not 0 <= ages['d0_age_s'] <= .25),
++                    ('SCAN_STALE',ages['scan_age_s'] is None or not 0 <= ages['scan_age_s'] <= .25),
++                    ('CALLER_STALE',self.control.armed and (ages['caller_age_s'] is None or not 0 <= ages['caller_age_s'] <= .2)),
++                    ('TRIAL_EXPIRED',self.control.trial_deadline is not None and now >= self.control.trial_deadline),
++                    ('BODY_RADIUS_UNCONFIGURED',not finite(state.body_radius_m) or state.body_radius_m <= 0),
++                    ('MAP_NOT_READY',grid is None),('TF_NOT_READY',pose is None))
++            blockers=[name for name,blocked in checks if blocked]
++            snapshot=dict(**ages,map_age_s=map_age,map_frame=state.map_frame,
++                          body_radius_m=state.body_radius_m,pose=pose,generation=self.control.generation)
++            if not blockers:
++                self.initialize_navigation()
++                self.control.autonomy_allowed = True
++                self.control.generation += 1
++                self.home=pose;self.explore_state='EXPLORING';state.auto_mode=True
++            self.control._event('auto_gate',accepted=not blockers,blockers=blockers,gate=snapshot)
++            return not blockers,('STARTED' if not blockers else 'EXPLICIT_ARM_FRESH_MAP_TF_AND_BODY_RADIUS_REQUIRED'),blockers,snapshot
++
++    def _hold(self, phase):
++        with state.lock: state.explore_phase = phase
++        # V0 keeps a valid explicit session without asserting physical STOP.
++        self.send_cmd('V 0.000 0.000',autonomous=True)
++
++    def _exclude_goal(self, now, failed=True):
++        if self.goal is not None:
++            radius = max(.30,state.map_resolution*3)
++            target = self.blocked_regions if failed else self.blocked_goals
++            target.append((*self.goal,radius,now+30.))
++            self.goal = None
++        self.progress.clear()
++
++    def _follow(self, pose, goal):
++        grid = self._grid()
++        path = None if grid is None else grid.path(pose[:2],goal)
++        if not path:
++            if getattr(self,'control',None) is not None:
++                self.control._event('navigation_blocked',reason='NO_SAFE_PATH',pose=pose,goal=goal)
++            return False
++        # Extend the carrot only along one straight run of A*. Do not skip a
++        # bend; the writer still checks the actual swept body before each TX.
++        wp = path[1] if len(path) > 1 else path[0]
++        if len(path)>2:
++            direction=(path[2][0]-wp[0],path[2][1]-wp[1])
++            for candidate in path[2:]:
++                offset=(candidate[0]-wp[0],candidate[1]-wp[1])
++                if abs(direction[0]*offset[1]-direction[1]*offset[0])>1e-8:break
++                if math.hypot(candidate[0]-pose[0],candidate[1]-pose[1])>.25:break
++                wp=candidate
++        dx,dy = wp[0]-pose[0],wp[1]-pose[1]
++        error = (math.atan2(dy,dx)-pose[2]+math.pi)%(2*math.pi)-math.pi
++        w = max(-.35,min(.35,error))
++        v = 0. if abs(error) > .25 else min(state.cruise_speed_mps,
++                  math.hypot(dx,dy)/.5,math.hypot(goal[0]-pose[0],goal[1]-pose[1])/.5)
++        if v == 0 and abs(w) > 0 and not self._rotation_clear():
++            # Prefer a slow, geometrically checked escape over a blind spin.
++            # The writer repeats this validation with fresh map/TF/scan.
++            scan_clear = bool(getattr(self.control,'scan_clear',False))
++            v = min(.02, math.hypot(dx,dy))
++            w = max(-.12,min(.12,error))
++            if scan_clear and self._forward_arc_clear(v,w):
++                self.control._event('navigation_yellow_escape',reason='FORWARD_SWEEP_CLEAR',
++                                    pose=pose,goal=goal,v=v,w=w)
++            else:
++                if getattr(self,'control',None) is not None:
++                    self.control._event('navigation_blocked',reason='NO_SAFE_FORWARD_SWEEP',pose=pose,goal=goal)
++                return False
++        return self.send_cmd(f'V {v:.3f} {w:.3f}',autonomous=True)[0]
++
++    def _rotation_clear(self):
++        with state.lock:
++            radius = state.body_radius_m
++            points = list(state.ranges)
++            age = time.monotonic()-state.scan_mono
++        returns=[p for p in points if finite(p) and 0<p<16.]
++        if not (radius is not None and 0<=age<=.25 and len(returns)>=30 and
++                min(returns)>radius+.15):return False
++        grid,pose=self._grid(),self._pose_map()
++        # A missing rounded radar bin is not an obstacle. The complete known-
++        # free map footprint covers those directions; unknown cells still block.
++        return grid is not None and pose is not None and grid.swept_clear(pose,0.,.35)
++
++    def auto_nav_loop(self):
++        if self.explore_state == 'WAIT_STOP':
++            health = self.control.health()
++            with state.lock:
++                state.explore_phase = 'HOME: đã xác nhận D0 dừng' if health['stop_confirmed'] else 'HOME: chờ xác nhận dừng'
++                if health['stop_confirmed']:
++                    state.auto_mode = False
++                    self.explore_state = 'COMPLETED'
++            return
++        with state.lock:
++            auto = state.auto_mode
++            scan_age = time.monotonic()-state.scan_mono
++        if not auto:
++            return
++        pose,grid = self._pose_map(),self._grid()
++        if pose is None or grid is None or not 0 <= scan_age <= .25:
++            self._hold('HOLD: chờ map, TF, scan hoặc kích thước thân xe')
++            return
++        if self.home is None:
++            self.home = pose
++            self.explore_state = 'EXPLORING'
++        if not grid.traversable(grid.world_to_cell(*pose[:2])) or not grid.swept_clear(pose,0.,0.):
++            if not self._try_escape():
++                self._hold('HOLD: chưa có đường thoát vùng đỏ đủ thân xe')
++            return
++        now = time.monotonic()
++        self.progress.append((now,pose))
++        while self.progress and now-self.progress[0][0] > 2.:
++            self.progress.popleft()
++        if (self.goal is not None and self.progress and now-self.progress[0][0] >= 1.5 and
++                math.hypot(pose[0]-self.progress[0][1][0],pose[1]-self.progress[0][1][1]) < .02 and
++                abs((pose[2]-self.progress[0][1][2]+math.pi)%(2*math.pi)-math.pi) < .10):
++            self._exclude_goal(now)
++            self._hold('Đổi vùng khám phá: mục tiêu không có tiến triển')
++            return
++        if self.explore_state == 'RETURNING_HOME':
++            dist = math.hypot(pose[0]-self.home[0],pose[1]-self.home[1])
++            if dist <= .04:
++                angle = (self.home[2]-pose[2]+math.pi)%(2*math.pi)-math.pi
++                if abs(angle) > .08:
++                    if self._rotation_clear():
++                        self.send_cmd(f'V 0.000 {max(-.35,min(.35,angle)):.3f}',autonomous=True)
++                    else:
++                        self._hold('HOME: chưa đủ khoảng trống để chỉnh hướng')
++                else:
++                    self.control.request_stop('HOME_STOP',wait=False)
++                    self.explore_state = 'WAIT_STOP'
++                return
++            if not self._follow(pose,self.home[:2]):
++                self._hold('HOLD: chưa có đường an toàn về home')
++            return
++        if self.goal is None or math.hypot(pose[0]-self.goal[0],pose[1]-self.goal[1]) < .06:
++            if self.goal is not None:
++                self._exclude_goal(now,failed=False)
++            self.goal = self.find_best_frontier(*pose[:2])
++            self.progress.clear()
++        if self.goal is None:
++            with state.lock:
++                remaining = state.frontier_reachable
++            if remaining == 0:
++                self.explore_state = 'RETURNING_HOME'
++                self._hold('Hết frontier reachable; về home, unknown khác còn chưa nghiệm thu')
++            else:
++                self._hold('HOLD: frontier còn nhưng chưa có mục tiêu an toàn mới')
++            return
++        with state.lock:
++            state.target_goal_x,state.target_goal_y = self.goal
++            state.explore_phase = 'EXPLORING: bám đường A* known-free'
++        if not self._follow(pose,self.goal):
++            self._exclude_goal(now)
++            self._hold('Đổi mục tiêu: đường bị chặn hoặc dữ liệu không hợp lệ')
++
++    def close_control(self):
++        self.control.request_stop('SHUTDOWN',wait=False)
++        self.control.stop_event.wait(.25)
++        self._reader_stop.set()
++        for thread in (self._reader_thread,self._watchdog_thread):
++            thread.join(.5)
++        ok = not self._reader_thread.is_alive() and not self._watchdog_thread.is_alive()
++        try:
++            if self.ser: self.ser.close()
++        except Exception:
++            ok = False
++        if ok:
++            cleanup_lock(getattr(self,'_port_lock',None),getattr(self,'_port_lock_path',None))
++            self._port_lock = None
++        return ok and self.control.stop_confirmed and self.control.stop_write_ok
++
++
++ros_node = None
++observe_only = False
++
++class WebHandler(BaseHTTPRequestHandler):
++    def log_message(self, format, *args):
++        return
++
++    def _cors(self):
++        self.send_header('Access-Control-Allow-Origin', '*')
++        self.send_header('Access-Control-Allow-Methods', 'GET, OPTIONS')
++        self.send_header('Access-Control-Allow-Headers', 'Content-Type')
++
++    def _json(self, code, data):
++        self.send_response(code)
++        self.send_header('Content-Type','application/json; charset=utf-8')
++        self._cors()
++        self.end_headers()
++        self.wfile.write(json.dumps(data,allow_nan=False).encode('utf8'))
++
++    def _command_reply(self,code,data,operation,arguments):
++        # Only HTTP response threads write files; reader/watchdog paths keep
++        # their own bounded RAM history and never wait for this journal lock.
++        control=ros_node.control.health() if ros_node else {}
++        if ros_node:
++            event=ros_node.control._event('http_outcome',operation=operation,http_status=code,response=data)
++            control['event_sequence']=event['sequence']
++        outcome=self.server.command_journal.record(operation,arguments,code,data,control)
++        self._json(code,dict(data,journal=outcome))
++
++    def do_OPTIONS(self):
++        self.send_response(200)
++        self._cors()
++        self.end_headers()
++
++    def do_GET(self):
++        p = self.path.split('?')
++        path = p[0]
++        q = p[1] if len(p) > 1 else ''
++
++        if observe_only:
++            import urllib.parse
++            params=urllib.parse.parse_qs(q)
++            stop=(path=='/api/cmd' and params.get('val',[''])[0]=='STOP') or (
++                  path=='/api/auto' and params.get('act',[''])[0].upper()=='STOP')
++            if path in ('/api/cmd','/api/pid','/api/auto') and not stop:
++                self._command_reply(423,{'status':'FAILED','reason':'OBSERVE_ONLY'},path,params)
++                return
++
++        if path == '/api/diagnostics':
++            report=ros_node.control.diagnostics() if ros_node else {'status':'NO_TRANSPORT'}
++            report['command_journal']=self.server.command_journal.snapshot()
++            self._json(200 if ros_node else 503,report)
++            return
++
++        if path == '/api/telemetry':
++            if ros_node is None:
++                self._json(503,{'status':'NO_TRANSPORT','mode':'DASHBOARD_ONLY',
++                                'reason':'Chỉ xem giao diện; chưa kết nối điều khiển xe'})
++                return
++            with state.lock:
++                d = {
++                    "auto": state.auto_mode,
++                    "status": 'OBSERVE_ONLY' if observe_only else state.safety_status,
++                    "hz": state.hz,
++                    "control": ros_node.control.health() if ros_node else {},
++                    "min_m": state.min_dist_m,
++                    "min_ang": state.min_angle_deg,
++                    "zones": state.zones,
++                    "ranges": state.ranges,
++                    "robot": {
++                        "x": state.robot_x, "y": state.robot_y, "th": state.robot_th,
++                        "l_rpm": state.left_rpm, "r_rpm": state.right_rpm,
++                        "l_pwm": state.left_pwm, "r_pwm": state.right_pwm
++                    },
++                    "map_info": {
++                        "has_map": state.map_received,
++                        "w": state.map_width, "h": state.map_height,
++                        "res": state.map_resolution,
++                        "ox": state.map_origin_x, "oy": state.map_origin_y,
++                        "yaw": state.map_origin_yaw, "frame": state.map_frame,
++                        "frontiers": state.frontier_count,
++                        "reachable_frontiers": state.frontier_reachable,
++                        "unknown_cells": state.unknown_cells,
++                        "goal_x": state.target_goal_x, "goal_y": state.target_goal_y,
++                        "phase": state.explore_phase
++                    }
++                }
++            payload = json.dumps(d).encode('utf-8')
++            self.send_response(200)
++            self.send_header('Content-Type', 'application/json')
++            self._cors()
++            self.end_headers()
++            self.wfile.write(payload)
++            return
++
++        elif path == '/api/map_full':
++            with state.lock:
++                d = {
++                    "w": state.map_width, "h": state.map_height,
++                    "res": state.map_resolution,
++                    "ox": state.map_origin_x, "oy": state.map_origin_y,
++                    "yaw": state.map_origin_yaw, "frame": state.map_frame,
++                    "data": state.map_data
++                }
++            payload = json.dumps(d).encode('utf-8')
++            self.send_response(200)
++            self.send_header('Content-Type', 'application/json')
++            self._cors()
++            self.end_headers()
++            self.wfile.write(payload)
++            return
++
++        elif path == '/api/cmd':
++            import urllib.parse
++            params = urllib.parse.parse_qs(q)
++            val = params.get('val',[''])[0]
++            if ros_node:
++                if val != 'STOP':
++                    with state.lock: state.auto_mode = False
++                ok,reason = ros_node.send_cmd(val)
++            else:
++                ok,reason = False,'NO_TRANSPORT'
++            self._command_reply(200 if ok else 422, {'status':'SENT' if ok else 'FAILED','reason':reason},'COMMAND',{'val':val})
++            return
++
++        elif path == '/api/pid':
++            import urllib.parse
++            params = urllib.parse.parse_qs(q)
++            try:
++                kp,ki,kd = [float(params[k][0]) for k in ('kp','ki','kd')]
++                result = ros_node.control.tuning(kp,ki,kd) if ros_node else {'status':'FAILED','reason':'NO_TRANSPORT'}
++            except (ValueError,KeyError,IndexError):
++                result = {'status':'REJECTED','reason':'INVALID_INPUT'}
++            self._command_reply(200 if result['status']=='APPLIED' else 422,result,'PID',params)
++            return
++
++        elif path == '/api/history_csv':
++            payload = ros_node.control.history_csv() if ros_node else 'id,time,kp,ki,kd,kf,status,reason\r\n'
++            self.send_response(200)
++            self.send_header('Content-Type','text/csv; charset=utf-8')
++            self.send_header('Content-Disposition','attachment; filename="agv_pid_history.csv"')
++            self.end_headers()
++            self.wfile.write(('\ufeff'+payload).encode('utf8'))
++            return
++
++        elif path == '/api/auto':
++            import urllib.parse
++            act = urllib.parse.parse_qs(q).get('act',[''])[0].upper()
++            ok,reason = False,'NO_TRANSPORT'
++            blockers,snapshot=[],{}
++            if ros_node and act == 'START':
++                ok,reason,blockers,snapshot=ros_node.start_auto()
++            elif ros_node and act == 'STOP':
++                ok,reason = ros_node.send_cmd('STOP')
++            self._command_reply(200 if ok else 422,{'status':'ok' if ok else 'FAILED',
++                'auto':state.auto_mode,'reason':reason,'blockers':blockers,'gate':snapshot},'AUTO_'+act,{'act':act})
++            return
++
++        else:
++            # Phục vụ giao diện Dashboard chuẩn Cyberpunk Pro
++            html_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'web', 'index_cyberpunk.html')
++            if not os.path.exists(html_file):
++                html_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'index_cyberpunk.html')
++            if os.path.exists(html_file):
++                with open(html_file, 'rb') as f:
++                    content = f.read()
++                self.send_response(200)
++                self.send_header('Content-Type', 'text/html; charset=utf-8')
++                self._cors()
++                self.end_headers()
++                self.wfile.write(content)
++            else:
++                self.send_error(404, 'File Not Found')
++
++def main(argv=None):
++    import argparse
++    parser=argparse.ArgumentParser(description='AGV web/ROS controller; no automatic ARM')
++    modes=parser.add_mutually_exclusive_group(required=True)
++    modes.add_argument('--dashboard-only',action='store_true',
++                        help='Serve the real UI without opening UART or initializing ROS')
++    modes.add_argument('--observe-only',action='store_true',
++                        help='Live telemetry/STOP only; reject ARM, drive, tuning and AUTO START')
++    modes.add_argument('--operator-control',action='store_true',
++                       help='Continuous manual/AUTO operation with explicit ARM and sensor/caller watchdogs')
++    modes.add_argument('--motion-window-s',type=float,
++                       help='One operator-initiated trial, at most 15s, V<=.04; no MAN/PID/reARM')
++    options=parser.parse_args(argv)
++    if options.motion_window_s is not None and (not finite(options.motion_window_s) or not 0 < options.motion_window_s <= 15):
++        parser.error('motion window must be finite, positive and at most 15 seconds')
++    global ros_node, observe_only, motion_window_s_config
++    ros_node = None
++    observe_only = options.observe_only
++    motion_window_s_config = options.motion_window_s
++    # Reserve the HTTP port first: a bind failure must never open hardware.
++    server = ThreadedHTTPServer(('0.0.0.0', PORT), WebHandler)
++    ros_thread = None
++    initialized = False
++    stopped = True
++    import signal
++    previous_term = None
++    try:
++        if not options.dashboard_only:
++            rclpy.init()
++            initialized = True
++            ros_node = AGVROSNode()
++            ros_thread = threading.Thread(target=rclpy.spin, args=(ros_node,), daemon=True)
++            ros_thread.start()
++        if threading.current_thread() is threading.main_thread():
++            previous_term = signal.signal(signal.SIGTERM,lambda *a:(_ for _ in ()).throw(KeyboardInterrupt()))
++        print(f'=== AGV WEB PORT {PORT}; MODE={"DASHBOARD_ONLY" if options.dashboard_only else "OPERATOR_CONTROL" if options.operator_control else "DISARMED_STARTUP"} ===',flush=True)
++        server.serve_forever()
++    except KeyboardInterrupt:
++        pass
++    finally:
++        try:
++            if ros_node: stopped = ros_node.close_control()
++        finally:
++            server.server_close()
++            if ros_node: ros_node.destroy_node()
++            if initialized: rclpy.shutdown()
++            if ros_thread: ros_thread.join(.5)
++            if previous_term is not None: signal.signal(signal.SIGTERM,previous_term)
++        if not stopped:
++            raise RuntimeError('Shutdown STOP unconfirmed or cleanup failed; check vehicle / cut power if moving')
++
++if __name__ == '__main__':
++    main()

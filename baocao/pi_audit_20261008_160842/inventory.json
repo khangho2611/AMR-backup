@@ -1,0 +1,1305 @@
+{
+  "time": "2026-10-08T16:10:28.473324+07:00",
+  "inventory": [
+    {
+      "folder": "/home/khangho/agv_codex_20261002_1915",
+      "files": [
+        {
+          "path": "START_PLAN.md",
+          "size": 2393,
+          "mtime": 1790943982.8443203,
+          "sha256": "e067849471d69f03cb3c613eab90a21da8972f7c4153f836d18e222dc5fcf9cf"
+        },
+        {
+          "path": "TRIAL_PLAN.md",
+          "size": 3743,
+          "mtime": 1790945751.2924383,
+          "sha256": "805b4d356817616a8accd7a684cd1868ac7d1f465ca8e6eef08e497aae52d9d5"
+        },
+        {
+          "path": "agv_command_session.py",
+          "size": 19730,
+          "mtime": 1790945751.0884392,
+          "sha256": "91b14da3e29f00a9d34db831b55386e00cfff2be2e29a9179104061d12d18803"
+        },
+        {
+          "path": "agv_navigation.py",
+          "size": 12283,
+          "mtime": 1790945751.0504394,
+          "sha256": "22c46260dfdfff1b05d544f8dc08e2b8c5b1034bb076c2d91575f0d5a0cf9e14"
+        },
+        {
+          "path": "agv_preflight_static_collector.py",
+          "size": 39174,
+          "mtime": 1790943535.8295362,
+          "sha256": "4b32ca76c0f253fdee228be7354281e8aec74adedcaf15897910a42a3463271a"
+        },
+        {
+          "path": "agv_unified_brain.py",
+          "size": 35679,
+          "mtime": 1790945751.0114396,
+          "sha256": "778e144133c39e59aaf8ceda4e9746d507c8dba7aa9e287d9d9b325fe93a96af"
+        },
+        {
+          "path": "backup_previous/agv_unified_brain.py",
+          "size": 26668,
+          "mtime": 1790935353.7076228,
+          "sha256": "a0f383621a87133e5691e092e51f861bda5095beedc2f54f0d4d7de6ffb2eefe"
+        },
+        {
+          "path": "backup_previous/index_cyberpunk.html",
+          "size": 26205,
+          "mtime": 1790934725.3048964,
+          "sha256": "12b4180d3c6bc6895140a6931b76eef11794533129fcef154c45d158df7e1895"
+        },
+        {
+          "path": "benchmark_planner_pi.py",
+          "size": 298,
+          "mtime": 1790945303.8419027,
+          "sha256": "ddc0a29620e91c5d15d42ff4bbadab68fe0758a48e0b45870cf2a9b4207dec85"
+        },
+        {
+          "path": "check_trial_live.py",
+          "size": 1409,
+          "mtime": 1790945910.5256355,
+          "sha256": "0b8bb2704b84a761e80a1f73d19970eec683b3c26a8404d8e309e7aae393f38c"
+        },
+        {
+          "path": "index_cyberpunk.html",
+          "size": 29712,
+          "mtime": 1790945751.145439,
+          "sha256": "ba249a6b4b2b793759436eb3520ef46d3776234c1594a090c85599ab58ed1b63"
+        },
+        {
+          "path": "retire_trial_slam.py",
+          "size": 871,
+          "mtime": 1790945712.4476385,
+          "sha256": "e2e050c297908cdc39254ecb2412eaafbb05e8d22baac27a9c36998a7af4604c"
+        },
+        {
+          "path": "retire_unused_trial.py",
+          "size": 1122,
+          "mtime": 1790945660.6609085,
+          "sha256": "221038d02761918f7901d9a29ae1efc086979356d0bff04a7583d588fabaa401"
+        },
+        {
+          "path": "slam_observe.yaml",
+          "size": 2629,
+          "mtime": 1790943982.8123212,
+          "sha256": "5d42596da19e610e39d4b82c042429edcb200e43d3420749aa6aafbc68da95c0"
+        },
+        {
+          "path": "slam_scan_fix.yaml",
+          "size": 2634,
+          "mtime": 1790945751.2304385,
+          "sha256": "09dd22eee3f667b98915dc3703c185dd699a6b33f35d083df81b8f5391158357"
+        },
+        {
+          "path": "start_observe.sh",
+          "size": 1504,
+          "mtime": 1790943982.777322,
+          "sha256": "cce32c1959b301e1322794915973dc99063da6590d496a0f3ecabeb19ca1257d"
+        },
+        {
+          "path": "start_scan_fix_preparation.sh",
+          "size": 1176,
+          "mtime": 1790945751.1884387,
+          "sha256": "f2fc3df7360d99e69880a379ad8080ed313858b2dfe3c4ece9bb1e8cca3f26e7"
+        },
+        {
+          "path": "start_trial.sh",
+          "size": 1142,
+          "mtime": 1790945254.8022013,
+          "sha256": "22dcb6073e3ef45460bc2fa44054635b2519246d2cfd743e8dc5e2425189cba9"
+        },
+        {
+          "path": "web/index_cyberpunk.html",
+          "size": 29712,
+          "mtime": 1790945752.510432,
+          "sha256": "ba249a6b4b2b793759436eb3520ef46d3776234c1594a090c85599ab58ed1b63"
+        }
+      ]
+    },
+    {
+      "folder": "/home/khangho/agv_codex_body_20261003_0106",
+      "files": [
+        {
+          "path": "agv_command_journal.py",
+          "size": 2973,
+          "mtime": 1790964051.9018288,
+          "sha256": "08513da55966bd3c885f57a0245417e36a9b981bfb099c00809535b583a9afe6"
+        },
+        {
+          "path": "agv_command_session.py",
+          "size": 25104,
+          "mtime": 1790964051.984829,
+          "sha256": "92d737d4b0d028afce612cd9581d0131285ba9c3446778bdf86a504804ed6fc3"
+        },
+        {
+          "path": "agv_navigation.py",
+          "size": 19750,
+          "mtime": 1790964052.0488288,
+          "sha256": "4684ddc446880d874ddb489df100460511b13842b77eac3e1b0fcb30f91e47ff"
+        },
+        {
+          "path": "agv_preflight_static_collector.py",
+          "size": 39174,
+          "mtime": 1790964052.121829,
+          "sha256": "4b32ca76c0f253fdee228be7354281e8aec74adedcaf15897910a42a3463271a"
+        },
+        {
+          "path": "agv_unified_brain.py",
+          "size": 44039,
+          "mtime": 1790964052.195829,
+          "sha256": "a1e3590f7726264dc2a0891d42ca33a73813c8c19075e8d1d4811bba88e1190c"
+        },
+        {
+          "path": "index_cyberpunk.html",
+          "size": 32688,
+          "mtime": 1790964052.258829,
+          "sha256": "90c845f251f69fd81d03717fd4b7a7a2d1d18cb5d82721a98929f721a98b9bcc"
+        },
+        {
+          "path": "slam_scan_fix.yaml",
+          "size": 2634,
+          "mtime": 1790964052.293829,
+          "sha256": "09dd22eee3f667b98915dc3703c185dd699a6b33f35d083df81b8f5391158357"
+        },
+        {
+          "path": "start_body.sh",
+          "size": 982,
+          "mtime": 1790964052.3508291,
+          "sha256": "0755b596f4bc8024beedc700016ccca68f688248f9eb37c0b4c10630b02f7613"
+        }
+      ]
+    },
+    {
+      "folder": "/home/khangho/agv_codex_diag_20261002_201411",
+      "files": [
+        {
+          "path": "agv_command_session.py",
+          "size": 23298,
+          "mtime": 1790948277.6866977,
+          "sha256": "47e7d973fd8a1c95c1d0c0c3a9e71be0b5be95c5dbfbc0f9b9b2486301630d93"
+        },
+        {
+          "path": "agv_navigation.py",
+          "size": 12283,
+          "mtime": 1790948278.719696,
+          "sha256": "22c46260dfdfff1b05d544f8dc08e2b8c5b1034bb076c2d91575f0d5a0cf9e14"
+        },
+        {
+          "path": "agv_preflight_static_collector.py",
+          "size": 39174,
+          "mtime": 1790948279.9926941,
+          "sha256": "4b32ca76c0f253fdee228be7354281e8aec74adedcaf15897910a42a3463271a"
+        },
+        {
+          "path": "agv_unified_brain.py",
+          "size": 36200,
+          "mtime": 1790948276.6666994,
+          "sha256": "511491ec6cdc6dd1baf95d661b822656f43a2f1cc0654f58894c6621d7877bcf"
+        },
+        {
+          "path": "index_cyberpunk.html",
+          "size": 29712,
+          "mtime": 1790948281.5026917,
+          "sha256": "ba249a6b4b2b793759436eb3520ef46d3776234c1594a090c85599ab58ed1b63"
+        },
+        {
+          "path": "start_candidate.sh",
+          "size": 438,
+          "mtime": 1790948473.724315,
+          "sha256": "9915f9d2efa67c6aed0d835679fa83d5bd60a28e3b8bef593a7409909958b466"
+        }
+      ]
+    },
+    {
+      "folder": "/home/khangho/agv_codex_document_20261003_174108",
+      "files": [
+        {
+          "path": "agv_command_journal.py",
+          "size": 2973,
+          "mtime": 1790959969.4425972,
+          "sha256": "08513da55966bd3c885f57a0245417e36a9b981bfb099c00809535b583a9afe6"
+        },
+        {
+          "path": "agv_command_session.py",
+          "size": 30853,
+          "mtime": 1791024541.6204467,
+          "sha256": "e07c9bd8b3e07357bb9605285a448c0436dfb18916c023ccfb9c3c97e9f6fb67"
+        },
+        {
+          "path": "agv_navigation.py",
+          "size": 19987,
+          "mtime": 1791024345.3329387,
+          "sha256": "37b6a0536e057d76143ae9314e8825f269479d9528676f5218c910e3822e194d"
+        },
+        {
+          "path": "agv_preflight_static_collector.py",
+          "size": 39174,
+          "mtime": 1790905737.9263587,
+          "sha256": "4b32ca76c0f253fdee228be7354281e8aec74adedcaf15897910a42a3463271a"
+        },
+        {
+          "path": "agv_unified_brain.py",
+          "size": 50465,
+          "mtime": 1791024962.945727,
+          "sha256": "263662e45e7e8b73d22bbd61d8391edc39b29d25643524566445189199349df9"
+        },
+        {
+          "path": "index_cyberpunk.html",
+          "size": 32804,
+          "mtime": 1791024541.621459,
+          "sha256": "b234e5882e4c94bb62bd4193146f26463f98cedd740bd4cdd19419d48c9b8cde"
+        },
+        {
+          "path": "slam_scan_fix.yaml",
+          "size": 2634,
+          "mtime": 1790984754.5025332,
+          "sha256": "09dd22eee3f667b98915dc3703c185dd699a6b33f35d083df81b8f5391158357"
+        },
+        {
+          "path": "start_disarmed.sh",
+          "size": 819,
+          "mtime": 1791025446.09076,
+          "sha256": "f51f7d2dcc095478284ee7ba8811228296ee8497bd79dcc0f01a4add152db5fe"
+        },
+        {
+          "path": "start_single_mapper.sh",
+          "size": 698,
+          "mtime": 1791025546.2922254,
+          "sha256": "fc38f84919dbcee52aa2218e35ae59405656900bd9c9709a50a5140d2753e3bd"
+        }
+      ]
+    },
+    {
+      "folder": "/home/khangho/agv_codex_escape_20261003_0044",
+      "files": [
+        {
+          "path": "agv_command_journal.py",
+          "size": 2973,
+          "mtime": 1790962999.6181827,
+          "sha256": "08513da55966bd3c885f57a0245417e36a9b981bfb099c00809535b583a9afe6"
+        },
+        {
+          "path": "agv_command_session.py",
+          "size": 24977,
+          "mtime": 1790962999.6801827,
+          "sha256": "b215fc81473562796c50d01db646823aec6d4d1f14cdc2b17acc0d4918717e77"
+        },
+        {
+          "path": "agv_navigation.py",
+          "size": 16723,
+          "mtime": 1790962999.7171829,
+          "sha256": "34ebc1d9902b6ff88dfa788d3ada6823f29e49fed9f4657215b81073f0a1c013"
+        },
+        {
+          "path": "agv_preflight_static_collector.py",
+          "size": 39174,
+          "mtime": 1790962999.7871828,
+          "sha256": "4b32ca76c0f253fdee228be7354281e8aec74adedcaf15897910a42a3463271a"
+        },
+        {
+          "path": "agv_unified_brain.py",
+          "size": 43657,
+          "mtime": 1790962999.8491828,
+          "sha256": "5310416ff87afb5230885a32532c12bf0a4b9b2ad3d61ef234698a81d3a2cf3b"
+        },
+        {
+          "path": "index_cyberpunk.html",
+          "size": 32688,
+          "mtime": 1790962999.902183,
+          "sha256": "90c845f251f69fd81d03717fd4b7a7a2d1d18cb5d82721a98929f721a98b9bcc"
+        },
+        {
+          "path": "slam_scan_fix.yaml",
+          "size": 2634,
+          "mtime": 1790962999.935183,
+          "sha256": "09dd22eee3f667b98915dc3703c185dd699a6b33f35d083df81b8f5391158357"
+        },
+        {
+          "path": "start_escape.sh",
+          "size": 940,
+          "mtime": 1790963000.009183,
+          "sha256": "ac5be8adbd5ac5e16b68277ee47dff9992862b3b331621af16feda40ac417cea"
+        }
+      ]
+    },
+    {
+      "folder": "/home/khangho/agv_codex_manual_cruise_20261003_011949",
+      "files": [
+        {
+          "path": "agv_command_journal.py",
+          "size": 2973,
+          "mtime": 1790965433.849399,
+          "sha256": "08513da55966bd3c885f57a0245417e36a9b981bfb099c00809535b583a9afe6"
+        },
+        {
+          "path": "agv_command_session.py",
+          "size": 25555,
+          "mtime": 1790965433.894398,
+          "sha256": "de57ea9b13e71dd00d029f0f5c139949e34dd93b59e75bf098d14a4224b9a3cd"
+        },
+        {
+          "path": "agv_navigation.py",
+          "size": 19750,
+          "mtime": 1790965433.9523969,
+          "sha256": "15f80ee258548051b04ed82aec3195c5144e2e7acdba60ae9e5926e9e98b5293"
+        },
+        {
+          "path": "agv_preflight_static_collector.py",
+          "size": 39174,
+          "mtime": 1790965434.0243952,
+          "sha256": "4b32ca76c0f253fdee228be7354281e8aec74adedcaf15897910a42a3463271a"
+        },
+        {
+          "path": "agv_unified_brain.py",
+          "size": 45158,
+          "mtime": 1790965434.076394,
+          "sha256": "67adf1fa7616002dbfd749864f1d44c069121f9de9b937804f0d3d21dbe37da3"
+        },
+        {
+          "path": "index_cyberpunk.html",
+          "size": 32621,
+          "mtime": 1790965434.1133933,
+          "sha256": "3e49b9d566511adc6c6c5b0c7b67376e5e454830f4652d980ba9d9d202aa4ef5"
+        },
+        {
+          "path": "slam_scan_fix.yaml",
+          "size": 2634,
+          "mtime": 1790965434.1513925,
+          "sha256": "09dd22eee3f667b98915dc3703c185dd699a6b33f35d083df81b8f5391158357"
+        },
+        {
+          "path": "start_manual_cruise.sh",
+          "size": 1230,
+          "mtime": 1790965434.2043912,
+          "sha256": "e9eaae6f510014d13c9afd02a8a7cc2f02883ec472f379e8d5bdb84f343a2f90"
+        }
+      ]
+    },
+    {
+      "folder": "/home/khangho/agv_codex_manual_tf_20261003_012944",
+      "files": [
+        {
+          "path": "agv_command_journal.py",
+          "size": 2973,
+          "mtime": 1790965932.6449049,
+          "sha256": "08513da55966bd3c885f57a0245417e36a9b981bfb099c00809535b583a9afe6"
+        },
+        {
+          "path": "agv_command_session.py",
+          "size": 25555,
+          "mtime": 1790965932.6889043,
+          "sha256": "de57ea9b13e71dd00d029f0f5c139949e34dd93b59e75bf098d14a4224b9a3cd"
+        },
+        {
+          "path": "agv_navigation.py",
+          "size": 19750,
+          "mtime": 1790965932.7509036,
+          "sha256": "15f80ee258548051b04ed82aec3195c5144e2e7acdba60ae9e5926e9e98b5293"
+        },
+        {
+          "path": "agv_preflight_static_collector.py",
+          "size": 39174,
+          "mtime": 1790965932.8019028,
+          "sha256": "4b32ca76c0f253fdee228be7354281e8aec74adedcaf15897910a42a3463271a"
+        },
+        {
+          "path": "agv_unified_brain.py",
+          "size": 45519,
+          "mtime": 1790965932.8749018,
+          "sha256": "6b456696e7895895f3978ab5668ffd1a2e85bc3ab72f05238f30ebaf20f6caa3"
+        },
+        {
+          "path": "index_cyberpunk.html",
+          "size": 32621,
+          "mtime": 1790965932.9299011,
+          "sha256": "3e49b9d566511adc6c6c5b0c7b67376e5e454830f4652d980ba9d9d202aa4ef5"
+        },
+        {
+          "path": "slam_scan_fix.yaml",
+          "size": 2634,
+          "mtime": 1790965932.9679005,
+          "sha256": "09dd22eee3f667b98915dc3703c185dd699a6b33f35d083df81b8f5391158357"
+        },
+        {
+          "path": "start_manual_tf.sh",
+          "size": 986,
+          "mtime": 1790965933.0338998,
+          "sha256": "21c81a9d8a5497a60abba26a55f445b5f7b922ad64f7639d376635fb48f59841"
+        }
+      ]
+    },
+    {
+      "folder": "/home/khangho/agv_codex_operator_20261003_002911",
+      "files": [
+        {
+          "path": "agv_command_journal.py",
+          "size": 2973,
+          "mtime": 1790962433.7698936,
+          "sha256": "08513da55966bd3c885f57a0245417e36a9b981bfb099c00809535b583a9afe6"
+        },
+        {
+          "path": "agv_command_session.py",
+          "size": 24320,
+          "mtime": 1790962433.8248937,
+          "sha256": "097380b668d1a0c161557bfd730c6dbfefa8de2eea14f220befb8285210805c6"
+        },
+        {
+          "path": "agv_navigation.py",
+          "size": 14678,
+          "mtime": 1790962433.8628938,
+          "sha256": "0f106a4a15fcdefda04f78ae74c65867950ccba1cb00dc46d70b340f4086f923"
+        },
+        {
+          "path": "agv_preflight_static_collector.py",
+          "size": 39174,
+          "mtime": 1790962433.9278939,
+          "sha256": "4b32ca76c0f253fdee228be7354281e8aec74adedcaf15897910a42a3463271a"
+        },
+        {
+          "path": "agv_unified_brain.py",
+          "size": 41173,
+          "mtime": 1790962434.0048938,
+          "sha256": "c426de2ab514dae4274f7871fc1fef7ba67151abe08657b0e312ee7a3b2c4141"
+        },
+        {
+          "path": "index_cyberpunk.html",
+          "size": 32688,
+          "mtime": 1790962434.0508938,
+          "sha256": "90c845f251f69fd81d03717fd4b7a7a2d1d18cb5d82721a98929f721a98b9bcc"
+        },
+        {
+          "path": "slam_scan_fix.yaml",
+          "size": 2634,
+          "mtime": 1790962434.091894,
+          "sha256": "09dd22eee3f667b98915dc3703c185dd699a6b33f35d083df81b8f5391158357"
+        },
+        {
+          "path": "start_operator.sh",
+          "size": 1824,
+          "mtime": 1790962434.1588938,
+          "sha256": "5052672e6cb72d2717a1d1187a79ce55aa0a1a269905cf3a44fc09b9f939077e"
+        }
+      ]
+    },
+    {
+      "folder": "/home/khangho/agv_codex_reader_20261003_0652",
+      "files": [
+        {
+          "path": "agv_command_journal.py",
+          "size": 2973,
+          "mtime": 1790984870.8863113,
+          "sha256": "08513da55966bd3c885f57a0245417e36a9b981bfb099c00809535b583a9afe6"
+        },
+        {
+          "path": "agv_command_session.py",
+          "size": 36836,
+          "mtime": 1791450179.2093573,
+          "sha256": "379e67b4c249997cd09971ee2b3edd7034fa9975c883976bf3d76ff10692802f"
+        },
+        {
+          "path": "agv_navigation.py",
+          "size": 21259,
+          "mtime": 1791211827.0059352,
+          "sha256": "f8c47533a9e983cffd2209e48ffb8cb544b6ba4de91e5e8fb00333dad0c6eb9c"
+        },
+        {
+          "path": "agv_preflight_static_collector.py",
+          "size": 39174,
+          "mtime": 1790984871.0253093,
+          "sha256": "4b32ca76c0f253fdee228be7354281e8aec74adedcaf15897910a42a3463271a"
+        },
+        {
+          "path": "agv_unified_brain.py",
+          "size": 75309,
+          "mtime": 1791450179.1563575,
+          "sha256": "9051d83aec5777765d76984cba4cb2ccd231e0f14a3603b305d4c49644292ffb"
+        },
+        {
+          "path": "backup_20261008/agv_command_session.py",
+          "size": 36616,
+          "mtime": 1791447941.3842523,
+          "sha256": "f92877ed94f8d3af87bab39c6c8ff730ce351bf7804ff13d0efb17b6a3952696"
+        },
+        {
+          "path": "backup_20261008/agv_unified_brain.py",
+          "size": 71430,
+          "mtime": 1791447941.3842523,
+          "sha256": "a91d4283274e6913e02d27528bc1d55e35562c0c696afe3f0c53b110c3fdac79"
+        },
+        {
+          "path": "backup_20261008/index_cyberpunk.html",
+          "size": 37790,
+          "mtime": 1791447941.3852525,
+          "sha256": "d6032fe341a6c781fdc5876920c13c758126c72669af6c129a46f155edc36bd1"
+        },
+        {
+          "path": "backup_before_autofix/agv_command_journal.py",
+          "size": 2973,
+          "mtime": 1790984870.8863113,
+          "sha256": "08513da55966bd3c885f57a0245417e36a9b981bfb099c00809535b583a9afe6"
+        },
+        {
+          "path": "backup_before_autofix/agv_command_session.py",
+          "size": 30705,
+          "mtime": 1791121900.8530824,
+          "sha256": "7217e232995a4dafef65cb2fb0b0a31b86e69ed230ee64e355e69123c5e7187b"
+        },
+        {
+          "path": "backup_before_autofix/agv_navigation.py",
+          "size": 19761,
+          "mtime": 1791120656.0563252,
+          "sha256": "dd82bc3164c072eff0cee5e2aaf11778267de376bfddfd749ed7841125e5c1f4"
+        },
+        {
+          "path": "backup_before_autofix/agv_preflight_static_collector.py",
+          "size": 39174,
+          "mtime": 1790984871.0253093,
+          "sha256": "4b32ca76c0f253fdee228be7354281e8aec74adedcaf15897910a42a3463271a"
+        },
+        {
+          "path": "backup_before_autofix/agv_unified_brain.py",
+          "size": 48757,
+          "mtime": 1791122044.5979116,
+          "sha256": "48848119ba073347741671ec7bd4d870da6f3a347b001de4cca9c6ced3234401"
+        },
+        {
+          "path": "backup_before_autofix/index_cyberpunk.html",
+          "size": 39863,
+          "mtime": 1791121278.0888534,
+          "sha256": "9f2e8860e37f1e670c5bdf2334e133430556b77542d39185b200c2a3d782dc73"
+        },
+        {
+          "path": "index_cyberpunk.html",
+          "size": 37867,
+          "mtime": 1791450179.2533572,
+          "sha256": "062bf8d5114ca180c54992aca33c723bcdc4cb391b15b00afcdf083678a5a313"
+        },
+        {
+          "path": "restart_brain.sh",
+          "size": 668,
+          "mtime": 1791289128.3385792,
+          "sha256": "25c2f43acf38a100400ca67ff7c5e953f3a07cae092ea26e574f2534622862f3"
+        },
+        {
+          "path": "slam_scan_fix.yaml",
+          "size": 2634,
+          "mtime": 1790984871.181307,
+          "sha256": "09dd22eee3f667b98915dc3703c185dd699a6b33f35d083df81b8f5391158357"
+        },
+        {
+          "path": "start.sh",
+          "size": 1212,
+          "mtime": 1790984871.2283065,
+          "sha256": "674c6eb179930e0d1ff19c0e6721f6fd5581a8c179a72e181fad90ff0a79dfd5"
+        },
+        {
+          "path": "start_agv_system.sh",
+          "size": 2512,
+          "mtime": 1791285515.234584,
+          "sha256": "a041f5baecefefa71111e771dd6b57efcfc782fc234147c70d18d4cc16197b41"
+        },
+        {
+          "path": "start_reboot.sh",
+          "size": 1856,
+          "mtime": 1791005817.811846,
+          "sha256": "0b2501e82cd10cfef495c3e5caad0dc0a8c1fbcf91d3dce48a895a62b9c1248b"
+        },
+        {
+          "path": "stop_agv_system.sh",
+          "size": 760,
+          "mtime": 1791181635.3885176,
+          "sha256": "fb873bdba7d988f45c639307cb4891db2fc3ff514e985aca5c8c06a48b952229"
+        }
+      ]
+    },
+    {
+      "folder": "/home/khangho/agv_codex_resume_20261003_0632",
+      "files": [
+        {
+          "path": "agv_command_journal.py",
+          "size": 2973,
+          "mtime": 1790965932.6449049,
+          "sha256": "08513da55966bd3c885f57a0245417e36a9b981bfb099c00809535b583a9afe6"
+        },
+        {
+          "path": "agv_command_session.py",
+          "size": 25555,
+          "mtime": 1790965932.6889043,
+          "sha256": "de57ea9b13e71dd00d029f0f5c139949e34dd93b59e75bf098d14a4224b9a3cd"
+        },
+        {
+          "path": "agv_navigation.py",
+          "size": 19750,
+          "mtime": 1790965932.7509036,
+          "sha256": "15f80ee258548051b04ed82aec3195c5144e2e7acdba60ae9e5926e9e98b5293"
+        },
+        {
+          "path": "agv_preflight_static_collector.py",
+          "size": 39174,
+          "mtime": 1790965932.8019028,
+          "sha256": "4b32ca76c0f253fdee228be7354281e8aec74adedcaf15897910a42a3463271a"
+        },
+        {
+          "path": "agv_unified_brain.py",
+          "size": 45519,
+          "mtime": 1790965932.8749018,
+          "sha256": "6b456696e7895895f3978ab5668ffd1a2e85bc3ab72f05238f30ebaf20f6caa3"
+        },
+        {
+          "path": "index_cyberpunk.html",
+          "size": 32621,
+          "mtime": 1790965932.9299011,
+          "sha256": "3e49b9d566511adc6c6c5b0c7b67376e5e454830f4652d980ba9d9d202aa4ef5"
+        },
+        {
+          "path": "slam_scan_fix.yaml",
+          "size": 2634,
+          "mtime": 1790965932.9679005,
+          "sha256": "09dd22eee3f667b98915dc3703c185dd699a6b33f35d083df81b8f5391158357"
+        },
+        {
+          "path": "start.sh",
+          "size": 1856,
+          "mtime": 1790984006.105277,
+          "sha256": "3a3b384ab0ec64845c3108ef4267cfd1b205a9fc037fcead3fffdc4ca623b6ba"
+        }
+      ]
+    },
+    {
+      "folder": "/home/khangho/agv_codex_sync_20261003_0640",
+      "files": [
+        {
+          "path": "agv_command_journal.py",
+          "size": 2973,
+          "mtime": 1790984462.7021918,
+          "sha256": "08513da55966bd3c885f57a0245417e36a9b981bfb099c00809535b583a9afe6"
+        },
+        {
+          "path": "agv_command_session.py",
+          "size": 28368,
+          "mtime": 1790984462.7561917,
+          "sha256": "7a7d0307d96f15d6aa61adf684b7cc9b4356444e1da40eff8995eae2f6f2bc24"
+        },
+        {
+          "path": "agv_navigation.py",
+          "size": 19750,
+          "mtime": 1790984462.8011916,
+          "sha256": "15f80ee258548051b04ed82aec3195c5144e2e7acdba60ae9e5926e9e98b5293"
+        },
+        {
+          "path": "agv_preflight_static_collector.py",
+          "size": 39174,
+          "mtime": 1790984462.8561912,
+          "sha256": "4b32ca76c0f253fdee228be7354281e8aec74adedcaf15897910a42a3463271a"
+        },
+        {
+          "path": "agv_unified_brain.py",
+          "size": 45964,
+          "mtime": 1790984462.921191,
+          "sha256": "23f4d959aaefbf77ab6a15369070e6ff02febaf1ab93e17ae8f898eb4b16f163"
+        },
+        {
+          "path": "index_cyberpunk.html",
+          "size": 32621,
+          "mtime": 1790984462.9651906,
+          "sha256": "3e49b9d566511adc6c6c5b0c7b67376e5e454830f4652d980ba9d9d202aa4ef5"
+        },
+        {
+          "path": "slam_scan_fix.yaml",
+          "size": 2634,
+          "mtime": 1790984462.9991906,
+          "sha256": "09dd22eee3f667b98915dc3703c185dd699a6b33f35d083df81b8f5391158357"
+        },
+        {
+          "path": "start.sh",
+          "size": 978,
+          "mtime": 1790984463.0571902,
+          "sha256": "99cc9782268fe894063fb54db826ca546780b24b3f82481d50da40212a86a6fe"
+        }
+      ]
+    },
+    {
+      "folder": "/home/khangho/agv_trial_20261002_1028",
+      "files": [
+        {
+          "path": "agv_motion_supervisor_runner.py",
+          "size": 48776,
+          "mtime": 1790912139.41911,
+          "sha256": "15cdfc6c6d86582df3ae219b8f301eb1dbb7bbdd0da742d43052242cda50f928"
+        },
+        {
+          "path": "agv_serial_arbiter_bridge_v3.py",
+          "size": 23209,
+          "mtime": 1790912139.4491098,
+          "sha256": "6f4a2106622e99fe60212199b621cdcbbd2a76b2e639519796b15d5a703e3d1d"
+        },
+        {
+          "path": "candidate_agv_motion_supervisor_runner_v08.py",
+          "size": 50664,
+          "mtime": 1790914709.6077895,
+          "sha256": "907c5882620b2a65b78c7f69a21893e941c073102f5e3c56ba192370688a2750"
+        },
+        {
+          "path": "candidate_agv_motion_supervisor_runner_v15.py",
+          "size": 50664,
+          "mtime": 1790914779.7774038,
+          "sha256": "a48bbb221af6ca4b57d98a56443e06619e31ade4d4f88315d0bf3648e9fa07d5"
+        },
+        {
+          "path": "candidate_agv_serial_arbiter_bridge_v3_v08.py",
+          "size": 23667,
+          "mtime": 1790914709.6387897,
+          "sha256": "95c8667ffd66a1076e68ce55a381afaee5f9618c7a705c991b61ae2e9978213d"
+        },
+        {
+          "path": "candidate_agv_serial_arbiter_bridge_v3_v15.py",
+          "size": 23667,
+          "mtime": 1790914779.8224041,
+          "sha256": "ad62e654568485dd3789e011e2f8d81ab4941ab51320f447956b98355da16f0a"
+        }
+      ]
+    },
+    {
+      "folder": "/home/khangho/firmware",
+      "files": []
+    },
+    {
+      "folder": "/home/khangho/firmware_bench",
+      "files": []
+    },
+    {
+      "folder": "/home/khangho/robot_ws",
+      "files": []
+    },
+    {
+      "folder": "/home/khangho/rplidar_c1_test",
+      "files": [
+        {
+          "path": "OPTIONAL_MAPPING.md",
+          "size": 2524,
+          "mtime": 1789661258.6198034,
+          "sha256": "b069f4a7d39f1905700ab3d13f3864bbe57dfb9ec6a27cfd8d7fda3be7a51bd0"
+        },
+        {
+          "path": "README.md",
+          "size": 42167,
+          "mtime": 1789662428.1708128,
+          "sha256": "d34717f9b22287c20d80c4ee659051785fb069d4b90c37d06f78caa9f7cbd7c7"
+        },
+        {
+          "path": "app/__init__.py",
+          "size": 38,
+          "mtime": 1789661258.8708398,
+          "sha256": "2a7ac88be66792ae4a4c20bc63ad682278c078149dc491af9be5dad49644fe04"
+        },
+        {
+          "path": "app/autonomous_avoidance.py",
+          "size": 5356,
+          "mtime": 1790779846.6243825,
+          "sha256": "b280864748b95879559e1a024d1e984d869a21c314f5349f7d286ddccfbe06f5"
+        },
+        {
+          "path": "app/diff_drive_odometry.py",
+          "size": 5744,
+          "mtime": 1789661258.6888134,
+          "sha256": "3740287ab60e99400be29c6af9412690c9b648ab24159b6b5cd13343a8a1f857"
+        },
+        {
+          "path": "app/lidar_manager.py",
+          "size": 4278,
+          "mtime": 1789661258.7008152,
+          "sha256": "abfd4df1c06638611f1ee327668db36bce7065484bb06f95a78e3ab6eba4cfe3"
+        },
+        {
+          "path": "app/main.py",
+          "size": 14590,
+          "mtime": 1789661258.7348201,
+          "sha256": "7ae975f3674c2d929ba543d59187446a9c798329dfdd20fd2d513cc599309bd3"
+        },
+        {
+          "path": "app/odom_monitor.py",
+          "size": 3060,
+          "mtime": 1789662353.0710495,
+          "sha256": "9cb2a901d1771616101830c3b6362e61f339e04d7fb2df4c6b0c1b1fcac5f12f"
+        },
+        {
+          "path": "app/odom_tf_broadcaster.py",
+          "size": 3372,
+          "mtime": 1789662128.6760669,
+          "sha256": "232f58f98c3fdfaed3bbe75018be0b9ad4c0399531eb4e08d84b8cc6faf666b6"
+        },
+        {
+          "path": "app/ros_manager.py",
+          "size": 4964,
+          "mtime": 1789662352.0790677,
+          "sha256": "cfca81ee5395a9120765412320149fc4290eb9058386acd5c08c47fa45160bb7"
+        },
+        {
+          "path": "app/run_avoidance.py",
+          "size": 403,
+          "mtime": 1790779884.2477791,
+          "sha256": "abfd2e8e24cefc5014f7cfe28601b298ed9df8ecc4db0f9fc594553034459ae4"
+        },
+        {
+          "path": "app/slam_gui.py",
+          "size": 13678,
+          "mtime": 1789661258.795829,
+          "sha256": "ffc42df0b01bb2209b95b59721a740d6e69825f827dd41de844926d6b21ad31d"
+        },
+        {
+          "path": "app/slam_manager.py",
+          "size": 6697,
+          "mtime": 1789662354.0530314,
+          "sha256": "5b0764c5b12e7693a1632357c53e4cae87bb1d57c4d19c08f2cf117c15f8f330"
+        },
+        {
+          "path": "app/system_check.py",
+          "size": 10163,
+          "mtime": 1789661258.8328345,
+          "sha256": "5d4aceb37d0a1efa4ffa06a872557b638a7b97858498e695cdac4a31f635193e"
+        },
+        {
+          "path": "app/tf_monitor.py",
+          "size": 1672,
+          "mtime": 1789661258.8538375,
+          "sha256": "e03fc7fa347d62648004c021a05dc85fc0513b659ec6f90cdde36ddde1d9274b"
+        },
+        {
+          "path": "bridge/agv_master_explorer.py",
+          "size": 25364,
+          "mtime": 1790824347.02725,
+          "sha256": "b4d67738cf3d541d1afbf78d48501419dd4711d8624488f709cd6cb140e9194d"
+        },
+        {
+          "path": "bridge/agv_unified_brain.py",
+          "size": 26668,
+          "mtime": 1790935353.7076228,
+          "sha256": "a0f383621a87133e5691e092e51f861bda5095beedc2f54f0d4d7de6ffb2eefe"
+        },
+        {
+          "path": "bridge/agv_unified_brain_v4_10.py",
+          "size": 58215,
+          "mtime": 1790934160.4721642,
+          "sha256": "0a611017c290f01801006e54b4123580291cbae648542e14bfe25c6ba6e3a72b"
+        },
+        {
+          "path": "bridge/lidar_bridge_server.py",
+          "size": 23967,
+          "mtime": 1790779977.0415003,
+          "sha256": "4417dae5513128a6b035974db6811650b0de5512b30e432c95adc2f40518463e"
+        },
+        {
+          "path": "bridge/web/index.html",
+          "size": 31808,
+          "mtime": 1790779901.3129382,
+          "sha256": "cef6ba5baa724800da341f10b549102120f083e3f992deff1c7978e976bb25fd"
+        },
+        {
+          "path": "bridge/web/index_cyberpunk.html",
+          "size": 26205,
+          "mtime": 1790934725.3048964,
+          "sha256": "12b4180d3c6bc6895140a6931b76eef11794533129fcef154c45d158df7e1895"
+        },
+        {
+          "path": "bridge/web/index_master_explorer.html",
+          "size": 20093,
+          "mtime": 1790823452.0923219,
+          "sha256": "a21fc51c447383baf62b55a510c16c0d6aa2277feaa85c7b771a20298bcabd30"
+        },
+        {
+          "path": "bridge/web/radar.html",
+          "size": 9245,
+          "mtime": 1789724386.1383822,
+          "sha256": "603f8180825b3e74580bc4297b5138a0e1af4d479b293025964e701bc27fa2a4"
+        },
+        {
+          "path": "config/lidar.yaml",
+          "size": 974,
+          "mtime": 1789661258.8958435,
+          "sha256": "0fe666aae78e68fe5648720ad53d41dd2b67a7984140a3e156413a9b5fd16744"
+        },
+        {
+          "path": "config/robot.yaml",
+          "size": 1643,
+          "mtime": 1789661258.919847,
+          "sha256": "053f757d62b1f5065214080aeb8f64fef88714fc4800af8ca4288c63faaf0ce1"
+        },
+        {
+          "path": "config/slam_toolbox.yaml",
+          "size": 2560,
+          "mtime": 1789662127.5700488,
+          "sha256": "9c8233cc47d9d514a8bc2a2b61afd3bc1a1359fb2a51cc7e477b5235a896681b"
+        },
+        {
+          "path": "desktop/run_gui.sh",
+          "size": 1515,
+          "mtime": 1789661259.0548666,
+          "sha256": "4074bd8f160aae088f832ab5b3642587520e786f0ca937a9bdc4e1839b91a547"
+        },
+        {
+          "path": "desktop/run_slam_gui.sh",
+          "size": 1229,
+          "mtime": 1789661259.0748694,
+          "sha256": "e5abd4cd62a906bc2804e31555e89107ca801dc2c93b82ca07291c68bf3f7dec"
+        },
+        {
+          "path": "launch/diff_drive_odom.launch.py",
+          "size": 703,
+          "mtime": 1789661259.1138752,
+          "sha256": "eed75ac66bd0ed3e1b04b8f0f86e28c2815eb0081eca89f44df97e21e0f0b337"
+        },
+        {
+          "path": "launch/lidar_test.launch.py",
+          "size": 2805,
+          "mtime": 1789661259.1348782,
+          "sha256": "e44e251f764f0f07af5e6665a305f178d7df1a82cbe2ee5c078b33dfd79da6ba"
+        },
+        {
+          "path": "launch/slam_mapping.launch.py",
+          "size": 2506,
+          "mtime": 1789661259.14788,
+          "sha256": "bb27fa88d8d2c7d8c984278fbd34e2936a7838ebe078c6cb681d23444abd579c"
+        },
+        {
+          "path": "launch/static_tf.launch.py",
+          "size": 3265,
+          "mtime": 1789661942.8676453,
+          "sha256": "b87f7797f14fabbd726b514401ac1a2a9f1cc463a28fc3580f649aa6eb304aef"
+        },
+        {
+          "path": "maps/test_room.yaml",
+          "size": 131,
+          "mtime": 1789662220.786946,
+          "sha256": "fcb93a33052c057348448752922212f0142c6a1ba8b012c8ab3b7a8e220e16aa"
+        },
+        {
+          "path": "scripts/check_slam.sh",
+          "size": 3977,
+          "mtime": 1789724400.7203028,
+          "sha256": "7f0c3c5cfba7f3b1bb1dd75a6ff6f60480bac879e61ec96ba48866672bbfdc0d"
+        },
+        {
+          "path": "scripts/connect_wifi_minhkhang.sh",
+          "size": 2044,
+          "mtime": 1789724400.7493026,
+          "sha256": "563c63c459d3bdb4b7851899ff285d5581ab0a30149b05b326928a754b1238e3"
+        },
+        {
+          "path": "scripts/debug_tf_slam.py",
+          "size": 1415,
+          "mtime": 1789661874.3471098,
+          "sha256": "473b87656b5a109ec2b7208260dc204916f40ee33832488416769d0f67b1472a"
+        },
+        {
+          "path": "scripts/detect_lidar.sh",
+          "size": 4042,
+          "mtime": 1789724400.7773025,
+          "sha256": "8a9d9269b572bfb21d988f918cc952efd9011a222cd69110faadc3186498f987"
+        },
+        {
+          "path": "scripts/diagnostics.sh",
+          "size": 4263,
+          "mtime": 1789724400.8053024,
+          "sha256": "5c5428b302d7daf36ed3e529033083d5213c98976d1df9e7a827e83c4203e88b"
+        },
+        {
+          "path": "scripts/exact_tf_error.py",
+          "size": 1527,
+          "mtime": 1789662026.5742955,
+          "sha256": "72b8dd1d2cc4f4846d5aa85ec12fe20a8926cec95a07643ba9f26c1b68ecdf87"
+        },
+        {
+          "path": "scripts/inspect_tf.sh",
+          "size": 1524,
+          "mtime": 1789724400.8293023,
+          "sha256": "a46805069aab6126e0115bd5834d3b1535ab31ebffb4f1347ae970650a6aa5ad"
+        },
+        {
+          "path": "scripts/install_dependencies.sh",
+          "size": 3272,
+          "mtime": 1789724400.858302,
+          "sha256": "49c3cf60f0b545dbeab9fa967027760cae6c616197cc93d98a4143b92443185d"
+        },
+        {
+          "path": "scripts/launch_full_system.sh",
+          "size": 1188,
+          "mtime": 1790822318.9640954,
+          "sha256": "f5b48e751e90bb054048f3f80509e390456d2e2d27e72181b68f5575a14bd0d8"
+        },
+        {
+          "path": "scripts/run_brain.sh",
+          "size": 124,
+          "mtime": 1790780674.3427205,
+          "sha256": "679525d5bec4676421079e4ecf1fe89156a1344ca5fa10dbbb74ee256601e6c6"
+        },
+        {
+          "path": "scripts/save_map.py",
+          "size": 3309,
+          "mtime": 1789724400.883302,
+          "sha256": "032d9dca82331d8df855257dafb298371d5af303712d254daeeb8e0b27ee991b"
+        },
+        {
+          "path": "scripts/save_map.sh",
+          "size": 624,
+          "mtime": 1789724400.8983018,
+          "sha256": "6844321c3728b5f9dcb6909af47e2c61b95d60b63ade1b7f61b9cb86d371e1fa"
+        },
+        {
+          "path": "scripts/setup_hotspot.sh",
+          "size": 2852,
+          "mtime": 1789724400.917302,
+          "sha256": "17fdc2bdf61898a8d2f4d40f0a43329adee64d1b9664e1065a2167bc02675bd7"
+        },
+        {
+          "path": "scripts/setup_udev.sh",
+          "size": 3431,
+          "mtime": 1789724400.9413016,
+          "sha256": "857fcc7468c71054f53b78aa3c82167b740812267025fc4d537ff9b990c3f587"
+        },
+        {
+          "path": "scripts/start_agv_all.sh",
+          "size": 2590,
+          "mtime": 1789724400.9613016,
+          "sha256": "f49833c22dfdb45149b3ddea03cd71f2224e2efd83bbeeef55d3b7749a9ce995"
+        },
+        {
+          "path": "scripts/start_background.sh",
+          "size": 1146,
+          "mtime": 1789724727.8125339,
+          "sha256": "b69f691e9d2c385609bc269fb20ea57ed6c07988ef89faaf288cd4b602045df4"
+        },
+        {
+          "path": "scripts/start_bridge.sh",
+          "size": 850,
+          "mtime": 1789724400.9953012,
+          "sha256": "6ae816183f882f4b0a051c06f621af77fb8a2317b7de189ea90413f3bffb238f"
+        },
+        {
+          "path": "scripts/start_lidar.sh",
+          "size": 3559,
+          "mtime": 1789724401.0243013,
+          "sha256": "bf4c4060e875f15ba0402ebf906a21381bfddef418efc01eb40133efa0269bea"
+        },
+        {
+          "path": "scripts/start_slam.sh",
+          "size": 3540,
+          "mtime": 1789724401.0493011,
+          "sha256": "b1fcf2f46dd37482924d5d5eba3b4867aab3bf963f7381378643b152b73d8245"
+        },
+        {
+          "path": "scripts/stop_background.sh",
+          "size": 466,
+          "mtime": 1789724727.8305337,
+          "sha256": "63af941f339831ba5d87a6aa50e1de888f033f5595453ae0fc21882546cc89f4"
+        },
+        {
+          "path": "scripts/stop_lidar.sh",
+          "size": 1951,
+          "mtime": 1789724401.072301,
+          "sha256": "1a37be4b46faef06bc6981d32b5b12d7e454e320fc06762582efaaa92e246478"
+        },
+        {
+          "path": "scripts/stop_slam.sh",
+          "size": 1845,
+          "mtime": 1789724401.0963008,
+          "sha256": "701490798afed374fa45adc5632165e2b5cc92e80d0c5aa6c357ae87602bcefa"
+        },
+        {
+          "path": "scripts/switch_to_client_wifi.sh",
+          "size": 828,
+          "mtime": 1789724401.1173007,
+          "sha256": "4afb37a474ab3f29a46ef47a148caffe26538e54ab92efab2635d6e1f7f21ae5"
+        },
+        {
+          "path": "scripts/test_scan.sh",
+          "size": 5255,
+          "mtime": 1789724401.1413007,
+          "sha256": "a4a5f6eb20638d4da69b21891ff0436273ef241ffc0f0e7bbc3b3cb55e64d46c"
+        }
+      ]
+    },
+    {
+      "folder": "/home/khangho/rplidar_c1_ws",
+      "files": [
+        {
+          "path": "src/sllidar_ros2/README.md",
+          "size": 4375,
+          "mtime": 1789419948.3218007,
+          "sha256": "eae81cf0de522a20da40988063a9168301d8597fa813c4fcfccd8060e0d23a63"
+        },
+        {
+          "path": "src/sllidar_ros2/launch/sllidar_a1_launch.py",
+          "size": 2650,
+          "mtime": 1789419948.3498006,
+          "sha256": "802b171faddaf88b6b6621419661cc8cee560162107e89bb6a5c2b6e6f3860a0"
+        },
+        {
+          "path": "src/sllidar_ros2/launch/sllidar_a2m12_launch .py",
+          "size": 2650,
+          "mtime": 1789419948.3528006,
+          "sha256": "08252a7c297953fafe33de5c9565cdb41a8ca5399d5fe319ee379bacc2cc7f4b"
+        },
+        {
+          "path": "src/sllidar_ros2/launch/sllidar_a2m7_launch.py",
+          "size": 2650,
+          "mtime": 1789419948.3568008,
+          "sha256": "08252a7c297953fafe33de5c9565cdb41a8ca5399d5fe319ee379bacc2cc7f4b"
+        },
+        {
+          "path": "src/sllidar_ros2/launch/sllidar_a2m8_launch.py",
+          "size": 2650,
+          "mtime": 1789419948.3608007,
+          "sha256": "802b171faddaf88b6b6621419661cc8cee560162107e89bb6a5c2b6e6f3860a0"
+        },
+        {
+          "path": "src/sllidar_ros2/launch/sllidar_a3_launch.py",
+          "size": 2707,
+          "mtime": 1789419948.3648007,
+          "sha256": "5c9f693f1da6dff2ef95b0b462e056b2639a8bd186eb0fe73f119b514e3f312b"
+        },
+        {
+          "path": "src/sllidar_ros2/launch/sllidar_c1_launch.py",
+          "size": 2684,
+          "mtime": 1789419948.3688006,
+          "sha256": "0edf5121a2f684a3c0c50e2bfcf62f3a6f92286b124b46a1bfcbc7eac6eed12c"
+        },
+        {
+          "path": "src/sllidar_ros2/launch/sllidar_s1_launch.py",
+          "size": 2415,
+          "mtime": 1789419948.3728006,
+          "sha256": "e388005e6acc59f5835864dbd6cf11d8805e424a7f25c30733c12c167dc636f6"
+        },
+        {
+          "path": "src/sllidar_ros2/launch/sllidar_s1_tcp_launch.py",
+          "size": 2331,
+          "mtime": 1789419948.3768008,
+          "sha256": "27455557568d7566b1a00b1ca7c4379b229ada2642a5ad14a41ab93d825f2727"
+        },
+        {
+          "path": "src/sllidar_ros2/launch/sllidar_s2_launch.py",
+          "size": 2706,
+          "mtime": 1789419948.3848007,
+          "sha256": "53e6adfa5857edcc992b2172a65c6c6dea20b92af2d6f3bbe3e99a3c00e3cd16"
+        },
+        {
+          "path": "src/sllidar_ros2/launch/sllidar_s2e_launch.py",
+          "size": 2675,
+          "mtime": 1789419948.3808007,
+          "sha256": "49a29d70203bb230a965e0fd3d614e0485d9d7259835ddfc012141e5a4ef94a3"
+        },
+        {
+          "path": "src/sllidar_ros2/launch/sllidar_s3_launch.py",
+          "size": 2687,
+          "mtime": 1789419948.3888006,
+          "sha256": "0e57bda4c092a7d7eb9e6922d3616c3081d1ae5455023afc1cd253dd4649c1cb"
+        },
+        {
+          "path": "src/sllidar_ros2/launch/sllidar_t1_launch.py",
+          "size": 2601,
+          "mtime": 1789419948.3928008,
+          "sha256": "d7a032b10abe2f0c29b536aadfb3fd7c6b570464aac7bb9cc8728362ce3c37f1"
+        },
+        {
+          "path": "src/sllidar_ros2/launch/view_sllidar_a1_launch.py",
+          "size": 3025,
+          "mtime": 1789419948.3968008,
+          "sha256": "99e86564e34eb4364682afb12b2a4280aba7bc30a4220a7e94db6bebe6e6e38e"
+        },
+        {
+          "path": "src/sllidar_ros2/launch/view_sllidar_a2m12_launch.py",
+          "size": 3025,
+          "mtime": 1789419948.4008007,
+          "sha256": "c6c91a712421a7cdcce2b43c911eece4e023db9648da0ea8e46cda7ee4bb087d"
+        },
+        {
+          "path": "src/sllidar_ros2/launch/view_sllidar_a2m7_launch.py",
+          "size": 3025,
+          "mtime": 1789419948.4058006,
+          "sha256": "c6c91a712421a7cdcce2b43c911eece4e023db9648da0ea8e46cda7ee4bb087d"
+        },
+        {
+          "path": "src/sllidar_ros2/launch/view_sllidar_a2m8_launch.py",
+          "size": 3025,
+          "mtime": 1789419948.4098008,
+          "sha256": "99e86564e34eb4364682afb12b2a4280aba7bc30a4220a7e94db6bebe6e6e38e"
+        },
+        {
+          "path": "src/sllidar_ros2/launch/view_sllidar_a3_launch.py",
+          "size": 3043,
+          "mtime": 1789419948.4148006,
+          "sha256": "71aa4a40d6fef99e496d076d10399a240597dd37927b3464abdfd3c51341041d"
+        },
+        {
+          "path": "src/sllidar_ros2/launch/view_sllidar_c1_launch.py",
+          "size": 3052,
+          "mtime": 1789419948.4178007,
+          "sha256": "a78a25166091b8d4f15250c40133730b00c183cd4a639c2f28586da04c319c33"
+        },
+        {
+          "path": "src/sllidar_ros2/launch/view_sllidar_s1_launch.py",
+          "size": 2772,
+          "mtime": 1789419948.4228008,
+          "sha256": "b4df6ccc702a79e3c04ffd7be581659a42164915785e682c6c19c5ac4bdaa037"
+        },
+        {
+          "path": "src/sllidar_ros2/launch/view_sllidar_s1_tcp_launch.py",
+          "size": 2669,
+          "mtime": 1789419948.4268007,
+          "sha256": "26ba704f1b24869380fdc2618247e658ebcfc1858470dc369ad68673f7136bf2"
+        },
+        {
+          "path": "src/sllidar_ros2/launch/view_sllidar_s2_launch.py",
+          "size": 3074,
+          "mtime": 1789419948.4348006,
+          "sha256": "c76dbe82a6417ec607580a73dbb8191a849094a147954701c5cfcae4ce7f2d59"
+        },
+        {
+          "path": "src/sllidar_ros2/launch/view_sllidar_s2e_launch.py",
+          "size": 3017,
+          "mtime": 1789419948.4308007,
+          "sha256": "15158e180225af017d85f5f356a643c81c241480eee6f19bbec6817037d86c05"
+        },
+        {
+          "path": "src/sllidar_ros2/launch/view_sllidar_s3_launch.py",
+          "size": 3055,
+          "mtime": 1789419948.4388008,
+          "sha256": "487857d2f281157263ee26d3527c8ea55543a2f806a96b8497a574d1ad14ead6"
+        },
+        {
+          "path": "src/sllidar_ros2/launch/view_sllidar_t1_launch.py",
+          "size": 2939,
+          "mtime": 1789419948.4428008,
+          "sha256": "877497b1ce48c806f2faf3a004cb093769be2a4792936e22e59753e8d326296f"
+        },
+        {
+          "path": "src/sllidar_ros2/scripts/create_udev_rules.sh",
+          "size": 416,
+          "mtime": 1789419948.4638007,
+          "sha256": "ec4a85e796a8045e626a7bc0f3fd92cff4c6c435a6126f7bf9adaceaa7d1b524"
+        },
+        {
+          "path": "src/sllidar_ros2/scripts/delete_udev_rules.sh",
+          "size": 292,
+          "mtime": 1789419948.4678006,
+          "sha256": "39ff3e1f8ea0e36e6543c46a160dda93535a9a989866660f56e058df9b551073"
+        },
+        {
+          "path": "src/sllidar_ros2/src/sllidar_client.cpp",
+          "size": 1228,
+          "mtime": 1789419948.8628006,
+          "sha256": "197938c4a2fef7bbac2a004a0d2efae038337c8b007ad8936c4d9c61082a3a9e"
+        },
+        {
+          "path": "src/sllidar_ros2/src/sllidar_node.cpp",
+          "size": 20845,
+          "mtime": 1789419948.8698008,
+          "sha256": "bfdd30f4aae3ed146c8a2f2c07e10966a87e871f030d2a37927a654d8db11153"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,298 @@
+{
+  "time_local": "2026-10-02T15:23:58.984268",
+  "timezone": "Asia/Bangkok",
+  "source_before": "7cf850b304460b2195412510deab1d2075a1e707147b5670d410169f10050b8f",
+  "source_after": "7cf850b304460b2195412510deab1d2075a1e707147b5670d410169f10050b8f",
+  "clock": "real unscaled no product timestamp/count/passed assignments",
+  "hardware": false,
+  "ROS": false,
+  "fixes_limited": {
+    "mixed_boot_addr0_VIN0_without_found_refused": {
+      "stage": 2,
+      "found": false,
+      "tx": []
+    },
+    "first_STOP_preTX_zero_rejected_late_postTX_zero_confirmed": {
+      "waiting_mutex": {
+        "op": 0,
+        "confirmed": false,
+        "tx": []
+      },
+      "first_write_blocked": {
+        "op": 1,
+        "confirmed": false,
+        "completion": 0.0,
+        "tx": []
+      },
+      "reply": {
+        "stop": [
+          false,
+          "STOP_UNCONFIRMED_TIMEOUT"
+        ]
+      },
+      "late_confirmed": true,
+      "fault": "STOP_UNCONFIRMED_TIMEOUT",
+      "tx": [
+        {
+          "mono": 371368.718,
+          "line": "STOP",
+          "expected": 6,
+          "written": 6
+        },
+        {
+          "mono": 371368.734,
+          "line": "STOP",
+          "expected": 6,
+          "written": 6
+        },
+        {
+          "mono": 371368.734,
+          "line": "STOP",
+          "expected": 6,
+          "written": 6
+        }
+      ]
+    },
+    "new_reader_FAULT_operation_partial_zero_not_confirmed": {
+      "previous": [
+        false,
+        "STOP_UNCONFIRMED_TIMEOUT"
+      ],
+      "oldop": 1,
+      "newop": 2,
+      "write_fault": true,
+      "observed": true,
+      "confirmed": false,
+      "tx": [
+        {
+          "mono": 371368.796,
+          "line": "STOP",
+          "expected": 6,
+          "written": 6
+        },
+        {
+          "mono": 371368.796,
+          "line": "STOP",
+          "expected": 6,
+          "written": 6
+        },
+        {
+          "mono": 371368.812,
+          "line": "STOP",
+          "expected": 6,
+          "written": 6
+        },
+        {
+          "mono": 371368.859,
+          "line": "STOP",
+          "expected": 6,
+          "written": 1
+        },
+        {
+          "mono": 371368.859,
+          "line": "STOP",
+          "expected": 6,
+          "written": 1
+        },
+        {
+          "mono": 371368.859,
+          "line": "STOP",
+          "expected": 6,
+          "written": 1
+        }
+      ]
+    },
+    "explicit_MCU_tuning_error_REJECTED_not_timeout_or_hardware_STOP": {
+      "reply": {
+        "tuning": [
+          "REJECTED",
+          "INVALID_TUNING_RANGE"
+        ]
+      },
+      "history": [
+        {
+          "tx_id": 1,
+          "time": "15:23:47",
+          "kp": 0.5,
+          "ki": 1.5,
+          "kd": 0.01,
+          "kf": 0.45,
+          "status": "REJECTED",
+          "reason": "INVALID_TUNING_RANGE"
+        }
+      ],
+      "tx": [
+        {
+          "mono": 371368.859,
+          "line": "TUNING 0.500 1.500 0.0100 0.450",
+          "expected": 33,
+          "written": 33
+        }
+      ]
+    }
+  },
+  "residuals": {
+    "new_STOP_reuses_old_completion_preTX_CONFIRMED_and_timeout_disagree": {
+      "before_new_TX": {
+        "op": 2,
+        "oldop": 1,
+        "completion": 371368.89,
+        "oldcompletion": 371368.89,
+        "confirmed": true,
+        "tx": [
+          {
+            "mono": 371368.859,
+            "line": "STOP",
+            "expected": 6,
+            "written": 6
+          },
+          {
+            "mono": 371368.875,
+            "line": "STOP",
+            "expected": 6,
+            "written": 6
+          },
+          {
+            "mono": 371368.89,
+            "line": "STOP",
+            "expected": 6,
+            "written": 6
+          }
+        ]
+      },
+      "final_reply": {
+        "stop": [
+          false,
+          "STOP_UNCONFIRMED_TIMEOUT"
+        ]
+      },
+      "final_confirmed": true,
+      "tx": [
+        {
+          "mono": 371368.859,
+          "line": "STOP",
+          "expected": 6,
+          "written": 6
+        },
+        {
+          "mono": 371368.875,
+          "line": "STOP",
+          "expected": 6,
+          "written": 6
+        },
+        {
+          "mono": 371368.89,
+          "line": "STOP",
+          "expected": 6,
+          "written": 6
+        },
+        {
+          "mono": 371368.921,
+          "line": "STOP",
+          "expected": 6,
+          "written": 6
+        },
+        {
+          "mono": 371368.921,
+          "line": "STOP",
+          "expected": 6,
+          "written": 6
+        },
+        {
+          "mono": 371368.937,
+          "line": "STOP",
+          "expected": 6,
+          "written": 6
+        }
+      ]
+    },
+    "actual_MAIN_partial_STOP500_public_FAULT_null_immediate": {
+      "reply": {
+        "code": 500,
+        "body": "{\"status\": \"PARTIAL_FAULT\", \"action\": \"STOP_LATCHED\", \"reason\": \"STOP_WRITE_FAILED: PARTIAL_STOP_WRITE: 1/6\"}"
+      },
+      "health": {
+        "code": 200,
+        "body": "{\"session_id\": \"3d856b83-b670-42f0-bbfc-497c434f63fb\", \"auto\": false, \"latched_stop\": true, \"fault_code\": null, \"first_fault_reason\": null, \"fsm_state\": \"IDLE\", \"mcu_state\": \"UNKNOWN\", \"mcu_mode\": \"IDLE\", \"startup_stage\": 0, \"preflight_passed\": false, \"preflight_count\": 0, \"robot\": {\"x\": 0.0, \"y\": 0.0, \"th\": 0.0, \"l_rpm\": 0.0, \"r_rpm\": 0.0, \"l_pwm\": 0, \"r_pwm\": 0, \"l_tgt\": 0.0, \"r_tgt\": 0.0, \"v\": 0.0, \"w\": 0.0}, \"zones\": {\"front\": 999, \"front_left\": 999, \"front_right\": 999, \"left\": 999, \"right\": 999}, \"min_m\": 99.0, \"map_info\": {\"has_map\": false, \"w\": 0, \"h\": 0, \"res\": 0.05, \"frontiers\": 0, \"fsm\": \"IDLE\"}}"
+      },
+      "write_fault": true,
+      "fault": null,
+      "first_reason": null,
+      "tx": [
+        {
+          "mono": 371369.015,
+          "line": "STOP",
+          "expected": 6,
+          "written": 1
+        }
+      ]
+    },
+    "actual_MAIN_valid_startup_3_5s_deadline_applied_to_10s_postdiag_FAIL": {
+      "sent": 82,
+      "sent_span": 10.15700000000652,
+      "max_sent_gap": 0.14100000000325963,
+      "trip": {
+        "elapsed": 3.6410000000032596,
+        "count": 0,
+        "stage": 0,
+        "fault": "HARDWARE_FAULT_OBSERVED: STARTUP_DEADLINE_EXCEEDED"
+      },
+      "preflight_count": 0,
+      "stage": 0,
+      "fresh_d0": 82,
+      "reply": {
+        "code": 422,
+        "body": "{\"status\": \"FAILED\", \"reason\": \"REFUSED_LATCHED_STOP\"}"
+      },
+      "tx": [
+        {
+          "mono": 371369.015,
+          "line": "STOP",
+          "expected": 6,
+          "written": 1
+        },
+        {
+          "mono": 371372.562,
+          "line": "STOP",
+          "expected": 6,
+          "written": 6
+        },
+        {
+          "mono": 371372.562,
+          "line": "STOP",
+          "expected": 6,
+          "written": 6
+        },
+        {
+          "mono": 371372.562,
+          "line": "STOP",
+          "expected": 6,
+          "written": 6
+        }
+      ],
+      "scope": "positive exact boot/scan/found/VIN+full zero stream; no unsafe packet needed"
+    }
+  },
+  "actual_imported_validator": "agv_preflight_static_collector",
+  "audited_imports": [
+    {
+      "module": "agv_preflight_static_collector",
+      "names": [
+        "validate_telemetry_sample",
+        "EXACT_BOOT_BANNER",
+        "EXACT_I2C_SCAN_BANNER",
+        "STARTUP_DEADLINE_S"
+      ]
+    }
+  ],
+  "normal_cleanup_limited": {
+    "main_alive": false,
+    "UART_closed": true,
+    "errors": [],
+    "nav_alive": false,
+    "watchdog_alive": false,
+    "stop_confirmed": true,
+    "final_fault": "STOP_UNCONFIRMED_TIMEOUT"
+  },
+  "scope": "actual MAIN reader HTTP FakeUART plus NEW component STOP/classifier/PID seams; no positive ARM fullentry possible because startup trips before10s, no fulltyped/owner/crash/physicalgoal acceptance"
+}

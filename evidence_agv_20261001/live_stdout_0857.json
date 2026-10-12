@@ -1,0 +1,39 @@
+{
+  "status": "PASS_PREFLIGHT_VERIFIED",
+  "valid_samples_count": 120,
+  "corrupt_lines_count": 10,
+  "elapsed_time_s": 13.657,
+  "observation_time_s": 11.889,
+  "rejection_reason": null,
+  "evidence_file": "/home/khangho/evidence_preflight_live_20261002_0857/preflight_raw_evidence_1790906417023_18115_0.json",
+  "first_sample": {
+    "safety": "DISARMED",
+    "mode": "PID",
+    "l_tgt": 0.0,
+    "r_tgt": 0.0,
+    "l_rpm": 0.0,
+    "r_rpm": 0.0,
+    "l_pwm": 0,
+    "r_pwm": 0,
+    "x": 0.0,
+    "y": 0.0,
+    "th": 0.0,
+    "v": 0.0,
+    "w": 0.0
+  },
+  "last_sample": {
+    "safety": "DISARMED",
+    "mode": "PID",
+    "l_tgt": 0.0,
+    "r_tgt": 0.0,
+    "l_rpm": 0.0,
+    "r_rpm": 0.0,
+    "l_pwm": 0,
+    "r_pwm": 0,
+    "x": 0.0,
+    "y": 0.0,
+    "th": 0.0,
+    "v": 0.0,
+    "w": 0.0
+  }
+}

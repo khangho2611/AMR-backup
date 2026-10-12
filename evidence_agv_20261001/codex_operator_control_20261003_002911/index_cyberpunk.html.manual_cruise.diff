@@ -1,0 +1,59 @@
+--- body/index_cyberpunk.html
++++ manual_cruise/index_cyberpunk.html
+@@ -367,6 +367,10 @@
+ 
+     async function toggleAuto() {
+       const act = isAutoRunning ? 'STOP' : 'START';
++      if (act === 'START') {
++        driveCmd=null;
++        if (driveTimer) { clearInterval(driveTimer); driveTimer=null; }
++      }
+       try {
+         const response = await fetch('/api/auto?act=' + act, {signal:AbortSignal.timeout(1200)});
+         const d = await response.json();
+@@ -496,7 +500,7 @@
+       isAutoRunning = Boolean(d.auto);
+       if (c.motion_window_s == null) {
+         const active = c.armed && !c.latched && !c.fault;
+-        document.querySelectorAll('.dpad-btn').forEach(b => { b.disabled = !active || isAutoRunning; });
++        document.querySelectorAll('.dpad-btn[id]').forEach(b => { b.disabled = !active; });
+         const pidButton = document.querySelector('button[onclick="applyPidMini()"]');
+         if (pidButton) pidButton.disabled = Boolean(c.armed || c.fault);
+         const arm = document.getElementById('btnArm');
+@@ -563,6 +567,7 @@
+     let driveCmd = null;
+ 
+     function startDrive(c) {
++      isAutoRunning = false;
+       driveCmd = c;
+       sendCmd(c);
+       if (driveTimer) clearInterval(driveTimer);
+@@ -571,10 +576,14 @@
+ 
+     function stopDrive(force = false) {
+       const active = Boolean(sessionTimer || driveCmd || driveTimer);
+-      if (sessionTimer) { clearInterval(sessionTimer); sessionTimer = null; }
++      if (force === true && sessionTimer) { clearInterval(sessionTimer); sessionTimer = null; }
+       driveCmd = null;
+       if (driveTimer) { clearInterval(driveTimer); driveTimer = null; }
+-      if (active || force === true) sendCmd('STOP');
++      if (force === true) sendCmd('STOP');
++      else if (active) {
++        sendCmd('V 0.000 0.000');
++        if (!sessionTimer) sessionTimer = setInterval(() => { if (!driveCmd && !isAutoRunning) sendCmd('V 0.000 0.000'); },150);
++      }
+       document.querySelectorAll('.dpad-btn').forEach(b => b.classList.remove('pressed'));
+     }
+ 
+@@ -606,8 +615,9 @@
+       if (driveCmd && (e.code.startsWith('Key') || e.code === 'Space')) { e.preventDefault(); stopDrive(); }
+     });
+ 
+-    window.addEventListener('blur', stopDrive);
+-    document.addEventListener('visibilitychange', () => { if (document.hidden) stopDrive(); });
++    const focusLost = () => { if (sessionTimer || driveCmd || driveTimer) stopDrive(true); };
++    window.addEventListener('blur', focusLost);
++    document.addEventListener('visibilitychange', () => { if (document.hidden) focusLost(); });
+     window.addEventListener('pointerup', () => { if (driveCmd) stopDrive(); });
+     render();
+   </script>

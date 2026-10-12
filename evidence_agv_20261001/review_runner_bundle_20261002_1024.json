@@ -1,0 +1,7649 @@
+{
+  "scope": "OFFLINE actual execute_lifecycle/gate/reader/watchdog; ONLY physical OPEN and lock replaced; real advancing clock, no scaling of 10s/80 contract; no Serial/connect",
+  "before": "15cdfc6c6d86582df3ae219b8f301eb1dbb7bbdd0da742d43052242cda50f928",
+  "after": "15cdfc6c6d86582df3ae219b8f301eb1dbb7bbdd0da742d43052242cda50f928",
+  "stable": true,
+  "cases": [
+    {
+      "case": "positive_exact_startup",
+      "exit": 0,
+      "elapsed": 10.84299999999348,
+      "report": {
+        "preflight_status": "PASS_PREFLIGHT_VERIFIED",
+        "status": "PASS_MOTION_VERIFIED",
+        "evidence_file": "C:\\Users\\Khang\\AppData\\Local\\Temp\\agv_OFFLINE_bundle1006_ut_juapn\\motion_evidence_1790911400200_20840.json"
+      },
+      "preflight_passed": true,
+      "preflight_failed": false,
+      "fsm_state": 5,
+      "arm_count": 1,
+      "velocity_count": 3,
+      "stop_count": 1,
+      "first_arm_elapsed": 10.48399999999674,
+      "max_preflight_gap": 0.0940000000409782,
+      "postdiag_count": 126,
+      "postdiag_span": 10.061999999976251,
+      "gate_confirmed": true,
+      "runner_confirmed": true,
+      "fault": null,
+      "closed": true,
+      "evidence_status": "PASS_MOTION_VERIFIED",
+      "tx_records": 5,
+      "records": [
+        {
+          "t": 353331.078,
+          "packet": {
+            "info": "ESP32 Robot Ready - BENCH SERIAL ONLY (WiFi DISABLED)"
+          }
+        },
+        {
+          "t": 353331.156,
+          "packet": {
+            "info": "Scanning I2C bus..."
+          }
+        },
+        {
+          "t": 353331.234,
+          "packet": {
+            "i2c_found": "0x42"
+          }
+        },
+        {
+          "t": 353331.312,
+          "packet": {
+            "vin_mv": 12033
+          }
+        },
+        {
+          "t": 353331.406,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353331.484,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353331.562,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353331.64,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353331.718,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353331.796,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353331.875,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353331.968,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353332.046,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353332.125,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353332.203,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353332.281,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353332.359,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353332.453,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353332.531,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353332.609,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353332.687,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353332.765,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353332.843,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353332.921,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353333.015,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353333.093,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353333.171,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353333.25,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353333.328,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353333.406,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353333.5,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353333.578,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353333.656,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353333.734,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353333.812,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353333.89,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353333.968,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353334.062,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353334.14,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353334.218,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353334.296,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353334.375,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353334.453,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353334.546,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353334.625,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353334.703,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353334.781,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353334.859,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353334.937,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353335.031,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353335.109,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353335.187,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353335.265,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353335.343,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353335.421,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353335.515,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353335.593,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353335.671,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353335.75,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353335.828,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353335.906,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353336.0,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353336.078,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353336.156,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353336.234,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353336.312,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353336.39,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353336.468,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353336.562,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353336.64,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353336.718,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353336.796,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353336.875,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353336.953,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353337.046,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353337.125,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353337.203,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353337.281,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353337.359,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353337.437,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353337.531,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353337.609,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353337.687,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353337.765,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353337.843,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353337.921,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353338.015,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353338.093,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353338.171,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353338.25,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353338.328,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353338.406,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353338.484,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353338.578,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353338.656,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353338.734,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353338.812,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353338.89,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353338.968,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353339.062,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353339.14,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353339.218,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353339.296,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353339.375,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353339.453,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353339.546,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353339.625,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353339.703,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353339.781,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353339.859,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353339.937,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353340.015,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353340.109,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353340.187,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353340.265,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353340.343,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353340.421,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353340.5,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353340.593,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353340.671,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353340.75,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353340.828,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353340.906,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353340.984,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353341.078,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353341.156,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353341.234,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353341.312,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353341.39,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353341.468,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353341.562,
+          "packet": {
+            "ack": "ARM",
+            "state": "ARMED"
+          }
+        },
+        {
+          "t": 353341.578,
+          "packet": {
+            "safety": "ARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353341.593,
+          "packet": {
+            "safety": "ARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353341.609,
+          "packet": {
+            "safety": "ARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353341.64,
+          "packet": {
+            "safety": "ARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353341.656,
+          "packet": {
+            "safety": "ARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353341.671,
+          "packet": {
+            "safety": "ARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353341.703,
+          "packet": {
+            "safety": "ARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353341.718,
+          "packet": {
+            "safety": "ARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353341.734,
+          "packet": {
+            "safety": "ARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353341.765,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353341.843,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        }
+      ],
+      "writes": [
+        {
+          "t": 353341.484,
+          "bytes": "ARM\n"
+        },
+        {
+          "t": 353341.593,
+          "bytes": "V 0.007 0.000\n"
+        },
+        {
+          "t": 353341.64,
+          "bytes": "V 0.015 0.000\n"
+        },
+        {
+          "t": 353341.687,
+          "bytes": "V 0.022 0.000\n"
+        },
+        {
+          "t": 353341.75,
+          "bytes": "STOP\n"
+        }
+      ]
+    },
+    {
+      "case": "gap_1s_only",
+      "exit": 0,
+      "elapsed": 10.85899999999674,
+      "report": {
+        "preflight_status": "PASS_PREFLIGHT_VERIFIED",
+        "status": "PASS_MOTION_VERIFIED",
+        "evidence_file": "C:\\Users\\Khang\\AppData\\Local\\Temp\\agv_OFFLINE_bundle1006_ouc7obao\\motion_evidence_1790911400211_20840.json"
+      },
+      "preflight_passed": true,
+      "preflight_failed": false,
+      "fsm_state": 5,
+      "arm_count": 1,
+      "velocity_count": 3,
+      "stop_count": 1,
+      "first_arm_elapsed": 10.436999999976251,
+      "max_preflight_gap": 1.0,
+      "postdiag_count": 114,
+      "postdiag_span": 10.014999999955762,
+      "gate_confirmed": true,
+      "runner_confirmed": true,
+      "fault": null,
+      "closed": true,
+      "evidence_status": "PASS_MOTION_VERIFIED",
+      "tx_records": 5,
+      "records": [
+        {
+          "t": 353331.078,
+          "packet": {
+            "info": "ESP32 Robot Ready - BENCH SERIAL ONLY (WiFi DISABLED)"
+          }
+        },
+        {
+          "t": 353331.156,
+          "packet": {
+            "info": "Scanning I2C bus..."
+          }
+        },
+        {
+          "t": 353331.234,
+          "packet": {
+            "i2c_found": "0x42"
+          }
+        },
+        {
+          "t": 353331.312,
+          "packet": {
+            "vin_mv": 12033
+          }
+        },
+        {
+          "t": 353331.406,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353331.484,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353331.562,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353331.64,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353331.718,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353331.796,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353331.875,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353331.968,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353332.046,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353332.125,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353333.125,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353333.203,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353333.281,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353333.359,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353333.453,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353333.531,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353333.609,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353333.687,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353333.765,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353333.843,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353333.921,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353334.015,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353334.093,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353334.171,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353334.25,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353334.328,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353334.406,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353334.5,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353334.578,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353334.656,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353334.734,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353334.812,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353334.89,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353334.968,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353335.062,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353335.14,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353335.218,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353335.296,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353335.375,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353335.453,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353335.546,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353335.625,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353335.703,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353335.781,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353335.859,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353335.937,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353336.031,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353336.109,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353336.187,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353336.265,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353336.343,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353336.421,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353336.515,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353336.593,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353336.671,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353336.75,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353336.828,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353336.906,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353336.984,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353337.078,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353337.156,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353337.234,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353337.312,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353337.39,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353337.468,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353337.562,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353337.64,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353337.718,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353337.796,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353337.875,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353337.953,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353338.046,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353338.125,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353338.203,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353338.281,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353338.359,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353338.437,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353338.531,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353338.609,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353338.687,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353338.765,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353338.843,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353338.921,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353339.015,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353339.093,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353339.171,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353339.25,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353339.328,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353339.406,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353339.484,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353339.578,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353339.656,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353339.734,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353339.812,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353339.89,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353339.968,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353340.062,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353340.14,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353340.218,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353340.296,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353340.375,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353340.453,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353340.531,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353340.625,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353340.703,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353340.781,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353340.859,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353340.937,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353341.015,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353341.109,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353341.187,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353341.265,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353341.343,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353341.421,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353341.5,
+          "packet": {
+            "ack": "ARM",
+            "state": "ARMED"
+          }
+        },
+        {
+          "t": 353341.531,
+          "packet": {
+            "safety": "ARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353341.546,
+          "packet": {
+            "safety": "ARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353341.562,
+          "packet": {
+            "safety": "ARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353341.593,
+          "packet": {
+            "safety": "ARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353341.609,
+          "packet": {
+            "safety": "ARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353341.625,
+          "packet": {
+            "safety": "ARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353341.656,
+          "packet": {
+            "safety": "ARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353341.671,
+          "packet": {
+            "safety": "ARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353341.687,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353341.765,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353341.859,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        }
+      ],
+      "writes": [
+        {
+          "t": 353341.437,
+          "bytes": "ARM\n"
+        },
+        {
+          "t": 353341.531,
+          "bytes": "V 0.007 0.000\n"
+        },
+        {
+          "t": 353341.578,
+          "bytes": "V 0.015 0.000\n"
+        },
+        {
+          "t": 353341.64,
+          "bytes": "V 0.024 0.000\n"
+        },
+        {
+          "t": 353341.687,
+          "bytes": "STOP\n"
+        }
+      ]
+    },
+    {
+      "case": "scan_without_found",
+      "exit": 1,
+      "elapsed": 0.3279999999795109,
+      "report": {
+        "status": "FAIL_PREFLIGHT_VALIDATION_FAILED",
+        "rejection_reason": "PREFLIGHT_MISSING_I2C_FOUND_AFTER_SCAN",
+        "evidence_file": "C:\\Users\\Khang\\AppData\\Local\\Temp\\agv_OFFLINE_bundle1006_vfk8bi_g\\motion_evidence_1790911389676_20840.json"
+      },
+      "preflight_passed": false,
+      "preflight_failed": true,
+      "fsm_state": 2,
+      "arm_count": 0,
+      "velocity_count": 0,
+      "stop_count": 1,
+      "first_arm_elapsed": null,
+      "max_preflight_gap": 0.07800000003771856,
+      "postdiag_count": 2,
+      "postdiag_span": 0.0779999999795109,
+      "gate_confirmed": true,
+      "runner_confirmed": false,
+      "fault": null,
+      "closed": true,
+      "evidence_status": "FAIL_PREFLIGHT_VALIDATION_FAILED",
+      "tx_records": 1,
+      "records": [
+        {
+          "t": 353331.078,
+          "packet": {
+            "info": "ESP32 Robot Ready - BENCH SERIAL ONLY (WiFi DISABLED)"
+          }
+        },
+        {
+          "t": 353331.156,
+          "packet": {
+            "info": "Scanning I2C bus..."
+          }
+        },
+        {
+          "t": 353331.234,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353331.312,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        }
+      ],
+      "writes": [
+        {
+          "t": 353331.234,
+          "bytes": "STOP\n"
+        }
+      ]
+    },
+    {
+      "case": "arbitrary_corrupt_boot",
+      "exit": 0,
+      "elapsed": 10.90600000001723,
+      "report": {
+        "preflight_status": "PASS_PREFLIGHT_VERIFIED",
+        "status": "PASS_MOTION_VERIFIED",
+        "evidence_file": "C:\\Users\\Khang\\AppData\\Local\\Temp\\agv_OFFLINE_bundle1006_q1si3yds\\motion_evidence_1790911400259_20840.json"
+      },
+      "preflight_passed": true,
+      "preflight_failed": false,
+      "fsm_state": 5,
+      "arm_count": 1,
+      "velocity_count": 3,
+      "stop_count": 1,
+      "first_arm_elapsed": 10.561999999976251,
+      "max_preflight_gap": 0.0940000000409782,
+      "postdiag_count": 126,
+      "postdiag_span": 10.077999999979511,
+      "gate_confirmed": true,
+      "runner_confirmed": true,
+      "fault": null,
+      "closed": true,
+      "evidence_status": "PASS_MOTION_VERIFIED",
+      "tx_records": 5,
+      "records": [
+        {
+          "t": 353331.078,
+          "packet": "THIS IS NOT ANY FIRMWARE ROM LINE"
+        },
+        {
+          "t": 353331.156,
+          "packet": {
+            "info": "ESP32 Robot Ready - BENCH SERIAL ONLY (WiFi DISABLED)"
+          }
+        },
+        {
+          "t": 353331.234,
+          "packet": {
+            "info": "Scanning I2C bus..."
+          }
+        },
+        {
+          "t": 353331.312,
+          "packet": {
+            "i2c_found": "0x42"
+          }
+        },
+        {
+          "t": 353331.406,
+          "packet": {
+            "vin_mv": 12033
+          }
+        },
+        {
+          "t": 353331.484,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353331.562,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353331.64,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353331.718,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353331.796,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353331.875,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353331.968,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353332.046,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353332.125,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353332.203,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353332.281,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353332.359,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353332.453,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353332.531,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353332.609,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353332.687,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353332.765,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353332.843,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353332.921,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353333.015,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353333.093,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353333.171,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353333.25,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353333.328,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353333.406,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353333.5,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353333.578,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353333.656,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353333.734,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353333.812,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353333.89,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353333.968,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353334.062,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353334.14,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353334.218,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353334.296,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353334.375,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353334.453,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353334.546,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353334.625,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353334.703,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353334.781,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353334.859,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353334.937,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353335.031,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353335.109,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353335.187,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353335.265,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353335.343,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353335.421,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353335.515,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353335.593,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353335.671,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353335.75,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353335.828,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353335.906,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353335.984,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353336.078,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353336.156,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353336.234,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353336.312,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353336.39,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353336.468,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353336.562,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353336.64,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353336.718,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353336.796,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353336.875,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353336.953,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353337.031,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353337.125,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353337.203,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353337.281,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353337.359,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353337.437,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353337.515,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353337.609,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353337.687,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353337.765,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353337.843,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353337.921,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353338.0,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353338.093,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353338.171,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353338.25,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353338.328,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353338.406,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353338.484,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353338.578,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353338.656,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353338.734,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353338.812,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353338.89,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353338.968,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353339.062,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353339.14,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353339.218,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353339.296,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353339.375,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353339.453,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353339.531,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353339.625,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353339.703,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353339.781,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353339.859,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353339.937,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353340.015,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353340.109,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353340.187,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353340.265,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353340.343,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353340.421,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353340.5,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353340.593,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353340.671,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353340.75,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353340.828,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353340.906,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353340.984,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353341.062,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353341.156,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353341.234,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353341.312,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353341.39,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353341.468,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353341.562,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353341.64,
+          "packet": {
+            "ack": "ARM",
+            "state": "ARMED"
+          }
+        },
+        {
+          "t": 353341.656,
+          "packet": {
+            "safety": "ARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353341.671,
+          "packet": {
+            "safety": "ARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353341.703,
+          "packet": {
+            "safety": "ARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353341.718,
+          "packet": {
+            "safety": "ARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353341.734,
+          "packet": {
+            "safety": "ARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353341.765,
+          "packet": {
+            "safety": "ARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353341.781,
+          "packet": {
+            "safety": "ARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353341.796,
+          "packet": {
+            "safety": "ARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353341.828,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353341.906,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        }
+      ],
+      "writes": [
+        {
+          "t": 353341.562,
+          "bytes": "ARM\n"
+        },
+        {
+          "t": 353341.656,
+          "bytes": "V 0.007 0.000\n"
+        },
+        {
+          "t": 353341.703,
+          "bytes": "V 0.015 0.000\n"
+        },
+        {
+          "t": 353341.765,
+          "bytes": "V 0.024 0.000\n"
+        },
+        {
+          "t": 353341.812,
+          "bytes": "STOP\n"
+        }
+      ]
+    },
+    {
+      "case": "unsafe_pwm_then_clean",
+      "exit": 1,
+      "elapsed": 0.7179999999934807,
+      "report": {
+        "status": "FAIL_PREFLIGHT_VALIDATION_FAILED",
+        "rejection_reason": "PREFLIGHT_UNSAFE_TELEMETRY: NON_ZERO_PWM: l=100.0, r=0.0",
+        "evidence_file": "C:\\Users\\Khang\\AppData\\Local\\Temp\\agv_OFFLINE_bundle1006_tpoqjimz\\motion_evidence_1790911390078_20840.json"
+      },
+      "preflight_passed": false,
+      "preflight_failed": true,
+      "fsm_state": 5,
+      "arm_count": 0,
+      "velocity_count": 0,
+      "stop_count": 1,
+      "first_arm_elapsed": null,
+      "max_preflight_gap": 0.0940000000409782,
+      "postdiag_count": 4,
+      "postdiag_span": 0.3119999999762513,
+      "gate_confirmed": true,
+      "runner_confirmed": false,
+      "fault": null,
+      "closed": true,
+      "evidence_status": "FAIL_PREFLIGHT_VALIDATION_FAILED",
+      "tx_records": 1,
+      "records": [
+        {
+          "t": 353331.078,
+          "packet": {
+            "info": "ESP32 Robot Ready - BENCH SERIAL ONLY (WiFi DISABLED)"
+          }
+        },
+        {
+          "t": 353331.156,
+          "packet": {
+            "info": "Scanning I2C bus..."
+          }
+        },
+        {
+          "t": 353331.234,
+          "packet": {
+            "i2c_found": "0x42"
+          }
+        },
+        {
+          "t": 353331.312,
+          "packet": {
+            "vin_mv": 12033
+          }
+        },
+        {
+          "t": 353331.406,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353331.484,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353331.562,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353331.64,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 100,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        },
+        {
+          "t": 353331.718,
+          "packet": {
+            "safety": "DISARMED",
+            "mode": "PID",
+            "l_tgt": 0.0,
+            "r_tgt": 0.0,
+            "l_pwm": 0,
+            "r_pwm": 0,
+            "l_rpm": 0.0,
+            "r_rpm": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "th": 0.0,
+            "v": 0.0,
+            "w": 0.0
+          }
+        }
+      ],
+      "writes": [
+        {
+          "t": 353331.656,
+          "bytes": "STOP\n"
+        }
+      ]
+    }
+  ]
+}

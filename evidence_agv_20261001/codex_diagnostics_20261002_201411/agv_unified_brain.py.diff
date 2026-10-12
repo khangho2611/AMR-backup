@@ -1,0 +1,32 @@
+--- before/agv_unified_brain.py
++++ after/agv_unified_brain.py
+@@ -471,6 +471,8 @@
+         grid = self._grid()
+         path = None if grid is None else grid.path(pose[:2],goal)
+         if not path:
++            if getattr(self,'control',None) is not None:
++                self.control._event('navigation_blocked',reason='NO_SAFE_PATH',pose=pose,goal=goal)
+             return False
+         # Adjacent waypoint only: no 25cm shortcut cutting across an A* bend.
+         wp = path[1] if len(path) > 1 else path[0]
+@@ -479,6 +481,8 @@
+         w = max(-.35,min(.35,error))
+         v = 0. if abs(error) > .25 else min(.04,math.hypot(dx,dy))
+         if v == 0 and abs(w) > 0 and not self._rotation_clear():
++            if getattr(self,'control',None) is not None:
++                self.control._event('navigation_blocked',reason='ROTATION_NOT_CLEAR',pose=pose,goal=goal)
+             return False
+         return self.send_cmd(f'V {v:.3f} {w:.3f}',autonomous=True)[0]
+ 
+@@ -612,6 +616,11 @@
+             if path in ('/api/cmd','/api/pid','/api/auto') and not stop:
+                 self._json(423,{'status':'FAILED','reason':'OBSERVE_ONLY'})
+                 return
++
++        if path == '/api/diagnostics':
++            self._json(200 if ros_node else 503,
++                       ros_node.control.diagnostics() if ros_node else {'status':'NO_TRANSPORT'})
++            return
+ 
+         if path == '/api/telemetry':
+             if ros_node is None:

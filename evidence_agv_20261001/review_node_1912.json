@@ -1,0 +1,62 @@
+{
+  "scope": "OFFLINE CALLBACKS AND MOCK SERIAL ONLY; constructor failure not bypassed for deployment",
+  "before": {
+    "agv_ros2_runtime_adapter.py": "15f460b1f81a566b7381307de275d1434722302d9ebe3d95d7de4db748930a9b",
+    "agv_ros2_arbiter_bridge.py": "b5c17f8e84329bd0f54b3cfa8e30c8752f6de3bcbaaccec4c9f66a516949ece8"
+  },
+  "after": {
+    "agv_ros2_runtime_adapter.py": "15f460b1f81a566b7381307de275d1434722302d9ebe3d95d7de4db748930a9b",
+    "agv_ros2_arbiter_bridge.py": "b5c17f8e84329bd0f54b3cfa8e30c8752f6de3bcbaaccec4c9f66a516949ece8"
+  },
+  "stable": true,
+  "cases": [
+    {
+      "id": "N1",
+      "scenario": "construct advertised offline Node",
+      "observed": {
+        "exception": "NameError",
+        "message": "name 'Odometry' is not defined"
+      },
+      "has_real_rclpy": false,
+      "expected": "construct safely using fake ROS dependencies"
+    },
+    {
+      "id": "N2",
+      "scenario": "stale scan header0 and wrong frame re-stamped now",
+      "scan": {
+        "header": {
+          "stamp": 100.0,
+          "frame_id": "laser"
+        },
+        "angle_min": -1.0,
+        "angle_max": 1.0,
+        "angle_increment": 0.1,
+        "ranges_count": 21
+      },
+      "expected": "reject old/unknown-frame data"
+    },
+    {
+      "id": "N3",
+      "scenario": "empty scan message invents default ranges",
+      "scan": {
+        "header": {
+          "stamp": 100.0,
+          "frame_id": "laser"
+        },
+        "angle_min": -3.14,
+        "angle_max": 3.14,
+        "angle_increment": 0.01,
+        "ranges_count": 628
+      },
+      "expected": "reject missing scan payload"
+    },
+    {
+      "id": "N4",
+      "scenario": "bare cmd topic callback auto-inherits gate token",
+      "mock_writes": [
+        "V 0.040 0.000\n"
+      ],
+      "expected": "bind source authorization/session and command age before dispatch"
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+--- D:\HoMinhKhang\PROJECT\GITHUB_PROJECT\CODE XE TU HANH\index_cyberpunk.html
++++ D:\HoMinhKhang\PROJECT\GITHUB_PROJECT\CODE XE TU HANH\candidates\agv_rpm140_20261003\index_cyberpunk.html
+@@ -596,8 +596,8 @@
+       el.addEventListener('pointercancel', rel);
+     }
+ 
+-    bind('btnW', 'M 140 140');
+-    bind('btnS', 'M -140 -140');
++    bind('btnW', 'V 0.536 0.000');
++    bind('btnS', 'V -0.536 0.000');
+     bind('btnA', 'M -120 120');
+     bind('btnD', 'M 120 -120');
+     bind('btnQ', 'M -130 130');
+@@ -607,7 +607,7 @@
+       if (e.target && /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)) return;
+       if (e.repeat) return;
+       if (e.code === 'Space') { e.preventDefault(); emergencyStop(); return; }
+-      const k = { 'KeyW': 'M 140 140', 'KeyS': 'M -140 -140', 'KeyA': 'M -120 120', 'KeyD': 'M 120 -120', 'KeyQ': 'M -130 130', 'KeyE': 'M 130 -130' };
++      const k = { 'KeyW': 'V 0.536 0.000', 'KeyS': 'V -0.536 0.000', 'KeyA': 'M -120 120', 'KeyD': 'M 120 -120', 'KeyQ': 'M -130 130', 'KeyE': 'M 130 -130' };
+       if (k[e.code]) { e.preventDefault(); startDrive(k[e.code]); }
+     });
+ 

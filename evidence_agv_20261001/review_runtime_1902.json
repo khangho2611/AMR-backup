@@ -1,0 +1,57 @@
+{
+  "scope": "OFFLINE SOURCE + FAKE SERIAL ONLY",
+  "before": {
+    "agv_ros2_runtime_adapter.py": "0ed1d15cd6d7bebf572c82adfa0db0d82d6f415c1317a98d48f075583efaa358",
+    "agv_ros2_arbiter_bridge.py": "b5c17f8e84329bd0f54b3cfa8e30c8752f6de3bcbaaccec4c9f66a516949ece8",
+    "agv_serial_arbiter_bridge_v3.py": "e7967eec69b12b97cef93ea12cc08cdcd2ac34735b740539214f81ecad9ca7bd"
+  },
+  "after": {
+    "agv_ros2_runtime_adapter.py": "0ed1d15cd6d7bebf572c82adfa0db0d82d6f415c1317a98d48f075583efaa358",
+    "agv_ros2_arbiter_bridge.py": "b5c17f8e84329bd0f54b3cfa8e30c8752f6de3bcbaaccec4c9f66a516949ece8",
+    "agv_serial_arbiter_bridge_v3.py": "e7967eec69b12b97cef93ea12cc08cdcd2ac34735b740539214f81ecad9ca7bd"
+  },
+  "stable": true,
+  "cases": [
+    {
+      "id": "A1",
+      "scenario": "explicit invalid receive timestamp NaN",
+      "observed": true,
+      "resulting_stamp": 298293.468,
+      "expected": false
+    },
+    {
+      "id": "A2",
+      "scenario": "corrupt numeric JSON field",
+      "observed": {
+        "exception": "ValueError",
+        "message": "could not convert string to float: 'corrupt'"
+      },
+      "expected": "structured rejection without exception"
+    },
+    {
+      "id": "W1",
+      "scenario": "real watchdog thread, actual gate, STOP write failure",
+      "attempts": [
+        "STOP\n"
+      ],
+      "trip_count": 1,
+      "active_lease": null,
+      "gate_state": "FAULT",
+      "gate_stop_confirmed": false,
+      "watchdog_public_state": {
+        "check_interval_s": 0.005,
+        "running": false,
+        "watchdog_tripped_count": 1
+      },
+      "expected": "retain/report failed STOP outcome and unconfirmed stop to supervisor"
+    }
+  ],
+  "runtime": {
+    "classes": [
+      "FirmwarePacketAdapter",
+      "ActiveLeaseWatchdogThread",
+      "MockRos2RuntimeExecutor"
+    ],
+    "ros_runtime_calls": []
+  }
+}

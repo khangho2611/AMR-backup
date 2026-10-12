@@ -1,0 +1,16 @@
+{
+  "scope": "OFFLINE actual CLI --mock only; no Serial/ROS/hardware",
+  "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+  "before": "ddbb47b6e2bfb78fd92764473b61d7874fa34519554fe5f75eb843ddfb0d6820",
+  "after": "ddbb47b6e2bfb78fd92764473b61d7874fa34519554fe5f75eb843ddfb0d6820",
+  "args": [
+    "C:\\Users\\Khang\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-X",
+    "utf8",
+    "agv_motion_supervisor_runner.py",
+    "--mock"
+  ],
+  "exit_code": 0,
+  "stdout": "[MOCK EXECUTION] B\u1eaft \u0111\u1ea7u ki\u1ec3m th\u1eed \u0111\u1ed9c l\u1eadp Mock Pipeline...\n[MOCK NOMINAL STOP] Status: STOP_UNCONFIRMED_STALE_OR_UNSAFE, Active: False\n[MOCK STOP CONFIRMED] Status: STOP_CONFIRMED, Confirmed: True\n[MOCK COMPLETED] T\u1ed5ng s\u1ed1 l\u1ec7nh ghi ra Serial: 22\n[MOCK COMPLETED] L\u1ec7nh cu\u1ed1i c\u00f9ng: STOP\n",
+  "stderr": ""
+}

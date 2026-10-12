@@ -1,0 +1,119 @@
+{
+  "scope": "OFFLINE fake transports only; real import failures in independent_preflight_suite_2050.json; C1-C3 use annotation-postponed diagnostics, S1-S2 unchanged product source",
+  "before": {
+    "agv_preflight_static_collector.py": "4069daef1abffcae49730d29cddb415b256d28f96c976466367605956277dcd5",
+    "agv_ros2_runtime_adapter.py": "02ff0683f49e6f546606c4e7743fc4d978245f155ca0232dc34e88657025c6ec",
+    "agv_serial_arbiter_bridge_v3.py": "6f4a2106622e99fe60212199b621cdcbbd2a76b2e639519796b15d5a703e3d1d"
+  },
+  "after": {
+    "agv_preflight_static_collector.py": "4069daef1abffcae49730d29cddb415b256d28f96c976466367605956277dcd5",
+    "agv_ros2_runtime_adapter.py": "02ff0683f49e6f546606c4e7743fc4d978245f155ca0232dc34e88657025c6ec",
+    "agv_serial_arbiter_bridge_v3.py": "6f4a2106622e99fe60212199b621cdcbbd2a76b2e639519796b15d5a703e3d1d"
+  },
+  "cases": [
+    {
+      "id": "C1_30_burst_then_no_data",
+      "scope": "diagnostic annotation-postponed IN MEMORY",
+      "code": 0,
+      "report": {
+        "status": "PASS_PREFLIGHT_VERIFIED",
+        "valid_samples_count": 30,
+        "corrupt_lines_count": 0,
+        "elapsed_time_s": 15.01,
+        "rejection_reason": null,
+        "first_sample": {
+          "safety": "DISARMED",
+          "mode": "PID",
+          "l_tgt": 0,
+          "r_tgt": 0,
+          "l_rpm": 0,
+          "r_rpm": 0,
+          "l_pwm": 0,
+          "r_pwm": 0,
+          "x": 0,
+          "y": 0,
+          "th": 0,
+          "v": 0,
+          "w": 0
+        },
+        "last_sample": {
+          "safety": "DISARMED",
+          "mode": "PID",
+          "l_tgt": 0,
+          "r_tgt": 0,
+          "l_rpm": 0,
+          "r_rpm": 0,
+          "l_pwm": 0,
+          "r_pwm": 0,
+          "x": 0,
+          "y": 0,
+          "th": 0,
+          "v": 0,
+          "w": 0
+        }
+      }
+    },
+    {
+      "id": "C2_30_safe_then_malformed_armed",
+      "scope": "diagnostic annotation-postponed IN MEMORY",
+      "code": 0,
+      "report": {
+        "status": "PASS_PREFLIGHT_VERIFIED",
+        "valid_samples_count": 30,
+        "corrupt_lines_count": 10,
+        "elapsed_time_s": 15.01,
+        "rejection_reason": null,
+        "first_sample": {
+          "safety": "DISARMED",
+          "mode": "PID",
+          "l_tgt": 0,
+          "r_tgt": 0,
+          "l_rpm": 0,
+          "r_rpm": 0,
+          "l_pwm": 0,
+          "r_pwm": 0,
+          "x": 0,
+          "y": 0,
+          "th": 0,
+          "v": 0,
+          "w": 0
+        },
+        "last_sample": {
+          "safety": "DISARMED",
+          "mode": "PID",
+          "l_tgt": 0,
+          "r_tgt": 0,
+          "l_rpm": 0,
+          "r_rpm": 0,
+          "l_pwm": 0,
+          "r_pwm": 0,
+          "x": 0,
+          "y": 0,
+          "th": 0,
+          "v": 0,
+          "w": 0
+        }
+      }
+    },
+    {
+      "id": "C3_invalid_duration_opens_port",
+      "fake_port_opens": [
+        "open"
+      ],
+      "code": 1
+    },
+    {
+      "id": "S1_adapter_only_freshD0",
+      "accepted": true,
+      "gate_confirmed": false,
+      "public_confirmed": false,
+      "gate_state": "ARMED"
+    },
+    {
+      "id": "S2_explicit_gate_then_adapter",
+      "accepted": true,
+      "gate_confirmed": true,
+      "public_confirmed": true
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "status": "FAIL_INVALID_BOOT_BANNER",
+  "valid_samples_count": 14,
+  "corrupt_lines_count": 10,
+  "elapsed_time_s": 1.751,
+  "observation_time_s": 0.0,
+  "rejection_reason": "Banner 'info' không hợp lệ hoặc giả mạo: Scanning I2C bus...",
+  "evidence_file": "/home/khangho/evidence_preflight_live_20261002_0817/preflight_raw_evidence_1790903955404_1548_0.json",
+  "first_sample": null,
+  "last_sample": null
+}

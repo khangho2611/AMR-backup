@@ -1,0 +1,38 @@
+{
+  "timestamp": "2026-10-01T21:19:21.435987+07:00",
+  "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+  "before": {
+    "agv_preflight_static_collector.py": "edc927d81b696eeb37f933b0721efc5245c40eb19e6cd6814aa2cb89aad45b2d",
+    "agv_ros2_runtime_adapter.py": "7a80382871aeceb8bf6cc30c69bdcdb441db409e71e897b1651e3d5eaf6b796d",
+    "agv_serial_arbiter_bridge_v3.py": "6f4a2106622e99fe60212199b621cdcbbd2a76b2e639519796b15d5a703e3d1d"
+  },
+  "after": {
+    "agv_preflight_static_collector.py": "edc927d81b696eeb37f933b0721efc5245c40eb19e6cd6814aa2cb89aad45b2d",
+    "agv_ros2_runtime_adapter.py": "7a80382871aeceb8bf6cc30c69bdcdb441db409e71e897b1651e3d5eaf6b796d",
+    "agv_serial_arbiter_bridge_v3.py": "6f4a2106622e99fe60212199b621cdcbbd2a76b2e639519796b15d5a703e3d1d"
+  },
+  "results": [
+    {
+      "command": [
+        "C:\\Users\\Khang\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "-X",
+        "utf8",
+        "test_preflight_collector_independent.py"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "...........\n----------------------------------------------------------------------\nRan 11 tests in 3.398s\n\nOK\n"
+    },
+    {
+      "command": [
+        "C:\\Users\\Khang\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "-X",
+        "utf8",
+        "test_full_integration_slice.py"
+      ],
+      "exit_code": 0,
+      "stdout": "[PASS TEST 3] Real Watchdog Thread: Đã trip thành công sau khi caller im lặng (1 lần)\n[PASS TEST 4] W1 Escalation: Watchdog bắt lỗi write failure và báo cáo unconfirmed chính xác 100%.\n",
+      "stderr": "...[SerialArbiterGateV3] LỖI GHI SERIAL THỰC TẾ: mock write failure\n.\n----------------------------------------------------------------------\nRan 4 tests in 0.124s\n\nOK\n"
+    }
+  ]
+}

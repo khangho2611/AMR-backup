@@ -1,0 +1,81 @@
+{
+  "scope": "OFFLINE actual helper/FakeArbiter rejecting commands and STOP; no hardware, not fullgate integration",
+  "before": "f71c959c03b0797fde5e65c19be58557a9e628c683bbf985c594f7bc0e5b77d5",
+  "after": "f71c959c03b0797fde5e65c19be58557a9e628c683bbf985c594f7bc0e5b77d5",
+  "start_without_gate_or_sensors": true,
+  "update_missing_telemetry_result": [
+    true,
+    "RUNNING"
+  ],
+  "calls": [
+    [
+      "V",
+      [
+        0.0075,
+        0.0,
+        100.05
+      ]
+    ],
+    [
+      "V",
+      [
+        0.015,
+        0.0,
+        100.05
+      ]
+    ],
+    [
+      "V",
+      [
+        0.0225,
+        0.0,
+        100.05
+      ]
+    ],
+    [
+      "V",
+      [
+        0.03,
+        0.0,
+        100.05
+      ]
+    ],
+    [
+      "V",
+      [
+        0.0375,
+        0.0,
+        100.05
+      ]
+    ],
+    [
+      "V",
+      [
+        0.045,
+        0.0,
+        100.05
+      ]
+    ],
+    [
+      "V",
+      [
+        0.05,
+        0.0,
+        100.05
+      ]
+    ],
+    [
+      "STOP",
+      [
+        100.06
+      ]
+    ]
+  ],
+  "repeated_same_clock_cmd_v": 0.05,
+  "max_accel": 0.15,
+  "is_active_after_stop": false,
+  "stop_confirmed": false,
+  "fault_reason": "QA_STOP_WRITE_FAIL",
+  "stop_failure_retention": null,
+  "conclusion": "Helper RUNNING while all V rejected/no telemetry; dt fixed, same timestamp ramps; STOP failure result not retained; no executable watchdog/confirmation loop"
+}

@@ -1,0 +1,44 @@
+--- agv_navigation.py.before
++++ agv_navigation.py
+@@ -141,14 +141,17 @@
+                 0 <= cell[1] < self.h and bool(self.safe[cell[1]*self.w+cell[0]]))
+ 
+     def swept_clear(self, pose, v, w):
++        return self.swept_clear_result(pose,v,w)[0]
++
++    def swept_clear_result(self, pose, v, w):
+         """Check the whole moving disk against exact blocked-cell rectangles.
+ 
+         Evaluate the actual subcell pose, rather than snapping it to a safe cell
+         centre. Occupied, unknown and map edges all retain the configured margin.
+         """
+-        if len(pose) != 3 or not all(finite(x) for x in pose):return False
++        if len(pose) != 3 or not all(finite(x) for x in pose):return False,'INVALID_POSE'
+         samples=twist_centres(v,w,spatial_step=self.res/4)
+-        if samples is None:return False
++        if samples is None:return False,'INVALID_TWIST'
+         centres,padding=samples
+         r=self.radius+padding
+         ox,oy,yaw=self.origin
+@@ -158,17 +161,17 @@
+         for bx,by in centres:
+             wx,wy=pose[0]+pc*bx-ps*by,pose[1]+ps*bx+pc*by
+             px,py=c*(wx-ox)+s*(wy-oy),-s*(wx-ox)+c*(wy-oy)
+-            if min(px,py,self.w*self.res-px,self.h*self.res-py) <= r:return False
++            if min(px,py,self.w*self.res-px,self.h*self.res-py) <= r:return False,'MAP_BOUNDARY'
+             left,right=math.floor((px-r)/self.res),math.floor((px+r)/self.res)
+             low,high=math.floor((py-r)/self.res),math.floor((py+r)/self.res)
+             for y in range(low,high+1):
+-                if time.monotonic()>deadline:return False
++                if time.monotonic()>deadline:return False,'SWEEP_BUDGET'
+                 for x in range(left,right+1):
+                     if self.data[y*self.w+x] == 0:continue
+                     dx=max(x*self.res-px,0.,px-(x+1)*self.res)
+                     dy=max(y*self.res-py,0.,py-(y+1)*self.res)
+-                    if math.hypot(dx,dy) <= r:return False
+-        return True
++                    if math.hypot(dx,dy) <= r:return False,('UNKNOWN_SWEEP' if self.data[y*self.w+x] < 0 else 'OCCUPIED_SWEEP')
++        return True,'CLEAR'
+ 
+     def box_swept_clear(self, pose, v, w, bounds):
+         """Measured enclosing rectangle versus occupied/unknown cell squares.

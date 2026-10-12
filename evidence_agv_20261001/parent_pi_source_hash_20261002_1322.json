@@ -1,0 +1,6 @@
+{
+  "action": "SSH_READ_ONLY_FILE_HASH_NO_SERIAL",
+  "exit": 0,
+  "stdout": "{\"time\": 1790922025.668556, \"files\": {\"/home/khangho/rplidar_c1_test/bridge/agv_unified_brain.py\": \"ff009266bc744da14b625c83b98f52c15f0cfd0d55cf3b047c2f541e7c1608e6\", \"/home/khangho/rplidar_c1_test/bridge/web/index_cyberpunk.html\": \"d7ae756030363875908bec39e4b944d9181c427553a1d419f5a59c00947110c1\", \"/home/khangho/agv_trial_20261002_1028/candidate_agv_motion_supervisor_runner_v08.py\": \"907c5882620b2a65b78c7f69a21893e941c073102f5e3c56ba192370688a2750\", \"/home/khangho/agv_trial_20261002_1028/candidate_agv_motion_supervisor_runner_v15.py\": \"a48bbb221af6ca4b57d98a56443e06619e31ade4d4f88315d0bf3648e9fa07d5\"}}\n",
+  "stderr": ""
+}

@@ -1,0 +1,333 @@
+{
+  "scope": "OFFLINE actual collector + fake stream/port/clock; no hardware",
+  "before": "b548d38bb02ffe067d78e768d927d18d1be068b73557cd1c6231cf278db2a078",
+  "after": "b548d38bb02ffe067d78e768d927d18d1be068b73557cd1c6231cf278db2a078",
+  "output_dir": "D:\\HoMinhKhang\\PROJECT\\GITHUB_PROJECT\\CODE XE TU HANH\\evidence_agv_20261001\\parent_collector_2207_res_7sz8odyo",
+  "cases": [
+    {
+      "id": "E4_unsafe_raw_and_count",
+      "code": 1,
+      "report": {
+        "status": "FAIL_TELEMETRY_INVARIANT_VIOLATION",
+        "valid_samples_count": 1,
+        "corrupt_lines_count": 0,
+        "elapsed_time_s": 0.2,
+        "observation_time_s": 0.0,
+        "rejection_reason": "NON_ZERO_PWM: l=1.0, r=0.0",
+        "evidence_file": "D:\\HoMinhKhang\\PROJECT\\GITHUB_PROJECT\\CODE XE TU HANH\\evidence_agv_20261001\\parent_collector_2207_res_7sz8odyo\\preflight_raw_evidence_1790867354451_27856_0.json",
+        "first_sample": null,
+        "last_sample": null
+      },
+      "evidence": {
+        "metadata": {
+          "timestamp_epoch": 1790867354.451447,
+          "port": "/dev/ttyUSB0",
+          "baudrate": 115200,
+          "mock": true,
+          "wall_timeout_s": 0.8,
+          "min_observation_s": 0.05,
+          "status": "FAIL_TELEMETRY_INVARIANT_VIOLATION",
+          "rejection_reason": "NON_ZERO_PWM: l=1.0, r=0.0",
+          "valid_samples_count": 1,
+          "corrupt_lines_count": 0
+        },
+        "records": [
+          {
+            "line_idx": 1,
+            "rx_mono": 100.1,
+            "raw_bytes_len": 136,
+            "raw_hex": "7b22736166657479223a202244495341524d4544222c20226c5f746774223a20302c2022725f746774223a20302c20226c5f70776d223a20302c2022725f70776d223a20302c20226c5f72706d223a20302c2022725f72706d223a20302c202278223a20302c202279223a20302c20227468223a20302c202276223a20302c202277223a20307d0a",
+            "payload": {
+              "safety": "DISARMED",
+              "l_tgt": 0,
+              "r_tgt": 0,
+              "l_pwm": 0,
+              "r_pwm": 0,
+              "l_rpm": 0,
+              "r_rpm": 0,
+              "x": 0,
+              "y": 0,
+              "th": 0,
+              "v": 0,
+              "w": 0
+            },
+            "error": null,
+            "processing_mono": 100.1
+          },
+          {
+            "line_idx": 2,
+            "rx_mono": 100.19999999999999,
+            "raw_bytes_len": 136,
+            "raw_hex": "7b22736166657479223a202244495341524d4544222c20226c5f746774223a20302c2022725f746774223a20302c20226c5f70776d223a20312c2022725f70776d223a20302c20226c5f72706d223a20302c2022725f72706d223a20302c202278223a20302c202279223a20302c20227468223a20302c202276223a20302c202277223a20307d0a",
+            "payload": {
+              "safety": "DISARMED",
+              "l_tgt": 0,
+              "r_tgt": 0,
+              "l_pwm": 1,
+              "r_pwm": 0,
+              "l_rpm": 0,
+              "r_rpm": 0,
+              "x": 0,
+              "y": 0,
+              "th": 0,
+              "v": 0,
+              "w": 0
+            },
+            "error": "NON_ZERO_PWM: l=1.0, r=0.0"
+          }
+        ]
+      },
+      "exception": null,
+      "stream_closed": true,
+      "lock_closed": false,
+      "tx": []
+    },
+    {
+      "id": "F_gap_evidence",
+      "code": 1,
+      "report": {
+        "status": "FAIL_TELEMETRY_STREAM_GAP",
+        "valid_samples_count": 1,
+        "corrupt_lines_count": 0,
+        "elapsed_time_s": 0.32,
+        "observation_time_s": 0.0,
+        "rejection_reason": "M\u1ea5t k\u1ebft n\u1ed1i telemetry: gap 0.220s > 0.15s",
+        "evidence_file": "D:\\HoMinhKhang\\PROJECT\\GITHUB_PROJECT\\CODE XE TU HANH\\evidence_agv_20261001\\parent_collector_2207_res_7sz8odyo\\preflight_raw_evidence_1790867354453_27856_0.json",
+        "first_sample": null,
+        "last_sample": null
+      },
+      "evidence": {
+        "metadata": {
+          "timestamp_epoch": 1790867354.4534473,
+          "port": "/dev/ttyUSB0",
+          "baudrate": 115200,
+          "mock": true,
+          "wall_timeout_s": 0.8,
+          "min_observation_s": 0.05,
+          "status": "FAIL_TELEMETRY_STREAM_GAP",
+          "rejection_reason": "M\u1ea5t k\u1ebft n\u1ed1i telemetry: gap 0.220s > 0.15s",
+          "valid_samples_count": 1,
+          "corrupt_lines_count": 0
+        },
+        "records": [
+          {
+            "line_idx": 1,
+            "rx_mono": 100.1,
+            "raw_bytes_len": 136,
+            "raw_hex": "7b22736166657479223a202244495341524d4544222c20226c5f746774223a20302c2022725f746774223a20302c20226c5f70776d223a20302c2022725f70776d223a20302c20226c5f72706d223a20302c2022725f72706d223a20302c202278223a20302c202279223a20302c20227468223a20302c202276223a20302c202277223a20307d0a",
+            "payload": {
+              "safety": "DISARMED",
+              "l_tgt": 0,
+              "r_tgt": 0,
+              "l_pwm": 0,
+              "r_pwm": 0,
+              "l_rpm": 0,
+              "r_rpm": 0,
+              "x": 0,
+              "y": 0,
+              "th": 0,
+              "v": 0,
+              "w": 0
+            },
+            "error": null,
+            "processing_mono": 100.1
+          }
+        ]
+      },
+      "exception": null,
+      "stream_closed": true,
+      "lock_closed": false,
+      "tx": []
+    },
+    {
+      "id": "F_corrupt_evidence",
+      "code": 1,
+      "report": {
+        "status": "FAIL_CORRUPT_LINE_AFTER_SETTLING",
+        "valid_samples_count": 1,
+        "corrupt_lines_count": 0,
+        "elapsed_time_s": 0.2,
+        "observation_time_s": 0.0,
+        "rejection_reason": "D\u00f2ng d\u1eef li\u1ec7u h\u1ecfng sau settling (line 2): corrupt",
+        "evidence_file": "D:\\HoMinhKhang\\PROJECT\\GITHUB_PROJECT\\CODE XE TU HANH\\evidence_agv_20261001\\parent_collector_2207_res_7sz8odyo\\preflight_raw_evidence_1790867354455_27856_0.json",
+        "first_sample": null,
+        "last_sample": null
+      },
+      "evidence": {
+        "metadata": {
+          "timestamp_epoch": 1790867354.4554968,
+          "port": "/dev/ttyUSB0",
+          "baudrate": 115200,
+          "mock": true,
+          "wall_timeout_s": 0.8,
+          "min_observation_s": 0.05,
+          "status": "FAIL_CORRUPT_LINE_AFTER_SETTLING",
+          "rejection_reason": "D\u00f2ng d\u1eef li\u1ec7u h\u1ecfng sau settling (line 2): corrupt",
+          "valid_samples_count": 1,
+          "corrupt_lines_count": 0
+        },
+        "records": [
+          {
+            "line_idx": 1,
+            "rx_mono": 100.1,
+            "raw_bytes_len": 136,
+            "raw_hex": "7b22736166657479223a202244495341524d4544222c20226c5f746774223a20302c2022725f746774223a20302c20226c5f70776d223a20302c2022725f70776d223a20302c20226c5f72706d223a20302c2022725f72706d223a20302c202278223a20302c202279223a20302c20227468223a20302c202276223a20302c202277223a20307d0a",
+            "payload": {
+              "safety": "DISARMED",
+              "l_tgt": 0,
+              "r_tgt": 0,
+              "l_pwm": 0,
+              "r_pwm": 0,
+              "l_rpm": 0,
+              "r_rpm": 0,
+              "x": 0,
+              "y": 0,
+              "th": 0,
+              "v": 0,
+              "w": 0
+            },
+            "error": null,
+            "processing_mono": 100.1
+          },
+          {
+            "line_idx": 2,
+            "rx_mono": 100.19999999999999,
+            "raw_bytes_len": 8,
+            "raw_hex": "636f72727570740a",
+            "payload": null,
+            "error": "FAIL_CORRUPT_LINE_AFTER_SETTLING"
+          }
+        ]
+      },
+      "exception": null,
+      "stream_closed": true,
+      "lock_closed": false,
+      "tx": []
+    },
+    {
+      "id": "F_partial_open_cleanup",
+      "code": 1,
+      "report": {
+        "status": "FAIL_PORT_OPEN_ERROR",
+        "valid_samples_count": 0,
+        "corrupt_lines_count": 0,
+        "elapsed_time_s": 0.0,
+        "observation_time_s": 0.0,
+        "rejection_reason": "PORT_OPEN_EXCEPTION: fake partially opened port failure",
+        "evidence_file": null,
+        "first_sample": null,
+        "last_sample": null
+      },
+      "evidence": null,
+      "exception": null,
+      "stream_closed": true,
+      "lock_closed": true,
+      "tx": []
+    },
+    {
+      "id": "F_close_error_cleanup",
+      "code": 1,
+      "report": {
+        "status": "FAIL_STREAM_CLOSE_ERROR",
+        "valid_samples_count": 2,
+        "corrupt_lines_count": 0,
+        "elapsed_time_s": 0.2,
+        "observation_time_s": 0.1,
+        "rejection_reason": "STREAM_CLOSE_EXCEPTION: fake close failure",
+        "evidence_file": "D:\\HoMinhKhang\\PROJECT\\GITHUB_PROJECT\\CODE XE TU HANH\\evidence_agv_20261001\\parent_collector_2207_res_7sz8odyo\\preflight_raw_evidence_1790867354457_27856_0.json",
+        "first_sample": {
+          "safety": "DISARMED",
+          "l_tgt": 0,
+          "r_tgt": 0,
+          "l_pwm": 0,
+          "r_pwm": 0,
+          "l_rpm": 0,
+          "r_rpm": 0,
+          "x": 0,
+          "y": 0,
+          "th": 0,
+          "v": 0,
+          "w": 0
+        },
+        "last_sample": {
+          "safety": "DISARMED",
+          "l_tgt": 0,
+          "r_tgt": 0,
+          "l_pwm": 0,
+          "r_pwm": 0,
+          "l_rpm": 0,
+          "r_rpm": 0,
+          "x": 0,
+          "y": 0,
+          "th": 0,
+          "v": 0,
+          "w": 0
+        }
+      },
+      "evidence": {
+        "metadata": {
+          "timestamp_epoch": 1790867354.4576006,
+          "port": "/dev/ttyUSB0",
+          "baudrate": 115200,
+          "mock": false,
+          "wall_timeout_s": 0.8,
+          "min_observation_s": 0.05,
+          "status": "FAIL_STREAM_CLOSE_ERROR",
+          "rejection_reason": "STREAM_CLOSE_EXCEPTION: fake close failure",
+          "valid_samples_count": 2,
+          "corrupt_lines_count": 0
+        },
+        "records": [
+          {
+            "line_idx": 1,
+            "rx_mono": 100.1,
+            "raw_bytes_len": 136,
+            "raw_hex": "7b22736166657479223a202244495341524d4544222c20226c5f746774223a20302c2022725f746774223a20302c20226c5f70776d223a20302c2022725f70776d223a20302c20226c5f72706d223a20302c2022725f72706d223a20302c202278223a20302c202279223a20302c20227468223a20302c202276223a20302c202277223a20307d0a",
+            "payload": {
+              "safety": "DISARMED",
+              "l_tgt": 0,
+              "r_tgt": 0,
+              "l_pwm": 0,
+              "r_pwm": 0,
+              "l_rpm": 0,
+              "r_rpm": 0,
+              "x": 0,
+              "y": 0,
+              "th": 0,
+              "v": 0,
+              "w": 0
+            },
+            "error": null,
+            "processing_mono": 100.1
+          },
+          {
+            "line_idx": 2,
+            "rx_mono": 100.19999999999999,
+            "raw_bytes_len": 136,
+            "raw_hex": "7b22736166657479223a202244495341524d4544222c20226c5f746774223a20302c2022725f746774223a20302c20226c5f70776d223a20302c2022725f70776d223a20302c20226c5f72706d223a20302c2022725f72706d223a20302c202278223a20302c202279223a20302c20227468223a20302c202276223a20302c202277223a20307d0a",
+            "payload": {
+              "safety": "DISARMED",
+              "l_tgt": 0,
+              "r_tgt": 0,
+              "l_pwm": 0,
+              "r_pwm": 0,
+              "l_rpm": 0,
+              "r_rpm": 0,
+              "x": 0,
+              "y": 0,
+              "th": 0,
+              "v": 0,
+              "w": 0
+            },
+            "error": null,
+            "processing_mono": 100.19999999999999
+          }
+        ]
+      },
+      "exception": null,
+      "stream_closed": false,
+      "lock_closed": true,
+      "tx": []
+    }
+  ]
+}

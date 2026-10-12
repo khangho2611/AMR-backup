@@ -1,0 +1,28 @@
+{
+  "metadata": {
+    "timestamp_epoch": 1790903634.188207,
+    "port": "/dev/ttyUSB0",
+    "baudrate": 115200,
+    "mock": true,
+    "wall_timeout_s": 15.0,
+    "min_observation_s": 10.0,
+    "status": "FAIL_TELEMETRY_INVARIANT_VIOLATION",
+    "rejection_reason": "MIXED_SCHEMA_FORBIDDEN_KEY_ERROR",
+    "valid_samples_count": 0,
+    "corrupt_lines_count": 0
+  },
+  "records": [
+    {
+      "line_idx": 1,
+      "rx_mono": 100.1,
+      "raw_bytes_len": 117,
+      "raw_hex": "7b22696e666f223a2022455350333220526f626f74205265616479202d2042454e43482053455249414c204f4e4c592028576946692044495341424c454429222c20226572726f72223a20224d4b455f4d31385f494e49545f4641494c4544222c2022736166657479223a20224641554c54227d0a",
+      "payload": {
+        "info": "ESP32 Robot Ready - BENCH SERIAL ONLY (WiFi DISABLED)",
+        "error": "MKE_M18_INIT_FAILED",
+        "safety": "FAULT"
+      },
+      "error": "MIXED_SCHEMA_FORBIDDEN_KEY_ERROR"
+    }
+  ]
+}

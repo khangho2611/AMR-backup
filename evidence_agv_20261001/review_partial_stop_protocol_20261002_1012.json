@@ -1,0 +1,29 @@
+{
+  "scope": "OFFLINE actual gate protocol/shared STOP component; simulated independent zero telemetry after partial STOP write; not full entry or physical STOP",
+  "before": "01903753bb7855d119e490e6899e6a82fd60b5a9b39454b2eef3f3bebb7a8113",
+  "after": "01903753bb7855d119e490e6899e6a82fd60b5a9b39454b2eef3f3bebb7a8113",
+  "write_outcome": {
+    "gate_local_fault": true,
+    "gate_state": "FAULT",
+    "gate_confirmed": false
+  },
+  "runner_confirmed": true,
+  "runner_fault": false,
+  "runner_stop_write_success": false,
+  "gate_local_fault": true,
+  "gate_confirmed": true,
+  "tx": [
+    {
+      "t": 352651.937,
+      "bytes": "ARM\n",
+      "length": 4,
+      "success": true
+    },
+    {
+      "t": 352651.937,
+      "bytes": "STOP\n",
+      "length": 1,
+      "success": true
+    }
+  ]
+}

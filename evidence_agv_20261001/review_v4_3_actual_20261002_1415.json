@@ -1,0 +1,167 @@
+{
+  "time_local": "2026-10-02T14:13:22.093955",
+  "timezone": "Asia/Bangkok",
+  "source_before": "f573ae4f98c978f589709be1b03255921b1c195de0a88e0b58b673ec9a142aa1",
+  "source_after": "f573ae4f98c978f589709be1b03255921b1c195de0a88e0b58b673ec9a142aa1",
+  "hardware_OPEN_TX": false,
+  "ROS": false,
+  "clock": "real/unscaled",
+  "scope": "actual main-reader-HTTP with FakeUART + component/actual HTTP method tests; no typed-stream full acceptance",
+  "fixes_limited": {
+    "empty_preflight_ARM_refused": [
+      false,
+      "REFUSED_PREFLIGHT_NOT_MET: count 0/80"
+    ],
+    "ARMED_release_rejected": [
+      false,
+      "CANNOT_RELEASE_LATCH_MCU_STATE_NOT_DISARMED: ARMED"
+    ],
+    "minimal_schema_no_longer_refreshes": true,
+    "partial_drive_now_attempts_three_STOP": true,
+    "autoSTOP_noUART_500": {
+      "codes": [
+        500
+      ],
+      "body": "{\"status\": \"PARTIAL_FAULT\", \"auto\": false, \"reason\": \"SERIAL_PORT_UNAVAILABLE\"}"
+    },
+    "actual_HTTP_CSV_quoted_8_columns": {
+      "columns": [
+        8,
+        8
+      ]
+    },
+    "one_cell_malformedmap_HOLD": true,
+    "vertical_unknown_frontier_standoff": {
+      "goal": [
+        1.35,
+        1.0
+      ],
+      "distance": 0.25,
+      "radius": 0.186,
+      "path_count": 23
+    }
+  },
+  "residuals": {
+    "actual_firmware_l_tgt_r_tgt_rejected": {
+      "count": 0,
+      "mcu": "UNKNOWN",
+      "source": "main.cpp telemetry emit l_tgt/r_tgt/v/w; candidate requires target_l_rpm/target_r_rpm"
+    },
+    "persistent_partial_STOP_hidden_by_local_notmoving": {
+      "result": [
+        false,
+        "PARTIAL_WRITE_FAULT: 1/10"
+      ],
+      "tx": [
+        {
+          "mono": 367138.171,
+          "line": "V 0.04 0",
+          "expected": 10,
+          "written": 10
+        },
+        {
+          "mono": 367138.171,
+          "line": "V 0.08 0",
+          "expected": 10,
+          "written": 1
+        },
+        {
+          "mono": 367138.171,
+          "line": "STOP",
+          "expected": 6,
+          "written": 1
+        },
+        {
+          "mono": 367138.171,
+          "line": "STOP",
+          "expected": 6,
+          "written": 1
+        },
+        {
+          "mono": 367138.171,
+          "line": "STOP",
+          "expected": 6,
+          "written": 1
+        }
+      ],
+      "is_moving": false,
+      "latch": true,
+      "has_confirmed_field": false,
+      "physical_STOP": false
+    },
+    "STOP_OK_without_DISARMED_confirmation": {
+      "result": [
+        true,
+        "OK"
+      ],
+      "mcu": "ARMED",
+      "tx": [
+        {
+          "mono": 367138.171,
+          "line": "STOP",
+          "expected": 6,
+          "written": 6
+        },
+        {
+          "mono": 367138.187,
+          "line": "STOP",
+          "expected": 6,
+          "written": 6
+        },
+        {
+          "mono": 367138.203,
+          "line": "STOP",
+          "expected": 6,
+          "written": 6
+        }
+      ]
+    },
+    "malformedmap_3x3_two_cells_false_COMPLETED": {
+      "mid": "RETURNING_HOME",
+      "final": "COMPLETED",
+      "UART": false,
+      "postSTOP_D0": false
+    },
+    "footprint_provenance_math": {
+      "track_word": 0.1875,
+      "body_length_unverified": 0.28,
+      "constant": 0.186,
+      "formula_result": 0.18849054127754472,
+      "note": "Word track is not measured full body; no new human measurement"
+    },
+    "actual_main_reader_real_schema_count0": {
+      "count": 0,
+      "mcu": "UNKNOWN",
+      "initial_ARM_reply": {
+        "code": 422,
+        "body": "{\"status\": \"FAILED\", \"reason\": \"REFUSED_PREFLIGHT_NOT_MET: count 0/80\"}"
+      }
+    },
+    "actual_main_4s_gap_nonzero_target_stale_ARM_noACK": {
+      "before": {
+        "count": 81,
+        "span": 4.26600000000326,
+        "target": 100.0,
+        "rpm": 0.2,
+        "gap_s": 1.7,
+        "preflight_passed": true
+      },
+      "last_age_before_ARM": 0.5929999999934807,
+      "reply": {
+        "code": 200,
+        "body": "{\"status\": \"ok\", \"action\": \"ARMED\"}"
+      },
+      "tx": [
+        {
+          "mono": 367143.187,
+          "line": "ARM",
+          "expected": 5,
+          "written": 5
+        }
+      ],
+      "ARM_ACK_received": false,
+      "startup_diag": false,
+      "session_mcu_bound": false
+    }
+  }
+}

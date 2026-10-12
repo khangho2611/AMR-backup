@@ -1,0 +1,85 @@
+--- before/README_CODEX_AGV_TIEP_TUC.md
++++ after/README_CODEX_AGV_TIEP_TUC.md
+@@ -1,6 +1,8 @@
+ # Bàn giao Codex — AGV tự khám phá phòng
+ 
+-**Ngày: 02/10/2026, Asia/Bangkok. Đọc file này trước khi tiếp tục.**
++**Cập nhật: 03/10/2026, Asia/Bangkok. Đọc file này trước khi tiếp tục.**
++
++**ƯU TIÊN HIỆN TẠI — người dùng: “tiếp tục đi đừng cho xe chạy nhé”. Chỉ sửa/QA offline và đọc trạng thái. Không nạp/restart controller, mở Serial, ARM/AUTO/drive, reset trial hay dùng lại xác nhận hiện trường cũ. Đọc mục17 trước các kế hoạch lịch sử phía dưới.**
+ 
+ Workspace: `D:/HoMinhKhang/PROJECT/GITHUB_PROJECT/CODE XE TU HANH`.
+ 
+@@ -8,9 +10,9 @@
+ 
+ Người dùng muốn sửa tình trạng xe chỉ quanh quẩn một vùng dù còn nhiều hướng đi; xe phải khám phá các vùng có thể tiếp cận trong phòng, lập bản đồ, rồi về **đúng vị trí và hướng ban đầu**. Có web để quan sát, điều khiển và test.
+ 
+-**Chưa hoàn thiện / chưa nghiệm thu mục tiêu toàn phòng.** Phiên web thật mới nhất đã tiêu thụ ARM một lần nhưng người dùng báo không thấy xe di chuyển. Controller giữ lỗi `TELEMETRY_TIMEOUT`. Bản chẩn đoán mới đã sửa và kiểm tra offline; **chưa triển khai lên Pi**.
+-
+-Codex tự implementation/QA. Người dùng đã yêu cầu dừng giao việc bot: **không gửi Telegram, không giao Khang AI Assistant, bốn bot hoặc Hermes; không spawn/delegate**. Không đổi gateway/model/privacy/token, không đọc secret. Checkpoint cũ “Codex không implementation” đã bị yêu cầu trực tiếp của người dùng thay thế.
++**Chưa hoàn thiện / chưa nghiệm thu mục tiêu toàn phòng.** Phiên web thật20:49 đã tiêu thụ ARM nhưng người dùng không thấy xe di chuyển; response gốc đã mất nên chưa chứng minh nguyên nhân cuối cùng. Pi đã reboot, controller/ROS cũ không còn chạy trong snapshot23:51. Bản sửa mới nhất ở mục17 đã QA offline, **chưa nạp lên Pi và chưa chạy xe**.
++
++Codex tự implementation/QA. Người dùng đã yêu cầu dừng giao việc bot: **không gửi Telegram, không giao Khang AI Assistant, bốn bot hoặc Hermes**. Sau đó người dùng cho phép subagent Codex, nhưng lượt sửa mới nhất do Codex trực tiếp làm, không có agent nền sửa file. Không đổi gateway/model/privacy/token, không đọc secret. Checkpoint cũ “Codex không implementation” đã bị yêu cầu trực tiếp thay thế.
+ 
+ ## 2. Điểm dừng chính xác và xác nhận mới của người dùng
+ 
+@@ -134,7 +136,9 @@
+ 
+ 20:08 chỉ đọc: PID14214 vẫn owner USB0; sáu file live manifest matched. PID/boot/D0 đều phải kiểm lại trước thao tác. Không mở USB0 để kiểm tra từ một process thứ hai. Không refresh liên tục tab operator: có thể mất lease. Có thể GET API read-only thay vì reload page.
+ 
+-## 7. Nhiệm vụ cần làm tiếp, theo thứ tự
++## 7. Kế hoạch phần cứng lịch sử — hiện chưa được thực hiện theo yêu cầu không chạy xe
++
++**Danh sách này không phải hành động tiếp theo lúc này. Ưu tiên mục17: SOURCE_OFFLINE_NO_MOTION.**
+ 
+ - [ ] Đọc [kế hoạch diagnostic](KE_HOACH_CHAN_DOAN_XE_KHONG_CHAY_CODEX_20261002.md); ghi nhận xác nhận hiện trường mới đã trả lời Có, không hỏi trùng ngay.
+ - [ ] Chỉ đọc trạng thái control hiện tại, boot, PID/cwd, owner và source hashes. Lưu evidence unique. Không giả định snapshot20:08 còn LIVE.
+@@ -257,3 +261,48 @@
+ - Bước retire PID23834 chưa thực hiện được: `scp` và `ssh` tới `khangho@100.90.252.15` timeout; HTTP `/api/telemetry` cũng timeout. Không file nào được ghi lên Pi, không kill/restart/ARM/AUTO, không mở Serial.
+ - Trạng thái cuối cùng đã xác minh trước khi mất kết nối: controller cũ PID23834, `trial_used=true`, `DISARMED`, `STOP_CONFIRMED`, RPM/PWM/odom bằng0. Sau khi mất kết nối chỉ được gọi là **last-known**, không coi là LIVE.
+ - Candidate local đã test xanh 59/59 và py_compile exit0; evidence `evidence_agv_20261001/yellow_arc_fix_20261002_/`. Cần khôi phục kết nối Pi rồi mới verify identity, retire controller cũ, SCP candidate, khởi động DISARMED và kiểm tra hash. Không tự retry khi Pi chưa reachable.
++
++## 17. Tiếp tục offline, không chạy xe — 03/10/2026
++
++### Trạng thái và quyền hiện tại
++
++- Người dùng yêu cầu tiếp tục nhưng **không cho xe chạy**. Lượt này không gửi bot, không nạp file lên Pi, không mở Serial/ARM/AUTO/drive/STOP, không flash, không đổi gain/PWM/timeout hoặc reset phiên đã dùng. Các lệnh UART trong test chỉ đi vào FakeUART trên máy local.
++- SSH chỉ đọc lúc02/10 23:51:12 Asia/Bangkok: boot mới `6c0476e0-29bf-4510-a153-b7708dcbbec7`; không controller AGV/SLAM/LiDAR/static TF; `fuser /dev/ttyUSB0` exit1/output rỗng; không port8080. PID23834/boot305c lịch sử đã hết hiệu lực. Đây là snapshot process/port, **không fresh D0 hoặc chứng minh STOP cơ khí**. Không restart stack để lấy telemetry trong lượt không chạy xe này.
++- Automation `gi-m-s-t-bot-agv` đọc từ cấu hình đang **PAUSED**; không resume hoặc sửa lịch trong lượt này. Các câu ACTIVE ở mục cũ là lịch sử.
++
++### Hạng mục đã sửa và kiểm tra
++
++1. **Cung tiến kiểm tra toàn thân:** `GridPlanner.swept_clear()` kiểm đường tâm theo v/w và vòng bao thân+.15m với ô occupied/unknown/biên bản đồ. Kiểm tọa độ thật trong ô, origin yaw, đệm giữa các mẫu và budget25ms. `_forward_arc_clear()` kết hợp map/TF/scan mới, vật cản bên hông và sai số làm tròn góc scan. `CommandSession.drive()` gọi validator sau khi lấy writer, rồi kiểm lại D0/scan/generation trước TX. Thiếu validator, hết freshness hoặc STOP chen vào đều không gửi V. Vùng vàng phía sau .55m với hướng tiến trống đạt fixture; vật cản bên hông .30m và ô unknown trong footprint bị chặn. **Giữ nguyên radius.20 + margin.15; không hạ ngưỡng quay.**
++2. **Bổ sung chứng cứ bị mất:** tách `command_events`512 khỏi D0 ring256. ARM/TX/ACK/drive/HTTP outcome vẫn còn sau1.500 packet D0 mới. HTTP ghi journal riêng `logs/command_outcomes.jsonl`, tối đa2MiB/file + một file `.1`, RAM32 record; có id, UTC, args, HTTP status, response, health và command events. Reopen khôi phục outcome, lỗi ghi báo `saved=false`. File IO chỉ ở HTTP thread, không UART/watchdog và không giữ lock control khi ghi. File đã đóng không phải cam kết sống sót khi mất nguồn đột ngột.
++3. **AUTO báo đúng gate:** response có `blockers` và snapshot D0/scan/caller/map/frame/body/pose/generation tại START. Không còn chỉ một reason chung. Kiểm và commit AUTO cùng lock theo thứ tự state→control để STOP không chen giữa hai bước. Không thêm auto-ARM.
++4. **Web giữ lỗi nhìn được:** hiển thị tên từng gate bằng tiếng Việt kèm mã; ô `commandNotice` giữ outcome khi telemetry100ms cập nhật badge. ARM_CONFIRMED hiện MCU đã xác nhận, không ghi chờ ACK. Journal lỗi có thông báo riêng. Đây là JS thực trong DOM fixture, chưa browser/Pi acceptance.
++
++**Đính chính mục15:** cho mọi V dương có w chỉ dựa vào front cone là thiếu kiểm tra vùng thân quét sang bên. Bản mới thay tiêu chí đó bằng validator hình học. 59 test cũ không chứng minh nguyên nhân xe thật không chạy; nguyên nhân phiên cũ vẫn chưa được khôi phục. Không tuyên bố phần cứng khỏe, xe đã chạy hay full-room PASS.
++
++### Kiểm thử và source hiện tại
++
++Evidence unique: `evidence_agv_20261001/codex_no_motion_20261002_234614/`.
++
++- RED:10 case geometry/history,2 journal,2 HTTP outcome và UI blockers tái hiện thiếu chức năng; giữ log nguyên bản.
++- Final **75 Python tests exit0/17.613s**, **11 JS assertion groups exit0**, AST và `node --check` exit0. Integration dùng actual reader/watchdog/HTTP localhost/typed callbacks và preflight10s80 real clock với FakeUART; không backdate hay đặt cờ PASS trong sản phẩm. STOP concurrent trong lúc validator chạy vẫn hủy V trước TX.
++- Lần full đầu có lỗi trùng keyword generation và fixture lifecycle thiếu health; đã sửa, log lỗi được giữ. Không coi lần lỗi giữa chừng là kết quả final.
++- `verification.json` gắn command/log/hash/diff. Hash ổn định trước/sau kiểm AST/JS syntax; manifest sau test là source local hiện tại. Chưa physical Serial/main ROS executor/Pi/collision/braking/crash/coverage/home acceptance.
++
++| File bắt buộc trong bundle local mới | SHA256 |
++|---|---|
++| `agv_unified_brain.py` | `bec4f77f49a9d32b0c9fb45b52911333db4cdd453249a3f465cf75440fadd56e` |
++| `agv_command_session.py` | `097380b668d1a0c161557bfd730c6dbfefa8de2eea14f220befb8285210805c6` |
++| `agv_navigation.py` | `0f106a4a15fcdefda04f78ae74c65867950ccba1cb00dc46d70b340f4086f923` |
++| **`agv_command_journal.py` mới** | `08513da55966bd3c885f57a0245417e36a9b981bfb099c00809535b583a9afe6` |
++| `index_cyberpunk.html` | `cf5af33888e989efe3de0621b48d0af6ea09d2d1647864400327dc1f5085fcab` |
++
++### Việc còn làm, vẫn offline
++
++- [ ] Kiểm trajectory/footprint với map thực và pose thực đã ghi, scan thiếu tia/TF time-frame epochs; horizon.5s và margin không phải số đo stopping distance. Map known-free bắt buộc ở toàn footprint khi rear scan có bin thiếu; không coi scan trống là chứng cứ free-space toàn phòng.
++- [ ] Xác định nguyên nhân no-motion bằng command outcomes/RX-TX trong một phiên **được cho phép sau này**; không đoán TF/ACK/friction/pin từ snapshot sau STOP. Không lặp thử tự động hoặc tăng timeout để che gap.
++- [ ] Hành vi vùng đỏ giữ HOLD/STOP; recovery lùi cần swept rear path/scan và kế hoạch riêng, không tự lùi mù. Vùng vàng không tự hạ margin.
++- [ ] Hoàn thiện điều khiển tay có ownership/lease rõ ràng; kiểm manual/AUTO tranh lệnh, source-auth, crash/close outcomes. Trial15s hiện vẫn khóa MAN/PID và reARM; không tự mở khóa.
++- [ ] Tiếp tục coverage/unknown/inaccessible, đường về home position+heading, full-room acceptance. Test/mock/map có frontier không thay nghiệm thu chuyển động thật.
++- [ ] Khi người dùng yêu cầu nạp/test trở lại: review bundle mới **bao gồm agv_command_journal.py**, snapshot boot/owner, backup/rollback/args và điều kiện hiện trường khi đó; không reuse kế hoạch cũ/PID cũ/approval USED. Lúc này chưa thực hiện bước đó.
++
++**Trạng thái bàn giao: SOURCE_OFFLINE_VERIFIED_NO_MOTION; chưa deploy; chưa giải quyết bằng chứng xe chạy thật. Đọc mục17 trước, không quay lại chạy mục7.**

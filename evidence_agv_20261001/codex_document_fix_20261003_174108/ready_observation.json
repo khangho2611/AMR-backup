@@ -1,0 +1,62 @@
+{
+  "samples": [
+    {
+      "time": 1791025478.3594527,
+      "control": {
+        "latched": true,
+        "armed": false,
+        "fault": null,
+        "owner": "MANUAL",
+        "idle_lease_remaining_s": null,
+        "motion_window_s": null,
+        "trial_used": false,
+        "trial_remaining_s": null,
+        "d0_age_s": 0.07274631200016302,
+        "latest_d0": {
+          "safety": "DISARMED",
+          "mode": "PID",
+          "l_tgt": 0.0,
+          "r_tgt": 0.0,
+          "l_rpm": 0.0,
+          "r_rpm": 0.0,
+          "l_pwm": 0,
+          "r_pwm": 0,
+          "x": 0.0,
+          "y": 0.0,
+          "th": 0.0,
+          "v": 0.0,
+          "w": 0.0
+        },
+        "startup_stage": 3,
+        "preflight_count": 229,
+        "preflight_ready": true,
+        "stop_op": 0,
+        "stop_confirmed": false,
+        "stop_write_ok": false,
+        "zero_observed": true,
+        "escalation": null
+      },
+      "auto": false,
+      "phase": "IDLE",
+      "map": {
+        "has_map": true,
+        "w": 85,
+        "h": 89,
+        "res": 0.05000000074505806,
+        "ox": -1.7536073665381984,
+        "oy": -3.8337025600606216,
+        "yaw": 0.0,
+        "frame": "map",
+        "frontiers": 0,
+        "reachable_frontiers": null,
+        "unknown_cells": null,
+        "goal_x": 0.0,
+        "goal_y": 0.0,
+        "phase": "IDLE"
+      },
+      "min_m": 0.31
+    }
+  ],
+  "manifest": "agv_unified_brain.py: OK\nagv_command_session.py: OK\nagv_navigation.py: OK\nagv_command_journal.py: OK\nagv_preflight_static_collector.py: OK\nindex_cyberpunk.html: OK\nslam_scan_fix.yaml: OK\n",
+  "web_sha": "b234e5882e4c94bb62bd4193146f26463f98cedd740bd4cdd19419d48c9b8cde"
+}

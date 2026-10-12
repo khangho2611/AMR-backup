@@ -1,0 +1,48 @@
+{
+  "scope": "OFFLINE MOCK ONLY",
+  "before": {
+    "agv_ros2_arbiter_bridge.py": "34ac93630a7581af63c324d57c67203ecdea826fce014f6544271b0381213f53",
+    "agv_serial_arbiter_bridge_v3.py": "e7967eec69b12b97cef93ea12cc08cdcd2ac34735b740539214f81ecad9ca7bd"
+  },
+  "after": {
+    "agv_ros2_arbiter_bridge.py": "34ac93630a7581af63c324d57c67203ecdea826fce014f6544271b0381213f53",
+    "agv_serial_arbiter_bridge_v3.py": "e7967eec69b12b97cef93ea12cc08cdcd2ac34735b740539214f81ecad9ca7bd"
+  },
+  "stable": true,
+  "cases": [
+    {
+      "id": "R1",
+      "scenario": "fresh odom masks still-missing auth source and scan/TF",
+      "observed": [
+        true,
+        "COMMAND_ACCEPTED"
+      ],
+      "mock_writes": [
+        "V 0.040 0.000\n"
+      ],
+      "scan": null,
+      "expected_accepted": false
+    },
+    {
+      "id": "R2",
+      "scenario": "STOP write succeeds but no fresh D0 confirmation",
+      "observed": [
+        true,
+        "EMERGENCY_STOP_ENFORCED"
+      ],
+      "gate_stop_confirmed": false,
+      "expected": "STOP_REQUESTED/WRITE_OK_UNCONFIRMED, not ENFORCED"
+    },
+    {
+      "id": "R3",
+      "scenario": "STOP blocked by velocity lease TTL validation",
+      "observed": [
+        false,
+        "REJECT_INVALID_DEADLINE_TTL_EXCEEDED_BOUND"
+      ],
+      "mock_writes": [],
+      "gate_safety": "ARMED",
+      "expected": "safety STOP independent of velocity lease TTL"
+    }
+  ]
+}

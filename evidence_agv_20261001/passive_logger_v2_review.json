@@ -1,0 +1,14 @@
+[
+  {
+    "case": "missing_pwm_nonzero_target",
+    "returned_success": true,
+    "summary": "in ghi: C:\\Users\\Khang\\AppData\\Local\\Temp\\tmpk4r_y79n\\passive_hand_push_QA_ONLY.log\nCHẾ ĐỘ: 100% READ-ONLY (TUYỆT ĐỐI KHÔNG GỬI LỆNH XUỐNG SERIAL)\n\nGiai đoạn 1: Thực hiện Preflight Gate (Kiểm tra an toàn tĩnh DISARMED 0)...\n-> PREFLIGHT PASS: Xác nhận xe ở trạng thái tĩnh an toàn.\n\nGiai đoạn 2: Sẵn sàng ghi nhận dữ liệu đẩy tay...\n\n=== HOÀN TẤT THU THẬP THÀNH CÔNG (20 MẪU) ===\nTổng dịch chuyển Odometry: 0.0000 m (0.00 cm)\nĐộ lệch góc: 0.0000 rad\n",
+    "error": ""
+  },
+  {
+    "case": "nan_pose",
+    "returned_success": true,
+    "summary": "ập tin ghi: C:\\Users\\Khang\\AppData\\Local\\Temp\\tmppwziwenn\\passive_hand_push_QA_ONLY.log\nCHẾ ĐỘ: 100% READ-ONLY (TUYỆT ĐỐI KHÔNG GỬI LỆNH XUỐNG SERIAL)\n\nGiai đoạn 1: Thực hiện Preflight Gate (Kiểm tra an toàn tĩnh DISARMED 0)...\n-> PREFLIGHT PASS: Xác nhận xe ở trạng thái tĩnh an toàn.\n\nGiai đoạn 2: Sẵn sàng ghi nhận dữ liệu đẩy tay...\n\n=== HOÀN TẤT THU THẬP THÀNH CÔNG (20 MẪU) ===\nTổng dịch chuyển Odometry: nan m (nan cm)\nĐộ lệch góc: 0.0000 rad\n",
+    "error": ""
+  }
+]

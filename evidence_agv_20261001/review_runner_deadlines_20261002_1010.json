@@ -1,0 +1,71 @@
+{
+  "scope": "OFFLINE full unscaled late-startup entry plus separately declared no-caller component and TX logger unit; no hardware",
+  "before": "01903753bb7855d119e490e6899e6a82fd60b5a9b39454b2eef3f3bebb7a8113",
+  "after": "01903753bb7855d119e490e6899e6a82fd60b5a9b39454b2eef3f3bebb7a8113",
+  "stable": true,
+  "cases": [
+    {
+      "case": "late_ready_after4s_full_unscaled_entry",
+      "exit": 0,
+      "elapsed": 15.0,
+      "first_rx_delay": 4.172000000020489,
+      "arm_count": 1,
+      "report": {
+        "preflight_status": "PASS_PREFLIGHT_VERIFIED",
+        "status": "PASS_MOTION_VERIFIED",
+        "evidence_file": "C:\\Users\\Khang\\AppData\\Local\\Temp\\agv_OFFLINE_late1010_otf71zq5\\motion_evidence_1790910665788_24728.json"
+      },
+      "closed": true,
+      "writes": [
+        {
+          "t": 352607.015,
+          "bytes": "ARM\n"
+        },
+        {
+          "t": 352607.109,
+          "bytes": "V 0.007 0.000\n"
+        },
+        {
+          "t": 352607.156,
+          "bytes": "V 0.015 0.000\n"
+        },
+        {
+          "t": 352607.218,
+          "bytes": "V 0.024 0.000\n"
+        },
+        {
+          "t": 352607.265,
+          "bytes": "STOP\n"
+        }
+      ]
+    },
+    {
+      "case": "component_no_update_calls",
+      "gate_confirmed": true,
+      "runner_confirmed": true,
+      "fault": "WATCHDOG_HARD_TIME_CAP",
+      "stop_write_success": false,
+      "writes": [
+        {
+          "t": 352607.515,
+          "bytes": "ARM\n"
+        },
+        {
+          "t": 352607.765,
+          "bytes": "STOP\n"
+        }
+      ]
+    },
+    {
+      "case": "partial_write_TX_metadata_only",
+      "records": [
+        {
+          "t": 352608.171,
+          "bytes": "STOP\n",
+          "length": 1,
+          "success": true
+        }
+      ]
+    }
+  ]
+}

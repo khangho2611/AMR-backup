@@ -1,0 +1,75 @@
+# ==============================================================================
+# slam_tuned.yaml - CẤU HÌNH SLAM TOOLBOX TỐI ƯU (ĐỘC LẬP / CÁCH LY)
+# Mục đích: Triệt tiêu hiện tượng xoay lệch phòng ("tường ma") do trượt bánh xe
+# Nguyên lý: Ưu tiên dữ liệu tia LiDAR (Scan Matching) khóa chặt hình học tường,
+#            hạ độ phụ thuộc mù quáng vào góc quay bánh xe (Odometry).
+# ==============================================================================
+
+slam_toolbox:
+  ros__parameters:
+
+    # 1. Định danh hệ quy chiếu và topic (chuẩn REP-105)
+    odom_frame: odom
+    map_frame: map
+    base_frame: base_footprint
+    scan_topic: /scan_slam
+    use_map_saver: true
+    mode: mapping
+
+    # 2. Xử lý & Quản lý bộ nhớ trên Raspberry Pi
+    debug_logging: false
+    throttle_scans: 1
+    transform_publish_period: 0.05       # 20 Hz
+    map_update_interval: 0.8             # Cập nhật bản đồ nhanh hơn (0.8s) để bắt kịp khi quay
+    resolution: 0.05                     # Độ phân giải ô lưới: 5cm / cell
+    max_laser_range: 12.0                # Tầm quét tối đa cho thuật toán SLAM
+    minimum_time_interval: 0.1           # Nhận tối đa 10 scan/giây
+    transform_timeout: 0.3
+    tf_buffer_duration: 30.0
+    stack_size_to_use: 40000000          # Cỡ stack tối đa cho Ceres Solver
+    enable_interactive_mode: true
+
+    # 3. Ngưỡng cập nhật Pose Graph - TINH CHỈNH ĐẶC BIỆT KHI QUAY
+    # Giảm ngưỡng góc quay xuống 0.087 rad (~5 độ) để đồ thị Pose Graph
+    # liên tục chốt mốc định vị khi xe quay tại chỗ, không dồn tích lũy sai số.
+    minimum_travel_distance: 0.10        # 10cm di chuyển tịnh tiến
+    minimum_travel_heading: 0.087        # ~5 độ quay (Gốc là 0.174 rad ~10 độ)
+
+    # 4. Kích thước Scan Buffer & So khớp quét (Scan Matching)
+    # Tăng buffer để lưu trữ nhiều mốc quét gần nhất khi xe đang quay vòng
+    scan_buffer_size: 20                 # Tăng từ 10 lên 20 scan gần nhất
+    scan_buffer_maximum_scan_distance: 12.0
+    link_match_minimum_response_fine: 0.08
+    link_scan_maximum_distance: 1.5
+    loop_search_maximum_distance: 5.0
+    do_loop_closing: true
+    loop_match_minimum_chain_size: 8
+    loop_match_maximum_variance_coarse: 3.5
+    loop_match_minimum_response_coarse: 0.30
+    loop_match_minimum_response_fine: 0.40
+
+    # 5. Tham số tối ưu hóa Ceres Solver - MỞ RỘNG VÙNG DÒ TÌM
+    # Cho phép tìm kiếm rộng hơn (0.8m) để bắt lại tường cũ ngay cả khi bánh bị trượt dạt
+    correlation_search_space_dimension: 0.8     # Gốc là 0.5
+    correlation_search_space_resolution: 0.01
+    correlation_search_space_smear_deviation: 0.1
+
+    # 6. Khoảng cách tìm kiếm vòng lặp (Loop Closure)
+    loop_search_space_dimension: 8.0
+    loop_search_space_resolution: 0.05
+    loop_search_space_smear_deviation: 0.03
+
+    # 7. TRỌNG SỐ QUAN TRỌNG NHẤT: TINH CHỈNH GÓC QUAY (SCAN MATCHER FIRST)
+    # Giảm mức phạt góc (penalty) để thuật toán Ceres thoải mái xoay tia LiDAR
+    # khớp vào tường cũ, thay vì bị ép phải nghe theo góc sai của Encoder!
+    distance_variance_penalty: 0.35      # Gốc là 0.5
+    angle_variance_penalty: 0.18         # Gốc là 1.0 (GIẢM MẠNH: Ưu tiên mắt LiDAR hơn chân bánh)
+
+    # Mở rộng cửa sổ dò góc thô (Coarse Search Offset) từ 20 độ (~0.349) lên 40 độ (~0.698)
+    # Nếu xe bị trượt lết bánh tới 30-35 độ, SLAM vẫn nằm trong vùng dò và kéo về đúng mốc!
+    fine_search_angle_offset: 0.00349
+    coarse_search_angle_offset: 0.698    # Gốc là 0.349 (~20 độ) -> Nâng lên ~40 độ
+    coarse_angle_resolution: 0.0349
+    minimum_angle_penalty: 0.35          # Gốc là 0.9 (Hạ thấp để không loại bỏ tia khớp chuẩn)
+    minimum_distance_penalty: 0.4        # Gốc là 0.5
+    use_response_expansion: true

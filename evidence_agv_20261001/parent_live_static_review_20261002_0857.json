@@ -1,0 +1,57 @@
+{
+  "scope": "Parent read-only raw/hash/proc independent review, no Serial connect/ARM",
+  "remote": "/home/khangho/evidence_preflight_live_20261002_0857/preflight_raw_evidence_1790906417023_18115_0.json",
+  "raw_sha256": "3de1fcd4fe81485d736f7dc1a5ef07beaa9093471db19560478aef4fe2c0ab86",
+  "ssh_read_exit": 0,
+  "parent_count_all_D0": 134,
+  "parent_count_post_diag_D0": 120,
+  "parent_post_diag_span_s": 11.889405917000204,
+  "parent_max_gap_s": 0.10327174900021419,
+  "all_D0_DISARMED_zero": true,
+  "classifications": [
+    {
+      "rx_mono": 3249.885923668,
+      "classification": "BOOT_BANNER",
+      "payload": {
+        "info": "ESP32 Robot Ready - BENCH SERIAL ONLY (WiFi DISABLED)"
+      }
+    },
+    {
+      "rx_mono": 3251.12707597,
+      "classification": "I2C_SCANNING_INFO",
+      "payload": {
+        "info": "Scanning I2C bus..."
+      }
+    },
+    {
+      "rx_mono": 3251.138379402,
+      "classification": "I2C_FOUND",
+      "payload": {
+        "i2c_found": "0x42"
+      }
+    },
+    {
+      "rx_mono": 3251.14008372,
+      "classification": "VIN_MV",
+      "payload": {
+        "vin_mv": 12033
+      }
+    }
+  ],
+  "metadata": {
+    "timestamp_epoch": 1790906417.0237458,
+    "port": "/dev/ttyUSB0",
+    "baudrate": 115200,
+    "mock": false,
+    "wall_timeout_s": 15.0,
+    "min_observation_s": 10.0,
+    "status": "PASS_PREFLIGHT_VERIFIED",
+    "rejection_reason": null,
+    "valid_samples_count": 120,
+    "corrupt_lines_count": 10
+  },
+  "post_command": "sha256sum /home/khangho/evidence_preflight_live_20261002_0857/preflight_raw_evidence_1790906417023_18115_0.json /tmp/agv_preflight_static_collector.py; cat /proc/sys/kernel/random/boot_id; ps -p 18115 -o pid=,args=; printf \"PS_EXIT=%s\\n\" \"$?\"; fuser /dev/ttyUSB0; printf \"FUSER_EXIT=%s\\n\" \"$?\"",
+  "post_exit": 0,
+  "post_stdout": "3de1fcd4fe81485d736f7dc1a5ef07beaa9093471db19560478aef4fe2c0ab86  /home/khangho/evidence_preflight_live_20261002_0857/preflight_raw_evidence_1790906417023_18115_0.json\n4b32ca76c0f253fdee228be7354281e8aec74adedcaf15897910a42a3463271a  /tmp/agv_preflight_static_collector.py\nb9714a2d-e109-47d0-a647-b9c032f241eb\nPS_EXIT=1\nFUSER_EXIT=1\n",
+  "post_stderr": ""
+}

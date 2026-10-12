@@ -1,0 +1,13 @@
+time=2026-10-02T20:49:56+07:00
+
+boot=305c4d73-736c-4871-968d-a84b997be21e
+
+proc=  23834 Sl   python3 -B -u agv_unified_brain.py --motion-window-s 15
+cwd=/home/khangho/agv_codex_diag_20261002_201411
+
+usb0=                     USER        PID ACCESS COMMAND
+/dev/ttyUSB0:        khangho   23834 F.... python3
+
+log_tail=
+[INFO] [1790948479.877864708] [agv_unified_brain]: ĐÃ MỞ CỔNG SERIAL /dev/ttyUSB0; DISARMED, KHÔNG AUTO ARM
+=== AGV WEB PORT 8080; MODE=DISARMED_STARTUP ===

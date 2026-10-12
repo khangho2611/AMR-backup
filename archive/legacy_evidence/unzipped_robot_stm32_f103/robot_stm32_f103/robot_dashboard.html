@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>STM32 2-Wheel Robot - Closed-Loop PID Speed Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;800&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap');
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .mono { font-family: 'JetBrains Mono', monospace; }
+    .glow-cyan { box-shadow: 0 0 20px rgba(6, 182, 212, 0.25); }
+    .glow-emerald { box-shadow: 0 0 20px rgba(16, 185, 129, 0.25); }
+    .glow-amber { box-shadow: 0 0 20px rgba(245, 158, 11, 0.25); }
+    .glow-rose { box-shadow: 0 0 20px rgba(244, 63, 94, 0.25); }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen p-4 md:p-6 flex flex-col">
+
+  <!-- TOP HEADER -->
+  <header class="max-w-7xl mx-auto w-full flex flex-col md:flex-row items-center justify-between gap-4 pb-6 border-b border-slate-800">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 font-black text-xl">
+        🤖
+      </div>
+      <div>
+        <div class="flex items-center gap-2">
+          <h1 class="text-xl md:text-2xl font-extrabold tracking-tight bg-gradient-to-r from-cyan-400 via-sky-300 to-indigo-400 bg-clip-text text-transparent">
+            STM32 ROBOT PID DASHBOARD
+          </h1>
+          <span id="activeModeBadge" class="text-[10px] uppercase tracking-wider font-extrabold px-2 py-0.5 rounded-full bg-cyan-950 border border-cyan-500/40 text-cyan-300">
+            CLOSED-LOOP PID
+          </span>
+        </div>
+        <p class="text-xs text-slate-400">Blue Pill F103C8 • MKE-M18 BD62130 • GA25 Dual Hall Encoders (TIM2/TIM3)</p>
+      </div>
+    </div>
+
+    <!-- CONNECTION & MODE CONTROLS -->
+    <div class="flex items-center flex-wrap gap-3">
+      <div id="statusBadge" class="flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold bg-slate-900 border border-slate-800 text-slate-400">
+        <span id="statusDot" class="w-2.5 h-2.5 rounded-full bg-slate-600"></span>
+        <span id="statusText">Chưa kết nối</span>
+      </div>
+      <button id="btnConnect" onclick="toggleSerialConnection()" class="px-5 py-2 rounded-xl text-sm font-bold bg-cyan-500 hover:bg-cyan-400 text-slate-950 shadow-lg shadow-cyan-500/20 transition-all active:scale-95 flex items-center gap-2">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+        <span>Kết nối STM32</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- MAIN GRID -->
+  <main class="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-6 mt-6 flex-1">
+
+    <!-- LEFT COLUMN: LIVE TELEMETRY & CHART (7 COLS) -->
+    <div class="lg:col-span-7 flex flex-col gap-6">
+
+      <!-- TACHOMETER CARDS (LEFT & RIGHT MOTORS) -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+        <!-- LEFT MOTOR CARD -->
+        <div class="bg-slate-900/90 border border-cyan-500/30 rounded-2xl p-5 glow-cyan relative overflow-hidden flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-extrabold uppercase tracking-wider text-cyan-400 flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-cyan-400"></span> Bánh Trái (Motor A)
+              </span>
+              <span id="leftDirBadge" class="text-[10px] font-bold px-2 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700">STOP</span>
+            </div>
+
+            <div class="flex items-baseline gap-2 my-1">
+              <span id="leftRpm" class="text-4xl sm:text-5xl font-extrabold mono text-cyan-300">0.00</span>
+              <span class="text-xs text-slate-400 font-semibold">RPM</span>
+            </div>
+
+            <!-- GAUGES & PROGRESS -->
+            <div class="w-full bg-slate-800/80 rounded-full h-2 my-3 overflow-hidden">
+              <div id="leftRpmBar" class="bg-gradient-to-r from-cyan-500 to-sky-400 h-full w-0 transition-all duration-150"></div>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-3 gap-2 pt-2 border-t border-slate-800/80 text-[11px]">
+            <div>
+              <span class="text-slate-400 block">Target:</span>
+              <span id="leftTgtVal" class="mono font-bold text-amber-300">0.0</span>
+            </div>
+            <div>
+              <span class="text-slate-400 block">PWM:</span>
+              <span id="leftPwmVal" class="mono font-bold text-slate-200">0</span>
+            </div>
+            <div>
+              <span class="text-slate-400 block">Xung TIM2:</span>
+              <span id="leftCountVal" class="mono font-bold text-cyan-400">0</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT MOTOR CARD -->
+        <div class="bg-slate-900/90 border border-emerald-500/30 rounded-2xl p-5 glow-emerald relative overflow-hidden flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-extrabold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-emerald-400"></span> Bánh Phải (Motor B)
+              </span>
+              <span id="rightDirBadge" class="text-[10px] font-bold px-2 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700">STOP</span>
+            </div>
+
+            <div class="flex items-baseline gap-2 my-1">
+              <span id="rightRpm" class="text-4xl sm:text-5xl font-extrabold mono text-emerald-300">0.00</span>
+              <span class="text-xs text-slate-400 font-semibold">RPM</span>
+            </div>
+
+            <!-- GAUGES & PROGRESS -->
+            <div class="w-full bg-slate-800/80 rounded-full h-2 my-3 overflow-hidden">
+              <div id="rightRpmBar" class="bg-gradient-to-r from-emerald-500 to-teal-400 h-full w-0 transition-all duration-150"></div>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-3 gap-2 pt-2 border-t border-slate-800/80 text-[11px]">
+            <div>
+              <span class="text-slate-400 block">Target:</span>
+              <span id="rightTgtVal" class="mono font-bold text-amber-300">0.0</span>
+            </div>
+            <div>
+              <span class="text-slate-400 block">PWM:</span>
+              <span id="rightPwmVal" class="mono font-bold text-slate-200">0</span>
+            </div>
+            <div>
+              <span class="text-slate-400 block">Xung TIM3:</span>
+              <span id="rightCountVal" class="mono font-bold text-emerald-400">0</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- REAL-TIME RPM CHART -->
+      <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 flex flex-col flex-1 shadow-lg">
+        <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+          <div class="flex items-center gap-2">
+            <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"/></svg>
+            <h2 class="text-sm font-bold text-slate-200">Đồ Thị Tốc Độ & Bám Đích PID (10Hz)</h2>
+          </div>
+          <div class="flex items-center gap-3 text-xs font-semibold flex-wrap">
+            <span class="flex items-center gap-1 text-amber-400"><span class="w-3 h-0.5 bg-amber-400 border-b border-dashed inline-block"></span> Target</span>
+            <span class="flex items-center gap-1 text-cyan-400"><span class="w-3 h-0.5 bg-cyan-400 inline-block"></span> Trái</span>
+            <span class="flex items-center gap-1 text-emerald-400"><span class="w-3 h-0.5 bg-emerald-400 inline-block"></span> Phải</span>
+            <button onclick="resetCounters()" class="text-xs px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition-colors">
+              Reset Xung
+            </button>
+          </div>
+        </div>
+
+        <div class="relative w-full h-52 sm:h-60 bg-slate-950/60 rounded-xl border border-slate-800/60 p-2 overflow-hidden flex items-center justify-center">
+          <canvas id="rpmChart" class="w-full h-full"></canvas>
+        </div>
+      </div>
+
+      <!-- PID TUNER PANEL -->
+      <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-5 shadow-xl">
+        <div class="flex items-center justify-between mb-4">
+          <div class="flex items-center gap-2">
+            <span class="text-amber-400 text-base">⚙️</span>
+            <h3 class="text-sm font-bold text-slate-200 uppercase tracking-wider">Tinh Chỉnh Thông Số PID (On-The-Fly)</h3>
+          </div>
+          <span class="text-[11px] text-slate-400">Không cần nạp lại code</span>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <!-- Kp -->
+          <div class="bg-slate-950/60 p-3 rounded-xl border border-slate-800/80">
+            <div class="flex justify-between text-xs mb-1">
+              <span class="text-slate-400 font-bold">Kp (Tỉ lệ)</span>
+              <span id="kpDisplay" class="mono font-bold text-cyan-400">0.50</span>
+            </div>
+            <input id="kpInput" type="number" step="0.05" min="0" max="5" value="0.50"
+                   onchange="updatePidSliders()"
+                   class="w-full bg-slate-900 border border-slate-700 rounded px-2 py-1 text-xs mono text-slate-100">
+          </div>
+
+          <!-- Ki -->
+          <div class="bg-slate-950/60 p-3 rounded-xl border border-slate-800/80">
+            <div class="flex justify-between text-xs mb-1">
+              <span class="text-slate-400 font-bold">Ki (Tích phân)</span>
+              <span id="kiDisplay" class="mono font-bold text-emerald-400">1.50</span>
+            </div>
+            <input id="kiInput" type="number" step="0.1" min="0" max="10" value="1.50"
+                   onchange="updatePidSliders()"
+                   class="w-full bg-slate-900 border border-slate-700 rounded px-2 py-1 text-xs mono text-slate-100">
+          </div>
+
+          <!-- Kd -->
+          <div class="bg-slate-950/60 p-3 rounded-xl border border-slate-800/80">
+            <div class="flex justify-between text-xs mb-1">
+              <span class="text-slate-400 font-bold">Kd (Vi phân)</span>
+              <span id="kdDisplay" class="mono font-bold text-indigo-400">0.010</span>
+            </div>
+            <input id="kdInput" type="number" step="0.005" min="0" max="1" value="0.010"
+                   onchange="updatePidSliders()"
+                   class="w-full bg-slate-900 border border-slate-700 rounded px-2 py-1 text-xs mono text-slate-100">
+          </div>
+
+          <!-- Kf -->
+          <div class="bg-slate-950/60 p-3 rounded-xl border border-slate-800/80">
+            <div class="flex justify-between text-xs mb-1">
+              <span class="text-slate-400 font-bold">Kf (Feedfwd)</span>
+              <span id="kfDisplay" class="mono font-bold text-amber-400">0.45</span>
+            </div>
+            <input id="kfInput" type="number" step="0.05" min="0" max="2" value="0.45"
+                   onchange="updatePidSliders()"
+                   class="w-full bg-slate-900 border border-slate-700 rounded px-2 py-1 text-xs mono text-slate-100">
+          </div>
+        </div>
+
+        <div class="flex flex-wrap items-center justify-between gap-2 mt-4 pt-3 border-t border-slate-800/60">
+          <div class="flex gap-2">
+            <button onclick="applyPidPreset(0.50, 1.50, 0.010, 0.45)" class="px-2.5 py-1 text-[11px] font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg border border-slate-700 transition-colors">
+              Mặc định GA25
+            </button>
+            <button onclick="applyPidPreset(0.35, 1.00, 0.008, 0.45)" class="px-2.5 py-1 text-[11px] font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg border border-slate-700 transition-colors">
+              Êm ái (Smooth)
+            </button>
+            <button onclick="applyPidPreset(0.70, 2.20, 0.015, 0.50)" class="px-2.5 py-1 text-[11px] font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg border border-slate-700 transition-colors">
+              Nhạy bén (Sport)
+            </button>
+          </div>
+          <button onclick="sendPidTuning()" class="px-4 py-1.5 text-xs font-bold bg-amber-500 hover:bg-amber-400 text-slate-950 rounded-xl shadow-md transition-all active:scale-95 flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+            Áp Dụng Lên STM32
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- RIGHT COLUMN: CONTROL PANEL & TERMINAL (5 COLS) -->
+    <div class="lg:col-span-5 flex flex-col gap-6">
+
+      <!-- ROBOT CONTROL PAD -->
+      <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-5 shadow-xl flex flex-col gap-5">
+        <div class="flex items-center justify-between">
+          <h2 class="text-sm font-bold uppercase tracking-wider text-slate-200 flex items-center gap-2">
+            🎮 Điều Khiển Xe Robot
+          </h2>
+          <!-- MODE SELECTOR -->
+          <div class="flex items-center bg-slate-950 p-1 rounded-xl border border-slate-800 text-xs">
+            <button id="btnModePid" onclick="setMode('PID')" class="px-2.5 py-1 rounded-lg font-bold bg-cyan-500 text-slate-950 transition-all">PID (RPM)</button>
+            <button id="btnModePwm" onclick="setMode('PWM')" class="px-2.5 py-1 rounded-lg font-semibold text-slate-400 hover:text-slate-200 transition-all">PWM Hở</button>
+          </div>
+        </div>
+
+        <!-- SPEED SLIDER -->
+        <div class="bg-slate-950/60 border border-slate-800/80 rounded-xl p-4 flex flex-col gap-3">
+          <div class="flex items-center justify-between text-xs">
+            <span id="speedLabel" class="text-slate-400 font-semibold">Tốc Độ Đặt Mục Tiêu:</span>
+            <div class="flex items-baseline gap-1">
+              <span id="speedDisplay" class="mono font-extrabold text-2xl text-cyan-400">180</span>
+              <span id="speedUnit" class="text-xs text-slate-400 font-bold">RPM</span>
+            </div>
+          </div>
+
+          <input id="speedSlider" type="range" min="30" max="280" value="180" step="5" oninput="onSpeedSliderChange(this.value)"
+                 class="w-full accent-cyan-400 cursor-pointer h-2 bg-slate-800 rounded-lg">
+
+          <!-- QUICK SPEED PRESETS -->
+          <div id="presetsContainer" class="grid grid-cols-4 gap-2 pt-1">
+            <button onclick="setSpeedPreset(80)" class="py-1 rounded-lg text-xs font-bold bg-slate-800 hover:bg-cyan-500/20 hover:text-cyan-300 border border-slate-700 transition-all">80 RPM</button>
+            <button onclick="setSpeedPreset(150)" class="py-1 rounded-lg text-xs font-bold bg-slate-800 hover:bg-cyan-500/20 hover:text-cyan-300 border border-slate-700 transition-all">150 RPM</button>
+            <button onclick="setSpeedPreset(200)" class="py-1 rounded-lg text-xs font-bold bg-slate-800 hover:bg-cyan-500/20 hover:text-cyan-300 border border-slate-700 transition-all">200 RPM</button>
+            <button onclick="setSpeedPreset(260)" class="py-1 rounded-lg text-xs font-bold bg-slate-800 hover:bg-cyan-500/20 hover:text-cyan-300 border border-slate-700 transition-all">MAX (260)</button>
+          </div>
+        </div>
+
+        <!-- DIRECTIONAL D-PAD BUTTONS -->
+        <div class="grid grid-cols-3 gap-2.5 max-w-[280px] mx-auto w-full py-2">
+          <!-- Row 1 -->
+          <button onmousedown="drivePivotLeft()" onmouseup="driveStop()" ontouchstart="drivePivotLeft()" ontouchend="driveStop()" class="p-3.5 rounded-xl bg-slate-800 hover:bg-slate-700 active:bg-cyan-600 border border-slate-700 flex flex-col items-center justify-center transition-all shadow select-none" title="Quay Trái Tại Chỗ (Q)">
+            <span class="text-base">↺</span>
+            <span class="text-[9px] text-slate-400 mt-0.5">Q</span>
+          </button>
+
+          <button onmousedown="driveForward()" onmouseup="driveStop()" ontouchstart="driveForward()" ontouchend="driveStop()" class="p-3.5 rounded-xl bg-cyan-600/30 hover:bg-cyan-600 active:bg-cyan-500 text-cyan-300 active:text-white border border-cyan-500/50 flex flex-col items-center justify-center font-bold transition-all shadow-md active:scale-95 select-none" title="Tiến Thẳng (W)">
+            <span class="text-xl leading-none">▲</span>
+            <span class="text-[10px] mt-1 font-bold">TIẾN [W]</span>
+          </button>
+
+          <button onmousedown="drivePivotRight()" onmouseup="driveStop()" ontouchstart="drivePivotRight()" ontouchend="driveStop()" class="p-3.5 rounded-xl bg-slate-800 hover:bg-slate-700 active:bg-cyan-600 border border-slate-700 flex flex-col items-center justify-center transition-all shadow select-none" title="Quay Phải Tại Chỗ (E)">
+            <span class="text-base">↻</span>
+            <span class="text-[9px] text-slate-400 mt-0.5">E</span>
+          </button>
+
+          <!-- Row 2 -->
+          <button onmousedown="driveTurnLeft()" onmouseup="driveStop()" ontouchstart="driveTurnLeft()" ontouchend="driveStop()" class="p-3.5 rounded-xl bg-slate-800 hover:bg-slate-700 active:bg-cyan-600 text-slate-200 border border-slate-700 flex flex-col items-center justify-center font-bold transition-all active:scale-95 select-none" title="Rẽ Trái (A)">
+            <span class="text-lg leading-none">◀</span>
+            <span class="text-[10px] mt-1">TRÁI [A]</span>
+          </button>
+
+          <button onclick="driveStop()" class="p-3.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-extrabold border border-rose-400 flex flex-col items-center justify-center transition-all shadow-lg glow-rose active:scale-95 select-none" title="Dừng Ngay [Space]">
+            <span class="text-base leading-none">🛑</span>
+            <span class="text-[11px] mt-1">DỪNG</span>
+          </button>
+
+          <button onmousedown="driveTurnRight()" onmouseup="driveStop()" ontouchstart="driveTurnRight()" ontouchend="driveStop()" class="p-3.5 rounded-xl bg-slate-800 hover:bg-slate-700 active:bg-cyan-600 text-slate-200 border border-slate-700 flex flex-col items-center justify-center font-bold transition-all active:scale-95 select-none" title="Rẽ Phải (D)">
+            <span class="text-lg leading-none">▶</span>
+            <span class="text-[10px] mt-1">PHẢI [D]</span>
+          </button>
+
+          <!-- Row 3 -->
+          <div></div>
+          <button onmousedown="driveBackward()" onmouseup="driveStop()" ontouchstart="driveBackward()" ontouchend="driveStop()" class="p-3.5 rounded-xl bg-slate-800 hover:bg-slate-700 active:bg-cyan-600 text-slate-200 border border-slate-700 flex flex-col items-center justify-center font-bold transition-all active:scale-95 select-none" title="Lùi (S)">
+            <span class="text-xl leading-none">▼</span>
+            <span class="text-[10px] mt-1 font-bold">LÙI [S]</span>
+          </button>
+          <div></div>
+        </div>
+
+        <div class="text-[11px] text-center text-slate-500">
+          Giữ phím <kbd class="px-1.5 py-0.5 rounded bg-slate-800 border border-slate-700 text-slate-300">W</kbd> <kbd class="px-1.5 py-0.5 rounded bg-slate-800 border border-slate-700 text-slate-300">A</kbd> <kbd class="px-1.5 py-0.5 rounded bg-slate-800 border border-slate-700 text-slate-300">S</kbd> <kbd class="px-1.5 py-0.5 rounded bg-slate-800 border border-slate-700 text-slate-300">D</kbd> để chạy, nhả phím để dừng.
+        </div>
+
+      </div>
+
+      <!-- LIVE TERMINAL & LOG -->
+      <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 flex flex-col flex-1 shadow-lg">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-xs font-bold text-slate-300 flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-emerald-400"></span> USB CDC Terminal Console
+          </span>
+          <div class="flex items-center gap-2">
+            <button onclick="sendCommand('SCAN\n')" class="text-[10px] text-cyan-400 hover:underline">Scan I2C</button>
+            <span class="text-slate-600">•</span>
+            <button onclick="clearConsole()" class="text-[10px] text-slate-400 hover:text-slate-200">Xóa log</button>
+          </div>
+        </div>
+
+        <div id="consoleLog" class="h-32 bg-slate-950/80 rounded-xl p-3 border border-slate-800/80 mono text-[11px] text-slate-300 overflow-y-auto flex flex-col gap-1 leading-relaxed">
+          <div class="text-slate-500">> Sẵn sàng. Nhấn "Kết nối STM32" để bắt đầu...</div>
+        </div>
+
+        <!-- MANUAL COMMAND INPUT -->
+        <form onsubmit="sendManualCommand(event)" class="flex gap-2 mt-3">
+          <input id="cmdInput" type="text" placeholder="Lệnh: S 180 180, TUNING 0.65 1.8 0.015 0.75, STOP..."
+                 class="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-3 py-1.5 text-xs text-slate-200 mono focus:outline-none focus:border-cyan-500">
+          <button type="submit" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs rounded-xl border border-slate-700">Gửi</button>
+        </form>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- JAVASCRIPT LOGIC (WEB SERIAL API & PID CONTROLS) -->
+  <script>
+    let port = null;
+    let reader = null;
+    let writer = null;
+    let keepReading = false;
+
+    let controlMode = 'PID'; // 'PID' hoặc 'PWM'
+    let currentSpeed = 180;  // 180 RPM khi ở chế độ PID, hoặc 180 PWM khi ở chế độ PWM
+    let lastTargetRpm = 0;
+
+    // Data for Chart (50 points = 5 seconds at 10Hz)
+    const MAX_CHART_POINTS = 50;
+    const chartLeftData = new Array(MAX_CHART_POINTS).fill(0);
+    const chartRightData = new Array(MAX_CHART_POINTS).fill(0);
+    const chartTargetData = new Array(MAX_CHART_POINTS).fill(0);
+
+    const canvas = document.getElementById('rpmChart');
+    const ctx = canvas.getContext('2d');
+
+    function resizeCanvas() {
+      canvas.width = canvas.parentElement.clientWidth;
+      canvas.height = canvas.parentElement.clientHeight;
+      drawChart();
+    }
+    window.addEventListener('resize', resizeCanvas);
+    setTimeout(resizeCanvas, 100);
+
+    // =========================================================================
+    // MODE SWITCHING (PID vs PWM)
+    // =========================================================================
+    function setMode(mode) {
+      controlMode = mode;
+      const btnPid = document.getElementById('btnModePid');
+      const btnPwm = document.getElementById('btnModePwm');
+      const badge = document.getElementById('activeModeBadge');
+      const label = document.getElementById('speedLabel');
+      const unit = document.getElementById('speedUnit');
+      const slider = document.getElementById('speedSlider');
+
+      if (mode === 'PID') {
+        btnPid.className = "px-2.5 py-1 rounded-lg font-bold bg-cyan-500 text-slate-950 transition-all";
+        btnPwm.className = "px-2.5 py-1 rounded-lg font-semibold text-slate-400 hover:text-slate-200 transition-all";
+        badge.innerText = "CLOSED-LOOP PID";
+        badge.className = "text-[10px] uppercase tracking-wider font-extrabold px-2 py-0.5 rounded-full bg-cyan-950 border border-cyan-500/40 text-cyan-300";
+        label.innerText = "Tốc Độ Đặt Mục Tiêu:";
+        unit.innerText = "RPM";
+        slider.min = "30";
+        slider.max = "280";
+        if (currentSpeed > 280) currentSpeed = 200;
+        slider.value = currentSpeed;
+        document.getElementById('speedDisplay').innerText = currentSpeed;
+      } else {
+        btnPwm.className = "px-2.5 py-1 rounded-lg font-bold bg-indigo-500 text-slate-950 transition-all";
+        btnPid.className = "px-2.5 py-1 rounded-lg font-semibold text-slate-400 hover:text-slate-200 transition-all";
+        badge.innerText = "OPEN-LOOP PWM";
+        badge.className = "text-[10px] uppercase tracking-wider font-extrabold px-2 py-0.5 rounded-full bg-indigo-950 border border-indigo-500/40 text-indigo-300";
+        label.innerText = "Mức Công Suất PWM:";
+        unit.innerText = "PWM";
+        slider.min = "30";
+        slider.max = "255";
+        if (currentSpeed > 255) currentSpeed = 200;
+        slider.value = currentSpeed;
+        document.getElementById('speedDisplay').innerText = currentSpeed;
+      }
+    }
+
+    // =========================================================================
+    // WEB SERIAL API CONNECTION
+    // =========================================================================
+    async function toggleSerialConnection() {
+      if (port) {
+        await disconnectSerial();
+      } else {
+        await connectSerial();
+      }
+    }
+
+    async function connectSerial() {
+      if (!("serial" in navigator)) {
+        alert("Trình duyệt không hỗ trợ Web Serial API!\nVui lòng sử dụng Google Chrome hoặc Microsoft Edge.");
+        return;
+      }
+
+      try {
+        logConsole("Đang yêu cầu chọn cổng COM (STM32 Virtual COM Port)...");
+        port = await navigator.serial.requestPort();
+        await port.open({ baudRate: 115200 });
+
+        updateConnectionUI(true);
+        logConsole("Đã kết nối thành công với STM32 (Baudrate: 115200)!");
+
+        const textEncoder = new TextEncoderStream();
+        const writableStreamClosed = textEncoder.readable.pipeTo(port.writable);
+        writer = textEncoder.writable.getWriter();
+
+        keepReading = true;
+        readSerialLoop();
+
+        // Gửi lệnh PING
+        await sendCommand("PING\n");
+
+      } catch (err) {
+        logConsole("Lỗi kết nối: " + err.message);
+        updateConnectionUI(false);
+        port = null;
+      }
+    }
+
+    async function disconnectSerial() {
+      keepReading = false;
+      if (reader) await reader.cancel();
+      if (writer) await writer.close();
+      if (port) await port.close();
+      port = null;
+      reader = null;
+      writer = null;
+      updateConnectionUI(false);
+      logConsole("Đã ngắt kết nối với STM32.");
+    }
+
+    function updateConnectionUI(connected) {
+      const btn = document.getElementById('btnConnect');
+      const dot = document.getElementById('statusDot');
+      const text = document.getElementById('statusText');
+      const badge = document.getElementById('statusBadge');
+
+      if (connected) {
+        btn.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg> Ngắt kết nối`;
+        btn.className = "px-5 py-2 rounded-xl text-sm font-bold bg-rose-600 hover:bg-rose-500 text-white shadow-lg shadow-rose-600/20 transition-all active:scale-95 flex items-center gap-2";
+        dot.className = "w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse";
+        text.innerText = "Đã kết nối (COM Port)";
+        badge.className = "flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold bg-emerald-950/60 border border-emerald-500/40 text-emerald-300";
+      } else {
+        btn.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg> Kết nối STM32`;
+        btn.className = "px-5 py-2 rounded-xl text-sm font-bold bg-cyan-500 hover:bg-cyan-400 text-slate-950 shadow-lg shadow-cyan-500/20 transition-all active:scale-95 flex items-center gap-2";
+        dot.className = "w-2.5 h-2.5 rounded-full bg-slate-600";
+        text.innerText = "Chưa kết nối";
+        badge.className = "flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold bg-slate-900 border border-slate-800 text-slate-400";
+      }
+    }
+
+    // =========================================================================
+    // SERIAL READ LOOP & TELEMETRY PARSING
+    // =========================================================================
+    async function readSerialLoop() {
+      const textDecoder = new TextDecoderStream();
+      const readableStreamClosed = port.readable.pipeTo(textDecoder.writable);
+      reader = textDecoder.readable.getReader();
+
+      let lineBuffer = "";
+
+      try {
+        while (keepReading) {
+          const { value, done } = await reader.read();
+          if (done) break;
+          if (value) {
+            lineBuffer += value;
+            const lines = lineBuffer.split("\n");
+            lineBuffer = lines.pop();
+
+            for (const line of lines) {
+              const cleanLine = line.trim();
+              if (cleanLine.length > 0) {
+                handleReceivedLine(cleanLine);
+              }
+            }
+          }
+        }
+      } catch (err) {
+        logConsole("Lỗi luồng đọc: " + err.message);
+      } finally {
+        reader.releaseLock();
+      }
+    }
+
+    function handleReceivedLine(line) {
+      if (line.startsWith("{") && line.endsWith("}")) {
+        try {
+          const data = JSON.parse(line);
+
+          // Telemetry JSON
+          if (data.l_rpm !== undefined && data.r_rpm !== undefined) {
+            updateTelemetry(data);
+            return;
+          }
+
+          if (data.ack) {
+            logConsole(`<span class="text-cyan-400 font-bold">[ACK]</span> ${data.ack}`);
+            return;
+          }
+
+          if (data.vin_mv) {
+            logConsole(`<span class="text-emerald-400 font-bold">[VIN]</span> Điện áp Motor: ${(data.vin_mv / 1000).toFixed(2)} V`);
+            return;
+          }
+
+          if (data.i2c_found) {
+            logConsole(`<span class="text-indigo-400 font-bold">[I2C]</span> Phát hiện MKE-M18 tại địa chỉ ${data.i2c_found}`);
+            return;
+          }
+        } catch (e) {}
+      }
+
+      logConsole(line);
+    }
+
+    function updateTelemetry(data) {
+      const l_rpm = Math.abs(data.l_rpm || 0);
+      const r_rpm = Math.abs(data.r_rpm || 0);
+      const l_tgt = Math.abs(data.l_tgt !== undefined ? data.l_tgt : 0);
+      const r_tgt = Math.abs(data.r_tgt !== undefined ? data.r_tgt : 0);
+      const max_tgt = Math.max(l_tgt, r_tgt);
+      lastTargetRpm = max_tgt;
+
+      document.getElementById('leftRpm').innerText = l_rpm.toFixed(2);
+      document.getElementById('rightRpm').innerText = r_rpm.toFixed(2);
+
+      document.getElementById('leftTgtVal').innerText = l_tgt.toFixed(1);
+      document.getElementById('rightTgtVal').innerText = r_tgt.toFixed(1);
+
+      document.getElementById('leftPwmVal').innerText = data.l_pwm || 0;
+      document.getElementById('rightPwmVal').innerText = data.r_pwm || 0;
+
+      document.getElementById('leftCountVal').innerText = data.l_cnt || 0;
+      document.getElementById('rightCountVal').innerText = data.r_cnt || 0;
+
+      // Progress bars (0 - 300 RPM)
+      document.getElementById('leftRpmBar').style.width = Math.min(100, (l_rpm / 300) * 100) + "%";
+      document.getElementById('rightRpmBar').style.width = Math.min(100, (r_rpm / 300) * 100) + "%";
+
+      updateDirBadge('leftDirBadge', data.l_rpm);
+      updateDirBadge('rightDirBadge', data.r_rpm);
+
+      // Add to chart
+      chartLeftData.push(l_rpm);
+      chartLeftData.shift();
+      chartRightData.push(r_rpm);
+      chartRightData.shift();
+      chartTargetData.push(max_tgt);
+      chartTargetData.shift();
+
+      drawChart();
+    }
+
+    function updateDirBadge(elemId, rpm) {
+      const badge = document.getElementById(elemId);
+      if (rpm > 1.0) {
+        badge.innerText = "TIẾN";
+        badge.className = "text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30";
+      } else if (rpm < -1.0) {
+        badge.innerText = "LÙI";
+        badge.className = "text-[10px] font-bold px-2 py-0.5 rounded bg-sky-500/20 text-sky-300 border border-sky-500/30";
+      } else {
+        badge.innerText = "STOP";
+        badge.className = "text-[10px] font-bold px-2 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700";
+      }
+    }
+
+    // =========================================================================
+    // CHART RENDERING (CANVAS)
+    // =========================================================================
+    function drawChart() {
+      const w = canvas.width;
+      const h = canvas.height;
+      ctx.clearRect(0, 0, w, h);
+
+      const maxRpm = 300;
+
+      // Horizontal grid lines
+      ctx.strokeStyle = "rgba(51, 65, 85, 0.4)";
+      ctx.lineWidth = 1;
+      ctx.setLineDash([]);
+      for (let i = 0; i <= 3; i++) {
+        const y = (h / 3) * i;
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(w, y);
+        ctx.stroke();
+      }
+
+      // Draw Target RPM (Dashed Amber)
+      drawDashedLine(chartTargetData, "#f59e0b", maxRpm);
+
+      // Draw Left Wheel (Cyan)
+      drawLine(chartLeftData, "#06b6d4", maxRpm);
+
+      // Draw Right Wheel (Emerald)
+      drawLine(chartRightData, "#10b981", maxRpm);
+    }
+
+    function drawLine(data, color, maxVal) {
+      const w = canvas.width;
+      const h = canvas.height;
+      const step = w / (data.length - 1);
+
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 2.5;
+      ctx.setLineDash([]);
+      ctx.beginPath();
+
+      data.forEach((val, i) => {
+        const x = i * step;
+        const y = h - (val / maxVal) * (h - 10) - 5;
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      });
+
+      ctx.stroke();
+    }
+
+    function drawDashedLine(data, color, maxVal) {
+      const w = canvas.width;
+      const h = canvas.height;
+      const step = w / (data.length - 1);
+
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 2;
+      ctx.setLineDash([4, 4]);
+      ctx.beginPath();
+
+      data.forEach((val, i) => {
+        const x = i * step;
+        const y = h - (val / maxVal) * (h - 10) - 5;
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      });
+
+      ctx.stroke();
+    }
+
+    // =========================================================================
+    // ROBOT DRIVE DISPATCHER
+    // =========================================================================
+    async function sendCommand(cmd) {
+      if (!writer) return;
+      try {
+        const fullCmd = cmd.endsWith("\n") ? cmd : cmd + "\n";
+        await writer.write(fullCmd);
+      } catch (e) {
+        logConsole("Lỗi gửi lệnh: " + e.message);
+      }
+    }
+
+    function onSpeedSliderChange(val) {
+      currentSpeed = parseInt(val);
+      document.getElementById('speedDisplay').innerText = currentSpeed;
+    }
+
+    function setSpeedPreset(val) {
+      document.getElementById('speedSlider').value = val;
+      onSpeedSliderChange(val);
+    }
+
+    function driveForward() {
+      if (controlMode === 'PID') {
+        sendCommand(`S ${currentSpeed} ${currentSpeed}`);
+      } else {
+        sendCommand(`M ${currentSpeed} ${currentSpeed}`);
+      }
+    }
+
+    function driveBackward() {
+      if (controlMode === 'PID') {
+        sendCommand(`S -${currentSpeed} -${currentSpeed}`);
+      } else {
+        sendCommand(`M -${currentSpeed} -${currentSpeed}`);
+      }
+    }
+
+    function driveTurnLeft() {
+      if (controlMode === 'PID') {
+        sendCommand(`S 0 ${currentSpeed}`);
+      } else {
+        sendCommand(`M 0 ${currentSpeed}`);
+      }
+    }
+
+    function driveTurnRight() {
+      if (controlMode === 'PID') {
+        sendCommand(`S ${currentSpeed} 0`);
+      } else {
+        sendCommand(`M ${currentSpeed} 0`);
+      }
+    }
+
+    function drivePivotLeft() {
+      if (controlMode === 'PID') {
+        sendCommand(`S -${currentSpeed} ${currentSpeed}`);
+      } else {
+        sendCommand(`M -${currentSpeed} ${currentSpeed}`);
+      }
+    }
+
+    function drivePivotRight() {
+      if (controlMode === 'PID') {
+        sendCommand(`S ${currentSpeed} -${currentSpeed}`);
+      } else {
+        sendCommand(`M ${currentSpeed} -${currentSpeed}`);
+      }
+    }
+
+    function driveStop() {
+      sendCommand("STOP");
+    }
+
+    function resetCounters() {
+      sendCommand("RESET");
+    }
+
+    // =========================================================================
+    // PID TUNING FUNCTIONS
+    // =========================================================================
+    function updatePidSliders() {
+      document.getElementById('kpDisplay').innerText = parseFloat(document.getElementById('kpInput').value).toFixed(2);
+      document.getElementById('kiDisplay').innerText = parseFloat(document.getElementById('kiInput').value).toFixed(2);
+      document.getElementById('kdDisplay').innerText = parseFloat(document.getElementById('kdInput').value).toFixed(3);
+      document.getElementById('kfDisplay').innerText = parseFloat(document.getElementById('kfInput').value).toFixed(2);
+    }
+
+    function applyPidPreset(kp, ki, kd, kf) {
+      document.getElementById('kpInput').value = kp;
+      document.getElementById('kiInput').value = ki;
+      document.getElementById('kdInput').value = kd;
+      document.getElementById('kfInput').value = kf;
+      updatePidSliders();
+      sendPidTuning();
+    }
+
+    function sendPidTuning() {
+      const kp = parseFloat(document.getElementById('kpInput').value);
+      const ki = parseFloat(document.getElementById('kiInput').value);
+      const kd = parseFloat(document.getElementById('kdInput').value);
+      const kf = parseFloat(document.getElementById('kfInput').value);
+      sendCommand(`TUNING ${kp} ${ki} ${kd} ${kf}`);
+    }
+
+    // =========================================================================
+    // TERMINAL & KEYBOARD SHORTCUTS
+    // =========================================================================
+    function sendManualCommand(e) {
+      e.preventDefault();
+      const input = document.getElementById('cmdInput');
+      const val = input.value.trim();
+      if (val) {
+        sendCommand(val);
+        input.value = "";
+      }
+    }
+
+    function logConsole(msg) {
+      const box = document.getElementById('consoleLog');
+      const time = new Date().toLocaleTimeString();
+      const line = document.createElement('div');
+      line.innerHTML = `<span class="text-slate-500">[${time}]</span> ${msg}`;
+      box.appendChild(line);
+      box.scrollTop = box.scrollHeight;
+    }
+
+    function clearConsole() {
+      document.getElementById('consoleLog').innerHTML = "";
+    }
+
+    const activeKeys = {};
+
+    window.addEventListener('keydown', (e) => {
+      if (["INPUT", "TEXTAREA"].includes(document.activeElement.tagName)) return;
+
+      const key = e.key.toUpperCase();
+      if (activeKeys[key]) return;
+      activeKeys[key] = true;
+
+      if (key === 'W' || key === 'ARROWUP') driveForward();
+      else if (key === 'S' || key === 'ARROWDOWN') driveBackward();
+      else if (key === 'A' || key === 'ARROWLEFT') driveTurnLeft();
+      else if (key === 'D' || key === 'ARROWRIGHT') driveTurnRight();
+      else if (key === 'Q') drivePivotLeft();
+      else if (key === 'E') drivePivotRight();
+      else if (key === ' ') { e.preventDefault(); driveStop(); }
+    });
+
+    window.addEventListener('keyup', (e) => {
+      if (["INPUT", "TEXTAREA"].includes(document.activeElement.tagName)) return;
+
+      const key = e.key.toUpperCase();
+      delete activeKeys[key];
+
+      if (['W', 'S', 'A', 'D', 'Q', 'E', 'ARROWUP', 'ARROWDOWN', 'ARROWLEFT', 'ARROWRIGHT'].includes(key)) {
+        driveStop();
+      }
+    });
+
+  </script>
+</body>
+</html>

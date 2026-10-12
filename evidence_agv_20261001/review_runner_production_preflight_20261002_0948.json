@@ -1,0 +1,129 @@
+{
+  "scope": "OFFLINE ONLY production unscaled 10s/80 path; physical OPEN/lock replaced with fake, ownership not tested; caller-silent component separate",
+  "before": "071408c7039529c2b03c209a40ed4f45ac25b7eacad7dc5d458654aad75b6d81",
+  "after": "071408c7039529c2b03c209a40ed4f45ac25b7eacad7dc5d458654aad75b6d81",
+  "stable": true,
+  "cases": [
+    {
+      "case": "unsafe_then_clean",
+      "exit": 1,
+      "elapsed": 10.625,
+      "report": {
+        "preflight_status": "PREFLIGHT_STABLE_VERIFIED",
+        "preflight_samples": 126,
+        "preflight_span_s": 10.062999999965541,
+        "evidence_file": "C:\\Users\\Khang\\AppData\\Local\\Temp\\agv_OFFLINE_production_0948_tbhd61jt\\motion_evidence_1790909231282_27660.json",
+        "status": "FAIL_MOTION_SAFETY_TRIPPED_BUT_STOPPED"
+      },
+      "arm_count": 1,
+      "first_arm_elapsed": 10.15700000000652,
+      "max_preflight_gap": 0.0940000000409782,
+      "unsafe_seen": true,
+      "unknown_seen": false,
+      "closed": true,
+      "gate_stop_confirmed": true,
+      "runner_stop_confirmed": true,
+      "evidence_status": null,
+      "tx_records": 7,
+      "writes": [
+        {
+          "t": 351172.453,
+          "bytes": "ARM\n"
+        },
+        {
+          "t": 351172.562,
+          "bytes": "V 0.007 0.000\n"
+        },
+        {
+          "t": 351172.609,
+          "bytes": "V 0.015 0.000\n"
+        },
+        {
+          "t": 351172.656,
+          "bytes": "V 0.022 0.000\n"
+        },
+        {
+          "t": 351172.718,
+          "bytes": "V 0.031 0.000\n"
+        },
+        {
+          "t": 351172.765,
+          "bytes": "STOP\n"
+        },
+        {
+          "t": 351172.828,
+          "bytes": "STOP\n"
+        }
+      ]
+    },
+    {
+      "case": "gap_and_unknown",
+      "exit": 1,
+      "elapsed": 10.579000000027008,
+      "report": {
+        "preflight_status": "PREFLIGHT_STABLE_VERIFIED",
+        "preflight_samples": 113,
+        "preflight_span_s": 10.01600000000326,
+        "evidence_file": "C:\\Users\\Khang\\AppData\\Local\\Temp\\agv_OFFLINE_production_0948_2e9g_mlj\\motion_evidence_1790909231231_27660.json",
+        "status": "FAIL_MOTION_SAFETY_TRIPPED_BUT_STOPPED"
+      },
+      "arm_count": 1,
+      "first_arm_elapsed": 10.110000000044238,
+      "max_preflight_gap": 1.0,
+      "unsafe_seen": false,
+      "unknown_seen": true,
+      "closed": true,
+      "gate_stop_confirmed": true,
+      "runner_stop_confirmed": true,
+      "evidence_status": null,
+      "tx_records": 7,
+      "writes": [
+        {
+          "t": 351172.406,
+          "bytes": "ARM\n"
+        },
+        {
+          "t": 351172.515,
+          "bytes": "V 0.007 0.000\n"
+        },
+        {
+          "t": 351172.562,
+          "bytes": "V 0.015 0.000\n"
+        },
+        {
+          "t": 351172.609,
+          "bytes": "V 0.022 0.000\n"
+        },
+        {
+          "t": 351172.656,
+          "bytes": "V 0.029 0.000\n"
+        },
+        {
+          "t": 351172.718,
+          "bytes": "STOP\n"
+        },
+        {
+          "t": 351172.765,
+          "bytes": "STOP\n"
+        }
+      ]
+    },
+    {
+      "case": "caller_silent_after_start_no_update_calls",
+      "tx": [
+        {
+          "t": 351173.015,
+          "bytes": "ARM\n"
+        },
+        {
+          "t": 351173.265,
+          "bytes": "STOP\n"
+        }
+      ],
+      "gate_stop_confirmed": true,
+      "runner_stop_confirmed": false,
+      "fault_reason": "WATCHDOG_HARD_TIME_CAP",
+      "elapsed_since_stop": 0.34399999998277053
+    }
+  ]
+}

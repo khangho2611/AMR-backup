@@ -1,0 +1,68 @@
+--- before/agv_navigation.py
++++ after/agv_navigation.py
+@@ -12,6 +12,28 @@
+ 
+ def finite(value):
+     return type(value) in (int, float) and math.isfinite(value)
++
++
++def twist_centres(v, w, horizon=.5, spatial_step=.005):
++    """Sample the centre's constant-twist path in the current base frame.
++
++    Half the distance between samples is added to the enclosing footprint by
++    callers, so an obstacle between samples cannot be skipped. This is a local
++    command horizon, not a measured physical braking-distance guarantee.
++    """
++    if (not all(finite(x) for x in (v,w,horizon,spatial_step)) or
++            abs(v) > .08 or abs(w) > .35 or not 0 < horizon <= .5 or spatial_step <= 0):
++        return None
++    steps=max(1,math.ceil(abs(v)*horizon/spatial_step))
++    if steps > 1000:return None
++    centres=[]
++    for k in range(steps+1):
++        t=horizon*k/steps
++        if abs(w) < 1e-9:
++            centres.append((v*t,0.))
++        else:
++            centres.append((v/w*math.sin(w*t),v/w*(1-math.cos(w*t))))
++    return centres,abs(v)*horizon/(2*steps)
+ 
+ 
+ def slam_censored_ranges(ranges, range_min, range_max, threshold=12.):
+@@ -109,6 +131,36 @@
+     def traversable(self, cell):
+         return (cell is not None and 0 <= cell[0] < self.w and
+                 0 <= cell[1] < self.h and bool(self.safe[cell[1]*self.w+cell[0]]))
++
++    def swept_clear(self, pose, v, w):
++        """Check the whole moving disk against exact blocked-cell rectangles.
++
++        Evaluate the actual subcell pose, rather than snapping it to a safe cell
++        centre. Occupied, unknown and map edges all retain the configured margin.
++        """
++        if len(pose) != 3 or not all(finite(x) for x in pose):return False
++        samples=twist_centres(v,w,spatial_step=self.res/4)
++        if samples is None:return False
++        centres,padding=samples
++        r=self.radius+padding
++        ox,oy,yaw=self.origin
++        c,s=math.cos(yaw),math.sin(yaw)
++        pc,ps=math.cos(pose[2]),math.sin(pose[2])
++        deadline=time.monotonic()+min(self.budget_s,.025)
++        for bx,by in centres:
++            wx,wy=pose[0]+pc*bx-ps*by,pose[1]+ps*bx+pc*by
++            px,py=c*(wx-ox)+s*(wy-oy),-s*(wx-ox)+c*(wy-oy)
++            if min(px,py,self.w*self.res-px,self.h*self.res-py) <= r:return False
++            left,right=math.floor((px-r)/self.res),math.floor((px+r)/self.res)
++            low,high=math.floor((py-r)/self.res),math.floor((py+r)/self.res)
++            for y in range(low,high+1):
++                if time.monotonic()>deadline:return False
++                for x in range(left,right+1):
++                    if self.data[y*self.w+x] == 0:continue
++                    dx=max(x*self.res-px,0.,px-(x+1)*self.res)
++                    dy=max(y*self.res-py,0.,py-(y+1)*self.res)
++                    if math.hypot(dx,dy) <= r:return False
++        return True
+ 
+     def neighbours(self, cell):
+         x, y = cell

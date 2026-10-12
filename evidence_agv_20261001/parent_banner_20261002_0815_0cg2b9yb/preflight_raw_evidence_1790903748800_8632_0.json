@@ -1,0 +1,39 @@
+{
+  "metadata": {
+    "timestamp_epoch": 1790903748.8005896,
+    "port": "/dev/ttyUSB0",
+    "baudrate": 115200,
+    "mock": true,
+    "wall_timeout_s": 15.0,
+    "min_observation_s": 10.0,
+    "status": "FAIL_TELEMETRY_INVARIANT_VIOLATION",
+    "rejection_reason": "MIXED_SCHEMA_FORBIDDEN_KEY_ERROR",
+    "valid_samples_count": 0,
+    "corrupt_lines_count": 0
+  },
+  "records": [
+    {
+      "line_idx": 1,
+      "rx_mono": 100.1,
+      "raw_bytes_len": 183,
+      "raw_hex": "7b22736166657479223a202244495341524d4544222c20226c5f746774223a20302c2022725f746774223a20302c20226c5f70776d223a20302c2022725f70776d223a20302c20226c5f72706d223a20302c2022725f72706d223a20302c202276223a20302c202277223a20302c202278223a20302c202279223a20302c20227468223a20302c20226572726f72223a20224d4b455f4d31385f494e49545f4641494c4544222c20226661756c74223a20747275657d0a",
+      "payload": {
+        "safety": "DISARMED",
+        "l_tgt": 0,
+        "r_tgt": 0,
+        "l_pwm": 0,
+        "r_pwm": 0,
+        "l_rpm": 0,
+        "r_rpm": 0,
+        "v": 0,
+        "w": 0,
+        "x": 0,
+        "y": 0,
+        "th": 0,
+        "error": "MKE_M18_INIT_FAILED",
+        "fault": true
+      },
+      "error": "MIXED_SCHEMA_FORBIDDEN_KEY_ERROR"
+    }
+  ]
+}

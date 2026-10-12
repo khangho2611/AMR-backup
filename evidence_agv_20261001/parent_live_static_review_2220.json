@@ -1,0 +1,136 @@
+{
+  "local_raw_sha": "ce1d34456acf6fb7d3bec81b660122383082295f4dbe2801b2be6ca2fcc5bd57",
+  "metadata": {
+    "timestamp_epoch": 1790868029.770704,
+    "port": "/dev/ttyUSB0",
+    "baudrate": 115200,
+    "mock": false,
+    "wall_timeout_s": 15.0,
+    "min_observation_s": 10.0,
+    "status": "FAIL_TELEMETRY_INVARIANT_VIOLATION",
+    "rejection_reason": "MISSING_KEY_safety",
+    "valid_samples_count": 0,
+    "corrupt_lines_count": 10
+  },
+  "decoded_records": [
+    {
+      "idx": 1,
+      "rx": 8620.64597898,
+      "text": "ets Jul 29 2019 12:21:46",
+      "error": "SETTLING_CORRUPT"
+    },
+    {
+      "idx": 2,
+      "rx": 8620.646162997,
+      "text": "",
+      "error": "SETTLING_CORRUPT"
+    },
+    {
+      "idx": 3,
+      "rx": 8620.652073987,
+      "text": "rst:0x1 (POWERON_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)",
+      "error": "SETTLING_CORRUPT"
+    },
+    {
+      "idx": 4,
+      "rx": 8620.654380913,
+      "text": "configsip: 0, SPIWP:0xee",
+      "error": "SETTLING_CORRUPT"
+    },
+    {
+      "idx": 5,
+      "rx": 8620.659794258,
+      "text": "clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00",
+      "error": "SETTLING_CORRUPT"
+    },
+    {
+      "idx": 6,
+      "rx": 8620.66219485,
+      "text": "mode:DIO, clock div:2",
+      "error": "SETTLING_CORRUPT"
+    },
+    {
+      "idx": 7,
+      "rx": 8620.664701034,
+      "text": "load:0x3fff0030,len:1184",
+      "error": "SETTLING_CORRUPT"
+    },
+    {
+      "idx": 8,
+      "rx": 8620.667268162,
+      "text": "load:0x40078000,len:13232",
+      "error": "SETTLING_CORRUPT"
+    },
+    {
+      "idx": 9,
+      "rx": 8620.668443486,
+      "text": "load:0x40080400,len:3028",
+      "error": "SETTLING_CORRUPT"
+    },
+    {
+      "idx": 10,
+      "rx": 8620.67121126,
+      "text": "entry 0x400805e4",
+      "error": "SETTLING_CORRUPT"
+    },
+    {
+      "idx": 11,
+      "rx": 8621.122835238,
+      "text": "{\"info\":\"ESP32 Robot Ready - BENCH SERIAL ONLY (WiFi DISABLED)\"}",
+      "error": "MISSING_KEY_safety"
+    }
+  ],
+  "readonly_postproof": {
+    "args": [
+      "ssh",
+      "-o",
+      "BatchMode=yes",
+      "-o",
+      "ConnectTimeout=5",
+      "-o",
+      "ServerAliveInterval=2",
+      "-o",
+      "ServerAliveCountMax=2",
+      "khangho@100.90.252.15",
+      "sha256sum /tmp/agv_preflight_static_collector.py /home/khangho/evidence_preflight_live/preflight_raw_evidence_1790868029770_2625_0.json; fuser /dev/ttyUSB0; echo FUSER_EXIT:$?; ps -p 2625 -o pid=,ppid=,stat=,args=; echo PS_EXIT:$?"
+    ],
+    "exit": 0,
+    "stdout": "b548d38bb02ffe067d78e768d927d18d1be068b73557cd1c6231cf278db2a078  /tmp/agv_preflight_static_collector.py\nce1d34456acf6fb7d3bec81b660122383082295f4dbe2801b2be6ca2fcc5bd57  /home/khangho/evidence_preflight_live/preflight_raw_evidence_1790868029770_2625_0.json\nFUSER_EXIT:1\nPS_EXIT:1\n",
+    "stderr": ""
+  },
+  "conclusion": "STATIC_FAIL_NO_VALID_D0; boot/info classification rejected; reset observed does not prove port-open caused reset; no retry or motion approved",
+  "broker_tool_logs": [
+    {
+      "id": 8616,
+      "content": "{\"output\": \"b548d38bb02ffe067d78e768d927d18d1be068b73557cd1c6231cf278db2a078  /tmp/agv_preflight_static_collector.py\\n53d35d7e-4b97-4c23-9461-17ecda8d408e\\nPython 3.12.3\", \"exit_code\": 0, \"error\": null}"
+    },
+    {
+      "id": 8618,
+      "content": "{\"output\": \"EXIT_CODE:1\", \"exit_code\": 0, \"error\": null}"
+    },
+    {
+      "id": 8620,
+      "content": "{\"output\": \"{\\n  \\\"status\\\": \\\"FAIL_TELEMETRY_INVARIANT_VIOLATION\\\",\\n  \\\"valid_samples_count\\\": 0,\\n  \\\"corrupt_lines_count\\\": 10,\\n  \\\"elapsed_time_s\\\": 0.499,\\n  \\\"observation_time_s\\\": 0.0,\\n  \\\"rejection_reason\\\": \\\"MISSING_KEY_safety\\\",\\n  \\\"evidence_file\\\": \\\"/home/khangho/evidence_preflight_live/preflight_raw_evidence_1790868029770_2625_0.json\\\",\\n  \\\"first_sample\\\": null,\\n  \\\"last_sample\\\": null\\n}\", \"exit_code\": 0, \"error\": null}"
+    },
+    {
+      "id": 8622,
+      "content": "{\"output\": \"{\\n  \\\"metadata\\\": {\\n    \\\"timestamp_epoch\\\": 1790868029.770704,\\n    \\\"port\\\": \\\"/dev/ttyUSB0\\\",\\n    \\\"baudrate\\\": 115200,\\n    \\\"mock\\\": false,\\n    \\\"wall_timeout_s\\\": 15.0,\\n    \\\"min_observation_s\\\": 10.0,\\n    \\\"status\\\": \\\"FAIL_TELEMETRY_INVARIANT_VIOLATION\\\",\\n    \\\"rejection_reason\\\": \\\"MISSING_KEY_safety\\\",\\n    \\\"valid_samples_count\\\": 0,\\n    \\\"corrupt_lines_count\\\": 10\\n  },\\n  \\\"records\\\": [\\n    {\\n      \\\"line_idx\\\": 1,\\n      \\\"rx_mono\\\": 8620.64597898,\\n      \\\"raw_bytes_len\\\": 26,\\n      \\\"raw_hex\\\": \\\"657473204a756c20323920323031392031323a32313a34360d0a\\\",\\n      \\\"payload\\\": null,\\n      \\\"error\\\": \\\"SETTLING_CORRUPT\\\"\\n    },\\n    {\\n      \\\"line_idx\\\": 2,\\n      \\\"rx_mono\\\": 8620.646162997,\\n      \\\"raw_bytes_len\\\": 2,\\n      \\\"raw_hex\\\": \\\"0d0a\\\",\\n      \\\"payload\\\": null,\\n      \\\"error\\\": \\\"SETTLING_CORRUPT\\\"\\n    },\\n    {\\n      \\\"line_idx\\\": 3,\\n      \\\"rx_mono\\\": 8620.652073987,\\n      \\\"raw_bytes_len\\\": 57,\\n      \\\"raw_hex\\\": \\\"7273743a3078312028504f5745524f4e5f5245534554292c626f6f743a3078313320285350495f464153545f464c4153485f424f4f54290d0a\\\",\\n      \\\"payload\\\": null,\\n      \\\"error\\\": \\\"SETTLING_CORRUPT\\\"\\n    },\\n    {\\n      \\\"line_idx\\\": 4,\\n      \\\"rx_mono\\\": 8620.654380913,\\n      \\\"raw_bytes_len\\\": 26,\\n      \\\"raw_hex\\\": \\\"636f6e6669677369703a20302c2053504957503a307865650d0a\\\",\\n      \\\"payload\\\": null,\\n      \\\"error\\\": \\\"SETTLING_CORRUPT\\\"\", \"exit_code\": 0, \"error\": null}"
+    },
+    {
+      "id": 8624,
+      "content": "{\"output\": \"1 ets Jul 29 2019 12:21:46 ERR: SETTLING_CORRUPT\\n2  ERR: SETTLING_CORRUPT\\n3 rst:0x1 (POWERON_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT) ERR: SETTLING_CORRUPT\\n4 configsip: 0, SPIWP:0xee ERR: SETTLING_CORRUPT\\n5 clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00 ERR: SETTLING_CORRUPT\\n6 mode:DIO, clock div:2 ERR: SETTLING_CORRUPT\\n7 load:0x3fff0030,len:1184 ERR: SETTLING_CORRUPT\\n8 load:0x40078000,len:13232 ERR: SETTLING_CORRUPT\\n9 load:0x40080400,len:3028 ERR: SETTLING_CORRUPT\\n10 entry 0x400805e4 ERR: SETTLING_CORRUPT\\n11 {\\\"info\\\":\\\"ESP32 Robot Ready - BENCH SERIAL ONLY (WiFi DISABLED)\\\"} ERR: MISSING_KEY_safety\", \"exit_code\": 0, \"error\": null}"
+    },
+    {
+      "id": 8626,
+      "content": "{\"output\": \"\", \"exit_code\": 0, \"error\": null}"
+    },
+    {
+      "id": 8628,
+      "content": "{\"output\": \"\", \"exit_code\": 0, \"error\": null}"
+    },
+    {
+      "id": 8630,
+      "content": "{\"output\": \"f121297cde69ac9da9a38105cf9a35cbb188cfe8eb6d8dda954420bc84150f67  live_stdout_2215.json\\r\\nce1d34456acf6fb7d3bec81b660122383082295f4dbe2801b2be6ca2fcc5bd57  preflight_raw_evidence_1790868029770_2625_0.json\", \"exit_code\": 0, \"error\": null}"
+    }
+  ]
+}

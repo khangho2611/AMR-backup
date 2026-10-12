@@ -1,0 +1,54 @@
+{
+  "utc": "2026-10-02T17:02:58.592286+00:00",
+  "mode": "SOURCE_OFFLINE_NO_MOTION",
+  "source_hashes": {
+    "agv_unified_brain.py": "bec4f77f49a9d32b0c9fb45b52911333db4cdd453249a3f465cf75440fadd56e",
+    "agv_command_session.py": "097380b668d1a0c161557bfd730c6dbfefa8de2eea14f220befb8285210805c6",
+    "agv_navigation.py": "0f106a4a15fcdefda04f78ae74c65867950ccba1cb00dc46d70b340f4086f923",
+    "agv_command_journal.py": "08513da55966bd3c885f57a0245417e36a9b981bfb099c00809535b583a9afe6",
+    "index_cyberpunk.html": "cf5af33888e989efe3de0621b48d0af6ea09d2d1647864400327dc1f5085fcab"
+  },
+  "static_hash_before": {
+    "agv_unified_brain.py": "bec4f77f49a9d32b0c9fb45b52911333db4cdd453249a3f465cf75440fadd56e",
+    "agv_command_session.py": "097380b668d1a0c161557bfd730c6dbfefa8de2eea14f220befb8285210805c6",
+    "agv_navigation.py": "0f106a4a15fcdefda04f78ae74c65867950ccba1cb00dc46d70b340f4086f923",
+    "agv_command_journal.py": "08513da55966bd3c885f57a0245417e36a9b981bfb099c00809535b583a9afe6",
+    "index_cyberpunk.html": "cf5af33888e989efe3de0621b48d0af6ea09d2d1647864400327dc1f5085fcab"
+  },
+  "static_hash_after": {
+    "agv_unified_brain.py": "bec4f77f49a9d32b0c9fb45b52911333db4cdd453249a3f465cf75440fadd56e",
+    "agv_command_session.py": "097380b668d1a0c161557bfd730c6dbfefa8de2eea14f220befb8285210805c6",
+    "agv_navigation.py": "0f106a4a15fcdefda04f78ae74c65867950ccba1cb00dc46d70b340f4086f923",
+    "agv_command_journal.py": "08513da55966bd3c885f57a0245417e36a9b981bfb099c00809535b583a9afe6",
+    "index_cyberpunk.html": "cf5af33888e989efe3de0621b48d0af6ea09d2d1647864400327dc1f5085fcab"
+  },
+  "ast": "PASS",
+  "node_syntax_exit": 0,
+  "python": {
+    "command": "python -B -X utf8 -m unittest discover -s tests -p 'test_agv_*.py' -v",
+    "tests": 75,
+    "exit": 0,
+    "log": "full_python_tests_final.txt"
+  },
+  "ui": {
+    "command": "node tests/test_agv_pid_ui.cjs",
+    "groups": 11,
+    "exit": 0,
+    "log": "green_ui.txt"
+  },
+  "limitations": [
+    "FakeUART/ROS imports replaced; no physical Serial OPEN or TX",
+    "No deployment/restart/ARM/AUTO/motion this turn",
+    "No physical braking/whole-room/home acceptance",
+    "No original ARM/AUTO failure timeline recovered"
+  ],
+  "pi_readonly": {
+    "utc": "2026-10-02T16:51:12.556071+00:00",
+    "boot": "6c0476e0-29bf-4510-a153-b7708dcbbec7",
+    "processes": [],
+    "usb0_fuser_exit": 1,
+    "usb0_pids": "",
+    "usb0_message": "",
+    "http8080": []
+  }
+}

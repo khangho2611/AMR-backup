@@ -1,0 +1,39 @@
+test_blacklisted_frontier_selects_another_area (test_agv_navigation_fix.NavigationRegression.test_blacklisted_frontier_selects_another_area) ... ok
+test_blocked_goal_is_not_silently_relocated (test_agv_navigation_fix.NavigationRegression.test_blocked_goal_is_not_silently_relocated) ... ok
+test_corner_cutting_is_blocked (test_agv_navigation_fix.NavigationRegression.test_corner_cutting_is_blocked) ... ok
+test_detour_uses_only_safe_known_free_cells (test_agv_navigation_fix.NavigationRegression.test_detour_uses_only_safe_known_free_cells) ... ok
+test_failed_goal_rejects_whole_frontier_region_not_next_wall_pixel (test_agv_navigation_fix.NavigationRegression.test_failed_goal_rejects_whole_frontier_region_not_next_wall_pixel) ... ok
+test_home_heading_must_be_restored_before_stop (test_agv_navigation_fix.NavigationRegression.test_home_heading_must_be_restored_before_stop) ... ok
+test_inflation_is_in_metres_not_fixed_cell_count (test_agv_navigation_fix.NavigationRegression.test_inflation_is_in_metres_not_fixed_cell_count) ... ok
+test_invalid_map_stops_planning_without_crash (test_agv_navigation_fix.NavigationRegression.test_invalid_map_stops_planning_without_crash) ... ok
+test_negative_world_coordinate_is_outside (test_agv_navigation_fix.NavigationRegression.test_negative_world_coordinate_is_outside) ... ok
+test_no_path_never_falls_back_to_direct_drive (test_agv_navigation_fix.NavigationRegression.test_no_path_never_falls_back_to_direct_drive) ... ok
+test_rotated_map_coordinate_roundtrip (test_agv_navigation_fix.NavigationRegression.test_rotated_map_coordinate_roundtrip) ... ok
+test_stuck_goal_is_rejected_after_window_and_not_each_tick (test_agv_navigation_fix.NavigationRegression.test_stuck_goal_is_rejected_after_window_and_not_each_tick) ... ok
+test_unknown_wall_is_not_a_drivable_shortcut (test_agv_navigation_fix.NavigationRegression.test_unknown_wall_is_not_a_drivable_shortcut) ... ok
+test_unreachable_unknown_island_is_not_selected (test_agv_navigation_fix.NavigationRegression.test_unreachable_unknown_island_is_not_selected) ... ok
+test_drive_never_implicitly_sends_arm (test_agv_navigation_fix.SessionRegression.test_drive_never_implicitly_sends_arm) ... ok
+test_fresh_armed_d0_stream_does_not_keep_silent_caller_alive (test_agv_navigation_fix.SessionRegression.test_fresh_armed_d0_stream_does_not_keep_silent_caller_alive) ... FAIL
+test_independent_tick_stops_silent_caller (test_agv_navigation_fix.SessionRegression.test_independent_tick_stops_silent_caller) ... ok
+test_no_ack_never_opens_drive_gate (test_agv_navigation_fix.SessionRegression.test_no_ack_never_opens_drive_gate) ... ok
+test_partial_stop_zero_remains_observed_not_confirmed (test_agv_navigation_fix.SessionRegression.test_partial_stop_zero_remains_observed_not_confirmed) ... ok
+test_pid_reject_does_not_become_fake_applied_or_motion (test_agv_navigation_fix.SessionRegression.test_pid_reject_does_not_become_fake_applied_or_motion) ... ok
+test_positive_diag_ten_seconds_ack_arm_then_drive (test_agv_navigation_fix.SessionRegression.test_positive_diag_ten_seconds_ack_arm_then_drive) ... ok
+test_second_stop_waiting_for_mutex_invalidates_old_confirmation (test_agv_navigation_fix.SessionRegression.test_second_stop_waiting_for_mutex_invalidates_old_confirmation) ... ok
+test_second_stop_zero_before_new_write_cannot_confirm (test_agv_navigation_fix.SessionRegression.test_second_stop_zero_before_new_write_cannot_confirm) ... ok
+test_stop_cancels_queued_drive_before_mutex_is_acquired (test_agv_navigation_fix.SessionRegression.test_stop_cancels_queued_drive_before_mutex_is_acquired) ... ok
+test_timeout_late_ack_cannot_be_assigned_to_new_pid_request (test_agv_navigation_fix.SessionRegression.test_timeout_late_ack_cannot_be_assigned_to_new_pid_request) ... ok
+test_zero_pid_matching_ack_applied (test_agv_navigation_fix.SessionRegression.test_zero_pid_matching_ack_applied) ... ok
+
+======================================================================
+FAIL: test_fresh_armed_d0_stream_does_not_keep_silent_caller_alive (test_agv_navigation_fix.SessionRegression.test_fresh_armed_d0_stream_does_not_keep_silent_caller_alive)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "D:\HoMinhKhang\PROJECT\GITHUB_PROJECT\CODE XE TU HANH\tests\test_agv_navigation_fix.py", line 331, in test_fresh_armed_d0_stream_does_not_keep_silent_caller_alive
+    self.assertEqual(self.s.fault,'CALLER_TIMEOUT')
+AssertionError: None != 'CALLER_TIMEOUT'
+
+----------------------------------------------------------------------
+Ran 26 tests in 1.281s
+
+FAILED (failures=1)

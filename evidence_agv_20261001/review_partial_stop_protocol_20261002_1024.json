@@ -1,0 +1,27 @@
+{
+  "scope": "OFFLINE actual gate protocol component: partial STOP plus independently received freshzero; not full entry",
+  "before": "15cdfc6c6d86582df3ae219b8f301eb1dbb7bbdd0da742d43052242cda50f928",
+  "after": "15cdfc6c6d86582df3ae219b8f301eb1dbb7bbdd0da742d43052242cda50f928",
+  "runner_confirmed": false,
+  "runner_fault": true,
+  "runner_stop_write_success": false,
+  "runner_stop_write_failed": true,
+  "gate_local_fault": true,
+  "gate_confirmed": true,
+  "tx": [
+    {
+      "t": 353445.171,
+      "bytes": "ARM\n",
+      "expected": 4,
+      "written": 4,
+      "success": true
+    },
+    {
+      "t": 353445.171,
+      "bytes": "STOP\n",
+      "expected": 5,
+      "written": 1,
+      "success": false
+    }
+  ]
+}

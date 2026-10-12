@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AGV AUTONOMOUS FRONTIER EXPLORER // FULL ROOM MAPPING & RTH</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #05070c;
+      --panel: #0a0e17;
+      --card: #101726;
+      --border: #1e293b;
+      --cyan: #00f0ff;
+      --cyan-glow: rgba(0, 240, 255, 0.4);
+      --green: #10b981;
+      --green-glow: rgba(16, 185, 129, 0.4);
+      --yellow: #f59e0b;
+      --red: #ef4444;
+      --red-glow: rgba(239, 68, 68, 0.5);
+      --purple: #8b5cf6;
+      --purple-glow: rgba(139, 92, 246, 0.4);
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; font-family: 'Plus Jakarta Sans', sans-serif; }
+    body { background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
+    
+    header {
+      background: var(--panel); border-bottom: 1px solid var(--border);
+      padding: 10px 20px; display: flex; justify-content: space-between; align-items: center;
+    }
+    .brand { font-size: 15px; font-weight: 800; color: var(--cyan); display: flex; align-items: center; gap: 8px; font-family: 'JetBrains Mono'; }
+    .status-badge { font-size: 11px; padding: 5px 12px; border-radius: 999px; font-weight: 800; font-family: 'JetBrains Mono'; }
+    .badge-idle { background: rgba(148, 163, 184, 0.2); color: var(--text-muted); border: 1px solid var(--border); }
+    .badge-spin { background: rgba(245, 158, 11, 0.2); color: var(--yellow); border: 1px solid var(--yellow); animation: pulse 0.8s infinite; }
+    .badge-explore { background: rgba(0, 240, 255, 0.2); color: var(--cyan); border: 1px solid var(--cyan); box-shadow: 0 0 10px var(--cyan-glow); }
+    .badge-home { background: rgba(139, 92, 246, 0.2); color: var(--purple); border: 1px solid var(--purple); animation: pulse 0.8s infinite; }
+    .badge-complete { background: rgba(16, 185, 129, 0.2); color: var(--green); border: 1px solid var(--green); box-shadow: 0 0 15px var(--green-glow); }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+    main { display: grid; grid-template-columns: 1fr 390px; gap: 14px; padding: 14px; flex: 1; }
+    
+    .viewport-box {
+      background: var(--panel); border: 1px solid var(--border); border-radius: 16px;
+      padding: 12px; display: flex; flex-direction: column; position: relative;
+    }
+    .view-tabs { display: flex; gap: 8px; margin-bottom: 10px; }
+    .tab-btn {
+      padding: 6px 14px; font-size: 12px; font-weight: 700; border-radius: 8px; cursor: pointer;
+      background: var(--card); color: var(--text-muted); border: 1px solid var(--border); transition: 0.2s;
+    }
+    .tab-btn.active { background: var(--cyan); color: #000; border-color: var(--cyan); box-shadow: 0 0 10px var(--cyan-glow); }
+    .canvas-container { flex: 1; display: flex; justify-content: center; align-items: center; position: relative; }
+    canvas { background: #04060a; border-radius: 12px; border: 1px solid #172033; max-width: 100%; height: auto; }
+
+    aside { display: flex; flex-direction: column; gap: 12px; }
+    .card { background: var(--panel); border: 1px solid var(--border); border-radius: 14px; padding: 14px; }
+    .card-title { font-size: 11px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; margin-bottom: 10px; display: flex; justify-content: space-between; font-family: 'JetBrains Mono'; }
+
+    /* TIẾN ĐỘ QUÉT TOÀN PHÒNG */
+    .progress-box { margin-bottom: 10px; }
+    .progress-bar-bg { width: 100%; height: 8px; background: var(--card); border-radius: 999px; overflow: hidden; border: 1px solid var(--border); }
+    .progress-fill { height: 100%; background: linear-gradient(90deg, var(--cyan), var(--green)); width: 0%; transition: width 0.3s; }
+
+    .tele-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+    .tele-item { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 8px 4px; text-align: center; }
+    .tele-lbl { font-size: 9px; color: var(--text-muted); font-weight: 700; font-family: 'JetBrains Mono'; }
+    .tele-val { font-size: 15px; font-weight: 900; color: var(--cyan); font-family: 'JetBrains Mono'; }
+
+    /* CỤM NÚT ĐIỀU HÀNH TỰ HÀNH & RTH */
+    .action-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+    .btn-action {
+      padding: 12px 4px; font-size: 11px; font-weight: 800; border-radius: 12px; cursor: pointer;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; transition: 0.15s;
+    }
+    .btn-explore { background: #064e3b; border: 2px solid #059669; color: #34d399; }
+    .btn-explore:active, .btn-explore.active { background: #059669; color: #fff; box-shadow: 0 0 15px var(--green-glow); }
+    .btn-home { background: #2e1065; border: 2px solid #7c3aed; color: #c4b5fd; }
+    .btn-home:active, .btn-home.active { background: #7c3aed; color: #fff; box-shadow: 0 0 15px var(--purple-glow); }
+    .btn-estop { background: #7f1d1d; border: 2px solid #dc2626; color: #fecaca; box-shadow: 0 0 15px var(--red-glow); }
+
+    .dpad-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; max-width: 280px; margin: 0 auto; }
+    .dpad-btn {
+      height: 52px; border-radius: 12px; border: 1px solid #334466; background: var(--card);
+      color: #fff; font-size: 16px; font-weight: 800; cursor: pointer; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 2px;
+    }
+    .dpad-btn:active, .dpad-btn.pressed { background: var(--cyan); color: #000; border-color: var(--cyan); transform: scale(0.95); }
+    .dpad-sub { font-size: 9px; font-family: 'JetBrains Mono'; opacity: 0.75; font-weight: 600; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="brand">⚡ AGV MASTER EXPLORER // FULL MAPPING & RTH</div>
+    <div style="display:flex; gap:8px; align-items:center;">
+      <span style="font-size:11px; color:var(--text-muted); font-family:'JetBrains Mono';">RPLIDAR C1: 10Hz</span>
+      <div class="status-badge badge-idle" id="statusBadge">TRẠNG THÁI: CHỜ LỆNH</div>
+    </div>
+  </header>
+
+  <main>
+    <div class="viewport-box">
+      <div class="view-tabs">
+        <button class="tab-btn active" id="tabSlam" onclick="switchView('slam')">🗺 BẢN ĐỒ SLAM & QUỸ ĐẠO</button>
+        <button class="tab-btn" id="tabRadar" onclick="switchView('radar')">📡 RADAR QUÉT 360°</button>
+        <span style="margin-left:auto; font-size:11px; color:var(--cyan); font-family:'JetBrains Mono'; align-self:center;" id="goalIndicator">MỤC TIÊU: (0.00, 0.00)</span>
+      </div>
+      <div class="canvas-container">
+        <canvas id="viewCanvas" width="600" height="600"></canvas>
+      </div>
+    </div>
+
+    <aside>
+      <!-- TIẾN ĐỘ KHÁM PHÁ TOÀN BỘ PHÒNG -->
+      <div class="card">
+        <div class="card-title">
+          <span>Tiến Độ Quét Căn Phòng</span>
+          <span style="color:var(--green);" id="txtScannedArea">0.0 m²</span>
+        </div>
+        <div class="progress-box">
+          <div class="progress-bar-bg"><div class="progress-fill" id="progressFill"></div></div>
+          <div style="display:flex; justify-content:space-between; margin-top:4px; font-size:10px; color:var(--text-muted); font-family:'JetBrains Mono';">
+            <span>ĐÃ QUÉT: <b id="txtProgressPct" style="color:var(--cyan);">0%</b></span>
+            <span>ĐIỂM BIÊN CÒN: <b id="txtFrontiers" style="color:var(--yellow);">0</b></span>
+          </div>
+        </div>
+
+        <div class="tele-grid">
+          <div class="tele-item"><div class="tele-lbl">X HIỆN TẠI</div><div class="tele-val" id="valX">0.000</div></div>
+          <div class="tele-item"><div class="tele-lbl">Y HIỆN TẠI</div><div class="tele-val" id="valY">0.000</div></div>
+          <div class="tele-item"><div class="tele-lbl">GÓC YAW</div><div class="tele-val" id="valTh">0.0°</div></div>
+          <div class="tele-item"><div class="tele-lbl">GỐC HOME X</div><div class="tele-val" id="valHomeX" style="color:var(--purple);">0.00</div></div>
+          <div class="tele-item"><div class="tele-lbl">GỐC HOME Y</div><div class="tele-val" id="valHomeY" style="color:var(--purple);">0.00</div></div>
+          <div class="tele-item"><div class="tele-lbl">VẬT CẢN</div><div class="tele-val" id="valMinD" style="color:var(--yellow);">-- cm</div></div>
+        </div>
+      </div>
+
+      <!-- ĐIỀU HÀNH TỰ ĐỘNG KHÁM PHÁ & RTH -->
+      <div class="card" style="flex:1;">
+        <div class="card-title">Bộ Điều Hành Tự Động Toàn Căn Phòng</div>
+        
+        <div class="action-grid">
+          <button class="btn-action btn-explore" id="btnExplore" onclick="toggleExplore()">
+            <span style="font-size:16px;">🚀</span>
+            <span id="exploreText">QUÉT HẾT PHÒNG</span>
+          </button>
+          <button class="btn-action btn-home" id="btnHome" onclick="returnHome()">
+            <span style="font-size:16px;">🏠</span>
+            <span>VỀ LẠI GỐC</span>
+          </button>
+          <button class="btn-action btn-estop" onclick="emergencyStop()">
+            <span style="font-size:16px;">🛑</span>
+            <span>DỪNG LẠI</span>
+          </button>
+        </div>
+
+        <div class="dpad-grid">
+          <button class="dpad-btn" id="btnQ"><span>↺</span><span class="dpad-sub">Q (Xoay T)</span></button>
+          <button class="dpad-btn" id="btnW"><span>▲</span><span class="dpad-sub">W (Tiến)</span></button>
+          <button class="dpad-btn" id="btnE"><span>↻</span><span class="dpad-sub">E (Xoay P)</span></button>
+
+          <button class="dpad-btn" id="btnA"><span>◄</span><span class="dpad-sub">A (Trái)</span></button>
+          <button class="dpad-btn" style="background:#450a0a; border-color:#991b1b; color:#fca5a5;" onclick="emergencyStop()"><span>🛑</span><span class="dpad-sub">Space</span></button>
+          <button class="dpad-btn" id="btnD"><span>►</span><span class="dpad-sub">D (Phải)</span></button>
+
+          <div></div>
+          <button class="dpad-btn" id="btnS"><span>▼</span><span class="dpad-sub">S (Lùi)</span></button>
+          <div></div>
+        </div>
+        
+        <div style="text-align:center; font-size:10px; color:var(--text-muted); margin-top:10px;">
+          Bấm [QUÉT HẾT PHÒNG] $\rightarrow$ Xe tự khám phá toàn bộ phòng $\rightarrow$ Tự về lại vị trí xuất phát!
+        </div>
+      </div>
+    </aside>
+  </main>
+
+  <script>
+    const canvas = document.getElementById('viewCanvas');
+    const ctx = canvas.getContext('2d');
+    let currentView = 'slam';
+    let teleData = null;
+    let mapData = null;
+
+    function switchView(view) {
+      currentView = view;
+      document.getElementById('tabRadar').classList.toggle('active', view === 'radar');
+      document.getElementById('tabSlam').classList.toggle('active', view === 'slam');
+      if (view === 'slam') fetchMap();
+    }
+
+    function toggleExplore() {
+      const isRunning = teleData && teleData.active;
+      const act = isRunning ? 'STOP' : 'START';
+      fetch('/api/explore?act=' + act).then(r=>r.json()).then(d=>{
+        updateUIState(d.fsm_state);
+      });
+    }
+
+    function returnHome() {
+      fetch('/api/explore?act=HOME').then(r=>r.json()).then(d=>{
+        updateUIState(d.fsm_state);
+      });
+    }
+
+    function emergencyStop() {
+      fetch('/api/explore?act=STOP').catch(()=>{});
+      fetch('/api/cmd?val=STOP').catch(()=>{});
+      updateUIState('IDLE');
+    }
+
+    function fetchMap() {
+      fetch('/api/map_full').then(r=>r.json()).then(d=>{
+        mapData = d;
+      }).catch(()=>{});
+    }
+
+    function updateUIState(st) {
+      const badge = document.getElementById('statusBadge');
+      const btn = document.getElementById('btnExplore');
+      const txt = document.getElementById('exploreText');
+
+      if (st === 'INITIAL_SPIN') {
+        badge.className = 'status-badge badge-spin';
+        badge.innerText = 'TRẠNG THÁI: KHỞI TẠO KHUNG 360°';
+        btn.classList.add('active');
+        txt.innerText = 'DỪNG QUÉT';
+      } else if (st === 'EXPLORING') {
+        badge.className = 'status-badge badge-explore';
+        badge.innerText = 'TRẠNG THÁI: ĐANG KHÁM PHÁ CĂN PHÒNG';
+        btn.classList.add('active');
+        txt.innerText = 'DỪNG QUÉT';
+      } else if (st === 'RETURNING_HOME') {
+        badge.className = 'status-badge badge-home';
+        badge.innerText = 'TRẠNG THÁI: TỰ ĐỘNG VỀ GỐC (RTH)';
+        btn.classList.remove('active');
+        txt.innerText = 'QUÉT HẾT PHÒNG';
+      } else if (st === 'COMPLETED') {
+        badge.className = 'status-badge badge-complete';
+        badge.innerText = 'TRẠNG THÁI: ĐÃ HOÀN TẤT & ĐỖ VỀ GỐC!';
+        btn.classList.remove('active');
+        txt.innerText = 'QUÉT HẾT PHÒNG';
+      } else {
+        badge.className = 'status-badge badge-idle';
+        badge.innerText = 'TRẠNG THÁI: CHỜ LỆNH';
+        btn.classList.remove('active');
+        txt.innerText = 'QUÉT HẾT PHÒNG';
+      }
+    }
+
+    function render() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const cx = canvas.width / 2;
+      const cy = canvas.height / 2;
+
+      if (currentView === 'slam' && mapData && mapData.data && mapData.data.length > 0) {
+        const mw = mapData.w;
+        const mh = mapData.h;
+        const pSize = Math.max(1, Math.min(canvas.width / mw, canvas.height / mh));
+        const ox = (canvas.width - mw * pSize) / 2;
+        const oy = (canvas.height - mh * pSize) / 2;
+
+        // Vẽ Lưới SLAM Grid
+        for (let y = 0; y < mh; y++) {
+          for (let x = 0; x < mw; x++) {
+            const val = mapData.data[(mh - 1 - y) * mw + x];
+            if (val === -1) ctx.fillStyle = '#070a12'; // Chưa quét
+            else if (val === 0) ctx.fillStyle = '#1e293b'; // Trống
+            else ctx.fillStyle = '#00f0ff'; // Tường
+            ctx.fillRect(ox + x * pSize, oy + y * pSize, pSize, pSize);
+          }
+        }
+
+        // Vẽ Điểm Home (Tím)
+        if (mapData.home) {
+          const hpx = ox + ((mapData.home.x - mapData.ox) / mapData.res) * pSize;
+          const hpy = oy + (mh - (mapData.home.y - mapData.oy) / mapData.res) * pSize;
+          ctx.fillStyle = '#8b5cf6';
+          ctx.beginPath(); ctx.arc(hpx, hpy, 8, 0, Math.PI * 2); ctx.fill();
+        }
+
+        // Vẽ Điểm Mục Tiêu Frontier (Vàng)
+        if (mapData.goal && (mapData.goal.x !== 0 || mapData.goal.y !== 0)) {
+          const gpx = ox + ((mapData.goal.x - mapData.ox) / mapData.res) * pSize;
+          const gpy = oy + (mh - (mapData.goal.y - mapData.oy) / mapData.res) * pSize;
+          ctx.fillStyle = '#f59e0b';
+          ctx.beginPath(); ctx.arc(gpx, gpy, 6, 0, Math.PI * 2); ctx.fill();
+        }
+
+        // Vẽ Robot hiện tại (Xanh lá)
+        if (teleData && teleData.robot) {
+          const rpx = ox + ((teleData.robot.x - mapData.ox) / mapData.res) * pSize;
+          const rpy = oy + (mh - (teleData.robot.y - mapData.oy) / mapData.res) * pSize;
+          ctx.fillStyle = '#10b981';
+          ctx.beginPath(); ctx.arc(rpx, rpy, 9, 0, Math.PI * 2); ctx.fill();
+        }
+      } 
+      else if (currentView === 'radar') {
+        ctx.strokeStyle = '#1e293b';
+        ctx.lineWidth = 1;
+        for (let r = 50; r <= 250; r += 50) {
+          ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.stroke();
+        }
+        ctx.beginPath();
+        ctx.moveTo(cx - 250, cy); ctx.lineTo(cx + 250, cy);
+        ctx.moveTo(cx, cy - 250); ctx.lineTo(cx, cy + 250);
+        ctx.stroke();
+
+        if (teleData && teleData.ranges) {
+          const scale = 75;
+          teleData.ranges.forEach((dist, deg) => {
+            if (dist > 0.05 && dist < 4.0) {
+              const rad = (deg - 90) * Math.PI / 180.0;
+              const px = cx + dist * Math.cos(rad) * scale;
+              const py = cy + dist * Math.sin(rad) * scale;
+              ctx.fillStyle = dist < 0.35 ? '#ef4444' : (dist < 0.70 ? '#f59e0b' : '#00f0ff');
+              ctx.fillRect(px - 2, py - 2, 4, 4);
+            }
+          });
+        }
+
+        ctx.fillStyle = '#10b981';
+        ctx.beginPath(); ctx.arc(cx, cy, 10, 0, Math.PI * 2); ctx.fill();
+        ctx.strokeStyle = '#fff'; ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx, cy - 22); ctx.stroke();
+      }
+
+      requestAnimationFrame(render);
+    }
+
+    setInterval(() => {
+      fetch('/api/telemetry').then(r=>r.json()).then(d=>{
+        teleData = d;
+        document.getElementById('valX').innerText = d.robot.x.toFixed(3);
+        document.getElementById('valY').innerText = d.robot.y.toFixed(3);
+        document.getElementById('valTh').innerText = (d.robot.th * 180 / Math.PI).toFixed(1) + '°';
+        document.getElementById('valHomeX').innerText = d.home_pos.x.toFixed(2);
+        document.getElementById('valHomeY').innerText = d.home_pos.y.toFixed(2);
+        document.getElementById('valMinD').innerText = (d.min_m * 100).toFixed(0) + ' cm';
+        
+        document.getElementById('txtScannedArea').innerText = d.scanned_area_m2.toFixed(1) + ' m²';
+        document.getElementById('txtProgressPct').innerText = d.progress_pct.toFixed(0) + '%';
+        document.getElementById('progressFill').style.width = Math.min(100, d.progress_pct) + '%';
+        document.getElementById('txtFrontiers').innerText = d.frontiers_remaining;
+        document.getElementById('goalIndicator').innerText = `MỤC TIÊU: (${d.target_goal.x.toFixed(2)}, ${d.target_goal.y.toFixed(2)})`;
+
+        updateUIState(d.fsm_state);
+      }).catch(()=>{});
+
+      if (currentView === 'slam') fetchMap();
+    }, 200);
+
+    // WASD Driving
+    const SPEED = 110;
+    let driveTimer = null;
+    let driveCmd = null;
+
+    function sendCmd(cmd) { fetch('/api/cmd?val=' + encodeURIComponent(cmd)).catch(()=>{}); }
+
+    function startDrive(c) {
+      driveCmd = c; sendCmd(c);
+      if (driveTimer) clearInterval(driveTimer);
+      driveTimer = setInterval(()=>{ if (driveCmd) sendCmd(driveCmd); }, 150);
+    }
+
+    function stopDrive() {
+      driveCmd = null;
+      if (driveTimer) { clearInterval(driveTimer); driveTimer = null; }
+      sendCmd('STOP');
+      document.querySelectorAll('.dpad-btn').forEach(b => b.classList.remove('pressed'));
+    }
+
+    function bind(id, c) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.addEventListener('pointerdown', (e)=>{ e.preventDefault(); el.classList.add('pressed'); startDrive(c); });
+      const rel = (e)=>{ e.preventDefault(); el.classList.remove('pressed'); stopDrive(); };
+      el.addEventListener('pointerup', rel);
+      el.addEventListener('pointercancel', rel);
+    }
+
+    bind('btnW', `S ${SPEED} ${SPEED}`);
+    bind('btnS', `S -${SPEED} -${SPEED}`);
+    bind('btnA', `S 0 ${SPEED}`);
+    bind('btnD', `S ${SPEED} 0`);
+    bind('btnQ', `S -${SPEED} ${SPEED}`);
+    bind('btnE', `S ${SPEED} -${SPEED}`);
+
+    window.addEventListener('keydown', (e)=>{
+      if (e.repeat) return;
+      if (e.code === 'Space') { e.preventDefault(); emergencyStop(); return; }
+      const k = { 'KeyW': `S ${SPEED} ${SPEED}`, 'KeyS': `S -${SPEED} -${SPEED}`, 'KeyA': `S 0 ${SPEED}`, 'KeyD': `S ${SPEED} 0`, 'KeyQ': `S -${SPEED} ${SPEED}`, 'KeyE': `S ${SPEED} -${SPEED}` };
+      if (k[e.code]) { e.preventDefault(); startDrive(k[e.code]); }
+    });
+
+    window.addEventListener('keyup', (e)=>{
+      if (e.code.startsWith('Key') || e.code === 'Space') { e.preventDefault(); stopDrive(); }
+    });
+
+    render();
+  </script>
+</body>
+</html>

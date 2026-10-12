@@ -1,0 +1,23 @@
+test_auto_rejection_returns_each_blocker_and_saves_the_exact_response (test_agv_brain_integration.BrainIntegration.test_auto_rejection_returns_each_blocker_and_saves_the_exact_response) ... FAIL
+test_observe_only_arm_rejection_is_journaled_without_uart_write (test_agv_brain_integration.BrainIntegration.test_observe_only_arm_rejection_is_journaled_without_uart_write) ... FAIL
+
+======================================================================
+FAIL: test_auto_rejection_returns_each_blocker_and_saves_the_exact_response (test_agv_brain_integration.BrainIntegration.test_auto_rejection_returns_each_blocker_and_saves_the_exact_response)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "D:\HoMinhKhang\PROJECT\GITHUB_PROJECT\CODE XE TU HANH\tests\test_agv_brain_integration.py", line 207, in test_auto_rejection_returns_each_blocker_and_saves_the_exact_response
+    self.assertTrue('blockers' in response,'AUTO must expose the actual failed gates')
+AssertionError: False is not true : AUTO must expose the actual failed gates
+
+======================================================================
+FAIL: test_observe_only_arm_rejection_is_journaled_without_uart_write (test_agv_brain_integration.BrainIntegration.test_observe_only_arm_rejection_is_journaled_without_uart_write)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "D:\HoMinhKhang\PROJECT\GITHUB_PROJECT\CODE XE TU HANH\tests\test_agv_brain_integration.py", line 224, in test_observe_only_arm_rejection_is_journaled_without_uart_write
+    self.assertTrue('journal' in response,'Mode rejections must be recorded too')
+AssertionError: False is not true : Mode rejections must be recorded too
+
+----------------------------------------------------------------------
+Ran 2 tests in 1.182s
+
+FAILED (failures=2)

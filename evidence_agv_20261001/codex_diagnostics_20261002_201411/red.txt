@@ -1,0 +1,82 @@
+test_bounded_history_keeps_first_fault_after_idle_stream_overwrites_ring (test_agv_diagnostics.DiagnosticRegression.test_bounded_history_keeps_first_fault_after_idle_stream_overwrites_ring) ... ERROR
+test_diagnostic_reads_cannot_mutate_control_or_emit_commands (test_agv_diagnostics.DiagnosticRegression.test_diagnostic_reads_cannot_mutate_control_or_emit_commands) ... ERROR
+test_partial_stop_is_recorded_as_partial_and_not_confirmed (test_agv_diagnostics.DiagnosticRegression.test_partial_stop_is_recorded_as_partial_and_not_confirmed) ... ERROR
+test_rejected_drive_records_blocker_without_hardware_write (test_agv_diagnostics.DiagnosticRegression.test_rejected_drive_records_blocker_without_hardware_write) ... ERROR
+test_rx_gap_is_captured_before_last_timestamp_is_updated (test_agv_diagnostics.DiagnosticRegression.test_rx_gap_is_captured_before_last_timestamp_is_updated) ... ERROR
+test_timeout_freezes_original_gap_and_transmitted_command (test_agv_diagnostics.DiagnosticRegression.test_timeout_freezes_original_gap_and_transmitted_command) ... ERROR
+test_bounded_trial_expires_despite_fresh_caller_and_sensor_streams (test_agv_navigation_fix.SessionRegression.test_bounded_trial_expires_despite_fresh_caller_and_sensor_streams) ... ok
+test_drive_never_implicitly_sends_arm (test_agv_navigation_fix.SessionRegression.test_drive_never_implicitly_sends_arm) ... ok
+test_expired_trial_never_writes_another_drive_before_watchdog_tick (test_agv_navigation_fix.SessionRegression.test_expired_trial_never_writes_another_drive_before_watchdog_tick) ... ok
+test_fresh_armed_d0_stream_does_not_keep_silent_caller_alive (test_agv_navigation_fix.SessionRegression.test_fresh_armed_d0_stream_does_not_keep_silent_caller_alive) ... ok
+test_independent_tick_stops_silent_caller (test_agv_navigation_fix.SessionRegression.test_independent_tick_stops_silent_caller) ... ok
+test_no_ack_never_opens_drive_gate (test_agv_navigation_fix.SessionRegression.test_no_ack_never_opens_drive_gate) ... ok
+test_partial_stop_zero_remains_observed_not_confirmed (test_agv_navigation_fix.SessionRegression.test_partial_stop_zero_remains_observed_not_confirmed) ... ok
+test_pid_reject_does_not_become_fake_applied_or_motion (test_agv_navigation_fix.SessionRegression.test_pid_reject_does_not_become_fake_applied_or_motion) ... ok
+test_positive_diag_ten_seconds_ack_arm_then_drive (test_agv_navigation_fix.SessionRegression.test_positive_diag_ten_seconds_ack_arm_then_drive) ... ok
+test_second_stop_waiting_for_mutex_invalidates_old_confirmation (test_agv_navigation_fix.SessionRegression.test_second_stop_waiting_for_mutex_invalidates_old_confirmation) ... ok
+test_second_stop_zero_before_new_write_cannot_confirm (test_agv_navigation_fix.SessionRegression.test_second_stop_zero_before_new_write_cannot_confirm) ... ok
+test_stop_cancels_queued_drive_before_mutex_is_acquired (test_agv_navigation_fix.SessionRegression.test_stop_cancels_queued_drive_before_mutex_is_acquired) ... ok
+test_timeout_late_ack_cannot_be_assigned_to_new_pid_request (test_agv_navigation_fix.SessionRegression.test_timeout_late_ack_cannot_be_assigned_to_new_pid_request) ... ok
+test_trial_cannot_rearm_after_early_user_stop (test_agv_navigation_fix.SessionRegression.test_trial_cannot_rearm_after_early_user_stop) ... ok
+test_trial_overspeed_triggers_stop_and_latches_fault (test_agv_navigation_fix.SessionRegression.test_trial_overspeed_triggers_stop_and_latches_fault) ... ok
+test_trial_rejects_manual_pwm_and_velocity_above_reviewed_limit (test_agv_navigation_fix.SessionRegression.test_trial_rejects_manual_pwm_and_velocity_above_reviewed_limit) ... ok
+test_zero_pid_matching_ack_applied (test_agv_navigation_fix.SessionRegression.test_zero_pid_matching_ack_applied) ... ok
+
+======================================================================
+ERROR: test_bounded_history_keeps_first_fault_after_idle_stream_overwrites_ring (test_agv_diagnostics.DiagnosticRegression.test_bounded_history_keeps_first_fault_after_idle_stream_overwrites_ring)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "D:\HoMinhKhang\PROJECT\GITHUB_PROJECT\CODE XE TU HANH\tests\test_agv_diagnostics.py", line 61, in test_bounded_history_keeps_first_fault_after_idle_stream_overwrites_ring
+    original = self.s.diagnostics()['first_fault_events']
+               ^^^^^^^^^^^^^^^^^^
+AttributeError: 'CommandSession' object has no attribute 'diagnostics'
+
+======================================================================
+ERROR: test_diagnostic_reads_cannot_mutate_control_or_emit_commands (test_agv_diagnostics.DiagnosticRegression.test_diagnostic_reads_cannot_mutate_control_or_emit_commands)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "D:\HoMinhKhang\PROJECT\GITHUB_PROJECT\CODE XE TU HANH\tests\test_agv_diagnostics.py", line 84, in test_diagnostic_reads_cannot_mutate_control_or_emit_commands
+    report = self.s.diagnostics()
+             ^^^^^^^^^^^^^^^^^^
+AttributeError: 'CommandSession' object has no attribute 'diagnostics'
+
+======================================================================
+ERROR: test_partial_stop_is_recorded_as_partial_and_not_confirmed (test_agv_diagnostics.DiagnosticRegression.test_partial_stop_is_recorded_as_partial_and_not_confirmed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "D:\HoMinhKhang\PROJECT\GITHUB_PROJECT\CODE XE TU HANH\tests\test_agv_diagnostics.py", line 38, in test_partial_stop_is_recorded_as_partial_and_not_confirmed
+    tx = [e for e in self.s.diagnostics()['events'] if e['kind'] == 'tx'][-1]
+                     ^^^^^^^^^^^^^^^^^^
+AttributeError: 'CommandSession' object has no attribute 'diagnostics'
+
+======================================================================
+ERROR: test_rejected_drive_records_blocker_without_hardware_write (test_agv_diagnostics.DiagnosticRegression.test_rejected_drive_records_blocker_without_hardware_write)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "D:\HoMinhKhang\PROJECT\GITHUB_PROJECT\CODE XE TU HANH\tests\test_agv_diagnostics.py", line 52, in test_rejected_drive_records_blocker_without_hardware_write
+    event = self.s.diagnostics()['events'][-1]
+            ^^^^^^^^^^^^^^^^^^
+AttributeError: 'CommandSession' object has no attribute 'diagnostics'
+
+======================================================================
+ERROR: test_rx_gap_is_captured_before_last_timestamp_is_updated (test_agv_diagnostics.DiagnosticRegression.test_rx_gap_is_captured_before_last_timestamp_is_updated)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "D:\HoMinhKhang\PROJECT\GITHUB_PROJECT\CODE XE TU HANH\tests\test_agv_diagnostics.py", line 75, in test_rx_gap_is_captured_before_last_timestamp_is_updated
+    event = self.s.diagnostics()['events'][-1]
+            ^^^^^^^^^^^^^^^^^^
+AttributeError: 'CommandSession' object has no attribute 'diagnostics'
+
+======================================================================
+ERROR: test_timeout_freezes_original_gap_and_transmitted_command (test_agv_diagnostics.DiagnosticRegression.test_timeout_freezes_original_gap_and_transmitted_command)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "D:\HoMinhKhang\PROJECT\GITHUB_PROJECT\CODE XE TU HANH\tests\test_agv_diagnostics.py", line 22, in test_timeout_freezes_original_gap_and_transmitted_command
+    report = self.s.diagnostics()
+             ^^^^^^^^^^^^^^^^^^
+AttributeError: 'CommandSession' object has no attribute 'diagnostics'
+
+----------------------------------------------------------------------
+Ran 23 tests in 1.150s
+
+FAILED (errors=6)

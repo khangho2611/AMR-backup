@@ -1,0 +1,170 @@
+{
+  "scope": "OFFLINE unchanged source/fakeStream/clock only; collision and sink faults isolated in retained directory",
+  "before": "b548d38bb02ffe067d78e768d927d18d1be068b73557cd1c6231cf278db2a078",
+  "after": "b548d38bb02ffe067d78e768d927d18d1be068b73557cd1c6231cf278db2a078",
+  "output_dir": "D:\\HoMinhKhang\\PROJECT\\GITHUB_PROJECT\\CODE XE TU HANH\\evidence_agv_20261001\\parent_collector_2207_pos_i3ls8kui",
+  "cases": [
+    {
+      "id": "E1_positive",
+      "code": 0,
+      "report": {
+        "status": "PASS_PREFLIGHT_VERIFIED",
+        "valid_samples_count": 2,
+        "corrupt_lines_count": 0,
+        "elapsed_time_s": 0.2,
+        "observation_time_s": 0.1,
+        "rejection_reason": null,
+        "evidence_file": "D:\\HoMinhKhang\\PROJECT\\GITHUB_PROJECT\\CODE XE TU HANH\\evidence_agv_20261001\\parent_collector_2207_pos_i3ls8kui\\preflight_raw_evidence_1700000000000_27856_0.json",
+        "first_sample": {
+          "safety": "DISARMED",
+          "mode": "PID",
+          "l_tgt": 0,
+          "r_tgt": 0,
+          "l_rpm": 0,
+          "r_rpm": 0,
+          "l_pwm": 0,
+          "r_pwm": 0,
+          "x": 0,
+          "y": 0,
+          "th": 0,
+          "v": 0,
+          "w": 0
+        },
+        "last_sample": {
+          "safety": "DISARMED",
+          "mode": "PID",
+          "l_tgt": 0,
+          "r_tgt": 0,
+          "l_rpm": 0,
+          "r_rpm": 0,
+          "l_pwm": 0,
+          "r_pwm": 0,
+          "x": 0,
+          "y": 0,
+          "th": 0,
+          "v": 0,
+          "w": 0
+        }
+      },
+      "tx": [],
+      "closed": true,
+      "records_have_raw_bytes": true
+    },
+    {
+      "id": "E2_write_failure_still_PASS",
+      "code": 1,
+      "report": {
+        "status": "FAIL_EVIDENCE_SINK_ERROR",
+        "valid_samples_count": 2,
+        "corrupt_lines_count": 0,
+        "elapsed_time_s": 0.2,
+        "observation_time_s": 0.1,
+        "rejection_reason": "EVIDENCE_WRITE_FAILED: offline evidence sink failure",
+        "evidence_file": "WRITE_ERROR: offline evidence sink failure",
+        "first_sample": {
+          "safety": "DISARMED",
+          "mode": "PID",
+          "l_tgt": 0,
+          "r_tgt": 0,
+          "l_rpm": 0,
+          "r_rpm": 0,
+          "l_pwm": 0,
+          "r_pwm": 0,
+          "x": 0,
+          "y": 0,
+          "th": 0,
+          "v": 0,
+          "w": 0
+        },
+        "last_sample": {
+          "safety": "DISARMED",
+          "mode": "PID",
+          "l_tgt": 0,
+          "r_tgt": 0,
+          "l_rpm": 0,
+          "r_rpm": 0,
+          "l_pwm": 0,
+          "r_pwm": 0,
+          "x": 0,
+          "y": 0,
+          "th": 0,
+          "v": 0,
+          "w": 0
+        }
+      },
+      "tx": [],
+      "closed": true
+    },
+    {
+      "id": "E3_filename_collision_overwrites",
+      "code": 0,
+      "report": {
+        "status": "PASS_PREFLIGHT_VERIFIED",
+        "valid_samples_count": 2,
+        "corrupt_lines_count": 0,
+        "elapsed_time_s": 0.2,
+        "observation_time_s": 0.1,
+        "rejection_reason": null,
+        "evidence_file": "D:\\HoMinhKhang\\PROJECT\\GITHUB_PROJECT\\CODE XE TU HANH\\evidence_agv_20261001\\parent_collector_2207_pos_i3ls8kui\\preflight_raw_evidence_1700000000000_27856_1.json",
+        "first_sample": {
+          "safety": "DISARMED",
+          "mode": "PID",
+          "l_tgt": 0,
+          "r_tgt": 0,
+          "l_rpm": 0,
+          "r_rpm": 0,
+          "l_pwm": 0,
+          "r_pwm": 0,
+          "x": 1,
+          "y": 0,
+          "th": 0,
+          "v": 0,
+          "w": 0
+        },
+        "last_sample": {
+          "safety": "DISARMED",
+          "mode": "PID",
+          "l_tgt": 0,
+          "r_tgt": 0,
+          "l_rpm": 0,
+          "r_rpm": 0,
+          "l_pwm": 0,
+          "r_pwm": 0,
+          "x": 1,
+          "y": 0,
+          "th": 0,
+          "v": 0,
+          "w": 0
+        }
+      },
+      "tx": [],
+      "closed": true,
+      "same_file": false,
+      "prior_evidence_changed": false
+    },
+    {
+      "id": "E4_unsafe_midstream_no_evidence",
+      "code": 1,
+      "report": {
+        "status": "FAIL_TELEMETRY_INVARIANT_VIOLATION",
+        "valid_samples_count": 1,
+        "corrupt_lines_count": 0,
+        "elapsed_time_s": 0.2,
+        "observation_time_s": 0.0,
+        "rejection_reason": "NON_ZERO_PWM: l=1.0, r=0.0",
+        "evidence_file": "D:\\HoMinhKhang\\PROJECT\\GITHUB_PROJECT\\CODE XE TU HANH\\evidence_agv_20261001\\parent_collector_2207_pos_i3ls8kui\\preflight_raw_evidence_1700000000000_27856_2.json",
+        "first_sample": null,
+        "last_sample": null
+      },
+      "tx": [],
+      "closed": true
+    },
+    {
+      "id": "CLI_positive_fake",
+      "exit_code": 0,
+      "stdout": "{\n  \"status\": \"PASS_PREFLIGHT_VERIFIED\",\n  \"valid_samples_count\": 2,\n  \"corrupt_lines_count\": 0,\n  \"elapsed_time_s\": 0.2,\n  \"observation_time_s\": 0.1,\n  \"rejection_reason\": null,\n  \"evidence_file\": \"D:\\\\HoMinhKhang\\\\PROJECT\\\\GITHUB_PROJECT\\\\CODE XE TU HANH\\\\evidence_agv_20261001\\\\parent_collector_2207_pos_i3ls8kui\\\\preflight_raw_evidence_1790867354469_27856_0.json\",\n  \"first_sample\": {\n    \"safety\": \"DISARMED\",\n    \"mode\": \"PID\",\n    \"l_tgt\": 0,\n    \"r_tgt\": 0,\n    \"l_rpm\": 0,\n    \"r_rpm\": 0,\n    \"l_pwm\": 0,\n    \"r_pwm\": 0,\n    \"x\": 0,\n    \"y\": 0,\n    \"th\": 0,\n    \"v\": 0,\n    \"w\": 0\n  },\n  \"last_sample\": {\n    \"safety\": \"DISARMED\",\n    \"mode\": \"PID\",\n    \"l_tgt\": 0,\n    \"r_tgt\": 0,\n    \"l_rpm\": 0,\n    \"r_rpm\": 0,\n    \"l_pwm\": 0,\n    \"r_pwm\": 0,\n    \"x\": 0,\n    \"y\": 0,\n    \"th\": 0,\n    \"v\": 0,\n    \"w\": 0\n  }\n}\n",
+      "tx": [],
+      "closed": true
+    }
+  ]
+}

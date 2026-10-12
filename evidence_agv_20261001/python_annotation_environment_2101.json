@@ -1,0 +1,18 @@
+{
+  "timestamp": "2026-10-01T21:00:57.413770+07:00",
+  "scope": "MINIMAL ANNOTATION SEMANTICS ONLY; does not rerun changing product",
+  "results": [
+    {
+      "executable": "C:\\Users\\Khang\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+      "exit_code": 1,
+      "stdout": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]\n",
+      "stderr": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n  File \"<string>\", line 1, in <module>\nNameError: name 'Tuple' is not defined. Did you mean: 'tuple'?\n"
+    },
+    {
+      "executable": "C:\\Users\\Khang\\AppData\\Local\\hermes\\tools\\python-3.14.7+20260901-win32-x64\\python.exe",
+      "exit_code": 0,
+      "stdout": "3.14.7 (main, Sep  1 2026, 14:17:30) [MSC v.1944 64 bit (AMD64)]\n(True, 'ok')\n",
+      "stderr": ""
+    }
+  ]
+}

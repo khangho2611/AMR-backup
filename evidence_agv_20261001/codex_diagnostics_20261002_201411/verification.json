@@ -1,0 +1,32 @@
+{
+  "command": [
+    "C:\\Users\\Khang\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-B",
+    "-X",
+    "utf8",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "tests",
+    "-p",
+    "test_agv_*.py",
+    "-v"
+  ],
+  "exit": 0,
+  "hash_before_tests": {
+    "agv_command_session.py": "47e7d973fd8a1c95c1d0c0c3a9e71be0b5be95c5dbfbc0f9b9b2486301630d93",
+    "agv_unified_brain.py": "511491ec6cdc6dd1baf95d661b822656f43a2f1cc0654f58894c6621d7877bcf",
+    "tests/test_agv_diagnostics.py": "f81850a22ae01bc468e709913412ea195c83f1712d6dcca5fcddacc66bed0233",
+    "tests/test_agv_brain_integration.py": "df58a9ed5bac113452e4caff6a4d8a5f6af27fb8294b070ccc2be7dab91672df"
+  },
+  "hash_after_tests": {
+    "agv_command_session.py": "47e7d973fd8a1c95c1d0c0c3a9e71be0b5be95c5dbfbc0f9b9b2486301630d93",
+    "agv_unified_brain.py": "511491ec6cdc6dd1baf95d661b822656f43a2f1cc0654f58894c6621d7877bcf",
+    "tests/test_agv_diagnostics.py": "f81850a22ae01bc468e709913412ea195c83f1712d6dcca5fcddacc66bed0233",
+    "tests/test_agv_brain_integration.py": "df58a9ed5bac113452e4caff6a4d8a5f6af27fb8294b070ccc2be7dab91672df"
+  },
+  "stable": true,
+  "ast": "PASS",
+  "scope": "SOURCE OFFLINE ONLY; FakeUART; ROS imports mocked; actual localhost HTTP; no Pi deploy/SerialOPEN/ARM"
+}

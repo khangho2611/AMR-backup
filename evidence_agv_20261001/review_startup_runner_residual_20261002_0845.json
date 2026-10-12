@@ -1,0 +1,380 @@
+{
+  "scope": "OFFLINE ONLY actual main CLI + actual gate protocol, fake transport/clock; no connect",
+  "before": {
+    "agv_preflight_static_collector.py": "5c6772b0b5de35e8b03673f38de27c5f0d645d229d0f1400f59d8a4fd111aedc",
+    "agv_motion_supervisor_runner.py": "1fa19731c098493014379fe23964100068443f2501fec99d12d865f16f7d4d23",
+    "agv_serial_arbiter_bridge_v3.py": "6f4a2106622e99fe60212199b621cdcbbd2a76b2e639519796b15d5a703e3d1d"
+  },
+  "after": {
+    "agv_preflight_static_collector.py": "5c6772b0b5de35e8b03673f38de27c5f0d645d229d0f1400f59d8a4fd111aedc",
+    "agv_motion_supervisor_runner.py": "1fa19731c098493014379fe23964100068443f2501fec99d12d865f16f7d4d23",
+    "agv_serial_arbiter_bridge_v3.py": "6f4a2106622e99fe60212199b621cdcbbd2a76b2e639519796b15d5a703e3d1d"
+  },
+  "stable": true,
+  "cases": [
+    {
+      "id": "F0_optional_VIN_absent_source_positive",
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "meets_expectation": true,
+      "report": {
+        "status": "PASS_PREFLIGHT_VERIFIED",
+        "valid_samples_count": 120,
+        "corrupt_lines_count": 0,
+        "elapsed_time_s": 12.3,
+        "observation_time_s": 11.9,
+        "rejection_reason": null,
+        "evidence_file": "D:\\HoMinhKhang\\PROJECT\\GITHUB_PROJECT\\CODE XE TU HANH\\evidence_agv_20261001\\parent_startup_0835_b9focyom\\preflight_raw_evidence_1790905614246_28948_0.json",
+        "first_sample": {
+          "safety": "DISARMED",
+          "mode": "PID",
+          "l_tgt": 0,
+          "r_tgt": 0,
+          "l_pwm": 0,
+          "r_pwm": 0,
+          "l_rpm": 0,
+          "r_rpm": 0,
+          "v": 0,
+          "w": 0,
+          "x": 0,
+          "y": 0,
+          "th": 0
+        },
+        "last_sample": {
+          "safety": "DISARMED",
+          "mode": "PID",
+          "l_tgt": 0,
+          "r_tgt": 0,
+          "l_pwm": 0,
+          "r_pwm": 0,
+          "l_rpm": 0,
+          "r_rpm": 0,
+          "v": 0,
+          "w": 0,
+          "x": 0,
+          "y": 0,
+          "th": 0
+        }
+      },
+      "post_diagnostic_D0_span": null,
+      "tx": [],
+      "closed": true,
+      "evidence_file": "D:\\HoMinhKhang\\PROJECT\\GITHUB_PROJECT\\CODE XE TU HANH\\evidence_agv_20261001\\parent_startup_0835_b9focyom\\preflight_raw_evidence_1790905614246_28948_0.json"
+    },
+    {
+      "id": "F1_scan_without_found_then_D0",
+      "expected_exit": 1,
+      "actual_exit": 0,
+      "meets_expectation": false,
+      "report": {
+        "status": "PASS_PREFLIGHT_VERIFIED",
+        "valid_samples_count": 120,
+        "corrupt_lines_count": 0,
+        "elapsed_time_s": 12.2,
+        "observation_time_s": 11.9,
+        "rejection_reason": null,
+        "evidence_file": "D:\\HoMinhKhang\\PROJECT\\GITHUB_PROJECT\\CODE XE TU HANH\\evidence_agv_20261001\\parent_startup_0835_b9focyom\\preflight_raw_evidence_1790905614255_28948_0.json",
+        "first_sample": {
+          "safety": "DISARMED",
+          "mode": "PID",
+          "l_tgt": 0,
+          "r_tgt": 0,
+          "l_pwm": 0,
+          "r_pwm": 0,
+          "l_rpm": 0,
+          "r_rpm": 0,
+          "v": 0,
+          "w": 0,
+          "x": 0,
+          "y": 0,
+          "th": 0
+        },
+        "last_sample": {
+          "safety": "DISARMED",
+          "mode": "PID",
+          "l_tgt": 0,
+          "r_tgt": 0,
+          "l_pwm": 0,
+          "r_pwm": 0,
+          "l_rpm": 0,
+          "r_rpm": 0,
+          "v": 0,
+          "w": 0,
+          "x": 0,
+          "y": 0,
+          "th": 0
+        }
+      },
+      "post_diagnostic_D0_span": null,
+      "tx": [],
+      "closed": true,
+      "evidence_file": "D:\\HoMinhKhang\\PROJECT\\GITHUB_PROJECT\\CODE XE TU HANH\\evidence_agv_20261001\\parent_startup_0835_b9focyom\\preflight_raw_evidence_1790905614255_28948_0.json"
+    },
+    {
+      "id": "F2_zero_address",
+      "expected_exit": 1,
+      "actual_exit": 0,
+      "meets_expectation": false,
+      "report": {
+        "status": "PASS_PREFLIGHT_VERIFIED",
+        "valid_samples_count": 120,
+        "corrupt_lines_count": 0,
+        "elapsed_time_s": 12.3,
+        "observation_time_s": 11.9,
+        "rejection_reason": null,
+        "evidence_file": "D:\\HoMinhKhang\\PROJECT\\GITHUB_PROJECT\\CODE XE TU HANH\\evidence_agv_20261001\\parent_startup_0835_b9focyom\\preflight_raw_evidence_1790905614264_28948_0.json",
+        "first_sample": {
+          "safety": "DISARMED",
+          "mode": "PID",
+          "l_tgt": 0,
+          "r_tgt": 0,
+          "l_pwm": 0,
+          "r_pwm": 0,
+          "l_rpm": 0,
+          "r_rpm": 0,
+          "v": 0,
+          "w": 0,
+          "x": 0,
+          "y": 0,
+          "th": 0
+        },
+        "last_sample": {
+          "safety": "DISARMED",
+          "mode": "PID",
+          "l_tgt": 0,
+          "r_tgt": 0,
+          "l_pwm": 0,
+          "r_pwm": 0,
+          "l_rpm": 0,
+          "r_rpm": 0,
+          "v": 0,
+          "w": 0,
+          "x": 0,
+          "y": 0,
+          "th": 0
+        }
+      },
+      "post_diagnostic_D0_span": null,
+      "tx": [],
+      "closed": true,
+      "evidence_file": "D:\\HoMinhKhang\\PROJECT\\GITHUB_PROJECT\\CODE XE TU HANH\\evidence_agv_20261001\\parent_startup_0835_b9focyom\\preflight_raw_evidence_1790905614264_28948_0.json"
+    },
+    {
+      "id": "F3_fractional_VIN",
+      "expected_exit": 1,
+      "actual_exit": 0,
+      "meets_expectation": false,
+      "report": {
+        "status": "PASS_PREFLIGHT_VERIFIED",
+        "valid_samples_count": 120,
+        "corrupt_lines_count": 0,
+        "elapsed_time_s": 12.4,
+        "observation_time_s": 11.9,
+        "rejection_reason": null,
+        "evidence_file": "D:\\HoMinhKhang\\PROJECT\\GITHUB_PROJECT\\CODE XE TU HANH\\evidence_agv_20261001\\parent_startup_0835_b9focyom\\preflight_raw_evidence_1790905614271_28948_0.json",
+        "first_sample": {
+          "safety": "DISARMED",
+          "mode": "PID",
+          "l_tgt": 0,
+          "r_tgt": 0,
+          "l_pwm": 0,
+          "r_pwm": 0,
+          "l_rpm": 0,
+          "r_rpm": 0,
+          "v": 0,
+          "w": 0,
+          "x": 0,
+          "y": 0,
+          "th": 0
+        },
+        "last_sample": {
+          "safety": "DISARMED",
+          "mode": "PID",
+          "l_tgt": 0,
+          "r_tgt": 0,
+          "l_pwm": 0,
+          "r_pwm": 0,
+          "l_rpm": 0,
+          "r_rpm": 0,
+          "v": 0,
+          "w": 0,
+          "x": 0,
+          "y": 0,
+          "th": 0
+        }
+      },
+      "post_diagnostic_D0_span": 11.899999999999324,
+      "tx": [],
+      "closed": true,
+      "evidence_file": "D:\\HoMinhKhang\\PROJECT\\GITHUB_PROJECT\\CODE XE TU HANH\\evidence_agv_20261001\\parent_startup_0835_b9focyom\\preflight_raw_evidence_1790905614271_28948_0.json"
+    },
+    {
+      "id": "F4_UINT32_overflow",
+      "expected_exit": 1,
+      "actual_exit": 0,
+      "meets_expectation": false,
+      "report": {
+        "status": "PASS_PREFLIGHT_VERIFIED",
+        "valid_samples_count": 120,
+        "corrupt_lines_count": 0,
+        "elapsed_time_s": 12.4,
+        "observation_time_s": 11.9,
+        "rejection_reason": null,
+        "evidence_file": "D:\\HoMinhKhang\\PROJECT\\GITHUB_PROJECT\\CODE XE TU HANH\\evidence_agv_20261001\\parent_startup_0835_b9focyom\\preflight_raw_evidence_1790905614280_28948_0.json",
+        "first_sample": {
+          "safety": "DISARMED",
+          "mode": "PID",
+          "l_tgt": 0,
+          "r_tgt": 0,
+          "l_pwm": 0,
+          "r_pwm": 0,
+          "l_rpm": 0,
+          "r_rpm": 0,
+          "v": 0,
+          "w": 0,
+          "x": 0,
+          "y": 0,
+          "th": 0
+        },
+        "last_sample": {
+          "safety": "DISARMED",
+          "mode": "PID",
+          "l_tgt": 0,
+          "r_tgt": 0,
+          "l_pwm": 0,
+          "r_pwm": 0,
+          "l_rpm": 0,
+          "r_rpm": 0,
+          "v": 0,
+          "w": 0,
+          "x": 0,
+          "y": 0,
+          "th": 0
+        }
+      },
+      "post_diagnostic_D0_span": 11.899999999999324,
+      "tx": [],
+      "closed": true,
+      "evidence_file": "D:\\HoMinhKhang\\PROJECT\\GITHUB_PROJECT\\CODE XE TU HANH\\evidence_agv_20261001\\parent_startup_0835_b9focyom\\preflight_raw_evidence_1790905614280_28948_0.json"
+    },
+    {
+      "id": "F5_postdiag_observation_fixed",
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "meets_expectation": true,
+      "report": {
+        "status": "PASS_PREFLIGHT_VERIFIED",
+        "valid_samples_count": 120,
+        "corrupt_lines_count": 0,
+        "elapsed_time_s": 14.4,
+        "observation_time_s": 11.9,
+        "rejection_reason": null,
+        "evidence_file": "D:\\HoMinhKhang\\PROJECT\\GITHUB_PROJECT\\CODE XE TU HANH\\evidence_agv_20261001\\parent_startup_0835_b9focyom\\preflight_raw_evidence_1790905614289_28948_0.json",
+        "first_sample": {
+          "safety": "DISARMED",
+          "mode": "PID",
+          "l_tgt": 0,
+          "r_tgt": 0,
+          "l_pwm": 0,
+          "r_pwm": 0,
+          "l_rpm": 0,
+          "r_rpm": 0,
+          "v": 0,
+          "w": 0,
+          "x": 0,
+          "y": 0,
+          "th": 0
+        },
+        "last_sample": {
+          "safety": "DISARMED",
+          "mode": "PID",
+          "l_tgt": 0,
+          "r_tgt": 0,
+          "l_pwm": 0,
+          "r_pwm": 0,
+          "l_rpm": 0,
+          "r_rpm": 0,
+          "v": 0,
+          "w": 0,
+          "x": 0,
+          "y": 0,
+          "th": 0
+        }
+      },
+      "post_diagnostic_D0_span": 11.899999999999324,
+      "tx": [],
+      "closed": true,
+      "evidence_file": "D:\\HoMinhKhang\\PROJECT\\GITHUB_PROJECT\\CODE XE TU HANH\\evidence_agv_20261001\\parent_startup_0835_b9focyom\\preflight_raw_evidence_1790905614289_28948_0.json"
+    },
+    {
+      "id": "T1_RPM_NaN",
+      "result": [
+        true,
+        "RUNNING"
+      ],
+      "exception": null,
+      "active": true,
+      "tx": [
+        "V 0.007 0.000\n"
+      ]
+    },
+    {
+      "id": "T2_RPM_corrupt",
+      "result": null,
+      "exception": "ValueError",
+      "active": true,
+      "tx": []
+    },
+    {
+      "id": "T3_stale_data",
+      "result": [
+        true,
+        "RUNNING"
+      ],
+      "exception": null,
+      "active": true,
+      "tx": [
+        "V 0.007 0.000\n"
+      ]
+    },
+    {
+      "id": "T4_missing_rx_replaced_by_now",
+      "result": [
+        true,
+        "STOP_CONFIRMED"
+      ],
+      "runner_confirmed": true,
+      "gate_confirmed": true,
+      "tx": [
+        "STOP\n"
+      ]
+    },
+    {
+      "id": "T0_positive_explicit_fresh_D0",
+      "result": [
+        true,
+        "STOP_CONFIRMED"
+      ],
+      "runner_confirmed": true,
+      "gate_confirmed": true,
+      "tx": [
+        "STOP\n"
+      ]
+    },
+    {
+      "id": "T5_missing_data_resets_STOP_deadline",
+      "first_stop": 100.05,
+      "last_stop": 100.5,
+      "last_gate_stop": 100.5,
+      "fault_reason": "REJECT_MISSING_TELEMETRY",
+      "tx": [
+        "STOP\n",
+        "STOP\n",
+        "STOP\n",
+        "STOP\n",
+        "STOP\n",
+        "STOP\n"
+      ]
+    }
+  ]
+}

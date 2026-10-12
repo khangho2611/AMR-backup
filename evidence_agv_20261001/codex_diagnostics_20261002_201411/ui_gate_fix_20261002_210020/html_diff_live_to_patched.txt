@@ -1,0 +1,52 @@
+warning: in the working copy of 'D:\HoMinhKhang\PROJECT\GITHUB_PROJECT\CODE XE TU HANH\evidence_agv_20261001\codex_diagnostics_20261002_201411\ui_gate_fix_20261002_210020\live_html_before_fix.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'index_cyberpunk.html', LF will be replaced by CRLF the next time Git touches it
+diff --git "a/D:\\HoMinhKhang\\PROJECT\\GITHUB_PROJECT\\CODE XE TU HANH\\evidence_agv_20261001\\codex_diagnostics_20261002_201411\\ui_gate_fix_20261002_210020\\live_html_before_fix.html" b/index_cyberpunk.html
+index 4b75bc0..f534187 100644
+--- "a/D:\\HoMinhKhang\\PROJECT\\GITHUB_PROJECT\\CODE XE TU HANH\\evidence_agv_20261001\\codex_diagnostics_20261002_201411\\ui_gate_fix_20261002_210020\\live_html_before_fix.html"	
++++ b/index_cyberpunk.html
+@@ -318,11 +318,13 @@
+         const response = await fetch('/api/cmd?val=' + encodeURIComponent(cmd), {signal:AbortSignal.timeout(1200)});
+         const data = await response.json();
+         if (!response.ok) {
+-          document.getElementById('statusBadge').innerText = data.reason || 'Lệnh bị từ chối';
++          document.getElementById('statusBadge').innerText = (cmd + ' BỊ TỪ CHỐI: ' + (data.reason || 'Lệnh bị từ chối'));
+           if (sessionTimer) clearInterval(sessionTimer);
+           sessionTimer = null;
+           if (driveTimer) clearInterval(driveTimer);
+           driveTimer = null; driveCmd = null;
++        } else if (cmd === 'ARM') {
++          document.getElementById('statusBadge').innerText = 'ARM ĐÃ GỬI — ĐANG CHỜ ACK MCU';
+         }
+         return response.ok;
+       } catch (_) {
+@@ -342,9 +344,17 @@
+       }
+     }
+ 
+-    function toggleAuto() {
++    async function toggleAuto() {
+       const act = isAutoRunning ? 'STOP' : 'START';
+-      fetch('/api/auto?act=' + act).then(r=>r.json()).then(d=>{
++      try {
++        const response = await fetch('/api/auto?act=' + act, {signal:AbortSignal.timeout(1200)});
++        const d = await response.json();
++        if (!response.ok || d.status !== 'ok') {
++          isAutoRunning = Boolean(d.auto);
++          document.getElementById('statusBadge').innerText =
++            ('AUTO ' + act + ' BỊ TỪ CHỐI: ' + (d.reason || 'UNKNOWN'));
++          return;
++        }
+         isAutoRunning = d.auto;
+         const btn = document.getElementById('btnAuto');
+         const txt = document.getElementById('autoText');
+@@ -359,7 +369,9 @@
+           btn.style.background = '#064e3b';
+           btn.style.borderColor = '#059669';
+         }
+-      });
++      } catch (_) {
++        document.getElementById('statusBadge').innerText = 'AUTO MẤT KẾT NỐI — CHƯA XÁC NHẬN AN TOÀN';
++      }
+     }
+ 
+     function emergencyStop() {

@@ -1,0 +1,150 @@
+{
+  "scope": "OFFLINE ONLY injected responsive fake UART; actual runtime+gate, no serial.Serial/connect",
+  "before": "071408c7039529c2b03c209a40ed4f45ac25b7eacad7dc5d458654aad75b6d81",
+  "after": "071408c7039529c2b03c209a40ed4f45ac25b7eacad7dc5d458654aad75b6d81",
+  "stable": true,
+  "cases": [
+    {
+      "case": "normal",
+      "code": 0,
+      "error": null,
+      "elapsed": 0.4529999999795109,
+      "report": {
+        "preflight_status": "PREFLIGHT_STABLE_VERIFIED",
+        "preflight_samples": 6,
+        "preflight_span_s": 0.10899999999674037,
+        "evidence_file": "C:\\Users\\Khang\\AppData\\Local\\Temp\\agv_OFFLINE_0915_ts8sy5x6\\motion_evidence_1790909240203_15560.json",
+        "status": "PASS_MOTION_VERIFIED"
+      },
+      "closed": true,
+      "arm_writes": 1,
+      "velocity_writes": 4,
+      "stop_confirmed": true,
+      "fault": null,
+      "duplicated_same_rx": 1,
+      "evidence_files": 1,
+      "records": 21,
+      "tx_records": 6,
+      "writes": [
+        {
+          "t": 351181.515,
+          "bytes": "ARM\n"
+        },
+        {
+          "t": 351181.562,
+          "bytes": "V 0.007 0.000\n"
+        },
+        {
+          "t": 351181.609,
+          "bytes": "V 0.015 0.000\n"
+        },
+        {
+          "t": 351181.656,
+          "bytes": "V 0.022 0.000\n"
+        },
+        {
+          "t": 351181.703,
+          "bytes": "V 0.029 0.000\n"
+        },
+        {
+          "t": 351181.765,
+          "bytes": "STOP\n"
+        }
+      ]
+    },
+    {
+      "case": "overspeed",
+      "code": 1,
+      "error": null,
+      "elapsed": 0.25,
+      "report": {
+        "preflight_status": "PREFLIGHT_STABLE_VERIFIED",
+        "preflight_samples": 7,
+        "preflight_span_s": 0.10899999999674037,
+        "evidence_file": "C:\\Users\\Khang\\AppData\\Local\\Temp\\agv_OFFLINE_0915_8r71wjvm\\motion_evidence_1790909240456_15560.json",
+        "status": "FAIL_MOTION_SAFETY_TRIPPED_BUT_STOPPED"
+      },
+      "closed": true,
+      "arm_writes": 1,
+      "velocity_writes": 0,
+      "stop_confirmed": true,
+      "fault": "REJECT_NON_FORWARDING_CLOCK",
+      "duplicated_same_rx": 1,
+      "evidence_files": 1,
+      "records": 12,
+      "tx_records": 3,
+      "writes": [
+        {
+          "t": 351181.984,
+          "bytes": "ARM\n"
+        },
+        {
+          "t": 351182.046,
+          "bytes": "STOP\n"
+        },
+        {
+          "t": 351182.046,
+          "bytes": "STOP\n"
+        }
+      ]
+    },
+    {
+      "case": "boot_error",
+      "code": 1,
+      "error": null,
+      "elapsed": 0.06300000002374873,
+      "report": {
+        "hardware_error": "MKE_M18_INIT_FAILED",
+        "status": "FAIL_HARDWARE_ERROR_BEFORE_ARM",
+        "evidence_file": "C:\\Users\\Khang\\AppData\\Local\\Temp\\agv_OFFLINE_0915_ogabi5ps\\motion_evidence_1790909240508_15560.json"
+      },
+      "closed": true,
+      "arm_writes": 0,
+      "velocity_writes": 0,
+      "stop_confirmed": false,
+      "fault": "HARDWARE_ERROR: MKE_M18_INIT_FAILED",
+      "duplicated_same_rx": 1,
+      "evidence_files": 1,
+      "records": 2,
+      "tx_records": 3,
+      "writes": [
+        {
+          "t": 351182.125,
+          "bytes": "STOP\n"
+        },
+        {
+          "t": 351182.125,
+          "bytes": "STOP\n"
+        },
+        {
+          "t": 351182.14,
+          "bytes": "STOP\n"
+        }
+      ]
+    },
+    {
+      "case": "negative_duration",
+      "code": 2,
+      "error": null,
+      "elapsed": 0.0,
+      "report": {
+        "status": "FAIL_INVALID_NOMINAL_TIME"
+      },
+      "closed": false,
+      "arm_writes": 0,
+      "velocity_writes": 0,
+      "stop_confirmed": null,
+      "fault": null,
+      "duplicated_same_rx": 0,
+      "evidence_files": 0,
+      "records": 0,
+      "tx_records": 0,
+      "writes": []
+    }
+  ],
+  "cli_proposed_output_dir": {
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[MOCK EXECUTION] Bắt đầu kiểm thử độc lập Mock Pipeline...\n[MOCK NOMINAL STOP] Status: STOP_UNCONFIRMED_STALE_OR_UNSAFE, Active: False\n[MOCK STOP CONFIRMED] Status: STOP_CONFIRMED, Confirmed: True\n[MOCK COMPLETED] Tổng số lệnh ghi ra Serial: 22\n[MOCK COMPLETED] Lệnh cuối cùng: STOP\n"
+  }
+}

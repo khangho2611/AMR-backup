@@ -1,0 +1,36 @@
+[
+  {
+    "case": "nonzero_D0",
+    "return": [
+      true,
+      "ARM_REQUESTED: Epoch=1, Token=new (Chờ xác nhận ACK + Telemetry ARMED mới)"
+    ],
+    "writes": [
+      "ARM\n"
+    ]
+  },
+  {
+    "case": "future_D0",
+    "return": [
+      true,
+      "ARM_REQUESTED: Epoch=1, Token=new (Chờ xác nhận ACK + Telemetry ARMED mới)"
+    ],
+    "writes": [
+      "ARM\n"
+    ]
+  },
+  {
+    "case": "invalid_telem_clock",
+    "return": [
+      true,
+      "ARM_REQUESTED: Epoch=1, Token=new (Chờ xác nhận ACK + Telemetry ARMED mới)"
+    ],
+    "writes": [
+      "ARM\n"
+    ]
+  },
+  {
+    "case": "STOP_confirmed_with_older_sample",
+    "stop_confirmed": true
+  }
+]

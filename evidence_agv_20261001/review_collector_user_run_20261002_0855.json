@@ -1,0 +1,246 @@
+{
+  "scope": "OFFLINE actual collector.main only/fakeSerial/clock; runner NOT imported, raw import fails on parentPython3.12.10 missingAny before typing import",
+  "before": {
+    "agv_preflight_static_collector.py": "4b32ca76c0f253fdee228be7354281e8aec74adedcaf15897910a42a3463271a",
+    "agv_motion_supervisor_runner.py": "2a30e7eeddf93190edc5b9540145132ae18b1bf44b0213961fea3f91a0f6f24e",
+    "agv_serial_arbiter_bridge_v3.py": "6f4a2106622e99fe60212199b621cdcbbd2a76b2e639519796b15d5a703e3d1d"
+  },
+  "after": {
+    "agv_preflight_static_collector.py": "4b32ca76c0f253fdee228be7354281e8aec74adedcaf15897910a42a3463271a",
+    "agv_motion_supervisor_runner.py": "2a30e7eeddf93190edc5b9540145132ae18b1bf44b0213961fea3f91a0f6f24e",
+    "agv_serial_arbiter_bridge_v3.py": "6f4a2106622e99fe60212199b621cdcbbd2a76b2e639519796b15d5a703e3d1d"
+  },
+  "cases": [
+    {
+      "id": "F0_optionalVIN",
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "meets_expectation": true,
+      "report": {
+        "status": "PASS_PREFLIGHT_VERIFIED",
+        "valid_samples_count": 120,
+        "corrupt_lines_count": 0,
+        "elapsed_time_s": 12.3,
+        "observation_time_s": 11.9,
+        "rejection_reason": null,
+        "evidence_file": "D:\\HoMinhKhang\\PROJECT\\GITHUB_PROJECT\\CODE XE TU HANH\\evidence_agv_20261001\\parent_startup_0835_cicwwgc7\\preflight_raw_evidence_1790906152866_10756_0.json",
+        "first_sample": {
+          "safety": "DISARMED",
+          "mode": "PID",
+          "l_tgt": 0,
+          "r_tgt": 0,
+          "l_pwm": 0,
+          "r_pwm": 0,
+          "l_rpm": 0,
+          "r_rpm": 0,
+          "v": 0,
+          "w": 0,
+          "x": 0,
+          "y": 0,
+          "th": 0
+        },
+        "last_sample": {
+          "safety": "DISARMED",
+          "mode": "PID",
+          "l_tgt": 0,
+          "r_tgt": 0,
+          "l_pwm": 0,
+          "r_pwm": 0,
+          "l_rpm": 0,
+          "r_rpm": 0,
+          "v": 0,
+          "w": 0,
+          "x": 0,
+          "y": 0,
+          "th": 0
+        }
+      },
+      "post_diagnostic_D0_span": null,
+      "tx": [],
+      "closed": true,
+      "evidence_file": "D:\\HoMinhKhang\\PROJECT\\GITHUB_PROJECT\\CODE XE TU HANH\\evidence_agv_20261001\\parent_startup_0835_cicwwgc7\\preflight_raw_evidence_1790906152866_10756_0.json"
+    },
+    {
+      "id": "F1_incompleteScan",
+      "expected_exit": 1,
+      "actual_exit": 1,
+      "meets_expectation": true,
+      "report": {
+        "status": "FAIL_INVALID_BOOT_BANNER",
+        "valid_samples_count": 0,
+        "corrupt_lines_count": 0,
+        "elapsed_time_s": 0.3,
+        "observation_time_s": 0.0,
+        "rejection_reason": "Qu\u00e1 tr\u00ecnh qu\u00e9t I2C ch\u01b0a ho\u00e0n t\u1ea5t (thi\u1ebfu i2c_found ho\u1eb7c error)",
+        "evidence_file": "D:\\HoMinhKhang\\PROJECT\\GITHUB_PROJECT\\CODE XE TU HANH\\evidence_agv_20261001\\parent_startup_0835_cicwwgc7\\preflight_raw_evidence_1790906152872_10756_0.json",
+        "first_sample": null,
+        "last_sample": null
+      },
+      "post_diagnostic_D0_span": null,
+      "tx": [],
+      "closed": true,
+      "evidence_file": "D:\\HoMinhKhang\\PROJECT\\GITHUB_PROJECT\\CODE XE TU HANH\\evidence_agv_20261001\\parent_startup_0835_cicwwgc7\\preflight_raw_evidence_1790906152872_10756_0.json"
+    },
+    {
+      "id": "F2_addr0",
+      "expected_exit": 1,
+      "actual_exit": 1,
+      "meets_expectation": true,
+      "report": {
+        "status": "FAIL_INVALID_I2C_DIAGNOSTIC",
+        "valid_samples_count": 0,
+        "corrupt_lines_count": 0,
+        "elapsed_time_s": 0.3,
+        "observation_time_s": 0.0,
+        "rejection_reason": "i2c_found kh\u00f4ng h\u1ee3p l\u1ec7 ho\u1eb7c xu\u1ea5t hi\u1ec7n ngo\u00e0i th\u1ee9 t\u1ef1 (state 2, addr 0x00)",
+        "evidence_file": "D:\\HoMinhKhang\\PROJECT\\GITHUB_PROJECT\\CODE XE TU HANH\\evidence_agv_20261001\\parent_startup_0835_cicwwgc7\\preflight_raw_evidence_1790906152874_10756_0.json",
+        "first_sample": null,
+        "last_sample": null
+      },
+      "post_diagnostic_D0_span": null,
+      "tx": [],
+      "closed": true,
+      "evidence_file": "D:\\HoMinhKhang\\PROJECT\\GITHUB_PROJECT\\CODE XE TU HANH\\evidence_agv_20261001\\parent_startup_0835_cicwwgc7\\preflight_raw_evidence_1790906152874_10756_0.json"
+    },
+    {
+      "id": "F3_vinfraction",
+      "expected_exit": 1,
+      "actual_exit": 1,
+      "meets_expectation": true,
+      "report": {
+        "status": "FAIL_INVALID_I2C_DIAGNOSTIC",
+        "valid_samples_count": 0,
+        "corrupt_lines_count": 0,
+        "elapsed_time_s": 0.4,
+        "observation_time_s": 0.0,
+        "rejection_reason": "vin_mv kh\u00f4ng h\u1ee3p l\u1ec7 ho\u1eb7c ngo\u00e0i th\u1ee9 t\u1ef1 (state 3, val 0.5)",
+        "evidence_file": "D:\\HoMinhKhang\\PROJECT\\GITHUB_PROJECT\\CODE XE TU HANH\\evidence_agv_20261001\\parent_startup_0835_cicwwgc7\\preflight_raw_evidence_1790906152878_10756_0.json",
+        "first_sample": null,
+        "last_sample": null
+      },
+      "post_diagnostic_D0_span": null,
+      "tx": [],
+      "closed": true,
+      "evidence_file": "D:\\HoMinhKhang\\PROJECT\\GITHUB_PROJECT\\CODE XE TU HANH\\evidence_agv_20261001\\parent_startup_0835_cicwwgc7\\preflight_raw_evidence_1790906152878_10756_0.json"
+    },
+    {
+      "id": "F4_vinOverflow",
+      "expected_exit": 1,
+      "actual_exit": 1,
+      "meets_expectation": true,
+      "report": {
+        "status": "FAIL_INVALID_I2C_DIAGNOSTIC",
+        "valid_samples_count": 0,
+        "corrupt_lines_count": 0,
+        "elapsed_time_s": 0.4,
+        "observation_time_s": 0.0,
+        "rejection_reason": "vin_mv kh\u00f4ng h\u1ee3p l\u1ec7 ho\u1eb7c ngo\u00e0i th\u1ee9 t\u1ef1 (state 3, val 4294967296)",
+        "evidence_file": "D:\\HoMinhKhang\\PROJECT\\GITHUB_PROJECT\\CODE XE TU HANH\\evidence_agv_20261001\\parent_startup_0835_cicwwgc7\\preflight_raw_evidence_1790906152879_10756_0.json",
+        "first_sample": null,
+        "last_sample": null
+      },
+      "post_diagnostic_D0_span": null,
+      "tx": [],
+      "closed": true,
+      "evidence_file": "D:\\HoMinhKhang\\PROJECT\\GITHUB_PROJECT\\CODE XE TU HANH\\evidence_agv_20261001\\parent_startup_0835_cicwwgc7\\preflight_raw_evidence_1790906152879_10756_0.json"
+    },
+    {
+      "id": "F5_poststartup",
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "meets_expectation": true,
+      "report": {
+        "status": "PASS_PREFLIGHT_VERIFIED",
+        "valid_samples_count": 120,
+        "corrupt_lines_count": 0,
+        "elapsed_time_s": 14.4,
+        "observation_time_s": 11.9,
+        "rejection_reason": null,
+        "evidence_file": "D:\\HoMinhKhang\\PROJECT\\GITHUB_PROJECT\\CODE XE TU HANH\\evidence_agv_20261001\\parent_startup_0835_cicwwgc7\\preflight_raw_evidence_1790906152885_10756_0.json",
+        "first_sample": {
+          "safety": "DISARMED",
+          "mode": "PID",
+          "l_tgt": 0,
+          "r_tgt": 0,
+          "l_pwm": 0,
+          "r_pwm": 0,
+          "l_rpm": 0,
+          "r_rpm": 0,
+          "v": 0,
+          "w": 0,
+          "x": 0,
+          "y": 0,
+          "th": 0
+        },
+        "last_sample": {
+          "safety": "DISARMED",
+          "mode": "PID",
+          "l_tgt": 0,
+          "r_tgt": 0,
+          "l_pwm": 0,
+          "r_pwm": 0,
+          "l_rpm": 0,
+          "r_rpm": 0,
+          "v": 0,
+          "w": 0,
+          "x": 0,
+          "y": 0,
+          "th": 0
+        }
+      },
+      "post_diagnostic_D0_span": 11.899999999999324,
+      "tx": [],
+      "closed": true,
+      "evidence_file": "D:\\HoMinhKhang\\PROJECT\\GITHUB_PROJECT\\CODE XE TU HANH\\evidence_agv_20261001\\parent_startup_0835_cicwwgc7\\preflight_raw_evidence_1790906152885_10756_0.json"
+    },
+    {
+      "id": "C0_actualraw26",
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "meets_expectation": true,
+      "report": {
+        "status": "PASS_PREFLIGHT_VERIFIED",
+        "valid_samples_count": 120,
+        "corrupt_lines_count": 10,
+        "elapsed_time_s": 14.8,
+        "observation_time_s": 11.9,
+        "rejection_reason": null,
+        "evidence_file": "D:\\HoMinhKhang\\PROJECT\\GITHUB_PROJECT\\CODE XE TU HANH\\evidence_agv_20261001\\parent_startup_0835_cicwwgc7\\preflight_raw_evidence_1790906152894_10756_0.json",
+        "first_sample": {
+          "safety": "DISARMED",
+          "mode": "PID",
+          "l_tgt": 0,
+          "r_tgt": 0,
+          "l_pwm": 0,
+          "r_pwm": 0,
+          "l_rpm": 0,
+          "r_rpm": 0,
+          "v": 0,
+          "w": 0,
+          "x": 0,
+          "y": 0,
+          "th": 0
+        },
+        "last_sample": {
+          "safety": "DISARMED",
+          "mode": "PID",
+          "l_tgt": 0,
+          "r_tgt": 0,
+          "l_pwm": 0,
+          "r_pwm": 0,
+          "l_rpm": 0,
+          "r_rpm": 0,
+          "v": 0,
+          "w": 0,
+          "x": 0,
+          "y": 0,
+          "th": 0
+        }
+      },
+      "post_diagnostic_D0_span": 11.899999999999324,
+      "tx": [],
+      "closed": true,
+      "evidence_file": "D:\\HoMinhKhang\\PROJECT\\GITHUB_PROJECT\\CODE XE TU HANH\\evidence_agv_20261001\\parent_startup_0835_cicwwgc7\\preflight_raw_evidence_1790906152894_10756_0.json"
+    }
+  ]
+}

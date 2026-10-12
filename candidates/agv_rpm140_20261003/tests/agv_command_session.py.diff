@@ -1,0 +1,22 @@
+--- D:\HoMinhKhang\PROJECT\GITHUB_PROJECT\CODE XE TU HANH\agv_command_session.py
++++ D:\HoMinhKhang\PROJECT\GITHUB_PROJECT\CODE XE TU HANH\candidates\agv_rpm140_20261003\agv_command_session.py
+@@ -16,6 +16,7 @@
+ 
+ from agv_preflight_static_collector import EXACT_BOOT_BANNER, EXACT_I2C_SCAN_BANNER
+ from agv_navigation import finite
++from agv_speed_profile import MAX_LINEAR_MPS, limited_twist
+ 
+ NUMERIC = ('l_tgt','r_tgt','l_rpm','r_rpm','l_pwm','r_pwm','x','y','th','v','w')
+ ZERO = ('l_tgt','r_tgt','l_rpm','r_rpm','l_pwm','r_pwm','v','w')
+@@ -338,8 +339,10 @@
+         if self.motion_window_s is not None and (parts[0]=='M' or abs(values[0])>.04):
+             return self._drive_result(command, False, 'TRIAL_V_ONLY_MAX_0.04')
+         if (parts[0] == 'M' and (autonomous or any(abs(v)>140 or v != int(v) for v in values)) or
+-                parts[0] == 'V' and (abs(values[0]) > .20 or abs(values[1]) > .35)):
++                parts[0] == 'V' and (abs(values[0]) > MAX_LINEAR_MPS or abs(values[1]) > .35)):
+             return self._drive_result(command, False, 'DRIVE_LIMIT')
++        if parts[0]=='V' and any(abs(a-b)>1e-9 for a,b in zip(values,limited_twist(*values))):
++            return self._drive_result(command,False,'WHEEL_RPM_LIMIT')
+         with self.lock:
+             if not autonomous:
+                 if self.autonomy_allowed is True:self.generation += 1

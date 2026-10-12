@@ -1,0 +1,249 @@
+--- backup/index_cyberpunk.html
++++ current/index_cyberpunk.html
+@@ -136,6 +136,7 @@
+             <span style="font-size:16px;">🚀</span>
+             <span id="autoText">BẬT TỰ ĐỘNG QUÉT MAP</span>
+           </button>
++          <button class="btn-action" id="btnArm" onclick="armControl()">MỞ PHIÊN ĐIỀU KHIỂN</button>
+           <button class="btn-action btn-estop" onclick="emergencyStop()">
+             <span style="font-size:16px;">🛑</span>
+             <span>DỪNG KHẨN CẤP</span>
+@@ -233,81 +234,59 @@
+       if (view === 'slam') fetchMap();
+     }
+ 
+-    // QUẢN LÝ LỊCH SỬ TUNING PID & XUẤT FILE EXCEL (.CSV)
+-    let pidHistory = JSON.parse(localStorage.getItem('agv_pid_history') || '[]');
+-
++    // Persistent browser records also retain timeouts/disconnections.
++    let pidHistory;
++    try { pidHistory = JSON.parse(localStorage.getItem('agv_pid_history') || '[]'); }
++    catch (_) { pidHistory = []; }
++    if (!Array.isArray(pidHistory)) pidHistory = [];
++    pidHistory.forEach(row => { if (row.status === 'PENDING') { row.status = 'FAILED'; row.reason = 'Trang tải lại: chưa xác nhận kết quả MCU'; } });
++    let pidBusy = false;
++    const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
++    function saveHistory() {
++      pidHistory = pidHistory.slice(-500);
++      try { localStorage.setItem('agv_pid_history', JSON.stringify(pidHistory)); } catch (_) {}
++      renderHistory();
++    }
+     function renderHistory() {
+       const tbody = document.getElementById('historyTableBody');
+       const countLbl = document.getElementById('historyCount');
+       if (!tbody) return;
+       if (countLbl) countLbl.innerText = pidHistory.length + ' bản ghi';
+-      if (pidHistory.length === 0) {
+-        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:6px; color:#64748b;">Chưa có bản ghi nào</td></tr>';
++      tbody.innerHTML = pidHistory.length ? pidHistory.slice(-10).reverse().map(row => {
++        const status = row.status || 'UNVERIFIED';
++        const color = status === 'APPLIED' ? 'var(--green)' : status === 'PENDING' ? 'var(--yellow)' : 'var(--red)';
++        return `<tr><td>${escapeHtml(row.time)}</td><td>${escapeHtml(row.kp)}</td><td>${escapeHtml(row.ki)}</td><td>${escapeHtml(row.kd)}</td><td style="color:${color}" title="${escapeHtml(row.reason)}">${escapeHtml(status)}</td></tr>`;
++      }).join('') : '<tr><td colspan="5">Chưa có bản ghi nào</td></tr>';
++    }
++    async function applyPidMini() {
++      if (pidBusy) return;
++      const fields = ['inputKpMini','inputKiMini','inputKdMini'];
++      const strings = fields.map(id => document.getElementById(id).value.trim());
++      const values = strings.map(Number);
++      const lbl = document.getElementById('pidStatusMini');
++      if (strings.some(v => v === '') || values.some((v,i) => !Number.isFinite(v) || v < 0 || v > [20,50,5][i])) {
++        if (lbl) lbl.innerText = 'REJECTED: giá trị PID không hợp lệ';
+         return;
+       }
+-      let html = '';
+-      for (let i = pidHistory.length - 1; i >= Math.max(0, pidHistory.length - 10); i--) {
+-        const row = pidHistory[i];
+-        const isOk = row.note && row.note.includes('APPLIED');
+-        html += `<tr style="border-bottom:1px solid #1e293b;">
+-          <td style="padding:2px 4px; color:#94a3b8;">${row.time}</td>
+-          <td style="padding:2px 4px; color:var(--cyan); font-weight:bold;">${row.kp}</td>
+-          <td style="padding:2px 4px; color:var(--green); font-weight:bold;">${row.ki}</td>
+-          <td style="padding:2px 4px; color:var(--yellow); font-weight:bold;">${row.kd}</td>
+-          <td style="padding:2px 4px; color:${isOk ? 'var(--green)' : 'var(--red)'}; font-weight:bold;">${isOk ? 'APPLIED' : 'REJECT'}</td>
+-        </tr>`;
++      const [kp,ki,kd] = values;
++      const record = {time:new Date().toISOString(),kp,ki,kd,kf:.45,status:'PENDING',reason:'Chờ MCU xác nhận'};
++      pidHistory.push(record); saveHistory();
++      pidBusy = true;
++      if (lbl) lbl.innerText = 'PENDING: chờ MCU';
++      try {
++        const response = await fetch(`/api/pid?kp=${kp}&ki=${ki}&kd=${kd}&kf=0.45`, {signal:AbortSignal.timeout(2500)});
++        const result = await response.json();
++        const accepted = response.ok && result.status === 'APPLIED';
++        record.status = accepted ? 'APPLIED' : result.status === 'REJECTED' ? 'REJECTED' : 'FAILED';
++        record.reason = result.reason || 'Không có xác nhận MCU hợp lệ';
++      } catch (_) {
++        record.status = 'FAILED';
++        record.reason = 'Mất kết nối hoặc timeout; chưa xác nhận MCU';
++      } finally {
++        pidBusy = false;
++        saveHistory();
++        if (lbl) { lbl.innerText = record.status + ': ' + record.reason; lbl.style.color = record.status === 'APPLIED' ? 'var(--green)' : 'var(--red)'; }
+       }
+-      tbody.innerHTML = html;
+-    }
+-
+-    function applyPidMini() {
+-      const valKp = document.getElementById('inputKpMini').value.trim();
+-      const valKi = document.getElementById('inputKiMini').value.trim();
+-      const valKd = document.getElementById('inputKdMini').value.trim();
+-
+-      const kp = valKp !== '' && !isNaN(valKp) ? parseFloat(valKp) : 0.50;
+-      const ki = valKi !== '' && !isNaN(valKi) ? parseFloat(valKi) : 1.50;
+-      const kd = valKd !== '' && !isNaN(valKd) ? parseFloat(valKd) : 0.00;
+-      const kf = 0.45;
+-
+-      const lbl = document.getElementById('pidStatusMini');
+-      if (lbl) lbl.innerText = 'ĐANG GỬI...';
+-
+-      fetch(`/api/pid?kp=${kp}&ki=${ki}&kd=${kd}&kf=${kf}`)
+-        .then(r => r.json())
+-        .then(d => {
+-          if (lbl) {
+-            lbl.innerText = d.status === 'APPLIED' ? '✅ ÁP DỤNG THÀNH CÔNG' : '❌ TỪ CHỐI';
+-            lbl.style.color = d.status === 'APPLIED' ? 'var(--green)' : 'var(--red)';
+-          }
+-          const now = new Date();
+-          const timeStr = now.toLocaleTimeString('vi-VN');
+-          const l_rpm = teleData && teleData.robot ? teleData.robot.l_rpm.toFixed(1) : '0.0';
+-          const r_rpm = teleData && teleData.robot ? teleData.robot.r_rpm.toFixed(1) : '0.0';
+-          const l_pwm = teleData && teleData.robot ? teleData.robot.l_pwm : '0';
+-          const r_pwm = teleData && teleData.robot ? teleData.robot.r_pwm : '0';
+-
+-          const record = {
+-            time: timeStr,
+-            kp: kp.toFixed(3),
+-            ki: ki.toFixed(3),
+-            kd: kd.toFixed(4),
+-            kf: kf.toFixed(3),
+-            rpm: `${l_rpm} / ${r_rpm}`,
+-            pwm: `${l_pwm} / ${r_pwm}`,
+-            note: d.status === 'APPLIED' ? 'APPLIED (Khớp MCU)' : `REJECTED (${d.ack || 'Lỗi'})`
+-          };
+-          pidHistory.push(record);
+-          if (pidHistory.length > 500) pidHistory.shift();
+-          localStorage.setItem('agv_pid_history', JSON.stringify(pidHistory));
+-          renderHistory();
+-        })
+-        .catch(err => {
+-          if (lbl) {
+-            lbl.innerText = '❌ LỖI KẾT NỐI';
+-            lbl.style.color = 'var(--red)';
+-          }
+-        });
+     }
+ 
+     function applyPid() {
+@@ -315,7 +294,12 @@
+     }
+ 
+     function exportToExcel() {
+-      window.open('/api/history_csv', '_blank');
++      const columns = ['time','kp','ki','kd','kf','status','reason'];
++      const quote = v => '"' + String(v ?? '').replace(/"/g, '""') + '"';
++      const csv = [columns, ...pidHistory.map(row => columns.map(k => row[k]))].map(row => row.map(quote).join(',')).join('\r\n');
++      const url = URL.createObjectURL(new Blob(['\ufeff' + csv], {type:'text/csv;charset=utf-8'}));
++      const link = document.createElement('a'); link.href = url; link.download = 'agv_pid_history.csv'; link.click();
++      setTimeout(() => URL.revokeObjectURL(url), 1000);
+     }
+ 
+     function clearHistory() {
+@@ -329,8 +313,33 @@
+     // Tự động render lịch sử ban đầu
+     setTimeout(renderHistory, 500);
+ 
+-    function sendCmd(cmd) {
+-      fetch('/api/cmd?val=' + encodeURIComponent(cmd)).catch(()=>{});
++    async function sendCmd(cmd) {
++      try {
++        const response = await fetch('/api/cmd?val=' + encodeURIComponent(cmd), {signal:AbortSignal.timeout(1200)});
++        const data = await response.json();
++        if (!response.ok) {
++          document.getElementById('statusBadge').innerText = data.reason || 'Lệnh bị từ chối';
++          if (sessionTimer) clearInterval(sessionTimer);
++          sessionTimer = null;
++          if (driveTimer) clearInterval(driveTimer);
++          driveTimer = null; driveCmd = null;
++        }
++        return response.ok;
++      } catch (_) {
++        if (sessionTimer) clearInterval(sessionTimer);
++        sessionTimer = null;
++        if (driveTimer) clearInterval(driveTimer);
++        driveTimer = null; driveCmd = null;
++        document.getElementById('statusBadge').innerText = 'MẤT KẾT NỐI — DỪNG CHƯA XÁC NHẬN';
++        return false;
++      }
++    }
++    let sessionTimer = null;
++    async function armControl() {
++      if (await sendCmd('ARM')) {
++        if (sessionTimer) clearInterval(sessionTimer);
++        sessionTimer = setInterval(() => { if (!driveCmd && !isAutoRunning) sendCmd('V 0.000 0.000'); },150);
++      }
+     }
+ 
+     function toggleAuto() {
+@@ -354,8 +363,8 @@
+     }
+ 
+     function emergencyStop() {
+-      fetch('/api/auto?act=STOP').catch(()=>{});
+-      sendCmd('STOP');
++      // STOP endpoint also disables AUTO. One operation, one confirmation.
++      stopDrive();
+       isAutoRunning = false;
+       const btn = document.getElementById('btnAuto');
+       document.getElementById('autoText').innerText = 'BẬT TỰ ĐỘNG QUÉT MAP';
+@@ -470,11 +479,18 @@
+         } else if (d.status === 'WARNING') {
+           badge.className = 'status-badge badge-warn';
+           badge.innerText = 'CẢNH BÁO VA CHẠM';
++        } else if (d.control && (d.control.fault || d.control.latched)) {
++          badge.className = 'status-badge badge-danger';
++          badge.innerText = d.control.fault || 'ĐÃ KHÓA — CẦN MỞ PHIÊN RÕ RÀNG';
+         } else {
+           badge.className = 'status-badge badge-safe';
+-          badge.innerText = 'TRẠNG THÁI: AN TOÀN';
++          badge.innerText = 'TELEMETRY ĐANG CẬP NHẬT';
+         }
+-      }).catch(()=>{});
++      }).catch(()=>{
++        document.getElementById('statusBadge').innerText = 'MẤT TELEMETRY — CHƯA XÁC NHẬN AN TOÀN';
++        ['valLRpm','valRRpm','valX','valY','valTh'].forEach(id => document.getElementById(id).innerText = '--');
++        if (driveCmd) stopDrive();
++      });
+     }, 100);
+ 
+     // ĐIỀU KHIỂN BÀN PHÍM WASD
+@@ -490,6 +506,7 @@
+     }
+ 
+     function stopDrive() {
++      if (sessionTimer) { clearInterval(sessionTimer); sessionTimer = null; }
+       driveCmd = null;
+       if (driveTimer) { clearInterval(driveTimer); driveTimer = null; }
+       sendCmd('STOP');
+@@ -513,6 +530,7 @@
+     bind('btnE', 'M 130 -130');
+ 
+     window.addEventListener('keydown', (e)=>{
++      if (e.target && /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)) return;
+       if (e.repeat) return;
+       if (e.code === 'Space') { e.preventDefault(); emergencyStop(); return; }
+       const k = { 'KeyW': 'M 140 140', 'KeyS': 'M -140 -140', 'KeyA': 'M -120 120', 'KeyD': 'M 120 -120', 'KeyQ': 'M -130 130', 'KeyE': 'M 130 -130' };
+@@ -520,9 +538,12 @@
+     });
+ 
+     window.addEventListener('keyup', (e)=>{
+-      if (e.code.startsWith('Key') || e.code === 'Space') { e.preventDefault(); stopDrive(); }
++      if (driveCmd && (e.code.startsWith('Key') || e.code === 'Space')) { e.preventDefault(); stopDrive(); }
+     });
+ 
++    window.addEventListener('blur', stopDrive);
++    document.addEventListener('visibilitychange', () => { if (document.hidden) stopDrive(); });
++    window.addEventListener('pointerup', () => { if (driveCmd) stopDrive(); });
+     render();
+   </script>
+ </body>

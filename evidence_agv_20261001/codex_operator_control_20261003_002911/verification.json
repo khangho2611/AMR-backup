@@ -1,0 +1,48 @@
+{
+  "utc": "2026-10-02T17:31:49.190260+00:00",
+  "hashes": {
+    "agv_unified_brain.py": "c426de2ab514dae4274f7871fc1fef7ba67151abe08657b0e312ee7a3b2c4141",
+    "agv_command_session.py": "097380b668d1a0c161557bfd730c6dbfefa8de2eea14f220befb8285210805c6",
+    "agv_navigation.py": "0f106a4a15fcdefda04f78ae74c65867950ccba1cb00dc46d70b340f4086f923",
+    "agv_command_journal.py": "08513da55966bd3c885f57a0245417e36a9b981bfb099c00809535b583a9afe6",
+    "agv_preflight_static_collector.py": "4b32ca76c0f253fdee228be7354281e8aec74adedcaf15897910a42a3463271a",
+    "index_cyberpunk.html": "90c845f251f69fd81d03717fd4b7a7a2d1d18cb5d82721a98929f721a98b9bcc",
+    "slam_scan_fix.yaml": "09dd22eee3f667b98915dc3703c185dd699a6b33f35d083df81b8f5391158357"
+  },
+  "after": {
+    "agv_unified_brain.py": "c426de2ab514dae4274f7871fc1fef7ba67151abe08657b0e312ee7a3b2c4141",
+    "agv_command_session.py": "097380b668d1a0c161557bfd730c6dbfefa8de2eea14f220befb8285210805c6",
+    "agv_navigation.py": "0f106a4a15fcdefda04f78ae74c65867950ccba1cb00dc46d70b340f4086f923",
+    "agv_command_journal.py": "08513da55966bd3c885f57a0245417e36a9b981bfb099c00809535b583a9afe6",
+    "agv_preflight_static_collector.py": "4b32ca76c0f253fdee228be7354281e8aec74adedcaf15897910a42a3463271a",
+    "index_cyberpunk.html": "90c845f251f69fd81d03717fd4b7a7a2d1d18cb5d82721a98929f721a98b9bcc"
+  },
+  "hash_stable": true,
+  "python_tests": {
+    "count": 77,
+    "exit": 0,
+    "log": "python_tests.log"
+  },
+  "js": [
+    {
+      "command": [
+        "node",
+        "--check",
+        "D:\\HoMinhKhang\\PROJECT\\GITHUB_PROJECT\\CODE XE TU HANH\\evidence_agv_20261001\\codex_operator_control_20261003_002911\\dashboard.js"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "node",
+        "D:\\HoMinhKhang\\PROJECT\\GITHUB_PROJECT\\CODE XE TU HANH\\tests\\test_agv_pid_ui.cjs"
+      ],
+      "exit": 0,
+      "stdout": "PASS zero PID and fixed Kf\nPASS FAILED vs REJECTED are distinct and persisted\nPASS disconnect recorded without synthetic MCU success\nPASS empty/nonfinite input rejected before fetch\nPASS pending is persistent; duplicate clicks do not dispatch\nPASS typing PID does not drive; blur has release handler\nPASS emergency stop dispatches exactly one STOP transaction\nPASS trial UI waits for preflight, blocks reARM and reflects stopped AUTO\nPASS continuous operator UI has no trial timer and keeps ARM/FAULT gating\nPASS AUTO rejection shows each gate instead of a generic message\nPASS confirmed ARM is not mislabeled as waiting for ACK\nPASS live telemetry does not erase the last command rejection\n",
+      "stderr": ""
+    }
+  ],
+  "limitations": "Offline tests. No physical motion, ROS executor or deployment acceptance."
+}

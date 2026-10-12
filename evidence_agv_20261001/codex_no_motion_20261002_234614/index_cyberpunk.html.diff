@@ -1,0 +1,83 @@
+--- before/index_cyberpunk.html
++++ after/index_cyberpunk.html
+@@ -129,6 +129,7 @@
+ 
+       <!-- ĐIỀU KHIỂN CHỦ ĐỘNG & TỰ HÀNH -->
+       <div class="card" style="flex:1;">
++        <div id="commandNotice" role="status" aria-live="polite" style="font-size:12px; line-height:1.5; margin-bottom:8px; overflow-wrap:anywhere;">Chưa gửi lệnh điều khiển.</div>
+         <div class="card-title">Bộ Điều Khiển Trung Tâm</div>
+         
+         <div class="action-grid">
+@@ -313,18 +314,38 @@
+     // Tự động render lịch sử ban đầu
+     setTimeout(renderHistory, 500);
+ 
++    function commandFailure(data) {
++      const labels = {
++        NOT_ARMED:'MCU chưa xác nhận mở phiên', LATCHED:'Phiên đang bị khóa',
++        FAULT:'Đang có lỗi điều khiển', D0_STALE:'Dữ liệu MCU quá cũ',
++        SCAN_STALE:'Dữ liệu LiDAR quá cũ', CALLER_STALE:'Mất nhịp lệnh từ người điều khiển',
++        MAP_NOT_READY:'Bản đồ thiếu, quá cũ hoặc chưa hợp lệ',
++        TF_NOT_READY:'Chưa có tọa độ xe mới trong bản đồ',
++        BODY_RADIUS_UNCONFIGURED:'Chưa cấu hình kích thước bao thân xe',
++        TRIAL_EXPIRED:'Phiên thử đã hết thời gian'
++      };
++      const blockers = Array.isArray(data.blockers) ? data.blockers : [];
++      return blockers.length ? blockers.map(b => (labels[b] || b) + ' (' + b + ')').join('; ') : (data.reason || 'Lệnh bị từ chối');
++    }
++    function showCommandMessage(text, data) {
++      if (data && data.journal && !data.journal.saved) text += ' — Không ghi được nhật ký lệnh';
++      document.getElementById('statusBadge').innerText = text;
++      // Telemetry refreshes the vehicle badge; retain the command outcome in
++      // its own area so the rejection does not disappear after 100 ms.
++      document.getElementById('commandNotice').innerText = text;
++    }
+     async function sendCmd(cmd) {
+       try {
+         const response = await fetch('/api/cmd?val=' + encodeURIComponent(cmd), {signal:AbortSignal.timeout(1200)});
+         const data = await response.json();
+         if (!response.ok) {
+-          document.getElementById('statusBadge').innerText = (cmd + ' BỊ TỪ CHỐI: ' + (data.reason || 'Lệnh bị từ chối'));
++          showCommandMessage(cmd + ' BỊ TỪ CHỐI: ' + commandFailure(data), data);
+           if (sessionTimer) clearInterval(sessionTimer);
+           sessionTimer = null;
+           if (driveTimer) clearInterval(driveTimer);
+           driveTimer = null; driveCmd = null;
+         } else if (cmd === 'ARM') {
+-          document.getElementById('statusBadge').innerText = 'ARM ĐÃ GỬI — ĐANG CHỜ ACK MCU';
++          showCommandMessage(data.reason === 'ARM_CONFIRMED' ? 'MCU ĐÃ XÁC NHẬN MỞ PHIÊN' : 'ARM ĐÃ GỬI — ĐANG CHỜ ACK MCU', data);
+         }
+         return response.ok;
+       } catch (_) {
+@@ -332,7 +353,7 @@
+         sessionTimer = null;
+         if (driveTimer) clearInterval(driveTimer);
+         driveTimer = null; driveCmd = null;
+-        document.getElementById('statusBadge').innerText = 'MẤT KẾT NỐI — DỪNG CHƯA XÁC NHẬN';
++        showCommandMessage('MẤT KẾT NỐI — DỪNG CHƯA XÁC NHẬN');
+         return false;
+       }
+     }
+@@ -351,11 +372,11 @@
+         const d = await response.json();
+         if (!response.ok || d.status !== 'ok') {
+           isAutoRunning = Boolean(d.auto);
+-          document.getElementById('statusBadge').innerText =
+-            ('AUTO ' + act + ' BỊ TỪ CHỐI: ' + (d.reason || 'UNKNOWN'));
++          showCommandMessage('AUTO ' + act + ' BỊ TỪ CHỐI: ' + commandFailure(d), d);
+           return;
+         }
+         isAutoRunning = d.auto;
++        showCommandMessage(isAutoRunning ? 'ĐÃ NHẬN LỆNH AUTO' : 'ĐÃ XÁC NHẬN DỪNG AUTO', d);
+         const btn = document.getElementById('btnAuto');
+         const txt = document.getElementById('autoText');
+         if (isAutoRunning) {
+@@ -370,7 +391,7 @@
+           btn.style.borderColor = '#059669';
+         }
+       } catch (_) {
+-        document.getElementById('statusBadge').innerText = 'AUTO MẤT KẾT NỐI — CHƯA XÁC NHẬN AN TOÀN';
++        showCommandMessage('AUTO MẤT KẾT NỐI — CHƯA XÁC NHẬN AN TOÀN');
+       }
+     }
+ 

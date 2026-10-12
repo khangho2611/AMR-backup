@@ -1,0 +1,14 @@
+test_navigation_failure_explains_why_no_drive_was_transmitted (test_agv_diagnostics.DiagnosticRegression.test_navigation_failure_explains_why_no_drive_was_transmitted) ... FAIL
+
+======================================================================
+FAIL: test_navigation_failure_explains_why_no_drive_was_transmitted (test_agv_diagnostics.DiagnosticRegression.test_navigation_failure_explains_why_no_drive_was_transmitted)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "D:\HoMinhKhang\PROJECT\GITHUB_PROJECT\CODE XE TU HANH\tests\test_agv_diagnostics.py", line 104, in test_navigation_failure_explains_why_no_drive_was_transmitted
+    self.assertTrue(events,'No safe path must have a diagnostic reason')
+AssertionError: [] is not true : No safe path must have a diagnostic reason
+
+----------------------------------------------------------------------
+Ran 1 test in 0.056s
+
+FAILED (failures=1)

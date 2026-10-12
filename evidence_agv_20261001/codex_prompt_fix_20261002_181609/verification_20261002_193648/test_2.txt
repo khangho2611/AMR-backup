@@ -1,0 +1,7 @@
+PASS zero PID and fixed Kf
+PASS FAILED vs REJECTED are distinct and persisted
+PASS disconnect recorded without synthetic MCU success
+PASS empty/nonfinite input rejected before fetch
+PASS pending is persistent; duplicate clicks do not dispatch
+PASS typing PID does not drive; blur has release handler
+PASS emergency stop dispatches exactly one STOP transaction

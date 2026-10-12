@@ -1,0 +1,106 @@
+{
+  "scope": "Offline replay of saved real map and exact navigation source; no ROS/hardware; pose from latest recorded navigation event, not odometry frame",
+  "pose": [
+    0.4798686723888933,
+    0.004542770995339828,
+    0.07094000000000003
+  ],
+  "results": [
+    {
+      "margin": 0.15,
+      "start_safe": true,
+      "forward_0_2_sweep": true,
+      "frontier": {
+        "goals": [
+          [
+            0.4654007365701567,
+            0.6265530368850438
+          ],
+          [
+            0.6654007395503889,
+            -0.6734469824864657
+          ],
+          [
+            -1.4845992924871076,
+            0.32655303241469547
+          ]
+        ],
+        "reachable_frontiers": 3,
+        "unknown_cells": 4122
+      },
+      "paths": [
+        {
+          "goal": [
+            0.36540073508004056,
+            0.6265530368850438
+          ],
+          "goal_safe": false,
+          "path_points": 0,
+          "heading_error_deg": null
+        },
+        {
+          "goal": [
+            0.6154007388053309,
+            -0.7234469832315238
+          ],
+          "goal_safe": false,
+          "path_points": 0,
+          "heading_error_deg": null
+        }
+      ],
+      "elapsed_s": 0.013260399999126093
+    },
+    {
+      "margin": 0.03,
+      "start_safe": true,
+      "forward_0_2_sweep": true,
+      "frontier": {
+        "goals": [
+          [
+            0.36540073508004056,
+            0.6265530368850438
+          ],
+          [
+            0.5654007380602728,
+            -0.6734469824864657
+          ],
+          [
+            -0.7345992813112368,
+            -0.42344697876117543
+          ],
+          [
+            -1.4845992924871076,
+            0.4265530339048116
+          ],
+          [
+            -1.734599296212398,
+            0.1765530301795213
+          ]
+        ],
+        "reachable_frontiers": 5,
+        "unknown_cells": 4122
+      },
+      "paths": [
+        {
+          "goal": [
+            0.36540073508004056,
+            0.6265530368850438
+          ],
+          "goal_safe": true,
+          "path_points": 13,
+          "heading_error_deg": 89.66400906242139
+        },
+        {
+          "goal": [
+            0.6154007388053309,
+            -0.7234469832315238
+          ],
+          "goal_safe": true,
+          "path_points": 16,
+          "heading_error_deg": -97.69561014158629
+        }
+      ],
+      "elapsed_s": 0.014127099999313941
+    }
+  ]
+}

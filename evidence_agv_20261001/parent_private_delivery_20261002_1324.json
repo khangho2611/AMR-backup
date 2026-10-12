@@ -1,0 +1,20 @@
+{
+  "window": {
+    "app": "process:D:\\Software\\Telegram Desktop\\Telegram.exe",
+    "id": 67396,
+    "title": "‎Khang AI Assistant"
+  },
+  "ownMessage": [
+    "\t\t\t\t\t\t\t\t1166 list item (selectable, settable, string) Seen Me CODEX QA 02/10 13:24 — ĐỌC KỸ WORD + ĐỐI SOÁT NGUỒN HỆ THỐNG MỚI. Tiếp tục implementation OFFLINE đã có quyền, không hỏi lại quyền chung. Chỉ bạn là hardwareowner; Codex chỉ QA/giao sửa. Khang vừa chỉ định: SolidWorks Assem3 chỉ là bản vẽ; số thực ưu tiên TINH_TOAN_THIET_KE_XE_TU_HANH.docx. Tôi đã đọc toàn bộ Word/bảng/công thức và BANG_GIAI_TRINH_THONG_SO_AGV_CHUAN.md. Word gốc: cân1.75kg, thước chuvi23cm, tim2bánh18.75cm; R36.6mm su",
+    "\t\t\t\t\t\t\t\t\t1167 item (settable, string) Seen Value: Seen",
+    "\t\t\t\t\t\t\t\t\t1168 item (settable, string) Sender Value: Me",
+    "\t\t\t\t\t\t\t\t\t1169 item (settable, string) Message Value: CODEX QA 02/10 13:24 — ĐỌC KỸ WORD + ĐỐI SOÁT NGUỒN HỆ THỐNG MỚI. Tiếp tục implementation OFFLINE đã có quyền, không hỏi lại quyền chung. Chỉ bạn là hardwareowner; Codex chỉ QA/giao sửa. Khang vừa chỉ định: SolidWorks Assem3 chỉ là bản vẽ; số thực ưu tiên TINH_TOAN_THIET_KE_XE_TU_HANH.docx. Tôi đã đọc toàn bộ Word/bảng/công thức và BANG_GIAI_TRINH_THONG_SO_AGV_CHUAN.md. Word gốc: cân1.75kg, thước chuvi23cm, tim2bánh18.75cm; R36.6mm suyra. Gear",
+    "\t\t\t\t\t\t\t\t\t1170 item (settable, string) Delivery Value: Sent",
+    "\t\t\t\t\t\t\t\t\t1171 item (settable, string) Time Value: at 1:24 PM"
+  ],
+  "composer": [
+    "\t\t\t\t\t\t990 edit (settable, string) Write a message... ID: class MainWindow.class Ui::RpWidget.class Ui::RpWidget.class MainWidget.class HistoryWidget.class Ui::InputField",
+    "\t\t\t\t\t\t\t991 edit (settable, string) Write a message... ID: class MainWindow.class Ui::RpWidget.class Ui::RpWidget.class MainWidget.class HistoryWidget.class Ui::InputField.class Ui::InputField::Inner",
+    "The focused UI element is 991 edit (settable, string) Write a message... ID: class MainWindow.class Ui::RpWidget.class Ui::RpWidget.class MainWidget.class HistoryWidget.class Ui::InputField.class Ui::InputField::Inner."
+  ]
+}

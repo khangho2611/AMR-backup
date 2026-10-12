@@ -1,0 +1,59 @@
+{
+  "metadata": {
+    "timestamp_epoch": 1790905547.9404802,
+    "port": "/dev/ttyUSB0",
+    "baudrate": 115200,
+    "mock": true,
+    "wall_timeout_s": 15.0,
+    "min_observation_s": 10.0,
+    "status": "FAIL_INVALID_I2C_DIAGNOSTIC",
+    "rejection_reason": "vin_mv không hợp lệ hoặc ngoài thứ tự (state 3, val True)",
+    "valid_samples_count": 0,
+    "corrupt_lines_count": 0
+  },
+  "records": [
+    {
+      "line_idx": 1,
+      "rx_mono": 100.1,
+      "raw_bytes_len": 66,
+      "raw_hex": "7b22696e666f223a2022455350333220526f626f74205265616479202d2042454e43482053455249414c204f4e4c592028576946692044495341424c454429227d0a",
+      "payload": {
+        "info": "ESP32 Robot Ready - BENCH SERIAL ONLY (WiFi DISABLED)"
+      },
+      "error": "SETTLING_INFO_BANNER",
+      "classification": "BOOT_BANNER"
+    },
+    {
+      "line_idx": 2,
+      "rx_mono": 100.19999999999999,
+      "raw_bytes_len": 32,
+      "raw_hex": "7b22696e666f223a20225363616e6e696e6720493243206275732e2e2e227d0a",
+      "payload": {
+        "info": "Scanning I2C bus..."
+      },
+      "error": "STARTUP_I2C_DIAG",
+      "classification": "I2C_SCANNING_INFO"
+    },
+    {
+      "line_idx": 3,
+      "rx_mono": 100.29999999999998,
+      "raw_bytes_len": 22,
+      "raw_hex": "7b226932635f666f756e64223a202230783432227d0a",
+      "payload": {
+        "i2c_found": "0x42"
+      },
+      "error": "STARTUP_I2C_DIAG",
+      "classification": "I2C_FOUND"
+    },
+    {
+      "line_idx": 4,
+      "rx_mono": 100.39999999999998,
+      "raw_bytes_len": 17,
+      "raw_hex": "7b2276696e5f6d76223a20747275657d0a",
+      "payload": {
+        "vin_mv": true
+      },
+      "error": "FAIL_INVALID_I2C_DIAGNOSTIC"
+    }
+  ]
+}

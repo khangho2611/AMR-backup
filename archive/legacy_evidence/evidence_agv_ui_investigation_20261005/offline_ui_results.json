@@ -1,0 +1,44 @@
+{
+  "html_sha256": "79f57b9627035f6790cfac1f8ee0df14630e64625f6af5e023e7b9da95e1def0",
+  "offline": true,
+  "network": "All fetch calls replaced with recording stubs; no vehicle requests",
+  "cases": [
+    {
+      "name": "Live fault disables controls",
+      "autoDisabled": true,
+      "armDisabled": true,
+      "dpadDisabled": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "armText": "LỖI: CALLER_TIMEOUT (NHẤN RESET)"
+    },
+    {
+      "name": "AUTO click with live fault",
+      "requests": [],
+      "notice": "XE ĐANG KIỂM TRA TIỀN TRẠM — CHƯA THỂ BẬT AUTO"
+    },
+    {
+      "name": "WASD with live fault",
+      "requests": [],
+      "notice": "XE ĐANG KIỂM TRA TIỀN TRẠM (8s) — VUI LÒNG ĐỢI"
+    },
+    {
+      "name": "Telemetry badge with WARNING plus CALLER_TIMEOUT",
+      "badge": "CẢNH BÁO VA CHẠM",
+      "fault": "CALLER_TIMEOUT"
+    },
+    {
+      "name": "Release while ARM response pending",
+      "requests": [
+        "/api/cmd?val=ARM",
+        "/api/cmd?val=M%20140%20140"
+      ],
+      "driveCmdAfterRelease": "M 140 140"
+    }
+  ]
+}

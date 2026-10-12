@@ -1,0 +1,11 @@
+{
+  "effective_body_radius_m": 0.2,
+  "effective_body_bounds_m": null,
+  "effective_scan_max_age_s": 0.25,
+  "effective_progress_timeout_s": 1.5,
+  "source_config_block_lines": [
+    134,
+    151
+  ],
+  "method": "execute captured configuration block against captured process environment, no hardware"
+}

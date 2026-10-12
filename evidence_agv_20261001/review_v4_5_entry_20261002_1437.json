@@ -1,0 +1,168 @@
+{
+  "time_local": "2026-10-02T14:38:32.872534",
+  "timezone": "Asia/Bangkok",
+  "source_before": "d9c1a1b677d0380eb3ce53cf048a4fb88798f35704f7cf02f454296bed1e5c1a",
+  "source_after": "d9c1a1b677d0380eb3ce53cf048a4fb88798f35704f7cf02f454296bed1e5c1a",
+  "hardware": false,
+  "ROS": false,
+  "clock": "real/unscaled; no flag/backdating assignments",
+  "fixes_limited": {
+    "mixed_error_not_incremented": true,
+    "None_write_rejected_latched": {
+      "reply": [
+        false,
+        "PARTIAL_WRITE_FAULT: 0/13"
+      ],
+      "tx": [
+        {
+          "mono": 368641.578,
+          "line": "V 0.04 0.00",
+          "attempted": 13,
+          "written": null
+        },
+        {
+          "mono": 368641.578,
+          "line": "STOP",
+          "attempted": 6,
+          "written": null
+        },
+        {
+          "mono": 368641.578,
+          "line": "STOP",
+          "attempted": 6,
+          "written": null
+        },
+        {
+          "mono": 368641.578,
+          "line": "STOP",
+          "attempted": 6,
+          "written": null
+        }
+      ]
+    },
+    "map_res_zero_HOLD": true,
+    "organic_actual_main_10s80": {
+      "count": 82,
+      "span": 10.14000000001397
+    },
+    "normal_actual_main_cleanup_limited": {
+      "main_alive": false,
+      "UART_closed": true,
+      "errors": [],
+      "nav_alive": false,
+      "watchdog_alive": false
+    }
+  },
+  "residuals": {
+    "mixed_error_does_not_reset_or_latch": {
+      "count": 1,
+      "latch": false,
+      "fault": null
+    },
+    "STOP_timeout_returns_True_no_FAULT": {
+      "reply": [
+        true,
+        "STOP_UNCONFIRMED_PENDING_ZERO"
+      ],
+      "confirmed": false,
+      "fault": null,
+      "tx": [
+        {
+          "mono": 368641.578,
+          "line": "STOP",
+          "attempted": 6,
+          "written": 6
+        },
+        {
+          "mono": 368641.578,
+          "line": "STOP",
+          "attempted": 6,
+          "written": 6
+        },
+        {
+          "mono": 368641.593,
+          "line": "STOP",
+          "attempted": 6,
+          "written": 6
+        }
+      ]
+    },
+    "STOP_false_confirm_nonzero_targets_vw": {
+      "reply": [
+        true,
+        "STOP_CONFIRMED_ZERO"
+      ],
+      "confirmed": true,
+      "l_tgt": 100.0,
+      "r_tgt": 100.0,
+      "v": 1.0,
+      "w": 1.0
+    },
+    "persistent_partial_STOP_outcome_ignored": {
+      "reply": [
+        false,
+        "PARTIAL_WRITE_FAULT: 1/13"
+      ],
+      "stop_attempts": [
+        {
+          "mono": 368641.703,
+          "line": "STOP",
+          "attempted": 6,
+          "written": 1
+        },
+        {
+          "mono": 368641.703,
+          "line": "STOP",
+          "attempted": 6,
+          "written": 1
+        },
+        {
+          "mono": 368641.703,
+          "line": "STOP",
+          "attempted": 6,
+          "written": 1
+        }
+      ],
+      "is_moving": false,
+      "confirmed": false,
+      "fault": "PARTIAL_WRITE_FAULT: 1/13"
+    },
+    "nonfinite_map_res_crashes_step": "cannot convert float NaN to integer",
+    "actual_reader_fault_after_pass_ignored": {
+      "passed": true,
+      "count": 82,
+      "latch": false,
+      "fault": null
+    },
+    "actual_HTTP_ARM_prelock_clock_stale_noACK_nodiag": {
+      "last_age_at_unlock": 0.7189999999827705,
+      "clock_captured": 368651.906,
+      "actual_ARM": [
+        {
+          "mono": 368652.562,
+          "line": "ARM",
+          "attempted": 5,
+          "written": 5
+        }
+      ],
+      "reply": {
+        "code": 200,
+        "body": "{\"status\": \"ok\", \"action\": \"ARMED\"}"
+      },
+      "boot_diagnostic_seen": false,
+      "ARM_ACK_received": false,
+      "MCU_session_bound": false,
+      "fixture": "fresh ARMED D0 only"
+    },
+    "actual_HTTP_STOP_200_unconfirmed": {
+      "reply": {
+        "code": 200,
+        "body": "{\"status\": \"ok\", \"action\": \"STOP_LATCHED\", \"reason\": \"STOP_UNCONFIRMED_PENDING_ZERO\"}"
+      },
+      "confirmed": false,
+      "fault": null
+    }
+  },
+  "audited_imports": [],
+  "scope": "actual main-reader-HTTP FakeUART + changed components; no typed streams, ownership, crash cleanup or physical acceptance"
+}

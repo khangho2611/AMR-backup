@@ -1,0 +1,22 @@
+; PlatformIO Project Configuration File
+; Project: 2-Wheel Robot (STM32F103C8T6 Blue Pill + MKE-M18 + GA25)
+; Framework: STM32 HAL (STM32Cube) - Pure C, No Arduino
+
+[platformio]
+include_dir = Core/Inc
+src_dir = Core/Src
+
+[env:bluepill_f103c8]
+platform = ststm32
+board = bluepill_f103c8
+framework = stm32cube
+upload_protocol = stlink
+debug_tool = stlink
+build_flags = 
+    -Wno-deprecated-declarations
+    -Wl,-u,_printf_float
+    -Wl,-u,_scanf_float
+    -I Core/Inc
+
+monitor_speed = 115200
+monitor_dtr = 1

@@ -1,0 +1,177 @@
+{
+  "scope": "OFFLINE ONLY injected responsive fake UART; actual runtime+gate, no serial.Serial/connect",
+  "before": "9e2b7ff8877b6f54eadbf45da772e8e9d6e6df5d9317ed1f91ca233824f636d9",
+  "after": "9e2b7ff8877b6f54eadbf45da772e8e9d6e6df5d9317ed1f91ca233824f636d9",
+  "stable": true,
+  "cases": [
+    {
+      "case": "normal",
+      "code": 0,
+      "error": null,
+      "elapsed": 0.35899999999674037,
+      "report": {
+        "status": "PASS_MOTION_VERIFIED",
+        "evidence_save_error": "name 'json' is not defined"
+      },
+      "closed": true,
+      "arm_writes": 1,
+      "velocity_writes": 4,
+      "stop_confirmed": true,
+      "fault": "NOMINAL_DURATION_REACHED",
+      "duplicated_same_rx": 2,
+      "evidence_files": 1,
+      "records": 17,
+      "tx_records": 0,
+      "writes": [
+        {
+          "t": 349169.984,
+          "bytes": "ARM\n"
+        },
+        {
+          "t": 349170.046,
+          "bytes": "V 0.007 0.000\n"
+        },
+        {
+          "t": 349170.093,
+          "bytes": "V 0.015 0.000\n"
+        },
+        {
+          "t": 349170.14,
+          "bytes": "V 0.022 0.000\n"
+        },
+        {
+          "t": 349170.187,
+          "bytes": "V 0.029 0.000\n"
+        },
+        {
+          "t": 349170.25,
+          "bytes": "STOP\n"
+        },
+        {
+          "t": 349170.296,
+          "bytes": "STOP\n"
+        }
+      ]
+    },
+    {
+      "case": "overspeed",
+      "code": 0,
+      "error": null,
+      "elapsed": 0.15600000001722947,
+      "report": {
+        "status": "PASS_MOTION_VERIFIED",
+        "evidence_save_error": "name 'json' is not defined"
+      },
+      "closed": true,
+      "arm_writes": 1,
+      "velocity_writes": 0,
+      "stop_confirmed": true,
+      "fault": "REJECT_NON_FORWARDING_CLOCK",
+      "duplicated_same_rx": 2,
+      "evidence_files": 1,
+      "records": 6,
+      "tx_records": 0,
+      "writes": [
+        {
+          "t": 349170.328,
+          "bytes": "ARM\n"
+        },
+        {
+          "t": 349170.39,
+          "bytes": "STOP\n"
+        },
+        {
+          "t": 349170.39,
+          "bytes": "STOP\n"
+        },
+        {
+          "t": 349170.421,
+          "bytes": "STOP\n"
+        }
+      ]
+    },
+    {
+      "case": "boot_error",
+      "code": 0,
+      "error": null,
+      "elapsed": 0.2970000000204891,
+      "report": {
+        "status": "PASS_MOTION_VERIFIED",
+        "evidence_save_error": "name 'json' is not defined"
+      },
+      "closed": true,
+      "arm_writes": 1,
+      "velocity_writes": 3,
+      "stop_confirmed": true,
+      "fault": "NOMINAL_DURATION_REACHED",
+      "duplicated_same_rx": 2,
+      "evidence_files": 1,
+      "records": 13,
+      "tx_records": 0,
+      "writes": [
+        {
+          "t": 349170.484,
+          "bytes": "ARM\n"
+        },
+        {
+          "t": 349170.531,
+          "bytes": "V 0.007 0.000\n"
+        },
+        {
+          "t": 349170.578,
+          "bytes": "V 0.015 0.000\n"
+        },
+        {
+          "t": 349170.625,
+          "bytes": "V 0.022 0.000\n"
+        },
+        {
+          "t": 349170.687,
+          "bytes": "STOP\n"
+        },
+        {
+          "t": 349170.734,
+          "bytes": "STOP\n"
+        }
+      ]
+    },
+    {
+      "case": "negative_duration",
+      "code": 0,
+      "error": null,
+      "elapsed": 0.1559999999590218,
+      "report": {
+        "status": "PASS_MOTION_VERIFIED",
+        "evidence_save_error": "name 'json' is not defined"
+      },
+      "closed": true,
+      "arm_writes": 1,
+      "velocity_writes": 0,
+      "stop_confirmed": true,
+      "fault": "NOMINAL_DURATION_REACHED",
+      "duplicated_same_rx": 2,
+      "evidence_files": 1,
+      "records": 6,
+      "tx_records": 0,
+      "writes": [
+        {
+          "t": 349170.796,
+          "bytes": "ARM\n"
+        },
+        {
+          "t": 349170.828,
+          "bytes": "STOP\n"
+        },
+        {
+          "t": 349170.89,
+          "bytes": "STOP\n"
+        }
+      ]
+    }
+  ],
+  "cli_proposed_output_dir": {
+    "exit": 2,
+    "stderr": "usage: agv_motion_supervisor_runner.py [-h] [--mock] [--port PORT]\n                                       [--baud BAUD] [--target-v TARGET_V]\n                                       [--nominal-time NOMINAL_TIME]\n                                       [--hard-time-cap HARD_TIME_CAP]\nagv_motion_supervisor_runner.py: error: unrecognized arguments: --output-dir C:\\Users\\Khang\\AppData\\Local\\Temp\\agv_OFFLINE_CLI_0915_3rpp9yfj\n",
+    "stdout": ""
+  }
+}

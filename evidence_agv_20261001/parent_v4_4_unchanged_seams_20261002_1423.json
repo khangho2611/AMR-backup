@@ -1,0 +1,12 @@
+{
+  "unchanged_functions": {
+    "_fire_physical_stop_internal": true,
+    "request_stop": true,
+    "_watchdog_loop": true,
+    "request_tuning": false
+  },
+  "actual_source_hash": "56e9e4cbcb070363fd3d29612fa0452cb435455b03ec2a2476c7bb7ba6fe7f15",
+  "audited_imports": [],
+  "harness_backdating_line": "state.preflight_start_mono = time.monotonic() - 9.8",
+  "scope": "AST/source comparison only, no execution"
+}

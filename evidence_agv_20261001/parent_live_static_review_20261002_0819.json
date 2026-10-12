@@ -1,0 +1,73 @@
+{
+  "scope": "READ ONLY Pi raw/proc/hash; no Serial access by parent",
+  "raw_sha": "aff8e814868c9d62d2dfab66a6fc4eefc02d88e7b5050b11d02adccc4b800813",
+  "metadata": {
+    "timestamp_epoch": 1790903955.404591,
+    "port": "/dev/ttyUSB0",
+    "baudrate": 115200,
+    "mock": false,
+    "wall_timeout_s": 15.0,
+    "min_observation_s": 10.0,
+    "status": "FAIL_INVALID_BOOT_BANNER",
+    "rejection_reason": "Banner 'info' không hợp lệ hoặc giả mạo: Scanning I2C bus...",
+    "valid_samples_count": 14,
+    "corrupt_lines_count": 10
+  },
+  "valid_count_independent": 14,
+  "valid_span": 1.1435495489999994,
+  "all_valid_D0zero": true,
+  "final_record": {
+    "line_idx": 26,
+    "rx_mono": 801.424977904,
+    "raw_bytes_len": 32,
+    "raw_hex": "7b22696e666f223a225363616e6e696e6720493243206275732e2e2e227d0d0a",
+    "payload": {
+      "info": "Scanning I2C bus..."
+    },
+    "error": "FAIL_INVALID_BOOT_BANNER"
+  },
+  "postproof": {
+    "exit": 0,
+    "stdout": "911bb3fb8c1eca2b67e3dd5b9a8176092d02bb11075771a445033f7c19893629  /tmp/agv_preflight_static_collector.py\naff8e814868c9d62d2dfab66a6fc4eefc02d88e7b5050b11d02adccc4b800813  /home/khangho/evidence_preflight_live_20261002_0817/preflight_raw_evidence_1790903955404_1548_0.json\nb9714a2d-e109-47d0-a647-b9c032f241eb\nFUSER_EXIT:1\nPS_EXIT:1\n",
+    "stderr": ""
+  },
+  "broker_commands": [
+    {
+      "id": 8697,
+      "command": "scp \"D:/HoMinhKhang/PROJECT/GITHUB_PROJECT/CODE XE TU HANH/agv_preflight_static_collector.py\" khangho@100.90.252.15:/tmp/agv_preflight_static_collector.py"
+    },
+    {
+      "id": 8699,
+      "command": "ssh khangho@100.90.252.15 \"sha256sum /tmp/agv_preflight_static_collector.py && cat /proc/sys/kernel/random/boot_id && python3 --version && fuser /dev/ttyUSB0\""
+    },
+    {
+      "id": 8701,
+      "command": "ssh khangho@100.90.252.15 \"fuser /dev/ttyUSB0; echo FUSER_EXIT:\\$?\""
+    },
+    {
+      "id": 8703,
+      "command": "ssh khangho@100.90.252.15 \"mkdir -p /home/khangho/evidence_preflight_live_20261002_0817 && set -C && /usr/bin/timeout --kill-after=2s 20s /usr/bin/python3 -X utf8 /tmp/agv_preflight_static_collector.py --port /dev/ttyUSB0 --baud 115200 --wall-timeout 15.0 --min-obs 10.0 --min-samples 80 --max-samples 120 --output-dir /home/khangho/evidence_preflight_live_20261002_0817 > /home/khangho/evidence_preflight_live_20261002_0817/live_stdout_0820.json 2>&1; echo OUTER_EXIT:\\$?\""
+    },
+    {
+      "id": 8705,
+      "command": "ssh khangho@100.90.252.15 \"cat /home/khangho/evidence_preflight_live_20261002_0817/live_stdout_0820.json\""
+    },
+    {
+      "id": 8707,
+      "command": "ssh khangho@100.90.252.15 \"python3 -c \\\"\nimport json\nwith open('/home/khangho/evidence_preflight_live_20261002_0817/preflight_raw_evidence_1790903955404_1548_0.json') as f:\n    d = json.load(f)\nprint('VALID SAMPLES COUNT IN FILE:', len([r for r in d['records'] if r.get('payload') and r['payload'].get('safety') == 'DISARMED']))\nfor r in d['records']:\n    line = bytes.fromhex(r['raw_hex']).decode('utf-8', errors='replace').strip()\n    print(r['line_idx'], line, 'ERR:', r['error'])\n\\\"\""
+    },
+    {
+      "id": 8709,
+      "command": "ssh khangho@100.90.252.15 \"fuser /dev/ttyUSB0 2>&1 || true; ps -ef | grep agv_preflight_static_collector | grep -v grep || true\""
+    },
+    {
+      "id": 8711,
+      "command": "scp khangho@100.90.252.15:/home/khangho/evidence_preflight_live_20261002_0817/live_stdout_0820.json \"D:/HoMinhKhang/PROJECT/GITHUB_PROJECT/CODE XE TU HANH/evidence_agv_20261001/live_stdout_0820.json\" && scp khangho@100.90.252.15:/home/khangho/evidence_preflight_live_20261002_0817/preflight_raw_evidence_1790903955404_1548_0.json \"D:/HoMinhKhang/PROJECT/GITHUB_PROJECT/CODE XE TU HANH/evidence_agv_20261001/preflight_raw_evidence_1790903955404_1548_0.json\""
+    },
+    {
+      "id": 8713,
+      "command": "python -c \"\nimport hashlib\nfiles = [\n    r'D:\\HoMinhKhang\\PROJECT\\GITHUB_PROJECT\\CODE XE TU HANH\\evidence_agv_20261001\\live_stdout_0820.json',\n    r'D:\\HoMinhKhang\\PROJECT\\GITHUB_PROJECT\\CODE XE TU HANH\\evidence_agv_20261001\\preflight_raw_evidence_1790903955404_1548_0.json'\n]\nfor p in files:\n    with open(p, 'rb') as fp:\n        print(f'{hashlib.sha256(fp.read()).hexdigest()}  {p.split(chr(92))[-1]}')\n\""
+    }
+  ],
+  "conclusion": "FAIL; transient D0 observed but <10s, no acceptance or automatic retry/motion"
+}

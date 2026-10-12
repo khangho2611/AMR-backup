@@ -1,0 +1,15 @@
+{
+  "metadata": {
+    "timestamp_epoch": 1790865577.3730028,
+    "port": "/dev/ttyUSB0",
+    "baudrate": 115200,
+    "mock": true,
+    "wall_timeout_s": 1.0,
+    "min_observation_s": 0.1,
+    "status": "FAIL_TELEMETRY_INVARIANT_VIOLATION",
+    "rejection_reason": "NON_ZERO_RPM: l=1.5, r=0.0",
+    "valid_samples_count": 0,
+    "corrupt_lines_count": 0
+  },
+  "records": []
+}

@@ -1,0 +1,129 @@
+{
+  "metadata": {
+    "timestamp_epoch": 1790868765.76186,
+    "port": "/dev/ttyUSB0",
+    "baudrate": 115200,
+    "mock": true,
+    "wall_timeout_s": 2.0,
+    "min_observation_s": 0.5,
+    "status": "FAIL_TELEMETRY_INVARIANT_VIOLATION",
+    "rejection_reason": "NON_ZERO_PWM: l=1.0, r=0.0",
+    "valid_samples_count": 0,
+    "corrupt_lines_count": 10
+  },
+  "records": [
+    {
+      "line_idx": 1,
+      "rx_mono": 310713.0631796,
+      "raw_bytes_len": 26,
+      "raw_hex": "657473204a756c20323920323031392031323a32313a34360d0a",
+      "payload": null,
+      "error": "SETTLING_CORRUPT"
+    },
+    {
+      "line_idx": 2,
+      "rx_mono": 310713.073464,
+      "raw_bytes_len": 2,
+      "raw_hex": "0d0a",
+      "payload": null,
+      "error": "SETTLING_CORRUPT"
+    },
+    {
+      "line_idx": 3,
+      "rx_mono": 310713.0838362,
+      "raw_bytes_len": 57,
+      "raw_hex": "7273743a3078312028504f5745524f4e5f5245534554292c626f6f743a3078313320285350495f464153545f464c4153485f424f4f54290d0a",
+      "payload": null,
+      "error": "SETTLING_CORRUPT"
+    },
+    {
+      "line_idx": 4,
+      "rx_mono": 310713.0939343,
+      "raw_bytes_len": 26,
+      "raw_hex": "636f6e6669677369703a20302c2053504957503a307865650d0a",
+      "payload": null,
+      "error": "SETTLING_CORRUPT"
+    },
+    {
+      "line_idx": 5,
+      "rx_mono": 310713.1041939,
+      "raw_bytes_len": 73,
+      "raw_hex": "636c6b5f6472763a307830302c715f6472763a307830302c645f6472763a307830302c6373305f6472763a307830302c68645f6472763a307830302c77705f6472763a307830300d0a",
+      "payload": null,
+      "error": "SETTLING_CORRUPT"
+    },
+    {
+      "line_idx": 6,
+      "rx_mono": 310713.114867,
+      "raw_bytes_len": 23,
+      "raw_hex": "6d6f64653a44494f2c20636c6f636b206469763a320d0a",
+      "payload": null,
+      "error": "SETTLING_CORRUPT"
+    },
+    {
+      "line_idx": 7,
+      "rx_mono": 310713.1255034,
+      "raw_bytes_len": 26,
+      "raw_hex": "6c6f61643a307833666666303033302c6c656e3a313138340d0a",
+      "payload": null,
+      "error": "SETTLING_CORRUPT"
+    },
+    {
+      "line_idx": 8,
+      "rx_mono": 310713.1356858,
+      "raw_bytes_len": 27,
+      "raw_hex": "6c6f61643a307834303037383030302c6c656e3a31333233320d0a",
+      "payload": null,
+      "error": "SETTLING_CORRUPT"
+    },
+    {
+      "line_idx": 9,
+      "rx_mono": 310713.1457624,
+      "raw_bytes_len": 26,
+      "raw_hex": "6c6f61643a307834303038303430302c6c656e3a333032380d0a",
+      "payload": null,
+      "error": "SETTLING_CORRUPT"
+    },
+    {
+      "line_idx": 10,
+      "rx_mono": 310713.155875,
+      "raw_bytes_len": 18,
+      "raw_hex": "656e74727920307834303038303565340d0a",
+      "payload": null,
+      "error": "SETTLING_CORRUPT"
+    },
+    {
+      "line_idx": 11,
+      "rx_mono": 310713.1664497,
+      "raw_bytes_len": 66,
+      "raw_hex": "7b22696e666f223a22455350333220526f626f74205265616479202d2042454e43482053455249414c204f4e4c592028576946692044495341424c454429227d0d0a",
+      "payload": {
+        "info": "ESP32 Robot Ready - BENCH SERIAL ONLY (WiFi DISABLED)"
+      },
+      "error": "SETTLING_INFO_BANNER",
+      "classification": "BOOT_BANNER"
+    },
+    {
+      "line_idx": 12,
+      "rx_mono": 310713.1771305,
+      "raw_bytes_len": 144,
+      "raw_hex": "7b22736166657479223a2244495341524d4544222c226d6f6465223a22504944222c226c5f746774223a302e302c22725f746774223a302e302c226c5f72706d223a302e302c22725f72706d223a302e302c226c5f70776d223a312c22725f70776d223a302c2278223a302e302c2279223a302e302c227468223a302e302c2276223a302e302c2277223a302e307d0a",
+      "payload": {
+        "safety": "DISARMED",
+        "mode": "PID",
+        "l_tgt": 0.0,
+        "r_tgt": 0.0,
+        "l_rpm": 0.0,
+        "r_rpm": 0.0,
+        "l_pwm": 1,
+        "r_pwm": 0,
+        "x": 0.0,
+        "y": 0.0,
+        "th": 0.0,
+        "v": 0.0,
+        "w": 0.0
+      },
+      "error": "NON_ZERO_PWM: l=1.0, r=0.0"
+    }
+  ]
+}

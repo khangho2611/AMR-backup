@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AGV MISSION CONTROL - SLAM & RADAR TACTICAL</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #07090e;
+      --panel: #0d121d;
+      --card: #131b2a;
+      --border: #1e293b;
+      --cyan: #00f0ff;
+      --cyan-glow: rgba(0, 240, 255, 0.4);
+      --green: #10b981;
+      --green-glow: rgba(16, 185, 129, 0.4);
+      --yellow: #f59e0b;
+      --red: #ef4444;
+      --red-glow: rgba(239, 68, 68, 0.5);
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; font-family: 'Plus Jakarta Sans', sans-serif; }
+    body { background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
+    
+    header {
+      background: var(--panel); border-bottom: 1px solid var(--border);
+      padding: 10px 20px; display: flex; justify-content: space-between; align-items: center;
+    }
+    .brand { font-size: 16px; font-weight: 800; color: var(--cyan); display: flex; align-items: center; gap: 8px; font-family: 'JetBrains Mono'; }
+    .status-badge { font-size: 11px; padding: 4px 10px; border-radius: 999px; font-weight: 800; font-family: 'JetBrains Mono'; }
+    .badge-safe { background: rgba(16, 185, 129, 0.2); color: var(--green); border: 1px solid var(--green); }
+    .badge-warn { background: rgba(245, 158, 11, 0.2); color: var(--yellow); border: 1px solid var(--yellow); }
+    .badge-danger { background: rgba(239, 68, 68, 0.2); color: var(--red); border: 1px solid var(--red); animation: pulse 0.8s infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+    main { display: grid; grid-template-columns: 1fr 380px; gap: 14px; padding: 14px; flex: 1; }
+    
+    /* KHUNG CANVAS VISUALIZER (RADAR & SLAM MAP) */
+    .viewport-box {
+      background: var(--panel); border: 1px solid var(--border); border-radius: 16px;
+      padding: 12px; display: flex; flex-direction: column; position: relative;
+    }
+    .view-tabs { display: flex; gap: 8px; margin-bottom: 10px; }
+    .tab-btn {
+      padding: 6px 14px; font-size: 12px; font-weight: 700; border-radius: 8px; cursor: pointer;
+      background: var(--card); color: var(--text-muted); border: 1px solid var(--border); transition: 0.2s;
+    }
+    .tab-btn.active { background: var(--cyan); color: #000; border-color: var(--cyan); box-shadow: 0 0 10px var(--cyan-glow); }
+    .canvas-container { flex: 1; display: flex; justify-content: center; align-items: center; position: relative; }
+    canvas { background: #04060a; border-radius: 12px; border: 1px solid #172033; max-width: 100%; height: auto; }
+
+    /* CỘT ĐIỀU KHIỂN BÊN PHẢI */
+    aside { display: flex; flex-direction: column; gap: 12px; }
+    .card { background: var(--panel); border: 1px solid var(--border); border-radius: 14px; padding: 14px; }
+    .card-title { font-size: 11px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; margin-bottom: 10px; display: flex; justify-content: space-between; font-family: 'JetBrains Mono'; }
+
+    /* TELEMETRY METRICS */
+    .tele-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+    .tele-item { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 8px 4px; text-align: center; }
+    .tele-lbl { font-size: 9px; color: var(--text-muted); font-weight: 700; font-family: 'JetBrains Mono'; }
+    .tele-val { font-size: 16px; font-weight: 900; color: var(--cyan); font-family: 'JetBrains Mono'; }
+
+    /* NÚT TỰ HÀNH & NÚT DỪNG KHẨN CẤP CHUẨN ĐỒ HỌA CAO */
+    .action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+    .btn-action {
+      padding: 14px 6px; font-size: 12px; font-weight: 800; border-radius: 12px; cursor: pointer;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; transition: 0.15s;
+    }
+    .btn-auto { background: #064e3b; border: 2px solid #059669; color: #34d399; }
+    .btn-auto:active, .btn-auto.active { background: #059669; color: #fff; box-shadow: 0 0 15px var(--green-glow); }
+    .btn-estop { background: #7f1d1d; border: 2px solid #dc2626; color: #fecaca; box-shadow: 0 0 15px var(--red-glow); }
+    .btn-estop:active { background: #b91c1c; transform: scale(0.96); }
+
+    /* CỤM PHÍM WASD D-PAD */
+    .dpad-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; max-width: 280px; margin: 0 auto; }
+    .dpad-btn {
+      height: 56px; border-radius: 12px; border: 1px solid #334466; background: var(--card);
+      color: #fff; font-size: 18px; font-weight: 800; cursor: pointer; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 2px; transition: 0.1s;
+    }
+    .dpad-btn:active, .dpad-btn.pressed { background: var(--cyan); color: #000; border-color: var(--cyan); transform: scale(0.95); }
+    .dpad-sub { font-size: 9px; font-family: 'JetBrains Mono'; opacity: 0.75; font-weight: 600; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="brand">⚡ AGV ROBOT V2.0 // SLAM & RADAR</div>
+    <div style="display:flex; gap:8px; align-items:center;">
+      <span style="font-size:11px; color:var(--text-muted); font-family:'JetBrains Mono';">RPLIDAR C1: 10Hz</span>
+      <div class="status-badge badge-safe" id="statusBadge">TRẠNG THÁI: AN TOÀN</div>
+    </div>
+  </header>
+
+  <main>
+    <!-- KHUNG ĐỒ HỌA TRUNG TÂM -->
+    <div class="viewport-box">
+      <div class="view-tabs">
+        <button class="tab-btn active" id="tabRadar" onclick="switchView('radar')">📡 RADAR QUÉT 360°</button>
+        <button class="tab-btn" id="tabSlam" onclick="switchView('slam')">🗺 BẢN ĐỒ SLAM 2D</button>
+        <span style="margin-left:auto; font-size:11px; color:var(--cyan); font-family:'JetBrains Mono'; align-self:center;" id="distIndicator">VẬT CẢN: -- m</span>
+      </div>
+      <div class="canvas-container">
+        <canvas id="viewCanvas" width="600" height="600"></canvas>
+      </div>
+    </div>
+
+    <!-- CỘT ĐIỀU KHIỂN & SỐ LIỆU -->
+    <aside>
+      <!-- TỌA ĐỘ VÀ VẬN TỐC THẬT -->
+      <div class="card">
+        <div class="card-title">
+          <span>Vị Trí & Động Lực Học</span>
+          <span style="color:var(--cyan);" onclick="sendCmd('RESET')">↺ RESET</span>
+        </div>
+        <div class="tele-grid">
+          <div class="tele-item"><div class="tele-lbl">X (MÉT)</div><div class="tele-val" id="valX">0.000</div></div>
+          <div class="tele-item"><div class="tele-lbl">Y (MÉT)</div><div class="tele-val" id="valY">0.000</div></div>
+          <div class="tele-item"><div class="tele-lbl">GÓC</div><div class="tele-val" id="valTh">0.0°</div></div>
+          <div class="tele-item"><div class="tele-lbl">BÁNH T (RPM)</div><div class="tele-val" id="valLRpm">0.0</div></div>
+          <div class="tele-item"><div class="tele-lbl">BÁNH P (RPM)</div><div class="tele-val" id="valRRpm">0.0</div></div>
+          <div class="tele-item"><div class="tele-lbl">GẦN NHẤT</div><div class="tele-val" id="valMinD" style="color:var(--yellow);">-- cm</div></div>
+        </div>
+      </div>
+
+      <!-- ĐIỀU KHIỂN CHỦ ĐỘNG & TỰ HÀNH -->
+      <div class="card" style="flex:1;">
+        <div class="card-title">Bộ Điều Khiển Trung Tâm</div>
+        
+        <div class="action-grid">
+          <button class="btn-action btn-auto" id="btnAuto" onclick="toggleAuto()">
+            <span style="font-size:16px;">🚀</span>
+            <span id="autoText">BẬT TỰ ĐỘNG QUÉT MAP</span>
+          </button>
+          <button class="btn-action" id="btnArm" onclick="armControl()">MỞ PHIÊN ĐIỀU KHIỂN</button>
+          <button class="btn-action btn-estop" onclick="emergencyStop()">
+            <span style="font-size:16px;">🛑</span>
+            <span>DỪNG KHẨN CẤP</span>
+          </button>
+        </div>
+
+        <div class="dpad-grid">
+          <button class="dpad-btn" id="btnQ"><span>↺</span><span class="dpad-sub">Q (Xoay T)</span></button>
+          <button class="dpad-btn" id="btnW"><span>▲</span><span class="dpad-sub">W (Tiến)</span></button>
+          <button class="dpad-btn" id="btnE"><span>↻</span><span class="dpad-sub">E (Xoay P)</span></button>
+
+          <button class="dpad-btn" id="btnA"><span>◄</span><span class="dpad-sub">A (Trái)</span></button>
+          <button class="dpad-btn" style="background:#450a0a; border-color:#991b1b; color:#fca5a5;" onclick="emergencyStop()"><span>🛑</span><span class="dpad-sub">Space</span></button>
+          <button class="dpad-btn" id="btnD"><span>►</span><span class="dpad-sub">D (Phải)</span></button>
+
+          <div></div>
+          <button class="dpad-btn" id="btnS"><span>▼</span><span class="dpad-sub">S (Lùi)</span></button>
+          <div></div>
+        </div>
+        
+        <!-- Ô NHẬP PID GỌN Ở GÓC DƯỚI PHẢI -->
+        <div style="margin-top:10px; background:#0c121e; border:1px solid #1e293b; border-radius:8px; padding:10px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <span style="font-size:11px; font-weight:bold; color:var(--cyan); font-family:'JetBrains Mono';">⚙️ THAM SỐ PID ĐỘNG CƠ</span>
+            <span id="pidStatusMini" style="font-size:9px; color:var(--text-muted);">SẴN SÀNG</span>
+          </div>
+          <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:8px; margin-bottom:8px;">
+            <div>
+              <label style="font-size:9px; font-weight:bold; color:var(--cyan); display:block; margin-bottom:2px;">Kp (Tỉ lệ)</label>
+              <input type="number" id="inputKpMini" step="0.05" value="0.50" style="width:100%; background:#070a10; border:1px solid #334155; color:#fff; padding:4px; border-radius:4px; font-family:'JetBrains Mono'; font-weight:bold; font-size:11px; box-sizing:border-box;">
+            </div>
+            <div>
+              <label style="font-size:9px; font-weight:bold; color:var(--green); display:block; margin-bottom:2px;">Ki (Tích phân)</label>
+              <input type="number" id="inputKiMini" step="0.10" value="1.50" style="width:100%; background:#070a10; border:1px solid #334155; color:#fff; padding:4px; border-radius:4px; font-family:'JetBrains Mono'; font-weight:bold; font-size:11px; box-sizing:border-box;">
+            </div>
+            <div>
+              <label style="font-size:9px; font-weight:bold; color:var(--yellow); display:block; margin-bottom:2px;">Kd (Vi phân)</label>
+              <input type="number" id="inputKdMini" step="0.005" value="0.010" style="width:100%; background:#070a10; border:1px solid #334155; color:#fff; padding:4px; border-radius:4px; font-family:'JetBrains Mono'; font-weight:bold; font-size:11px; box-sizing:border-box;">
+            </div>
+          </div>
+          <div style="display:flex; gap:6px; margin-bottom:8px;">
+            <button onclick="applyPidMini()" style="flex:2; background:#0284c7; color:#fff; border:none; padding:7px 4px; border-radius:6px; font-weight:bold; cursor:pointer; font-family:'JetBrains Mono'; font-size:10px; display:flex; align-items:center; justify-content:center; gap:4px;">
+              <span>💾</span> <span>NẠP PID</span>
+            </button>
+            <button onclick="exportToExcel()" style="flex:1; background:#16a34a; color:#fff; border:none; padding:7px 4px; border-radius:6px; font-weight:bold; cursor:pointer; font-family:'JetBrains Mono'; font-size:10px; display:flex; align-items:center; justify-content:center; gap:4px;">
+              <span>📊</span> <span>XUẤT CSV</span>
+            </button>
+          </div>
+
+          <!-- LỊCH SỬ NẠP THÔNG SỐ RÚT GỌN TRỰC QUAN -->
+          <div style="border-top:1px solid #1e293b; padding-top:6px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+              <span style="font-size:9px; font-weight:bold; color:var(--text-muted); font-family:'JetBrains Mono';">LỊCH SỬ NẠP GẦN ĐÂY</span>
+              <span id="historyCount" style="font-size:9px; color:var(--cyan); font-family:'JetBrains Mono';">0 bản ghi</span>
+            </div>
+            <div style="max-height:90px; overflow-y:auto;">
+              <table style="width:100%; border-collapse:collapse; font-size:9px; font-family:'JetBrains Mono'; text-align:left;">
+                <thead>
+                  <tr style="color:var(--text-muted); border-bottom:1px solid #334155;">
+                    <th style="padding:2px 4px;">Giờ</th>
+                    <th style="padding:2px 4px;">Kp</th>
+                    <th style="padding:2px 4px;">Ki</th>
+                    <th style="padding:2px 4px;">Kd</th>
+                    <th style="padding:2px 4px;">Kết quả</th>
+                  </tr>
+                </thead>
+                <tbody id="historyTableBody">
+                  <tr><td colspan="5" style="text-align:center; padding:6px; color:#64748b;">Chưa có bản ghi nào</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div style="text-align:center; font-size:10px; color:var(--text-muted); margin-top:8px;">
+          Giữ phím lái • Buông tay xe phanh • Nhấn Space dừng khẩn cấp
+        </div>
+      </div>
+    </aside>
+  </main>
+
+  <script>
+    const canvas = document.getElementById('viewCanvas');
+    const ctx = canvas.getContext('2d');
+    let currentView = 'radar';
+    let isAutoRunning = false;
+    let teleData = null;
+    let mapData = null;
+
+    function switchView(view) {
+      currentView = view;
+      document.getElementById('tabRadar').classList.toggle('active', view === 'radar');
+      document.getElementById('tabSlam').classList.toggle('active', view === 'slam');
+
+      if (view === 'slam') fetchMap();
+    }
+
+    // Persistent browser records also retain timeouts/disconnections.
+    let pidHistory;
+    try { pidHistory = JSON.parse(localStorage.getItem('agv_pid_history') || '[]'); }
+    catch (_) { pidHistory = []; }
+    if (!Array.isArray(pidHistory)) pidHistory = [];
+    pidHistory.forEach(row => { if (row.status === 'PENDING') { row.status = 'FAILED'; row.reason = 'Trang tải lại: chưa xác nhận kết quả MCU'; } });
+    let pidBusy = false;
+    const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    function saveHistory() {
+      pidHistory = pidHistory.slice(-500);
+      try { localStorage.setItem('agv_pid_history', JSON.stringify(pidHistory)); } catch (_) {}
+      renderHistory();
+    }
+    function renderHistory() {
+      const tbody = document.getElementById('historyTableBody');
+      const countLbl = document.getElementById('historyCount');
+      if (!tbody) return;
+      if (countLbl) countLbl.innerText = pidHistory.length + ' bản ghi';
+      tbody.innerHTML = pidHistory.length ? pidHistory.slice(-10).reverse().map(row => {
+        const status = row.status || 'UNVERIFIED';
+        const color = status === 'APPLIED' ? 'var(--green)' : status === 'PENDING' ? 'var(--yellow)' : 'var(--red)';
+        return `<tr><td>${escapeHtml(row.time)}</td><td>${escapeHtml(row.kp)}</td><td>${escapeHtml(row.ki)}</td><td>${escapeHtml(row.kd)}</td><td style="color:${color}" title="${escapeHtml(row.reason)}">${escapeHtml(status)}</td></tr>`;
+      }).join('') : '<tr><td colspan="5">Chưa có bản ghi nào</td></tr>';
+    }
+    async function applyPidMini() {
+      if (pidBusy) return;
+      const fields = ['inputKpMini','inputKiMini','inputKdMini'];
+      const strings = fields.map(id => document.getElementById(id).value.trim());
+      const values = strings.map(Number);
+      const lbl = document.getElementById('pidStatusMini');
+      if (strings.some(v => v === '') || values.some((v,i) => !Number.isFinite(v) || v < 0 || v > [20,50,5][i])) {
+        if (lbl) lbl.innerText = 'REJECTED: giá trị PID không hợp lệ';
+        return;
+      }
+      const [kp,ki,kd] = values;
+      const record = {time:new Date().toISOString(),kp,ki,kd,kf:.45,status:'PENDING',reason:'Chờ MCU xác nhận'};
+      pidHistory.push(record); saveHistory();
+      pidBusy = true;
+      if (lbl) lbl.innerText = 'PENDING: chờ MCU';
+      try {
+        const response = await fetch(`/api/pid?kp=${kp}&ki=${ki}&kd=${kd}&kf=0.45`, {signal:AbortSignal.timeout(2500)});
+        const result = await response.json();
+        const accepted = response.ok && result.status === 'APPLIED';
+        record.status = accepted ? 'APPLIED' : result.status === 'REJECTED' ? 'REJECTED' : 'FAILED';
+        record.reason = result.reason || 'Không có xác nhận MCU hợp lệ';
+      } catch (_) {
+        record.status = 'FAILED';
+        record.reason = 'Mất kết nối hoặc timeout; chưa xác nhận MCU';
+      } finally {
+        pidBusy = false;
+        saveHistory();
+        if (lbl) { lbl.innerText = record.status + ': ' + record.reason; lbl.style.color = record.status === 'APPLIED' ? 'var(--green)' : 'var(--red)'; }
+      }
+    }
+
+    function applyPid() {
+      applyPidMini();
+    }
+
+    function exportToExcel() {
+      const columns = ['time','kp','ki','kd','kf','status','reason'];
+      const quote = v => '"' + String(v ?? '').replace(/"/g, '""') + '"';
+      const csv = [columns, ...pidHistory.map(row => columns.map(k => row[k]))].map(row => row.map(quote).join(',')).join('\r\n');
+      const url = URL.createObjectURL(new Blob(['\ufeff' + csv], {type:'text/csv;charset=utf-8'}));
+      const link = document.createElement('a'); link.href = url; link.download = 'agv_pid_history.csv'; link.click();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    }
+
+    function clearHistory() {
+      if (confirm('Bạn có chắc muốn xóa sạch toàn bộ lịch sử đo đạc PID không?')) {
+        pidHistory = [];
+        localStorage.removeItem('agv_pid_history');
+        renderHistory();
+      }
+    }
+
+    // Tự động render lịch sử ban đầu
+    setTimeout(renderHistory, 500);
+
+    async function sendCmd(cmd) {
+      try {
+        const response = await fetch('/api/cmd?val=' + encodeURIComponent(cmd), {signal:AbortSignal.timeout(1200)});
+        const data = await response.json();
+        if (!response.ok) {
+          document.getElementById('statusBadge').innerText = (cmd + ' BỊ TỪ CHỐI: ' + (data.reason || 'Lệnh bị từ chối'));
+          if (sessionTimer) clearInterval(sessionTimer);
+          sessionTimer = null;
+          if (driveTimer) clearInterval(driveTimer);
+          driveTimer = null; driveCmd = null;
+        } else if (cmd === 'ARM') {
+          document.getElementById('statusBadge').innerText = 'ARM ĐÃ GỬI — ĐANG CHỜ ACK MCU';
+        }
+        return response.ok;
+      } catch (_) {
+        if (sessionTimer) clearInterval(sessionTimer);
+        sessionTimer = null;
+        if (driveTimer) clearInterval(driveTimer);
+        driveTimer = null; driveCmd = null;
+        document.getElementById('statusBadge').innerText = 'MẤT KẾT NỐI — DỪNG CHƯA XÁC NHẬN';
+        return false;
+      }
+    }
+    let sessionTimer = null;
+    async function armControl() {
+      if (await sendCmd('ARM')) {
+        if (sessionTimer) clearInterval(sessionTimer);
+        sessionTimer = setInterval(() => { if (!driveCmd && !isAutoRunning) sendCmd('V 0.000 0.000'); },150);
+      }
+    }
+
+    async function toggleAuto() {
+      const act = isAutoRunning ? 'STOP' : 'START';
+      try {
+        const response = await fetch('/api/auto?act=' + act, {signal:AbortSignal.timeout(1200)});
+        const d = await response.json();
+        if (!response.ok || d.status !== 'ok') {
+          isAutoRunning = Boolean(d.auto);
+          document.getElementById('statusBadge').innerText =
+            ('AUTO ' + act + ' BỊ TỪ CHỐI: ' + (d.reason || 'UNKNOWN'));
+          return;
+        }
+        isAutoRunning = d.auto;
+        const btn = document.getElementById('btnAuto');
+        const txt = document.getElementById('autoText');
+        if (isAutoRunning) {
+          btn.classList.add('active');
+          txt.innerText = 'DỪNG QUÉT MAP';
+          btn.style.background = '#d97706';
+          btn.style.borderColor = '#f59e0b';
+        } else {
+          btn.classList.remove('active');
+          txt.innerText = 'BẬT TỰ ĐỘNG QUÉT MAP';
+          btn.style.background = '#064e3b';
+          btn.style.borderColor = '#059669';
+        }
+      } catch (_) {
+        document.getElementById('statusBadge').innerText = 'AUTO MẤT KẾT NỐI — CHƯA XÁC NHẬN AN TOÀN';
+      }
+    }
+
+    function emergencyStop() {
+      // STOP endpoint also disables AUTO. One operation, one confirmation.
+      stopDrive(true);
+      isAutoRunning = false;
+      const btn = document.getElementById('btnAuto');
+      document.getElementById('autoText').innerText = 'BẬT TỰ ĐỘNG QUÉT MAP';
+      btn.style.background = '#064e3b';
+      btn.style.borderColor = '#059669';
+    }
+
+    function fetchMap() {
+      fetch('/api/map_full').then(r=>r.json()).then(d=>{
+        mapData = d;
+      }).catch(()=>{});
+    }
+
+    // VẼ RADAR HOẶC BẢN ĐỒ SLAM
+    function render() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const cx = canvas.width / 2;
+      const cy = canvas.height / 2;
+
+      if (currentView === 'radar') {
+        // 1. Vẽ vòng tròn Radar
+        ctx.strokeStyle = '#1e293b';
+        ctx.lineWidth = 1;
+        for (let r = 50; r <= 250; r += 50) {
+          ctx.beginPath();
+          ctx.arc(cx, cy, r, 0, Math.PI * 2);
+          ctx.stroke();
+        }
+
+        // Vẽ các tia trục
+        ctx.beginPath();
+        ctx.moveTo(cx - 250, cy); ctx.lineTo(cx + 250, cy);
+        ctx.moveTo(cx, cy - 250); ctx.lineTo(cx, cy + 250);
+        ctx.stroke();
+
+        // 2. Vẽ đám mây điểm LaserScan
+        if (teleData && teleData.ranges) {
+          const scale = 75; // 75px = 1m (phạm vi ~3.5m)
+          ctx.fillStyle = '#00f0ff';
+          teleData.ranges.forEach((dist, deg) => {
+            if (dist > 0.05 && dist < 4.0) {
+              const rad = (deg - 90) * Math.PI / 180.0;
+              const px = cx + dist * Math.cos(rad) * scale;
+              const py = cy + dist * Math.sin(rad) * scale;
+              
+              if (dist < 0.35) ctx.fillStyle = '#ef4444';
+              else if (dist < 0.70) ctx.fillStyle = '#f59e0b';
+              else ctx.fillStyle = '#00f0ff';
+              
+              ctx.fillRect(px - 2, py - 2, 4, 4);
+            }
+          });
+        }
+
+        // 3. Vẽ vị trí xe Robot ở tâm
+        ctx.fillStyle = '#10b981';
+        ctx.beginPath();
+        ctx.arc(cx, cy, 10, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = '#fff';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(cx, cy);
+        ctx.lineTo(cx, cy - 22); // Mũi tên tiến
+        ctx.stroke();
+      } 
+      else if (currentView === 'slam' && mapData && mapData.data && mapData.data.length > 0) {
+        // VẼ BẢN ĐỒ SLAM GRID THỰC TẾ
+        const mw = mapData.w;
+        const mh = mapData.h;
+        const pSize = Math.max(1, Math.min(canvas.width / mw, canvas.height / mh));
+        const ox = (canvas.width - mw * pSize) / 2;
+        const oy = (canvas.height - mh * pSize) / 2;
+
+        for (let y = 0; y < mh; y++) {
+          for (let x = 0; x < mw; x++) {
+            const val = mapData.data[(mh - 1 - y) * mw + x];
+            if (val === -1) {
+              ctx.fillStyle = '#0b0f19'; // Vùng chưa quét
+            } else if (val === 0) {
+              ctx.fillStyle = '#1e293b'; // Vùng trống tự do
+            } else {
+              ctx.fillStyle = '#00f0ff'; // Vật cản / Tường phòng
+            }
+            ctx.fillRect(ox + x * pSize, oy + y * pSize, pSize, pSize);
+          }
+        }
+      }
+
+      requestAnimationFrame(render);
+    }
+
+    function updateTrialUI(d) {
+      const c = d.control;
+      if (!c || c.motion_window_s == null) return;
+      isAutoRunning = Boolean(d.auto);
+      document.querySelectorAll('.dpad-btn').forEach(b => { b.disabled = true; });
+      const pidButton = document.querySelector('button[onclick="applyPidMini()"]');
+      if (pidButton) pidButton.disabled = true;
+      const arm = document.getElementById('btnArm');
+      arm.disabled = !c.preflight_ready || c.trial_used || Boolean(c.fault);
+      arm.innerText = c.trial_used ? 'PHIÊN TEST ĐÃ DÙNG' : c.preflight_ready ? 'MỞ PHIÊN TEST 15 GIÂY' : 'ĐANG KIỂM TRA XE';
+      document.getElementById('btnAuto').disabled = !c.armed || Boolean(c.fault);
+      document.getElementById('autoText').innerText = d.auto ? 'DỪNG TEST AUTO' : 'BẬT TEST AUTO 15 GIÂY';
+    }
+
+    // ĐỌC TELEMETRY LIÊN TỤC 10HZ
+    setInterval(() => {
+      fetch('/api/telemetry').then(r=>r.json()).then(d=>{
+        teleData = d;
+        updateTrialUI(d);
+        document.getElementById('valX').innerText = d.robot.x.toFixed(3);
+        document.getElementById('valY').innerText = d.robot.y.toFixed(3);
+        document.getElementById('valTh').innerText = (d.robot.th * 180 / Math.PI).toFixed(1) + '°';
+        document.getElementById('valLRpm').innerText = Math.abs(d.robot.l_rpm).toFixed(1);
+        document.getElementById('valRRpm').innerText = Math.abs(d.robot.r_rpm).toFixed(1);
+        document.getElementById('valMinD').innerText = (d.min_m * 100).toFixed(0) + ' cm';
+        document.getElementById('distIndicator').innerText = `VẬT CẢN: ${d.min_m.toFixed(2)}m (${d.min_ang}°)`;
+
+        const badge = document.getElementById('statusBadge');
+        if (d.status === 'OBSERVE_ONLY') {
+          badge.className = 'status-badge badge-warn';
+          badge.innerText = 'ĐANG XEM DỮ LIỆU XE — CHƯA BẬT CHẠY' +
+            (d.control && d.control.fault ? ' / ' + d.control.fault : '');
+        } else if (d.map_info && d.map_info.phase && d.auto) {
+          badge.className = 'status-badge badge-warn';
+          badge.innerText = 'TỰ HÀNH: ' + d.map_info.phase;
+        } else if (d.status === 'DANGER_STOP') {
+          badge.className = 'status-badge badge-danger';
+          badge.innerText = 'CẢNH BÁO: QUÁ GẦN!';
+        } else if (d.status === 'WARNING') {
+          badge.className = 'status-badge badge-warn';
+          badge.innerText = 'CẢNH BÁO VA CHẠM';
+        } else if (d.control && (d.control.fault || d.control.latched)) {
+          badge.className = 'status-badge badge-danger';
+          badge.innerText = d.control.fault || 'ĐÃ KHÓA — CẦN MỞ PHIÊN RÕ RÀNG';
+        } else {
+          badge.className = 'status-badge badge-safe';
+          badge.innerText = 'TELEMETRY ĐANG CẬP NHẬT';
+        }
+      }).catch(()=>{
+        document.getElementById('statusBadge').innerText = 'MẤT TELEMETRY — CHƯA XÁC NHẬN AN TOÀN';
+        ['valLRpm','valRRpm','valX','valY','valTh'].forEach(id => document.getElementById(id).innerText = '--');
+        if (driveCmd) stopDrive();
+      });
+    }, 100);
+
+    // ĐIỀU KHIỂN BÀN PHÍM WASD
+    const SPEED = 110;
+    let driveTimer = null;
+    let driveCmd = null;
+
+    function startDrive(c) {
+      driveCmd = c;
+      sendCmd(c);
+      if (driveTimer) clearInterval(driveTimer);
+      driveTimer = setInterval(()=>{ if (driveCmd) sendCmd(driveCmd); }, 150);
+    }
+
+    function stopDrive(force = false) {
+      const active = Boolean(sessionTimer || driveCmd || driveTimer);
+      if (sessionTimer) { clearInterval(sessionTimer); sessionTimer = null; }
+      driveCmd = null;
+      if (driveTimer) { clearInterval(driveTimer); driveTimer = null; }
+      if (active || force === true) sendCmd('STOP');
+      document.querySelectorAll('.dpad-btn').forEach(b => b.classList.remove('pressed'));
+    }
+
+    function bind(id, c) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.addEventListener('pointerdown', (e)=>{ e.preventDefault(); el.classList.add('pressed'); startDrive(c); });
+      const rel = (e)=>{ e.preventDefault(); el.classList.remove('pressed'); stopDrive(); };
+      el.addEventListener('pointerup', rel);
+      el.addEventListener('pointercancel', rel);
+    }
+
+    bind('btnW', 'M 140 140');
+    bind('btnS', 'M -140 -140');
+    bind('btnA', 'M -120 120');
+    bind('btnD', 'M 120 -120');
+    bind('btnQ', 'M -130 130');
+    bind('btnE', 'M 130 -130');
+
+    window.addEventListener('keydown', (e)=>{
+      if (e.target && /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)) return;
+      if (e.repeat) return;
+      if (e.code === 'Space') { e.preventDefault(); emergencyStop(); return; }
+      const k = { 'KeyW': 'M 140 140', 'KeyS': 'M -140 -140', 'KeyA': 'M -120 120', 'KeyD': 'M 120 -120', 'KeyQ': 'M -130 130', 'KeyE': 'M 130 -130' };
+      if (k[e.code]) { e.preventDefault(); startDrive(k[e.code]); }
+    });
+
+    window.addEventListener('keyup', (e)=>{
+      if (driveCmd && (e.code.startsWith('Key') || e.code === 'Space')) { e.preventDefault(); stopDrive(); }
+    });
+
+    window.addEventListener('blur', stopDrive);
+    document.addEventListener('visibilitychange', () => { if (document.hidden) stopDrive(); });
+    window.addEventListener('pointerup', () => { if (driveCmd) stopDrive(); });
+    render();
+  </script>
+</body>
+</html>

@@ -1,0 +1,50 @@
+{
+  "scope": "OFFLINE only actual runtime+gate, unscaled production preflight NOT exercised by these mock transport cases",
+  "hash_before": "071408c7039529c2b03c209a40ed4f45ac25b7eacad7dc5d458654aad75b6d81",
+  "hash_after": "071408c7039529c2b03c209a40ed4f45ac25b7eacad7dc5d458654aad75b6d81",
+  "cases": [
+    {
+      "case": "sink_failure",
+      "exit": 1,
+      "report": {
+        "preflight_status": "PREFLIGHT_STABLE_VERIFIED",
+        "preflight_samples": 6,
+        "preflight_span_s": 0.10899999999674037,
+        "evidence_save_error": "[WinError 183] Cannot create a file when that file already exists: 'C:\\\\Users\\\\Khang\\\\AppData\\\\Local\\\\Temp\\\\agv_OFFLINE_fail_0948_n6ni_2rz\\\\existing_file'",
+        "status": "FAIL_EVIDENCE_SINK_ERROR"
+      },
+      "closed": true,
+      "stop_confirmed": true,
+      "stop_writes": 1
+    },
+    {
+      "case": "first_stop_write_failure",
+      "exit": 1,
+      "report": {
+        "preflight_status": "PREFLIGHT_STABLE_VERIFIED",
+        "preflight_samples": 7,
+        "preflight_span_s": 0.125,
+        "cleanup_stop_write_error": "OFFLINE all STOP writes fail",
+        "evidence_file": "C:\\Users\\Khang\\AppData\\Local\\Temp\\agv_OFFLINE_fail_0948_zxgavhzu\\motion_evidence_1790909278782_18076.json",
+        "status": "FAIL_CLEANUP_STOP_WRITE_ERROR"
+      },
+      "closed": true,
+      "stop_confirmed": false,
+      "stop_writes": 12
+    },
+    {
+      "case": "close_failure",
+      "exit": 0,
+      "report": {
+        "preflight_status": "PREFLIGHT_STABLE_VERIFIED",
+        "preflight_samples": 7,
+        "preflight_span_s": 0.10899999999674037,
+        "evidence_file": "C:\\Users\\Khang\\AppData\\Local\\Temp\\agv_OFFLINE_fail_0948_7g4wbf7b\\motion_evidence_1790909279187_18076.json",
+        "status": "PASS_MOTION_VERIFIED"
+      },
+      "closed": false,
+      "stop_confirmed": true,
+      "stop_writes": 1
+    }
+  ]
+}

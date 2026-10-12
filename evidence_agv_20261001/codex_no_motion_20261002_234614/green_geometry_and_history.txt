@@ -1,0 +1,15 @@
+test_freshness_is_rechecked_after_geometry_and_before_tx (test_agv_no_motion_fixes.ArcSession.test_freshness_is_rechecked_after_geometry_and_before_tx) ... ok
+test_front_flag_alone_cannot_authorize_a_turning_forward_command (test_agv_no_motion_fixes.ArcSession.test_front_flag_alone_cannot_authorize_a_turning_forward_command) ... ok
+test_missing_pose_or_stale_map_does_not_validate_an_arc (test_agv_no_motion_fixes.NodeArcClearance.test_missing_pose_or_stale_map_does_not_validate_an_arc) ... ok
+test_scan_obstacle_to_side_blocks_arc_even_if_map_has_not_caught_up (test_agv_no_motion_fixes.NodeArcClearance.test_scan_obstacle_to_side_blocks_arc_even_if_map_has_not_caught_up) ... ok
+test_yellow_rear_obstacle_does_not_block_clear_forward_sweep (test_agv_no_motion_fixes.NodeArcClearance.test_yellow_rear_obstacle_does_not_block_clear_forward_sweep) ... ok
+test_nonfault_arm_ack_and_drive_survive_long_idle_d0_stream (test_agv_no_motion_fixes.RetainedCommands.test_nonfault_arm_ack_and_drive_survive_long_idle_d0_stream) ... ok
+test_clear_arc_and_rotated_map_use_the_same_metric_footprint (test_agv_no_motion_fixes.SweptClearance.test_clear_arc_and_rotated_map_use_the_same_metric_footprint) ... ok
+test_curve_cannot_enter_a_cell_that_the_starting_footprint_clears (test_agv_no_motion_fixes.SweptClearance.test_curve_cannot_enter_a_cell_that_the_starting_footprint_clears) ... ok
+test_obstacle_or_unknown_inside_body_margin_blocks_even_a_forward_arc (test_agv_no_motion_fixes.SweptClearance.test_obstacle_or_unknown_inside_body_margin_blocks_even_a_forward_arc) ... ok
+test_subcell_edge_and_invalid_twist_fail_closed (test_agv_no_motion_fixes.SweptClearance.test_subcell_edge_and_invalid_twist_fail_closed) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.148s
+
+OK

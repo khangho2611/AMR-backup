@@ -1,0 +1,1 @@
+{"pids": [52120, 52244], "reason": "MCU reset odometry to zero on controller OPEN; build one map for current epoch", "odom": {"safety": "DISARMED", "mode": "PID", "l_tgt": 0.0, "r_tgt": 0.0, "l_rpm": 0.0, "r_rpm": 0.0, "l_pwm": 0, "r_pwm": 0, "x": 0.0, "y": 0.0, "th": 0.0, "v": 0.0, "w": 0.0}}

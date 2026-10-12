@@ -1,0 +1,1305 @@
+{
+  "source": "D:\\HoMinhKhang\\PROJECT\\GITHUB_PROJECT\\CODE XE TU HANH\\TINH_TOAN_THIET_KE_XE_TU_HANH.docx",
+  "sha256": "ad9d7a45fdc7cc16982df7a22cb4e277bc2794dcbd3efacfdb8cad40853981ca",
+  "extraction": "all body paragraphs/tables plus Office Math; no DOCX edits",
+  "body": [
+    {
+      "body_index": 0,
+      "tag": "p",
+      "text": "BẢN TÍNH TOÁN THIẾT KẾ ĐỘNG LỰC HỌC, ĐỘNG HỌC VÀ ĐIỀU KHIỂN XE TỰ HÀNH (AGV)",
+      "math": []
+    },
+    {
+      "body_index": 1,
+      "tag": "p",
+      "text": "HỆ THỐNG THỰC TẾ: XE 1.75 KG, ĐỘNG CƠ GA25 280RPM, DRIVER I2C MKE-M18 VÀ NGUỒN PIN 3S WAVESHARE",
+      "math": []
+    },
+    {
+      "body_index": 2,
+      "tag": "p",
+      "text": "1. TỔNG TẢI TRỌNG VÀ PHÂN BỔ KHỐI LƯỢNG THỰC TẾ",
+      "math": []
+    },
+    {
+      "body_index": 3,
+      "tag": "p",
+      "text": "Khối lượng thực tế cân được của xe sau khi lắp đặt hoàn chỉnh gồm khung gầm, khối pin 3S, bo mạch vi điều khiển, driver và 2 động cơ là m_thuc = 1.75 kg. Cấu hình cơ khí gồm 1 bánh tự lựa (caster) dẫn hướng phía trước và 2 bánh chủ động dẫn động độc lập phía sau.",
+      "math": []
+    },
+    {
+      "body_index": 4,
+      "tag": "p",
+      "text": "1.1. Công thức tính tổng khối lượng thiết kế có hệ số an toàn",
+      "math": []
+    },
+    {
+      "body_index": 5,
+      "tag": "p",
+      "text": "Tổng khối lượng thiết kế là khối lượng dùng để tính toán động cơ, bằng khối lượng thực tế nhân với hệ số an toàn dự phòng (chọn k_s = 1.2, tương ứng tính dư thêm 20% tải để dự phòng phụ kiện và cáp nối phát sinh):",
+      "math": []
+    },
+    {
+      "body_index": 6,
+      "tag": "p",
+      "text": "",
+      "math": [
+        "M=mthuc·ks"
+      ]
+    },
+    {
+      "body_index": 7,
+      "tag": "p",
+      "text": "Trong đó:",
+      "math": []
+    },
+    {
+      "body_index": 8,
+      "tag": "p",
+      "text": "•  M: Tổng khối lượng tính toán của xe (đơn vị: kg).",
+      "math": []
+    },
+    {
+      "body_index": 9,
+      "tag": "p",
+      "text": "•  m_thuc: Khối lượng thực tế cân được của xe (m_thuc = 1.75 kg).",
+      "math": []
+    },
+    {
+      "body_index": 10,
+      "tag": "p",
+      "text": "•  k_s: Hệ số an toàn thiết kế (k_s = 1.2).",
+      "math": []
+    },
+    {
+      "body_index": 11,
+      "tag": "p",
+      "text": "Thay số vào công thức:",
+      "math": []
+    },
+    {
+      "body_index": 12,
+      "tag": "p",
+      "text": "",
+      "math": [
+        "M=1.75·1.2=2.10 kg"
+      ]
+    },
+    {
+      "body_index": 13,
+      "tag": "p",
+      "text": "1.2. Công thức tính trọng lực toàn xe",
+      "math": []
+    },
+    {
+      "body_index": 14,
+      "tag": "p",
+      "text": "Trọng lực là lực hút của Trái Đất tác dụng lên toàn bộ khối lượng xe theo phương thẳng đứng vuông góc với mặt sàn:",
+      "math": []
+    },
+    {
+      "body_index": 15,
+      "tag": "p",
+      "text": "",
+      "math": [
+        "P=M·g"
+      ]
+    },
+    {
+      "body_index": 16,
+      "tag": "p",
+      "text": "Trong đó:",
+      "math": []
+    },
+    {
+      "body_index": 17,
+      "tag": "p",
+      "text": "•  P: Trọng lực toàn phần của xe (đơn vị: N).",
+      "math": []
+    },
+    {
+      "body_index": 18,
+      "tag": "p",
+      "text": "•  M: Tổng khối lượng tính toán (M = 2.10 kg).",
+      "math": []
+    },
+    {
+      "body_index": 19,
+      "tag": "p",
+      "text": "•  g: Gia tốc trọng trường (lấy chuẩn g = 9.81 m/s²).",
+      "math": []
+    },
+    {
+      "body_index": 20,
+      "tag": "p",
+      "text": "Thay số:",
+      "math": []
+    },
+    {
+      "body_index": 21,
+      "tag": "p",
+      "text": "",
+      "math": [
+        "P=2.10·9.81=20.601 N"
+      ]
+    },
+    {
+      "body_index": 22,
+      "tag": "p",
+      "text": "1.3. Phân bổ tải trọng lên các cụm bánh xe",
+      "math": []
+    },
+    {
+      "body_index": 23,
+      "tag": "p",
+      "text": "Để 2 bánh dẫn động phía sau có đủ ma sát bám sàn, tránh hiện tượng trượt quay khi khởi động hoặc phanh, đồng thời bánh caster trước đủ nhẹ để chuyển hướng mượt, tải trọng phân bổ theo tỷ lệ 70% đè lên 2 bánh sau và 30% đè lên bánh trước:",
+      "math": []
+    },
+    {
+      "body_index": 24,
+      "tag": "p",
+      "text": "1. Trọng lực dồn lên 2 bánh dẫn động sau:",
+      "math": []
+    },
+    {
+      "body_index": 25,
+      "tag": "p",
+      "text": "",
+      "math": [
+        "Psau=0.70·P=0.70·20.601=14.42 N"
+      ]
+    },
+    {
+      "body_index": 26,
+      "tag": "p",
+      "text": "Mỗi bánh sau chịu tải trọng:",
+      "math": []
+    },
+    {
+      "body_index": 27,
+      "tag": "p",
+      "text": "",
+      "math": [
+        "Pbanh_sau=Psau2=14.422=7.21 N≈0.735 kg/bánh"
+      ]
+    },
+    {
+      "body_index": 28,
+      "tag": "p",
+      "text": "2. Trọng lực dồn lên bánh caster trước:",
+      "math": []
+    },
+    {
+      "body_index": 29,
+      "tag": "p",
+      "text": "",
+      "math": [
+        "Pcaster=0.30·P=0.30·20.601=6.18 N≈0.630 kg"
+      ]
+    },
+    {
+      "body_index": 30,
+      "tag": "p",
+      "text": "2. THÔNG SỐ HÌNH HỌC BÁNH XE THỰC TẾ",
+      "math": []
+    },
+    {
+      "body_index": 31,
+      "tag": "p",
+      "text": "Bánh xe đi kèm bộ động cơ GA25 có chu vi vòng tròn ngoài đo được trực tiếp bằng thước dây là C = 23 cm (0.23 m). Khoảng cách giữa hai tâm bánh xe dẫn động sau đo được là L = 18.75 cm (0.1875 m).",
+      "math": []
+    },
+    {
+      "body_index": 32,
+      "tag": "p",
+      "text": "2.1. Công thức tính đường kính và bán kính bánh xe",
+      "math": []
+    },
+    {
+      "body_index": 33,
+      "tag": "p",
+      "text": "Đường kính bánh xe được tính từ chu vi theo công thức hình học:",
+      "math": []
+    },
+    {
+      "body_index": 34,
+      "tag": "p",
+      "text": "",
+      "math": [
+        "D=Cπ"
+      ]
+    },
+    {
+      "body_index": 35,
+      "tag": "p",
+      "text": "Trong đó:",
+      "math": []
+    },
+    {
+      "body_index": 36,
+      "tag": "p",
+      "text": "•  D: Đường kính bánh xe (đơn vị: m).",
+      "math": []
+    },
+    {
+      "body_index": 37,
+      "tag": "p",
+      "text": "•  C: Chu vi bánh xe (C = 0.23 m).",
+      "math": []
+    },
+    {
+      "body_index": 38,
+      "tag": "p",
+      "text": "•  pi: Hằng số Pi (lấy 3.1416).",
+      "math": []
+    },
+    {
+      "body_index": 39,
+      "tag": "p",
+      "text": "Thay số:",
+      "math": []
+    },
+    {
+      "body_index": 40,
+      "tag": "p",
+      "text": "",
+      "math": [
+        "D=0.233.1416≈0.0732 m=73.2 mm"
+      ]
+    },
+    {
+      "body_index": 41,
+      "tag": "p",
+      "text": "Bán kính bánh xe bằng một nửa đường kính:",
+      "math": []
+    },
+    {
+      "body_index": 42,
+      "tag": "p",
+      "text": "",
+      "math": [
+        "R=D2=0.07322=0.0366 m=36.6 mm"
+      ]
+    },
+    {
+      "body_index": 43,
+      "tag": "p",
+      "text": "3. TÍNH TOÁN LỰC CẢN VÀ MÔ-MEN XOẮN YÊU CẦU",
+      "math": []
+    },
+    {
+      "body_index": 44,
+      "tag": "p",
+      "text": "3.1. Công thức tính lực cản lăn",
+      "math": []
+    },
+    {
+      "body_index": 45,
+      "tag": "p",
+      "text": "Lực cản lăn xuất hiện do ma sát tiếp xúc và biến dạng giữa lốp cao su của bánh xe với mặt sàn phẳng khi xe di chuyển đều:",
+      "math": []
+    },
+    {
+      "body_index": 46,
+      "tag": "p",
+      "text": "",
+      "math": [
+        "Flan=μ·P=μ·M·g"
+      ]
+    },
+    {
+      "body_index": 47,
+      "tag": "p",
+      "text": "Trong đó:",
+      "math": []
+    },
+    {
+      "body_index": 48,
+      "tag": "p",
+      "text": "•  F_lan: Lực cản lăn của xe (đơn vị: N).",
+      "math": []
+    },
+    {
+      "body_index": 49,
+      "tag": "p",
+      "text": "•  mu: Hệ số cản lăn sàn gạch/gỗ phẳng (lấy chuẩn mu = 0.02).",
+      "math": []
+    },
+    {
+      "body_index": 50,
+      "tag": "p",
+      "text": "•  P: Trọng lực toàn xe (P = 20.601 N).",
+      "math": []
+    },
+    {
+      "body_index": 51,
+      "tag": "p",
+      "text": "Thay số:",
+      "math": []
+    },
+    {
+      "body_index": 52,
+      "tag": "p",
+      "text": "",
+      "math": [
+        "Flan=0.02·20.601=0.412 N"
+      ]
+    },
+    {
+      "body_index": 53,
+      "tag": "p",
+      "text": "3.2. Công thức tính lực quán tính khi tăng tốc",
+      "math": []
+    },
+    {
+      "body_index": 54,
+      "tag": "p",
+      "text": "Lực quán tính là lực cản trở gia tốc khi xe bắt đầu tăng tốc từ vị trí đứng yên lên tốc độ định mức theo Định luật II Newton:",
+      "math": []
+    },
+    {
+      "body_index": 55,
+      "tag": "p",
+      "text": "",
+      "math": [
+        "Fqt=M·a"
+      ]
+    },
+    {
+      "body_index": 56,
+      "tag": "p",
+      "text": "Trong đó:",
+      "math": []
+    },
+    {
+      "body_index": 57,
+      "tag": "p",
+      "text": "•  F_qt: Lực quán tính khi tăng tốc (đơn vị: N).",
+      "math": []
+    },
+    {
+      "body_index": 58,
+      "tag": "p",
+      "text": "•  M: Tổng khối lượng tính toán (M = 2.10 kg).",
+      "math": []
+    },
+    {
+      "body_index": 59,
+      "tag": "p",
+      "text": "•  a: Gia tốc tăng tốc mong muốn (chọn a = 0.3 m/s² để xe khởi động êm mượt, không giật trượt bánh).",
+      "math": []
+    },
+    {
+      "body_index": 60,
+      "tag": "p",
+      "text": "Thay số:",
+      "math": []
+    },
+    {
+      "body_index": 61,
+      "tag": "p",
+      "text": "",
+      "math": [
+        "Fqt=2.10·0.3=0.630 N"
+      ]
+    },
+    {
+      "body_index": 62,
+      "tag": "p",
+      "text": "3.3. Tổng lực kéo yêu cầu toàn xe và lực đẩy mỗi bánh",
+      "math": []
+    },
+    {
+      "body_index": 63,
+      "tag": "p",
+      "text": "Tổng lực kéo là hợp lực động cơ cần tạo ra tại thời điểm khởi động tăng tốc:",
+      "math": []
+    },
+    {
+      "body_index": 64,
+      "tag": "p",
+      "text": "",
+      "math": [
+        "Fkeo=Flan+Fqt=0.412+0.630=1.042 N"
+      ]
+    },
+    {
+      "body_index": 65,
+      "tag": "p",
+      "text": "Mỗi bánh dẫn động sau cần tạo ra một lực đẩy tiếp tuyến:",
+      "math": []
+    },
+    {
+      "body_index": 66,
+      "tag": "p",
+      "text": "",
+      "math": [
+        "Fbanh=Fkeo2=1.0422=0.521 N"
+      ]
+    },
+    {
+      "body_index": 67,
+      "tag": "p",
+      "text": "3.4. Mô-men xoắn cần thiết trên trục bánh xe",
+      "math": []
+    },
+    {
+      "body_index": 68,
+      "tag": "p",
+      "text": "Mô-men xoắn yêu cầu là tích số giữa lực đẩy tiếp tuyến với bán kính bánh xe, chia cho hiệu suất truyền động:",
+      "math": []
+    },
+    {
+      "body_index": 69,
+      "tag": "p",
+      "text": "",
+      "math": [
+        "Tbanh=Fbanh·Rη"
+      ]
+    },
+    {
+      "body_index": 70,
+      "tag": "p",
+      "text": "Trong đó:",
+      "math": []
+    },
+    {
+      "body_index": 71,
+      "tag": "p",
+      "text": "•  T_banh: Mô-men xoắn yêu cầu trên trục bánh (đơn vị: N.m).",
+      "math": []
+    },
+    {
+      "body_index": 72,
+      "tag": "p",
+      "text": "•  F_banh: Lực đẩy mỗi bánh (F_banh = 0.521 N).",
+      "math": []
+    },
+    {
+      "body_index": 73,
+      "tag": "p",
+      "text": "•  R: Bán kính bánh xe (R = 0.0366 m).",
+      "math": []
+    },
+    {
+      "body_index": 74,
+      "tag": "p",
+      "text": "•  eta: Hiệu suất truyền động cơ khí hộp số (chọn eta = 0.85).",
+      "math": []
+    },
+    {
+      "body_index": 75,
+      "tag": "p",
+      "text": "Thay số:",
+      "math": []
+    },
+    {
+      "body_index": 76,
+      "tag": "p",
+      "text": "",
+      "math": [
+        "Tbanh=0.521·0.03660.85=0.0224 N·m=0.228 kg·cm"
+      ]
+    },
+    {
+      "body_index": 77,
+      "tag": "p",
+      "text": "Áp dụng hệ số an toàn dự trữ công suất k_m = 1.5:",
+      "math": []
+    },
+    {
+      "body_index": 78,
+      "tag": "p",
+      "text": "",
+      "math": [
+        "Tchon≥Tbanh·1.5=0.228·1.5=0.342 kg·cm"
+      ]
+    },
+    {
+      "body_index": 79,
+      "tag": "p",
+      "text": "4. ĐỐI CHIẾU THỰC TẾ: TỐC ĐỘ YÊU CẦU VÀ ĐỘNG CƠ 280 RPM ĐÃ MUA",
+      "math": []
+    },
+    {
+      "body_index": 80,
+      "tag": "p",
+      "text": "4.1. Tốc độ vòng quay lý thuyết cần thiết (n_yeucau)",
+      "math": []
+    },
+    {
+      "body_index": 81,
+      "tag": "p",
+      "text": "Trong không gian phòng thí nghiệm hoặc nhà xưởng, tốc độ di chuyển an toàn và tối ưu của xe là v = 0.50 m/s (tương đương 1.8 km/h).",
+      "math": []
+    },
+    {
+      "body_index": 82,
+      "tag": "p",
+      "text": "Công thức tính tốc độ vòng quay yêu cầu của bánh xe:",
+      "math": []
+    },
+    {
+      "body_index": 83,
+      "tag": "p",
+      "text": "",
+      "math": [
+        "nyeucau=60·vC=60·0.500.23≈130.4 RPM≈130−140 RPM"
+      ]
+    },
+    {
+      "body_index": 84,
+      "tag": "p",
+      "text": "Như vậy về mặt lý thuyết, xe chỉ cần động cơ có tốc độ sau giảm tốc khoảng 130 đến 140 RPM.",
+      "math": []
+    },
+    {
+      "body_index": 85,
+      "tag": "p",
+      "text": "4.2. Thực tế sử dụng động cơ GA25-370 280 RPM và giải pháp điều khiển PWM",
+      "math": []
+    },
+    {
+      "body_index": 86,
+      "tag": "p",
+      "text": "Thực tế đã mua bộ động cơ GA25-370 12V 280 RPM (n_thucte = 280 RPM). Khi mở hết 100% công suất, xe chạy đạt v_max = 1.07 m/s (gần 3.9 km/h, quá nhanh trong nhà).",
+      "math": []
+    },
+    {
+      "body_index": 87,
+      "tag": "p",
+      "text": "Giải pháp lập trình điều khiển:",
+      "math": []
+    },
+    {
+      "body_index": 88,
+      "tag": "p",
+      "text": "",
+      "math": [
+        "Tỷ lệ PWM=nyeucaunthucte=130280≈46.4%⟹Cài đặt PWM từ 45\\% đến 50\\%"
+      ]
+    },
+    {
+      "body_index": 89,
+      "tag": "p",
+      "text": "Trên thang điều khiển 8-bit (0 đến 255): PWM = 120 đến 130.",
+      "math": []
+    },
+    {
+      "body_index": 90,
+      "tag": "p",
+      "text": "Lợi ích thực tế: Động cơ chạy cực mát, tăng tuổi thọ chổi than. 50% dải công suất còn lại đóng vai trò dự trữ mô-men xoắn giúp xe tự động tăng ga vượt dốc, leo gờ cửa hoặc khi bánh caster bị kẹt góc xoay mà không bị sụt áp.",
+      "math": []
+    },
+    {
+      "body_index": 91,
+      "tag": "p",
+      "text": "5. MÔ HÌNH HÓA ĐỘNG HỌC XE DI ĐỘNG VI SAI (DIFFERENTIAL DRIVE KINEMATICS)",
+      "math": []
+    },
+    {
+      "body_index": 92,
+      "tag": "p",
+      "text": "Xe sử dụng cơ cấu vi sai 2 bánh chủ động phía sau với bán kính bánh xe R = 0.0366 m và khoảng cách giữa hai bánh xe L = 0.1875 m. Xe di chuyển trên mặt phẳng tọa độ toàn cục Oxy với góc hướng thân xe là theta.",
+      "math": []
+    },
+    {
+      "body_index": 93,
+      "tag": "p",
+      "text": "5.1. Mô hình Động học thuận (Forward Kinematics)",
+      "math": []
+    },
+    {
+      "body_index": 94,
+      "tag": "p",
+      "text": "Động học thuận là bài toán xác định vận tốc dài tịnh tiến v(t) và vận tốc góc xoay omega(t) của toàn xe dựa trên vận tốc góc quay tức thời của bánh phải (omega_R) và bánh trái (omega_L) đo được từ Encoder:",
+      "math": []
+    },
+    {
+      "body_index": 95,
+      "tag": "p",
+      "text": "",
+      "math": [
+        "v=RωRωL2"
+      ]
+    },
+    {
+      "body_index": 96,
+      "tag": "p",
+      "text": "",
+      "math": [
+        "ω=RωRωLL"
+      ]
+    },
+    {
+      "body_index": 97,
+      "tag": "p",
+      "text": "Trong đó:",
+      "math": []
+    },
+    {
+      "body_index": 98,
+      "tag": "p",
+      "text": "•  v: Vận tốc dài tịnh tiến của tâm trục bánh sau (đơn vị: m/s).",
+      "math": []
+    },
+    {
+      "body_index": 99,
+      "tag": "p",
+      "text": "•  omega: Vận tốc góc tự xoay của thân xe quanh trục thẳng đứng (đơn vị: rad/s).",
+      "math": []
+    },
+    {
+      "body_index": 100,
+      "tag": "p",
+      "text": "•  omega_R: Vận tốc góc quay của bánh xe sau bên phải (đơn vị: rad/s).",
+      "math": []
+    },
+    {
+      "body_index": 101,
+      "tag": "p",
+      "text": "•  omega_L: Vận tốc góc quay của bánh xe sau bên trái (đơn vị: rad/s).",
+      "math": []
+    },
+    {
+      "body_index": 102,
+      "tag": "p",
+      "text": "•  R: Bán kính bánh xe (R = 0.0366 m).",
+      "math": []
+    },
+    {
+      "body_index": 103,
+      "tag": "p",
+      "text": "•  L: Khoảng cách giữa hai bánh xe sau (L = 0.1875 m).",
+      "math": []
+    },
+    {
+      "body_index": 104,
+      "tag": "p",
+      "text": "Biểu diễn đạo hàm vị trí của xe trong hệ tọa độ thế giới Oxy thông qua ma trận Jacobi chuyển đổi trạng thái:",
+      "math": []
+    },
+    {
+      "body_index": 105,
+      "tag": "p",
+      "text": "1. Quan hệ giữa vận tốc tọa độ toàn cục Oxy và vận tốc thân xe [v, omega]^T:",
+      "math": []
+    },
+    {
+      "body_index": 106,
+      "tag": "p",
+      "text": "",
+      "math": [
+        "x˙ y˙ θ˙]=[cosθ0 sinθ0 01][v ω"
+      ]
+    },
+    {
+      "body_index": 107,
+      "tag": "p",
+      "text": "2. Ma trận Jacobi chuyển đổi trực tiếp từ vận tốc góc hai bánh xe [omega_R, omega_L]^T sang vận tốc toàn cục:",
+      "math": []
+    },
+    {
+      "body_index": 108,
+      "tag": "p",
+      "text": "",
+      "math": [
+        "x˙ y˙ θ˙]=[R2cosθR2cosθ R2sinθR2sinθ RL−RL][ωR ωL"
+      ]
+    },
+    {
+      "body_index": 109,
+      "tag": "p",
+      "text": "5.2. Mô hình Động học nghịch (Inverse Kinematics)",
+      "math": []
+    },
+    {
+      "body_index": 110,
+      "tag": "p",
+      "text": "Động học nghịch là bài toán quy đổi từ vận tốc dài mong muốn v(t) và vận tốc góc mong muốn omega(t) (do thuật toán dẫn đường hoặc bộ điều khiển phát ra) thành vận tốc góc cần đặt cho từng động cơ bánh phải (omega_R) và bánh trái (omega_L):",
+      "math": []
+    },
+    {
+      "body_index": 111,
+      "tag": "p",
+      "text": "",
+      "math": [
+        "vR=v+ω·L2⟹ωR=1Rvω·L2[10pt]vL=v−ω·L2⟹ωL=1Rvω·L2"
+      ]
+    },
+    {
+      "body_index": 112,
+      "tag": "p",
+      "text": "Trong đó:",
+      "math": []
+    },
+    {
+      "body_index": 113,
+      "tag": "p",
+      "text": "•  v_R, v_L: Vận tốc dài tiếp tuyến tương ứng của bánh phải và bánh trái (đơn vị: m/s).",
+      "math": []
+    },
+    {
+      "body_index": 114,
+      "tag": "p",
+      "text": "•  omega_R, omega_L: Vận tốc góc đặt cho động cơ bánh phải và bánh trái (đơn vị: rad/s).",
+      "math": []
+    },
+    {
+      "body_index": 115,
+      "tag": "p",
+      "text": "•  v: Vận tốc dài yêu cầu của xe (đơn vị: m/s).",
+      "math": []
+    },
+    {
+      "body_index": 116,
+      "tag": "p",
+      "text": "•  omega: Vận tốc góc yêu cầu của xe (đơn vị: rad/s).",
+      "math": []
+    },
+    {
+      "body_index": 117,
+      "tag": "p",
+      "text": "Chuyển đổi từ vận tốc góc omega (rad/s) sang tốc độ vòng quay n (vòng/phút - RPM) để nạp vào hàm điều khiển PWM:",
+      "math": []
+    },
+    {
+      "body_index": 118,
+      "tag": "p",
+      "text": "",
+      "math": [
+        "nR=60·ωR2π,nL=60·ωL2π"
+      ]
+    },
+    {
+      "body_index": 119,
+      "tag": "p",
+      "text": "6. TÍNH TOÁN THÔNG SỐ ENCODER VÀ GIẢI THUẬT ĐỊNH VỊ ODOMETRY",
+      "math": []
+    },
+    {
+      "body_index": 120,
+      "tag": "p",
+      "text": "Động cơ GA25 tích hợp Encoder Hall 2 kênh AB có 11 xung/vòng/kênh trên đĩa từ. Hộp số giảm tốc có tỷ số truyền K_gear = 21.3 : 1.",
+      "math": []
+    },
+    {
+      "body_index": 121,
+      "tag": "p",
+      "text": "6.1. Tổng số xung trên 1 vòng quay bánh xe",
+      "math": []
+    },
+    {
+      "body_index": 122,
+      "tag": "p",
+      "text": "Số xung thực tế sau khi qua hộp số giảm tốc và giải mã 4 cạnh xung (chế độ x4 Quadrature Decoding):",
+      "math": []
+    },
+    {
+      "body_index": 123,
+      "tag": "p",
+      "text": "",
+      "math": [
+        "Nrev=Ndia·Kgear·4=11·21.3·4=937.2 xung/vòng"
+      ]
+    },
+    {
+      "body_index": 124,
+      "tag": "p",
+      "text": "6.2. Độ phân giải quãng đường di chuyển của mỗi xung",
+      "math": []
+    },
+    {
+      "body_index": 125,
+      "tag": "p",
+      "text": "Cự ly xe lăn bánh tương ứng với 1 xung Encoder đọc được:",
+      "math": []
+    },
+    {
+      "body_index": 126,
+      "tag": "p",
+      "text": "",
+      "math": [
+        "Δspulse=CNrev=0.23937.2≈0.000245 m=0.245 mm/xung"
+      ]
+    },
+    {
+      "body_index": 127,
+      "tag": "p",
+      "text": "6.3. Giải thuật cập nhật tọa độ Odometry trong chu kỳ lấy mẫu dt",
+      "math": []
+    },
+    {
+      "body_index": 128,
+      "tag": "p",
+      "text": "Trong mỗi chu kỳ trích mẫu dt (chọn dt = 0.02s tương ứng 50 Hz), gọi delta_N_R và delta_N_L là số xung vi điều khiển đếm được từ bánh phải và bánh trái. Quãng đường dịch chuyển của từng bánh:",
+      "math": []
+    },
+    {
+      "body_index": 129,
+      "tag": "p",
+      "text": "",
+      "math": [
+        "ΔsR=ΔNR·Δspulse,ΔsL=ΔNL·Δspulse"
+      ]
+    },
+    {
+      "body_index": 130,
+      "tag": "p",
+      "text": "Quãng đường tịnh tiến của tâm xe và góc quay thân xe:",
+      "math": []
+    },
+    {
+      "body_index": 131,
+      "tag": "p",
+      "text": "",
+      "math": [
+        "Δs=ΔsR+ΔsL2,Δθ=ΔsR−ΔsLL=ΔsR−ΔsL0.1875"
+      ]
+    },
+    {
+      "body_index": 132,
+      "tag": "p",
+      "text": "Cập nhật tọa độ và góc hướng của xe theo phương pháp tích phân hình thang Runge-Kutta bậc 2:",
+      "math": []
+    },
+    {
+      "body_index": 133,
+      "tag": "p",
+      "text": "",
+      "math": [
+        "xk+1=xk+Δs·cosθkΔθ2[8pt]yk+1=yk+Δs·sinθkΔθ2[8pt]θk+1=θk+Δθ"
+      ]
+    },
+    {
+      "body_index": 134,
+      "tag": "p",
+      "text": "7. TÍNH TOÁN NGUỒN ĐIỆN VÀ DRIVER ĐIỀU KHIỂN",
+      "math": []
+    },
+    {
+      "body_index": 135,
+      "tag": "p",
+      "text": "7.1. Đánh giá Driver MKE-M18 BD62130 I2C",
+      "math": []
+    },
+    {
+      "body_index": 136,
+      "tag": "p",
+      "text": "Module MKE-M18 chịu điện áp 8.0V - 13.0VDC, dòng liên tục 3.0A/kênh (dòng đỉnh 4.0A). Động cơ GA25 chạy có tải chỉ ăn dòng 0.2A - 0.4A và dòng kẹt tải là 1.8A. Driver hoàn toàn dư tải an toàn.",
+      "math": []
+    },
+    {
+      "body_index": 137,
+      "tag": "p",
+      "text": "Lợi thế I2C: Module chỉ dùng 2 chân SDA/SCL (địa chỉ 0x40), tích hợp vi điều khiển ARM Cortex-M0+ tự băm xung PWM độc lập, giải phóng 100% chân GPIO ngắt ngoài trên vi điều khiển chính để đọc tín hiệu Encoder.",
+      "math": []
+    },
+    {
+      "body_index": 138,
+      "tag": "p",
+      "text": "7.2. Tính toán thời gian hoạt động của khối Pin Waveshare UPS 3S",
+      "math": []
+    },
+    {
+      "body_index": 139,
+      "tag": "p",
+      "text": "Khối pin gồm 3 cell pin 18650 mắc nối tiếp (điện áp 11.1V - 12.6V, dung lượng 2600 mAh = 2.6 Ah).",
+      "math": []
+    },
+    {
+      "body_index": 140,
+      "tag": "p",
+      "text": "Tổng dòng tiêu thụ trung bình toàn xe:",
+      "math": []
+    },
+    {
+      "body_index": 141,
+      "tag": "p",
+      "text": "",
+      "math": [
+        "Itb=I2_motor+Imcu+Isensor=0.35+0.15+0.30=0.80 A"
+      ]
+    },
+    {
+      "body_index": 142,
+      "tag": "p",
+      "text": "Thời gian hoạt động liên tục với độ xả sâu an toàn 80% (DoD = 0.8):",
+      "math": []
+    },
+    {
+      "body_index": 143,
+      "tag": "p",
+      "text": "",
+      "math": [
+        "thoat_dong=Cpin·DoDItb=2.6·0.80.80=2.6 giờ (khoảng 2 tiếng 35 phút)"
+      ]
+    },
+    {
+      "body_index": 144,
+      "tag": "p",
+      "text": "7.3. Mạch giảm áp Buck XL4015 5A",
+      "math": []
+    },
+    {
+      "body_index": 145,
+      "tag": "p",
+      "text": "Module Buck XL4015 hạ áp từ nguồn 12V xuống 5.0VDC độc lập cung cấp dòng tải lên đến 5A cho cụm cảm biến và phụ kiện, tránh sụt áp gây reset vi điều khiển khi động cơ khởi động.",
+      "math": []
+    },
+    {
+      "body_index": 146,
+      "tag": "p",
+      "text": "8. TÍNH TOÁN CHU KỲ ĐIỀU KHIỂN, GIA TỐC VÀ CỰ LY PHANH AN TOÀN",
+      "math": []
+    },
+    {
+      "body_index": 147,
+      "tag": "p",
+      "text": "8.1. Tính toán chu kỳ lấy mẫu điều khiển (Sample Time dt)",
+      "math": []
+    },
+    {
+      "body_index": 148,
+      "tag": "p",
+      "text": "Khi xe chạy ở vận tốc danh định v = 0.50 m/s với độ phân giải xung delta_s = 0.245 mm/xung, tần số phát xung của mỗi bánh xe:",
+      "math": []
+    },
+    {
+      "body_index": 149,
+      "tag": "p",
+      "text": "",
+      "math": [
+        "fpulse=vΔspulse=0.500.000245≈2040 extxung/giây(khoảng2.04kHz)"
+      ]
+    },
+    {
+      "body_index": 150,
+      "tag": "p",
+      "text": "Để bộ điều khiển vi điều khiển (Arduino/ESP32/STM32) đọc kịp số xung và tính toán PID mượt mà mà không bị quá tải CPU, chu kỳ lấy mẫu ngắt Timer được chọn:",
+      "math": []
+    },
+    {
+      "body_index": 151,
+      "tag": "p",
+      "text": "",
+      "math": [
+        "Δt=0.02 exts(20ms,tươngứngtầnsốlấymẫuf=50 extHz"
+      ]
+    },
+    {
+      "body_index": 152,
+      "tag": "p",
+      "text": "Trong mỗi chu kỳ 20 ms, mỗi bánh xe quay được số xung là:",
+      "math": []
+    },
+    {
+      "body_index": 153,
+      "tag": "p",
+      "text": "",
+      "math": [
+        "Nsample=fpulse·Δt=2040·0.02≈40.8 extxung/chukỳ"
+      ]
+    },
+    {
+      "body_index": 154,
+      "tag": "p",
+      "text": "Nhận xét: Mỗi chu kỳ có khoảng 40 xung, đủ dày để thuật toán tính toán vận tốc tức thời cực kỳ mịn và không bị nhiễu số liệu.",
+      "math": []
+    },
+    {
+      "body_index": 155,
+      "tag": "p",
+      "text": "8.2. Tính toán gia tốc tăng tốc và quãng đường khởi động",
+      "math": []
+    },
+    {
+      "body_index": 156,
+      "tag": "p",
+      "text": "Để bánh xe cao su không bị trượt trên bề mặt sàn gạch hoặc gỗ khi bắt đầu lăn bánh, gia tốc tăng tốc cực đại được giới hạn:",
+      "math": []
+    },
+    {
+      "body_index": 157,
+      "tag": "p",
+      "text": "",
+      "math": [
+        "amax=0.30 extms2"
+      ]
+    },
+    {
+      "body_index": 158,
+      "tag": "p",
+      "text": "Thời gian xe cần để tăng tốc từ vị trí đứng yên lên tốc độ định mức v = 0.50 m/s:",
+      "math": []
+    },
+    {
+      "body_index": 159,
+      "tag": "p",
+      "text": "",
+      "math": [
+        "ttangtoc=vamax=0.500.30≈1.67 extgiây"
+      ]
+    },
+    {
+      "body_index": 160,
+      "tag": "p",
+      "text": "Quãng đường xe di chuyển trong giai đoạn tăng tốc:",
+      "math": []
+    },
+    {
+      "body_index": 161,
+      "tag": "p",
+      "text": "",
+      "math": [
+        "stangtoc=v22·amax=0.5022·0.30≈0.417 extm=41.7 extcm"
+      ]
+    },
+    {
+      "body_index": 162,
+      "tag": "p",
+      "text": "8.3. Tính toán cự ly dừng phanh an toàn khi gặp vật cản",
+      "math": []
+    },
+    {
+      "body_index": 163,
+      "tag": "p",
+      "text": "Khi cảm biến (LiDAR 2D hoặc cảm biến siêu âm) phát hiện vật cản phía trước, khoảng cách an toàn tối thiểu cần thiết để xe dừng hẳn không va chạm gồm 3 thành phần:",
+      "math": []
+    },
+    {
+      "body_index": 164,
+      "tag": "p",
+      "text": "•  1. Quãng đường xe trôi do độ trễ xử lý cảm biến và vi điều khiển (t_tre = 0.05 s = 50 ms):",
+      "math": []
+    },
+    {
+      "body_index": 165,
+      "tag": "p",
+      "text": "",
+      "math": [
+        "stroi=v·ttre=0.50·0.05=0.025 extm=2.5 extcm"
+      ]
+    },
+    {
+      "body_index": 166,
+      "tag": "p",
+      "text": "•  2. Quãng đường hãm phanh với gia tốc hãm an toàn a_phanh = 0.50 m/s²:",
+      "math": []
+    },
+    {
+      "body_index": 167,
+      "tag": "p",
+      "text": "",
+      "math": [
+        "sphanh=v22·aphanh=0.5022·0.50=0.250 extm=25.0 extcm"
+      ]
+    },
+    {
+      "body_index": 168,
+      "tag": "p",
+      "text": "•  3. Khoảng đệm an toàn vật lý giữ khoảng cách với vật cản khi đã dừng hẳn: s_dem = 0.10 m (10 cm).",
+      "math": []
+    },
+    {
+      "body_index": 169,
+      "tag": "p",
+      "text": "Tổng cự ly an toàn bắt buộc phải cài đặt trong code cảm biến:",
+      "math": []
+    },
+    {
+      "body_index": 170,
+      "tag": "p",
+      "text": "",
+      "math": [
+        "Sdung=stroi+sphanh+sdem=0.025+0.250+0.100=0.375 extm=37.5 extcm"
+      ]
+    },
+    {
+      "body_index": 171,
+      "tag": "p",
+      "text": "Khuyến nghị lập trình: Cài đặt ngưỡng cảnh báo và kích hoạt phanh dừng khi vật cản xuất hiện ở cự ly nhỏ hơn hoặc bằng 38 - 40 cm.",
+      "math": []
+    },
+    {
+      "body_index": 172,
+      "tag": "p",
+      "text": "9. BỘ ĐIỀU KHIỂN PID VẬN TỐC VÀ QUY TRÌNH HIỆU CHUẨN THỰC TẾ",
+      "math": []
+    },
+    {
+      "body_index": 173,
+      "tag": "p",
+      "text": "9.1. Cấu trúc bộ điều khiển PID vận tốc vòng kín",
+      "math": []
+    },
+    {
+      "body_index": 174,
+      "tag": "p",
+      "text": "Bộ điều khiển PID vận tốc nhận giá trị sai lệch giữa vận tốc yêu cầu (v_setpoint) và vận tốc thực tế phản hồi từ Encoder (v_feedback) để tính toán giá trị PWM xuất ra module I2C MKE-M18:",
+      "math": []
+    },
+    {
+      "body_index": 175,
+      "tag": "p",
+      "text": "",
+      "math": [
+        "e(t)=vsetpoint(t)−vfeedback(t)"
+      ]
+    },
+    {
+      "body_index": 176,
+      "tag": "p",
+      "text": "",
+      "math": [
+        "uPWM(t)=Kp·e(t)+Ki0te(au)dau+Kdde(t)dt"
+      ]
+    },
+    {
+      "body_index": 177,
+      "tag": "p",
+      "text": "Trong đó:",
+      "math": []
+    },
+    {
+      "body_index": 178,
+      "tag": "p",
+      "text": "•  K_p: Hệ số tỉ lệ (Proportional Gain), tạo lực kéo nhanh chóng theo độ lệch tức thời.",
+      "math": []
+    },
+    {
+      "body_index": 179,
+      "tag": "p",
+      "text": "•  K_i: Hệ số tích phân (Integral Gain), triệt tiêu hoàn toàn sai số xác lập khi xe chạy đường dài hoặc leo dốc nhẹ.",
+      "math": []
+    },
+    {
+      "body_index": 180,
+      "tag": "p",
+      "text": "•  K_d: Hệ số vi phân (Derivative Gain), giảm thiểu hiện tượng vọt lố và dập tắt dao động rung lắc khi đổi tốc độ đột ngột.",
+      "math": []
+    },
+    {
+      "body_index": 181,
+      "tag": "p",
+      "text": "Dải thông số PID khởi điểm khuyến nghị cho xe 1.75 kg có quán tính nhỏ: K_p = 12.0 - 18.0; K_i = 1.5 - 2.5; K_d = 0.2 - 0.5; tần số lấy mẫu chu kỳ dt = 0.02 s.",
+      "math": []
+    },
+    {
+      "body_index": 182,
+      "tag": "p",
+      "text": "9.2. Quy trình hiệu chuẩn thực tế bắt buộc (Calibration Procedure)",
+      "math": []
+    },
+    {
+      "body_index": 183,
+      "tag": "p",
+      "text": "Do lốp cao su có độ đàn hồi lún nhẹ dưới trọng lượng xe và khoảng cách trục L có thể lệch một vài milimet khi gia công gá bắt động cơ, cần thực hiện 2 bước hiệu chuẩn thực tế trên sàn:",
+      "math": []
+    },
+    {
+      "body_index": 184,
+      "tag": "p",
+      "text": "Bước 1: Hiệu chuẩn cự ly chạy thẳng (Hiệu chỉnh bán kính bánh xe R)",
+      "math": []
+    },
+    {
+      "body_index": 185,
+      "tag": "p",
+      "text": "•  1. Đặt xe tại vạch mốc số 0 trên mặt sàn, ra lệnh cho xe chạy thẳng đúng 1.0 m (1000 mm) theo số xung lý thuyết (4075 xung).",
+      "math": []
+    },
+    {
+      "body_index": 186,
+      "tag": "p",
+      "text": "•  2. Dùng thước cuộn đo quãng đường thực tế xe lăn bánh (gọi là S_thuc, ví dụ đạt 9187.5 mm).",
+      "math": []
+    },
+    {
+      "body_index": 187,
+      "tag": "p",
+      "text": "•  3. Tính hệ số bù cự ly và cập nhật lại bán kính thực tế trong code:",
+      "math": []
+    },
+    {
+      "body_index": 188,
+      "tag": "p",
+      "text": "",
+      "math": [
+        "Rhieu_chinh=Rly_thuyet·SthucSly_thuyet=0.0366·9851000≈0.0360 extm"
+      ]
+    },
+    {
+      "body_index": 189,
+      "tag": "p",
+      "text": "Bước 2: Hiệu chuẩn góc quay tại chỗ 360 độ (Hiệu chỉnh khoảng cách trục L)",
+      "math": []
+    },
+    {
+      "body_index": 190,
+      "tag": "p",
+      "text": "•  1. Đặt xe trên sàn, đánh dấu hướng ban đầu của đầu xe bằng tia laser hoặc vạch phấn.",
+      "math": []
+    },
+    {
+      "body_index": 191,
+      "tag": "p",
+      "text": "•  2. Ra lệnh cho xe tự xoay tròn tại chỗ đúng 10 vòng (3600 độ hay 20*pi rad) theo công thức góc d_theta = (s_R - s_L)/L.",
+      "math": []
+    },
+    {
+      "body_index": 192,
+      "tag": "p",
+      "text": "•  3. Quan sát vị trí dừng của đầu xe sau khi đủ 10 vòng:",
+      "math": []
+    },
+    {
+      "body_index": 193,
+      "tag": "p",
+      "text": "Nếu xe quay chưa đủ 10 vòng (bị thiếu góc): Thông số L trong code đang nhỏ hơn thực tế, cần tăng giá trị L (ví dụ từ 187.5 mm lên 86 mm).",
+      "math": []
+    },
+    {
+      "body_index": 194,
+      "tag": "p",
+      "text": "Nếu xe quay lố qua 10 vòng (bị dư góc): Thông số L trong code đang lớn hơn thực tế, cần giảm giá trị L (ví dụ từ 187.5 mm xuống 84 mm).",
+      "math": []
+    },
+    {
+      "body_index": 195,
+      "tag": "p",
+      "text": "4. Lặp lại 2-3 lần cho đến khi đầu xe dừng chuẩn xác 100% tại hướng xuất phát ban đầu. Khi đó sai số tích lũy góc của thuật toán Odometry được triệt tiêu hoàn toàn.",
+      "math": []
+    },
+    {
+      "body_index": 196,
+      "tag": "p",
+      "text": "8. KẾT QUẢ THỰC NGHIỆM ĐO KIỂM THỰC TẾ TRÊN SÀN (NGHIỆM THU ODOMETRY)",
+      "math": []
+    },
+    {
+      "body_index": 197,
+      "tag": "p",
+      "text": "Ngày nghiệm thu:  Thực nghiệm chạy trên mặt sàn phẳng đối chứng với thước dây cơ khí. Đối tượng thử nghiệm:  Khung xe tự hành AGV 1.75 kg, 2 động cơ GA25-370 có Encoder 937.2 xung/vòng, vi điều khiển ESP32-32D.",
+      "math": []
+    },
+    {
+      "body_index": 198,
+      "tag": "tbl",
+      "text": "Hạng mục kiểm tra Giá trị lý thuyết (Firmware) Kết quả đo thực tế (Thước dây) Đánh giá kỹ thuật Quãng đường chạy thẳng 1 mét 1.000 m (4075.4 xung Encoder) 100.0 cm ± 0.5 cm (995 mm - 1005 mm) Sai số thực nghiệm cực nhỏ trong khoảng ±2mm đến ±5mm (sai số tương đối < 0.5%). Nằm hoàn toàn trong dung sai cho phép của cảm biến cơ khí và độ lún đàn hồi lốp xe. Độ lệch hướng bánh Caster Theta = 0.0 rad (0.0°) Thẳng băng 100% khi bánh Caster so thẳng hàng với 2 bánh sau. Khẳng định động học vi sai đối xứng hoàn hảo, hệ điều khiển PID triệt tiêu hoàn toàn sai lệch.",
+      "math": []
+    },
+    {
+      "body_index": 199,
+      "tag": "p",
+      "text": "KẾT LUẬN NGHIỆM THU: Hệ thống Động lực học, Động học vi sai và Thuật toán Tích phân Odometry Runge-Kutta bậc 2 đạt độ chính xác cao với sai số đo thực tế nằm trong biên độ dung sai cho phép ±2mm ~ ±5mm (< 0.5%). Kết quả này hoàn toàn thỏa mãn các tiêu chuẩn kỹ thuật điều hướng xe tự hành AGV trong nhà xưởng và môi trường thực tế.",
+      "math": []
+    },
+    {
+      "body_index": 200,
+      "tag": "sectPr",
+      "text": "",
+      "math": []
+    }
+  ]
+}

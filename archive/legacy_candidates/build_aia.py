@@ -1,0 +1,333 @@
+import os, zipfile
+
+bky_xml = """<xml xmlns="https://developers.google.com/blockly/xml">
+  <block type="global_declaration" id="rihXrO9AKKZWS;E!cH`X" x="-229" y="-101">
+    <field name="NAME">time</field>
+    <value name="VALUE">
+      <block type="math_number" id="/X[54{n%+t9FmJ~vQ17(">
+        <field name="NUM">0</field>
+      </block>
+    </value>
+  </block>
+  <block type="global_declaration" id="J+rri]?f!%.Nd@6k6l)?" x="-229" y="-50">
+    <field name="NAME">p</field>
+    <value name="VALUE">
+      <block type="math_number" id="BKx!(r.NFhB$bT@7PxAf">
+        <field name="NUM">0</field>
+      </block>
+    </value>
+  </block>
+  <block type="global_declaration" id="Y|+}D)5kK=!1ximJE8hS" x="-229" y="0">
+    <field name="NAME">sec</field>
+    <value name="VALUE">
+      <block type="math_number" id="53QCT6yKMm~_TizG1*?}">
+        <field name="NUM">0</field>
+      </block>
+    </value>
+  </block>
+  <block type="global_declaration" id="eAS;zj^qW?pk?IosKvRt" x="-229" y="50">
+    <field name="NAME">min</field>
+    <value name="VALUE">
+      <block type="math_number" id="P4M7LV+|EaRxA[+r3aGY">
+        <field name="NUM">0</field>
+      </block>
+    </value>
+  </block>
+  <block type="component_event" id="gc2h0}l%WWN($9BiWg[7" x="-229" y="120">
+    <mutation xmlns="http://www.w3.org/1999/xhtml" component_type="Button" is_generic="false" instance_name="Button1" event_name="Click"></mutation>
+    <field name="COMPONENT_SELECTOR">Button1</field>
+    <statement name="DO">
+      <block type="component_set_get" id="Kex!aWwvp5H3kSB!cfc5">
+        <mutation xmlns="http://www.w3.org/1999/xhtml" component_type="Clock" set_or_get="set" property_name="TimerEnabled" is_generic="false" instance_name="Clock1"></mutation>
+        <field name="COMPONENT_SELECTOR">Clock1</field>
+        <field name="PROP">TimerEnabled</field>
+        <value name="VALUE">
+          <block type="logic_boolean" id="NRD`pslMBZ`OT+?jKx32">
+            <field name="BOOL">TRUE</field>
+          </block>
+        </value>
+      </block>
+    </statement>
+  </block>
+  <block type="component_event" id="s:+^(b?r4S,lam/gUykf" x="-229" y="220">
+    <mutation xmlns="http://www.w3.org/1999/xhtml" component_type="Button" is_generic="false" instance_name="Button2" event_name="Click"></mutation>
+    <field name="COMPONENT_SELECTOR">Button2</field>
+    <statement name="DO">
+      <block type="component_set_get" id="]-#JN]BNgF7u)TYV%_Z.">
+        <mutation xmlns="http://www.w3.org/1999/xhtml" component_type="Clock" set_or_get="set" property_name="TimerEnabled" is_generic="false" instance_name="Clock1"></mutation>
+        <field name="COMPONENT_SELECTOR">Clock1</field>
+        <field name="PROP">TimerEnabled</field>
+        <value name="VALUE">
+          <block type="logic_false" id="Gp7Yh-N3d6=$;]f#JVhH">
+            <field name="BOOL">FALSE</field>
+          </block>
+        </value>
+      </block>
+    </statement>
+  </block>
+  <block type="component_event" id="T}{{`krO.qT$^p}o=$.t" x="-229" y="320">
+    <mutation xmlns="http://www.w3.org/1999/xhtml" component_type="Button" is_generic="false" instance_name="Button3" event_name="Click"></mutation>
+    <field name="COMPONENT_SELECTOR">Button3</field>
+    <statement name="DO">
+      <block type="component_set_get" id=";QVo=e~P!cHS|}1egiVF">
+        <mutation xmlns="http://www.w3.org/1999/xhtml" component_type="Clock" set_or_get="set" property_name="TimerEnabled" is_generic="false" instance_name="Clock1"></mutation>
+        <field name="COMPONENT_SELECTOR">Clock1</field>
+        <field name="PROP">TimerEnabled</field>
+        <value name="VALUE">
+          <block type="logic_false" id="RnH[7U,t/V@=IP_dy!}@">
+            <field name="BOOL">FALSE</field>
+          </block>
+        </value>
+        <next>
+          <block type="lexical_variable_set" id="dq2J2`FDs~5(AftJ:o8I">
+            <field name="VAR">global time</field>
+            <value name="VALUE">
+              <block type="math_number" id="TXisXtD0x~#t-pUUulNf">
+                <field name="NUM">0</field>
+              </block>
+            </value>
+            <next>
+              <block type="component_set_get" id="XLzsF+$#ToFuUomqGECg">
+                <mutation xmlns="http://www.w3.org/1999/xhtml" component_type="Label" set_or_get="set" property_name="Text" is_generic="false" instance_name="Label1"></mutation>
+                <field name="COMPONENT_SELECTOR">Label1</field>
+                <field name="PROP">Text</field>
+                <value name="VALUE">
+                  <block type="text" id=",uF]y`qvrachOZBNxDLr">
+                    <field name="TEXT">00:00.0</field>
+                  </block>
+                </value>
+              </block>
+            </next>
+          </block>
+        </next>
+      </block>
+    </statement>
+  </block>
+  <block type="component_event" id="6%F-~m|9)n=qMiiKft.y" x="150" y="-100">
+    <mutation xmlns="http://www.w3.org/1999/xhtml" component_type="Clock" is_generic="false" instance_name="Clock1" event_name="Timer"></mutation>
+    <field name="COMPONENT_SELECTOR">Clock1</field>
+    <statement name="DO">
+      <block type="lexical_variable_set" id="UQ!zOPZJjWFLJzj8@|IU">
+        <field name="VAR">global time</field>
+        <value name="VALUE">
+          <block type="math_add" id="UCcfM/zA%)s/;#v{Z1R1">
+            <mutation xmlns="http://www.w3.org/1999/xhtml" items="2"></mutation>
+            <value name="NUM0">
+              <block type="lexical_variable_get" id="cyOI?N(K`mPO}3AuD);%">
+                <field name="VAR">global time</field>
+              </block>
+            </value>
+            <value name="NUM1">
+              <block type="math_number" id="Ca$A!?#[uH@N@tu~h~ZB">
+                <field name="NUM">1</field>
+              </block>
+            </value>
+          </block>
+        </value>
+        <next>
+          <block type="lexical_variable_set" id="rKaSgx*H[oJo[j9.1cQ*">
+            <field name="VAR">global p</field>
+            <value name="VALUE">
+              <block type="math_divide" id="~oWa+:b*g^[UZZhTk9]v">
+                <field name="OP">MODULO</field>
+                <value name="DIVIDEND">
+                  <block type="lexical_variable_get" id="C?S/[hj;:I[Po_])@z~T">
+                    <field name="VAR">global time</field>
+                  </block>
+                </value>
+                <value name="DIVISOR">
+                  <block type="math_number" id="wtw]P{yrn_@as40op:.w">
+                    <field name="NUM">10</field>
+                  </block>
+                </value>
+              </block>
+            </value>
+            <next>
+              <block type="lexical_variable_set" id="$9ct%X..r%7AQLgH;jH*">
+                <field name="VAR">global sec</field>
+                <value name="VALUE">
+                  <block type="math_divide" id="l3:dAkEho.Twn8G2:qKN">
+                    <field name="OP">MODULO</field>
+                    <value name="DIVIDEND">
+                      <block type="math_floor" id="7^@L0]L=y$|.D2kis`7/">
+                        <field name="OP">FLOOR</field>
+                        <value name="NUM">
+                          <block type="math_division" id="I=#Szb~:a[~a;alAT/G6">
+                            <value name="A">
+                              <block type="lexical_variable_get" id="S%XDL]MZB(uZ*i%QR~a|">
+                                <field name="VAR">global time</field>
+                              </block>
+                            </value>
+                            <value name="B">
+                              <block type="math_number" id="h|@%ObhomHk*CCrlkE`W">
+                                <field name="NUM">10</field>
+                              </block>
+                            </value>
+                          </block>
+                        </value>
+                      </block>
+                    </value>
+                    <value name="DIVISOR">
+                      <block type="math_number" id="a!~Ie!|eQ5DNKpC4cE#)">
+                        <field name="NUM">60</field>
+                      </block>
+                    </value>
+                  </block>
+                </value>
+                <next>
+                  <block type="lexical_variable_set" id="set_min_block">
+                    <field name="VAR">global min</field>
+                    <value name="VALUE">
+                      <block type="math_floor" id="floor_min_block">
+                        <field name="OP">FLOOR</field>
+                        <value name="NUM">
+                          <block type="math_division" id="div_min_block">
+                            <value name="A">
+                              <block type="lexical_variable_get" id="get_time_for_min">
+                                <field name="VAR">global time</field>
+                              </block>
+                            </value>
+                            <value name="B">
+                              <block type="math_number" id="num_600_for_min">
+                                <field name="NUM">600</field>
+                              </block>
+                            </value>
+                          </block>
+                        </value>
+                      </block>
+                    </value>
+                    <next>
+                      <block type="component_set_get" id="=O{J.zYd~(#P=}UY,*X^">
+                        <mutation xmlns="http://www.w3.org/1999/xhtml" component_type="Label" set_or_get="set" property_name="Text" is_generic="false" instance_name="Label1"></mutation>
+                        <field name="COMPONENT_SELECTOR">Label1</field>
+                        <field name="PROP">Text</field>
+                        <value name="VALUE">
+                          <block type="text_join" id="bBl]v3}CBEsmk6+:H?B~">
+                            <mutation xmlns="http://www.w3.org/1999/xhtml" items="5"></mutation>
+                            <value name="ADD0">
+                              <block type="controls_if" id="if_min_block">
+                                <mutation xmlns="http://www.w3.org/1999/xhtml" else="1"></mutation>
+                                <value name="IF0">
+                                  <block type="math_compare" id="cmp_min_block">
+                                    <field name="OP">LT</field>
+                                    <value name="A">
+                                      <block type="lexical_variable_get" id="get_min_cmp">
+                                        <field name="VAR">global min</field>
+                                      </block>
+                                    </value>
+                                    <value name="B">
+                                      <block type="math_number" id="num_10_min">
+                                        <field name="NUM">10</field>
+                                      </block>
+                                    </value>
+                                  </block>
+                                </value>
+                                <statement name="DO0">
+                                  <block type="text_join" id="join_0_min">
+                                    <mutation xmlns="http://www.w3.org/1999/xhtml" items="2"></mutation>
+                                    <value name="ADD0">
+                                      <block type="text" id="txt_0_min">
+                                        <field name="TEXT">0</field>
+                                      </block>
+                                    </value>
+                                    <value name="ADD1">
+                                      <block type="lexical_variable_get" id="get_min_padded">
+                                        <field name="VAR">global min</field>
+                                      </block>
+                                    </value>
+                                  </block>
+                                </statement>
+                                <statement name="ELSE">
+                                  <block type="lexical_variable_get" id="get_min_raw">
+                                    <field name="VAR">global min</field>
+                                  </block>
+                                </statement>
+                              </block>
+                            </value>
+                            <value name="ADD1">
+                              <block type="text" id="3l1]2GdZ}rSBLnIBmw`r">
+                                <field name="TEXT">:</field>
+                              </block>
+                            </value>
+                            <value name="ADD2">
+                              <block type="controls_if" id="if_sec_block">
+                                <mutation xmlns="http://www.w3.org/1999/xhtml" else="1"></mutation>
+                                <value name="IF0">
+                                  <block type="math_compare" id="cmp_sec_block">
+                                    <field name="OP">LT</field>
+                                    <value name="A">
+                                      <block type="lexical_variable_get" id="get_sec_cmp">
+                                        <field name="VAR">global sec</field>
+                                      </block>
+                                    </value>
+                                    <value name="B">
+                                      <block type="math_number" id="num_10_sec">
+                                        <field name="NUM">10</field>
+                                      </block>
+                                    </value>
+                                  </block>
+                                </value>
+                                <statement name="DO0">
+                                  <block type="text_join" id="join_0_sec">
+                                    <mutation xmlns="http://www.w3.org/1999/xhtml" items="2"></mutation>
+                                    <value name="ADD0">
+                                      <block type="text" id="txt_0_sec">
+                                        <field name="TEXT">0</field>
+                                      </block>
+                                    </value>
+                                    <value name="ADD1">
+                                      <block type="lexical_variable_get" id="get_sec_padded">
+                                        <field name="VAR">global sec</field>
+                                      </block>
+                                    </value>
+                                  </block>
+                                </statement>
+                                <statement name="ELSE">
+                                  <block type="lexical_variable_get" id="get_sec_raw">
+                                    <field name="VAR">global sec</field>
+                                  </block>
+                                </statement>
+                              </block>
+                            </value>
+                            <value name="ADD3">
+                              <block type="text" id="]Kdco:xu^0Nu5pJO}mxi">
+                                <field name="TEXT">.</field>
+                              </block>
+                            </value>
+                            <value name="ADD4">
+                              <block type="lexical_variable_get" id="A5ZPNJlAKHUxRvfmq:z+">
+                                <field name="VAR">global p</field>
+                              </block>
+                            </value>
+                          </block>
+                        </value>
+                      </block>
+                    </next>
+                  </block>
+                </next>
+              </block>
+            </next>
+          </block>
+        </next>
+      </block>
+    </statement>
+  </block>
+  <yacodeblocks xmlns="https://appinventor.mit.edu/ns/project/" ya-version="237" language-version="39"></yacodeblocks>
+</xml>"""
+
+bky_path = r'D:\HoMinhKhang\PROJECT\GITHUB_PROJECT\CODE XE TU HANH\bt7_extracted\src\appinventor\ai_khangho_26112005\BT7\Screen1.bky'
+with open(bky_path, 'w', encoding='utf-8') as f:
+    f.write(bky_xml.strip())
+print("BKY written successfully!")
+
+# Pack back to .aia
+extract_dir = r'D:\HoMinhKhang\PROJECT\GITHUB_PROJECT\CODE XE TU HANH\bt7_extracted'
+output_aia = r'D:\HoMinhKhang\PROJECT\GITHUB_PROJECT\CODE XE TU HANH\BT7_HOAN_CHINH.aia'
+with zipfile.ZipFile(output_aia, 'w', zipfile.ZIP_DEFLATED) as zip_out:
+    for root, dirs, files in os.walk(extract_dir):
+        for file in files:
+            full_path = os.path.join(root, file)
+            rel_path = os.path.relpath(full_path, extract_dir)
+            zip_out.write(full_path, rel_path)
+
+print("Exported to:", output_aia)

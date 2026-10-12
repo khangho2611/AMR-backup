@@ -1,0 +1,194 @@
+--- before/agv_unified_brain.py
++++ after/agv_unified_brain.py
+@@ -12,8 +12,9 @@
+ import math
+ import serial
+ import threading
+-from agv_navigation import GridPlanner, finite, slam_censored_ranges
++from agv_navigation import GridPlanner, finite, slam_censored_ranges, twist_centres
+ from agv_command_session import CommandSession
++from agv_command_journal import CommandOutcomeJournal
+ from agv_preflight_static_collector import acquire_port_lock, cleanup_lock
+ from collections import deque
+ import rclpy
+@@ -34,6 +35,11 @@
+ 
+ class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
+     daemon_threads = True
++
++    def __init__(self,*args,journal_path=None,**kwargs):
++        super().__init__(*args,**kwargs)
++        self.command_journal=CommandOutcomeJournal(journal_path or os.path.join(
++            os.path.dirname(os.path.abspath(__file__)),'logs','command_outcomes.jsonl'))
+ 
+ class AGVSharedState:
+     def __init__(self):
+@@ -153,6 +159,7 @@
+             self.ser.port = SERIAL_PORT
+             self.ser.open()
+             self.control = CommandSession(self.ser,motion_window_s=motion_window_s_config)
++            self.control.arc_validator = self._forward_arc_clear
+             self._reader_thread.start()
+             self._watchdog_thread.start()
+             self.get_logger().info(f'ĐÃ MỞ CỔNG SERIAL {SERIAL_PORT}; DISARMED, KHÔNG AUTO ARM')
+@@ -454,6 +461,57 @@
+         except Exception:
+             return None
+ 
++    def _forward_arc_clear(self, v, w):
++        grid,pose=self._grid(),self._pose_map()
++        if grid is None or pose is None or not finite(v) or v <= 0:return False
++        with state.lock:
++            epoch=(state.map_version,state.map_frame,state.body_radius_m,state.wall_margin_m,state.scan_mono)
++            points=list(state.ranges)
++            if not 0 <= time.monotonic()-state.scan_mono <= .25:return False
++        samples=twist_centres(v,w)
++        if samples is None or not grid.swept_clear(pose,v,w):return False
++        centres,padding=samples
++        # Map and fresh scan must both clear the moving enclosing body. Missing
++        # rear bins are not invented as free rays: the full footprint there
++        # must be known-free in the map. Front coverage remains a writer gate.
++        for deg,d in enumerate(points):
++            if not finite(d) or d <= 0:continue
++            angle=math.radians(deg)
++            px,py=d*math.cos(angle),d*math.sin(angle)
++            # Account for the half-degree rounding used by scan_cb.
++            radius=grid.radius+padding+d*math.sin(math.radians(.5))
++            if any(math.hypot(px-x,py-y) <= radius for x,y in centres):return False
++        with state.lock:
++            return (epoch==(state.map_version,state.map_frame,state.body_radius_m,state.wall_margin_m,state.scan_mono)
++                    and 0 <= time.monotonic()-state.scan_mono <= .25
++                    and 0 <= time.monotonic()-state.map_mono <= 2.)
++
++    def start_auto(self):
++        """Expose each failed START gate at the moment of the decision."""
++        pose,grid=self._pose_map(),self._grid()
++        # Same lock order as telemetry; STOP cannot interleave the final ARM
++        # check and AUTO commit. No UART or disk IO happens under these locks.
++        with state.lock,self.control.lock:
++            now=self.control.clock()
++            ages=self.control._ages(now)
++            map_age=time.monotonic()-state.map_mono
++            checks=(('NOT_ARMED',not self.control.armed),('LATCHED',self.control.latched),
++                    ('FAULT',self.control.fault is not None),
++                    ('D0_STALE',ages['d0_age_s'] is None or not 0 <= ages['d0_age_s'] <= .25),
++                    ('SCAN_STALE',ages['scan_age_s'] is None or not 0 <= ages['scan_age_s'] <= .25),
++                    ('CALLER_STALE',self.control.armed and (ages['caller_age_s'] is None or not 0 <= ages['caller_age_s'] <= .2)),
++                    ('TRIAL_EXPIRED',self.control.trial_deadline is not None and now >= self.control.trial_deadline),
++                    ('BODY_RADIUS_UNCONFIGURED',not finite(state.body_radius_m) or state.body_radius_m <= 0),
++                    ('MAP_NOT_READY',grid is None),('TF_NOT_READY',pose is None))
++            blockers=[name for name,blocked in checks if blocked]
++            snapshot=dict(**ages,map_age_s=map_age,map_frame=state.map_frame,
++                          body_radius_m=state.body_radius_m,pose=pose,generation=self.control.generation)
++            if not blockers:
++                self.initialize_navigation()
++                self.home=pose;self.explore_state='EXPLORING';state.auto_mode=True
++            self.control._event('auto_gate',accepted=not blockers,blockers=blockers,gate=snapshot)
++            return not blockers,('STARTED' if not blockers else 'EXPLICIT_ARM_FRESH_MAP_TF_AND_BODY_RADIUS_REQUIRED'),blockers,snapshot
++
+     def _hold(self, phase):
+         with state.lock: state.explore_phase = phase
+         # V0 keeps a valid explicit session without asserting physical STOP.
+@@ -481,19 +539,17 @@
+         w = max(-.35,min(.35,error))
+         v = 0. if abs(error) > .25 else min(.04,math.hypot(dx,dy))
+         if v == 0 and abs(w) > 0 and not self._rotation_clear():
+-            # If the front cone is clear but the rear/side is only in the
+-            # yellow band, escape with a slow forward arc instead of spinning
+-            # in place.  The command session still requires a fresh D0/scan
+-            # and front clearance; pure turns retain the 360-degree gate.
++            # Prefer a slow, geometrically checked escape over a blind spin.
++            # The writer repeats this validation with fresh map/TF/scan.
+             scan_clear = bool(getattr(self.control,'scan_clear',False))
+-            if scan_clear:
+-                v = min(.02, math.hypot(dx,dy))
+-                w = max(-.12,min(.12,error))
+-                self.control._event('navigation_yellow_escape',reason='FORWARD_ARC_FRONT_CLEAR',
++            v = min(.02, math.hypot(dx,dy))
++            w = max(-.12,min(.12,error))
++            if scan_clear and self._forward_arc_clear(v,w):
++                self.control._event('navigation_yellow_escape',reason='FORWARD_SWEEP_CLEAR',
+                                     pose=pose,goal=goal,v=v,w=w)
+             else:
+                 if getattr(self,'control',None) is not None:
+-                    self.control._event('navigation_blocked',reason='ROTATION_NOT_CLEAR',pose=pose,goal=goal)
++                    self.control._event('navigation_blocked',reason='NO_SAFE_FORWARD_SWEEP',pose=pose,goal=goal)
+                 return False
+         return self.send_cmd(f'V {v:.3f} {w:.3f}',autonomous=True)[0]
+ 
+@@ -609,6 +665,16 @@
+         self.end_headers()
+         self.wfile.write(json.dumps(data,allow_nan=False).encode('utf8'))
+ 
++    def _command_reply(self,code,data,operation,arguments):
++        # Only HTTP response threads write files; reader/watchdog paths keep
++        # their own bounded RAM history and never wait for this journal lock.
++        control=ros_node.control.health() if ros_node else {}
++        if ros_node:
++            ros_node.control._event('http_outcome',operation=operation,http_status=code,response=data)
++            control['command_events']=ros_node.control.diagnostics()['command_events']
++        outcome=self.server.command_journal.record(operation,arguments,code,data,control)
++        self._json(code,dict(data,journal=outcome))
++
+     def do_OPTIONS(self):
+         self.send_response(200)
+         self._cors()
+@@ -625,12 +691,13 @@
+             stop=(path=='/api/cmd' and params.get('val',[''])[0]=='STOP') or (
+                   path=='/api/auto' and params.get('act',[''])[0].upper()=='STOP')
+             if path in ('/api/cmd','/api/pid','/api/auto') and not stop:
+-                self._json(423,{'status':'FAILED','reason':'OBSERVE_ONLY'})
++                self._command_reply(423,{'status':'FAILED','reason':'OBSERVE_ONLY'},path,params)
+                 return
+ 
+         if path == '/api/diagnostics':
+-            self._json(200 if ros_node else 503,
+-                       ros_node.control.diagnostics() if ros_node else {'status':'NO_TRANSPORT'})
++            report=ros_node.control.diagnostics() if ros_node else {'status':'NO_TRANSPORT'}
++            report['command_journal']=self.server.command_journal.snapshot()
++            self._json(200 if ros_node else 503,report)
+             return
+ 
+         if path == '/api/telemetry':
+@@ -701,7 +768,7 @@
+                 ok,reason = ros_node.send_cmd(val)
+             else:
+                 ok,reason = False,'NO_TRANSPORT'
+-            self._json(200 if ok else 422, {'status':'SENT' if ok else 'FAILED','reason':reason})
++            self._command_reply(200 if ok else 422, {'status':'SENT' if ok else 'FAILED','reason':reason},'COMMAND',{'val':val})
+             return
+ 
+         elif path == '/api/pid':
+@@ -712,7 +779,7 @@
+                 result = ros_node.control.tuning(kp,ki,kd) if ros_node else {'status':'FAILED','reason':'NO_TRANSPORT'}
+             except (ValueError,KeyError,IndexError):
+                 result = {'status':'REJECTED','reason':'INVALID_INPUT'}
+-            self._json(200 if result['status']=='APPLIED' else 422,result)
++            self._command_reply(200 if result['status']=='APPLIED' else 422,result,'PID',params)
+             return
+ 
+         elif path == '/api/history_csv':
+@@ -728,19 +795,13 @@
+             import urllib.parse
+             act = urllib.parse.parse_qs(q).get('act',[''])[0].upper()
+             ok,reason = False,'NO_TRANSPORT'
++            blockers,snapshot=[],{}
+             if ros_node and act == 'START':
+-                pose,grid = ros_node._pose_map(),ros_node._grid()
+-                if pose is not None and grid is not None and ros_node.control.armed and not ros_node.control.latched:
+-                    ros_node.initialize_navigation()
+-                    ros_node.home = pose
+-                    ros_node.explore_state = 'EXPLORING'
+-                    with state.lock: state.auto_mode = True
+-                    ok,reason = True,'STARTED'
+-                else:
+-                    reason = 'EXPLICIT_ARM_FRESH_MAP_TF_AND_BODY_RADIUS_REQUIRED'
++                ok,reason,blockers,snapshot=ros_node.start_auto()
+             elif ros_node and act == 'STOP':
+                 ok,reason = ros_node.send_cmd('STOP')
+-            self._json(200 if ok else 422,{'status':'ok' if ok else 'FAILED','auto':state.auto_mode,'reason':reason})
++            self._command_reply(200 if ok else 422,{'status':'ok' if ok else 'FAILED',
++                'auto':state.auto_mode,'reason':reason,'blockers':blockers,'gate':snapshot},'AUTO_'+act,{'act':act})
+             return
+ 
+         else:

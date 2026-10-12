@@ -1,0 +1,36 @@
+--- D:\HoMinhKhang\PROJECT\GITHUB_PROJECT\CODE XE TU HANH\agv_unified_brain.py
++++ D:\HoMinhKhang\PROJECT\GITHUB_PROJECT\CODE XE TU HANH\candidates\agv_rpm140_20261003\agv_unified_brain.py
+@@ -15,6 +15,7 @@
+ from agv_navigation import GridPlanner, finite, slam_censored_ranges, twist_centres, valid_body_bounds
+ from agv_command_session import CommandSession
+ from agv_command_journal import CommandOutcomeJournal
++from agv_speed_profile import MAX_LINEAR_MPS, limited_twist
+ from agv_preflight_static_collector import acquire_port_lock, cleanup_lock
+ from collections import deque
+ import rclpy
+@@ -50,7 +51,7 @@
+         self.body_radius_m = None
+         self.body_bounds_m = None
+         self.wall_margin_m = .15
+-        self.cruise_speed_mps = .20
++        self.cruise_speed_mps = MAX_LINEAR_MPS
+         self.map_mono = 0.
+         self.map_version = 0
+         self.map_origin_yaw = 0.
+@@ -612,7 +613,7 @@
+             for candidate in path[2:]:
+                 offset=(candidate[0]-wp[0],candidate[1]-wp[1])
+                 if abs(direction[0]*offset[1]-direction[1]*offset[0])>1e-8:break
+-                if math.hypot(candidate[0]-pose[0],candidate[1]-pose[1])>.25:break
++                if math.hypot(candidate[0]-pose[0],candidate[1]-pose[1])>.60:break
+                 wp=candidate
+         dx,dy = wp[0]-pose[0],wp[1]-pose[1]
+         error = (math.atan2(dy,dx)-pose[2]+math.pi)%(2*math.pi)-math.pi
+@@ -632,6 +633,7 @@
+                 if getattr(self,'control',None) is not None:
+                     self.control._event('navigation_blocked',reason='NO_SAFE_FORWARD_SWEEP',pose=pose,goal=goal)
+                 return False
++        v,w=limited_twist(v,w)
+         return self.send_cmd(f'V {v:.3f} {w:.3f}',autonomous=True)[0]
+ 
+     def _rotation_clear(self):

@@ -1,0 +1,64 @@
+{
+  "scope": "OFFLINE ONLY; real source constructor/Node callbacks, FakeSerial; no ROS or hardware runtime",
+  "before": {
+    "agv_ros2_runtime_adapter.py": "9aa61bb903adf6532a58d0b23ca191876ec70a5a6eca190b9af97ae7581a987c",
+    "agv_ros2_arbiter_bridge.py": "5a0542868f68349118df0ebb4957f5ed9cb65ef951d661d985f792106491b8ad"
+  },
+  "after": {
+    "agv_ros2_runtime_adapter.py": "9aa61bb903adf6532a58d0b23ca191876ec70a5a6eca190b9af97ae7581a987c",
+    "agv_ros2_arbiter_bridge.py": "5a0542868f68349118df0ebb4957f5ed9cb65ef951d661d985f792106491b8ad"
+  },
+  "stable": true,
+  "cases": [
+    {
+      "id": "D1_missing_stamp_epoch",
+      "writes": [],
+      "exception": null
+    },
+    {
+      "id": "D2_future_stamp",
+      "writes": [],
+      "exception": null
+    },
+    {
+      "id": "D3_age_350ms",
+      "writes": [],
+      "exception": null
+    },
+    {
+      "id": "D4_fractional_epoch",
+      "writes": [],
+      "exception": null
+    },
+    {
+      "id": "D5_corrupt_epoch",
+      "writes": [],
+      "exception": null
+    },
+    {
+      "id": "D6_shutdown_write_failure",
+      "writes": [
+        "STOP\n"
+      ],
+      "gate_state": "FAULT",
+      "confirmed": false,
+      "reported_result": "REJECT_STOP_WRITE_FAILED",
+      "reported_failed": true
+    },
+    {
+      "id": "POS_valid_envelope",
+      "writes": [
+        "V 0.040 0.000\n"
+      ]
+    },
+    {
+      "id": "STOP_write_then_freshD0",
+      "writes": [
+        "STOP\n"
+      ],
+      "gate_confirmed_before": false,
+      "gate_confirmed_after": true,
+      "public_confirmation": false
+    }
+  ]
+}

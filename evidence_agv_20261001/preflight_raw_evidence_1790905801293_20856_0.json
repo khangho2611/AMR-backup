@@ -1,0 +1,38 @@
+{
+  "metadata": {
+    "timestamp_epoch": 1790905801.2937303,
+    "port": "/dev/ttyUSB0",
+    "baudrate": 115200,
+    "mock": true,
+    "wall_timeout_s": 1.0,
+    "min_observation_s": 0.1,
+    "status": "FAIL_TELEMETRY_INVARIANT_VIOLATION",
+    "rejection_reason": "NON_FINITE_OR_INVALID_v",
+    "valid_samples_count": 0,
+    "corrupt_lines_count": 0
+  },
+  "records": [
+    {
+      "line_idx": 1,
+      "rx_mono": 347749.2713048,
+      "raw_bytes_len": 146,
+      "raw_hex": "7b22736166657479223a2244495341524d4544222c226d6f6465223a22504944222c226c5f746774223a302e302c22725f746774223a302e302c226c5f72706d223a302e302c22725f72706d223a302e302c226c5f70776d223a302c22725f70776d223a302c2278223a302e302c2279223a302e302c227468223a302e302c2276223a224e614e222c2277223a302e307d0a",
+      "payload": {
+        "safety": "DISARMED",
+        "mode": "PID",
+        "l_tgt": 0.0,
+        "r_tgt": 0.0,
+        "l_rpm": 0.0,
+        "r_rpm": 0.0,
+        "l_pwm": 0,
+        "r_pwm": 0,
+        "x": 0.0,
+        "y": 0.0,
+        "th": 0.0,
+        "v": "NaN",
+        "w": 0.0
+      },
+      "error": "NON_FINITE_OR_INVALID_v"
+    }
+  ]
+}

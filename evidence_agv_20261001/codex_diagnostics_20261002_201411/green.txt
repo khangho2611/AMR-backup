@@ -1,0 +1,11 @@
+test_bounded_history_keeps_first_fault_after_idle_stream_overwrites_ring (test_agv_diagnostics.DiagnosticRegression.test_bounded_history_keeps_first_fault_after_idle_stream_overwrites_ring) ... ok
+test_diagnostic_reads_cannot_mutate_control_or_emit_commands (test_agv_diagnostics.DiagnosticRegression.test_diagnostic_reads_cannot_mutate_control_or_emit_commands) ... ok
+test_partial_stop_is_recorded_as_partial_and_not_confirmed (test_agv_diagnostics.DiagnosticRegression.test_partial_stop_is_recorded_as_partial_and_not_confirmed) ... ok
+test_rejected_drive_records_blocker_without_hardware_write (test_agv_diagnostics.DiagnosticRegression.test_rejected_drive_records_blocker_without_hardware_write) ... ok
+test_rx_gap_is_captured_before_last_timestamp_is_updated (test_agv_diagnostics.DiagnosticRegression.test_rx_gap_is_captured_before_last_timestamp_is_updated) ... ok
+test_timeout_freezes_original_gap_and_transmitted_command (test_agv_diagnostics.DiagnosticRegression.test_timeout_freezes_original_gap_and_transmitted_command) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.067s
+
+OK

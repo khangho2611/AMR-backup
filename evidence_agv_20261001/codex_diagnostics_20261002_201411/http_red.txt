@@ -1,0 +1,17 @@
+test_http_diagnostics_is_read_only_in_observe_mode (test_agv_brain_integration.BrainIntegration.test_http_diagnostics_is_read_only_in_observe_mode) ... FAIL
+
+======================================================================
+FAIL: test_http_diagnostics_is_read_only_in_observe_mode (test_agv_brain_integration.BrainIntegration.test_http_diagnostics_is_read_only_in_observe_mode)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "D:\HoMinhKhang\PROJECT\GITHUB_PROJECT\CODE XE TU HANH\tests\test_agv_brain_integration.py", line 193, in test_http_diagnostics_is_read_only_in_observe_mode
+    self.assertEqual(response.headers.get_content_type(),'application/json')
+AssertionError: 'text/html' != 'application/json'
+- text/html
++ application/json
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.682s
+
+FAILED (failures=1)

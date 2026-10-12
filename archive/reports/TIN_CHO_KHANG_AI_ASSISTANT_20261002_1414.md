@@ -1,0 +1,17 @@
+ĐỐI SOÁT V4.3 14:14 — FINAL10671/sourcef573ae4…2aa1/testf46d69…b095. Đọc DOI_SOAT_BUNDLE_V4_3_AGV_20261002_1414.md + review_v4_3_actual_20261002_1415.py/.json. Chỉ sửa SOURCE OFFLINE; không deploy/restart/USB0/ARM/run/PID/gainPWM/flash/logger/ROS/recovery.
+
+Công nhận8fix LIMITED: count0ARMrefused; releaseARMEDreject/minimalD0ignored; partialV có3STOPattempt; autoSTOPnoUART500; actualHTTPCSV8cột; mapdata1HOLD; verticalunknownstandoff. HTMLhash đãkhớp. Không lặp các lỗi đã sửa.
+
+BLOCKER NGUỒN THẬT: firmware main.cpp347 emit l_tgt/r_tgt/v/w; parser mới đòi target_l_rpm/target_r_rpm. Actual parser/fullD0nguồnthật count0; actual main-reader nhận5gói count0/UNKNOWN. Testfake target_* che incompatibility. Sửa reader/validator source-linked, KHÔNGflash firmware để khớp mock.
+
+ActualMAIN/reader/HTTP/FakeUART REALCLOCK, KHÔNGgán passed:81gói/span4.266s/gap1.7s/target100RPM/RPM.2/vw1→preflight_passedTrue; lastage.593stale rồiARM vẫnTX/HTTP200 nhờ1D0ARMED, khôngACK/diag/session. Contract vẫn10s80/continuousgap/lastage/exacttargetPWMvwzero, không4s/RPMtolerance/boolcachedforever. Harnesssuite1 feed85×5ms rồi TRỰCTIẾPgán preflight_passed=True, chưa nghiệmthu.
+
+PartialV saufullV:3STOPattempt đều1/6 byte, helper nuốtoutcome nhưngisMovingFalse/latchTrue/no confirmed. requestSTOP3fullTX vẫnTrueOK trongMCUARMED/nopostD0. Đừng gọi physicalSTOP/safe stationary từwrites. Harnessresetwrite_limit→STOPfull chỉtransientcase, thiếupersistentpartial/writefail/shareddeadline-health/escalation.
+
+Map3x3/data2→RETURN→COMPLETEDUARTNone/noSTOPconfirmed; len<=1 chỉsửa1fixture. ValidatorNone cần phân biệtinvalid/unreachable/coveragecomplete, khôngrỗngfrontiergiả. WordKHÔNGchứngbodylength.28/fullwidth; track.1875khôngbodywidth. Côngthức bạnghi+.02 cho.1884905 KHÔNG.186. Labelprovisional/provenance; không ép đo lại m1.75/C.23/L.1875. Radius mới đãcải thiệnstandofffixture khôngfullbody100%.
+
+YÊUCẦU MỘT actualbundle tíchhợp auditedgate95/runner907/runtime/planner/collector4b32 vào main/UI/soleownerlockreaderqueue. Đừngcloneguardrútgọn tiếp. StartupFSM/diag/settling đúngschemafirmware/continuous10s80/gapageexactzero/unsafe-reset-latch TRƯỚC ARM+sessionACKfresh. SharedFAULTSTOPdespitelatch/outcomebyte/firstreason/deadline/freshzeroOBSERVED≠confirmed/writefail/publicescalation/watchdogALLmotion/boundedjoinclosecleanupFAILnonzero.
+
+TypedSCANMAPTF/validschema-res-frame-yaw-epoch-freshness/fullfootprintknownfreestandoff/reachablepathcoverageunknowninaccessible/homeposheadingbeforeANYmotion/COMPLETEDsauSTOPconfirmed. PIDUI0PENDINGAPPLIEDREJECTEDFAILEDCSV/history/caller/cleanup các residual1405 còn hiệu lực (HTMLunchanged). Full ACTUAL ENTRY positive + REALD0schema/preflight10s80/unsafeafterpass/gapstale/nonzeroTarget/noACK/persistentpartialSTOP/noCaller/malformedmanyshapes/typedstreamloss/wrongheading/PIDconcurrent/UI0FAILED/cleanup. ChỉfakephysicalOPEN+lock; khônggán passed/scalecontract/csvtesttựviết. Hashdiff/exactcommand/backuprollback/boundedlogscope trungthực.
+
+NOT_APPROVED deploy/restart/f573USB0ARM-release-drive-PID:protocol/startup/STOPconfirm/map/runtime/cleanup. Khôngautoapprovalrejection. Generalhumanrunintentpersist; currentfield chỉchốtkhibundlereviewREADY. Khôngxinlạiquyềnimplementation/chạy chung/đợiROSphysical/framework/spawn.140–150RPMgiữstaged.

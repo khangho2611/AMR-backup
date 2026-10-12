@@ -1,0 +1,125 @@
+[
+  {
+    "sequence": 3120,
+    "mono": 10305.780182695,
+    "kind": "stop_requested",
+    "generation": 214,
+    "stop_op": 211,
+    "reason": "SCAN_TIMEOUT",
+    "d0_age_s": 0.08677538899974024,
+    "scan_age_s": 0.2801504239996575,
+    "caller_age_s": 0.285379364999244
+  },
+  {
+    "sequence": 3124,
+    "mono": 10305.813553261,
+    "kind": "tx",
+    "generation": 215,
+    "stop_op": 212,
+    "command": "STOP",
+    "started_mono": 10305.792435922,
+    "duration_s": 0.021101801999975578,
+    "requested_bytes": 5,
+    "written_bytes": 5,
+    "full_write": true,
+    "error": null
+  },
+  {
+    "sequence": 3125,
+    "mono": 10305.818917758,
+    "kind": "tx",
+    "generation": 215,
+    "stop_op": 212,
+    "command": "CLEAR_FAULT\nARM",
+    "started_mono": 10305.813591743,
+    "duration_s": 0.005314829999406356,
+    "requested_bytes": 16,
+    "written_bytes": 16,
+    "full_write": true,
+    "error": null
+  },
+  {
+    "sequence": 3128,
+    "mono": 10305.869496471,
+    "kind": "stop_requested",
+    "generation": 215,
+    "stop_op": 212,
+    "reason": "SCAN_TIMEOUT",
+    "d0_age_s": 0.06639664700014691,
+    "scan_age_s": 0.36946647799959464,
+    "caller_age_s": 0.37469541899918113
+  },
+  {
+    "sequence": 3721,
+    "mono": 10316.123218507,
+    "kind": "http_outcome",
+    "generation": 270,
+    "stop_op": 267,
+    "operation": "COMMAND",
+    "http_status": 200,
+    "response": {
+      "status": "SENT",
+      "reason": "STOP_CONFIRMED"
+    }
+  },
+  {
+    "sequence": 3722,
+    "mono": 10316.123793788,
+    "kind": "rx_ack",
+    "generation": 270,
+    "stop_op": 267,
+    "ack": "ARM"
+  },
+  {
+    "sequence": 3725,
+    "mono": 10316.126354212,
+    "kind": "tx",
+    "generation": 270,
+    "stop_op": 267,
+    "command": "ARM\nV 0.000 -0.450",
+    "started_mono": 10316.126118877,
+    "duration_s": 0.00022716800049238373,
+    "requested_bytes": 19,
+    "written_bytes": 19,
+    "full_write": true,
+    "error": null
+  },
+  {
+    "sequence": 3726,
+    "mono": 10316.126389656,
+    "kind": "drive",
+    "generation": 270,
+    "stop_op": 267,
+    "command": "V 0.000 -0.450",
+    "accepted": true,
+    "reason": "SENT",
+    "blockers": [],
+    "d0_age_s": 0.0034949849996337434,
+    "scan_age_s": 0.53015793799932,
+    "caller_age_s": 1.1684998753480613e-05
+  },
+  {
+    "sequence": 3737,
+    "mono": 10316.894744975,
+    "kind": "stop_requested",
+    "generation": 270,
+    "stop_op": 267,
+    "reason": "USER_STOP",
+    "d0_age_s": 0.004363841999293072,
+    "scan_age_s": 0.009528207998300786,
+    "caller_age_s": 0.7683585219983797
+  },
+  {
+    "sequence": 3742,
+    "mono": 10316.988379446,
+    "kind": "http_outcome",
+    "generation": 271,
+    "stop_op": 268,
+    "operation": "COMMAND",
+    "http_status": 200,
+    "response": {
+      "status": "SENT",
+      "reason": "STOP_CONFIRMED"
+    }
+  }
+]

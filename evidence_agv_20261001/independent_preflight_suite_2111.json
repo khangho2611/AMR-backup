@@ -1,0 +1,52 @@
+{
+  "timestamp": "2026-10-01T21:11:09.238252+07:00",
+  "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+  "before": {
+    "agv_preflight_static_collector.py": "926ca87cf9a4194150916e9160379b2add08fc0bfb7dd3bf2cb6a87e15168e46",
+    "test_preflight_collector_independent.py": "5adbe4e236241a7360a15db25e4c478878c7e59824f2c5dbc998b4e7c07df1eb",
+    "agv_serial_arbiter_bridge_v3.py": "6f4a2106622e99fe60212199b621cdcbbd2a76b2e639519796b15d5a703e3d1d",
+    "agv_ros2_runtime_adapter.py": "d44bae5bb04027b49a4989c83213c1ab5d4c34c500c8a19753478922cd1d1cf6"
+  },
+  "results": [
+    {
+      "command": [
+        "C:\\Users\\Khang\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "-X",
+        "utf8",
+        "agv_preflight_static_collector.py",
+        "--mock"
+      ],
+      "exit_code": 0,
+      "stdout": "{\n  \"status\": \"PASS_PREFLIGHT_VERIFIED\",\n  \"valid_samples_count\": 150,\n  \"corrupt_lines_count\": 0,\n  \"elapsed_time_s\": 3.078,\n  \"rejection_reason\": null,\n  \"first_sample\": {\n    \"safety\": \"DISARMED\",\n    \"mode\": \"PID\",\n    \"l_tgt\": 0.0,\n    \"r_tgt\": 0.0,\n    \"l_rpm\": 0.0,\n    \"r_rpm\": 0.0,\n    \"l_pwm\": 0,\n    \"r_pwm\": 0,\n    \"x\": 0.0,\n    \"y\": 0.0,\n    \"th\": 0.0,\n    \"v\": 0.0,\n    \"w\": 0.0\n  },\n  \"last_sample\": {\n    \"safety\": \"DISARMED\",\n    \"mode\": \"PID\",\n    \"l_tgt\": 0.0,\n    \"r_tgt\": 0.0,\n    \"l_rpm\": 0.0,\n    \"r_rpm\": 0.0,\n    \"l_pwm\": 0,\n    \"r_pwm\": 0,\n    \"x\": 0.0,\n    \"y\": 0.0,\n    \"th\": 0.0,\n    \"v\": 0.0,\n    \"w\": 0.0\n  }\n}\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\Khang\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "-X",
+        "utf8",
+        "test_preflight_collector_independent.py"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "...........\n----------------------------------------------------------------------\nRan 11 tests in 3.402s\n\nOK\n"
+    },
+    {
+      "command": [
+        "C:\\Users\\Khang\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "-X",
+        "utf8",
+        "test_full_integration_slice.py"
+      ],
+      "exit_code": 0,
+      "stdout": "[PASS TEST 3] Real Watchdog Thread: Đã trip thành công sau khi caller im lặng (1 lần)\n[PASS TEST 4] W1 Escalation: Watchdog bắt lỗi write failure và báo cáo unconfirmed chính xác 100%.\n",
+      "stderr": "...[SerialArbiterGateV3] LỖI GHI SERIAL THỰC TẾ: mock write failure\n.\n----------------------------------------------------------------------\nRan 4 tests in 0.125s\n\nOK\n"
+    }
+  ],
+  "after": {
+    "agv_preflight_static_collector.py": "926ca87cf9a4194150916e9160379b2add08fc0bfb7dd3bf2cb6a87e15168e46",
+    "test_preflight_collector_independent.py": "5adbe4e236241a7360a15db25e4c478878c7e59824f2c5dbc998b4e7c07df1eb",
+    "agv_serial_arbiter_bridge_v3.py": "6f4a2106622e99fe60212199b621cdcbbd2a76b2e639519796b15d5a703e3d1d",
+    "agv_ros2_runtime_adapter.py": "d44bae5bb04027b49a4989c83213c1ab5d4c34c500c8a19753478922cd1d1cf6"
+  }
+}

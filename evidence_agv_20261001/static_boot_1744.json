@@ -1,0 +1,6 @@
+{
+  "scope": "static read-only SSH",
+  "exit_code": 0,
+  "stdout": "{\"scope\": \"read-only proc inventory; no Serial open/TX\", \"boot_id\": \"0e4596d7-76a2-4b76-8305-69179c06f9df\", \"uptime_seconds\": 137.94, \"task_processes\": [], \"visible_serial_owners\": [], \"inventory_scope\": \"unprivileged /proc visibility; not a live DISARMED proof\"}\n",
+  "stderr": ""
+}

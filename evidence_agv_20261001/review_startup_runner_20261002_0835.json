@@ -1,0 +1,461 @@
+{
+  "scope": "OFFLINE ONLY; actual collector main + actual gate protocol with fake transport/clock; no connect/hardware",
+  "before": {
+    "agv_preflight_static_collector.py": "ca1c7390cad29c3f8d5812a4e0a38b7e5143fb05fce6e7d89e178060986785c3",
+    "agv_motion_supervisor_runner.py": "0b0ce17c2e1c7bc5de885103d6d1d92dd31f905797dfb3890a9f8b974a3b048d",
+    "agv_serial_arbiter_bridge_v3.py": "6f4a2106622e99fe60212199b621cdcbbd2a76b2e639519796b15d5a703e3d1d"
+  },
+  "after": {
+    "agv_preflight_static_collector.py": "ca1c7390cad29c3f8d5812a4e0a38b7e5143fb05fce6e7d89e178060986785c3",
+    "agv_motion_supervisor_runner.py": "0b0ce17c2e1c7bc5de885103d6d1d92dd31f905797dfb3890a9f8b974a3b048d",
+    "agv_serial_arbiter_bridge_v3.py": "6f4a2106622e99fe60212199b621cdcbbd2a76b2e639519796b15d5a703e3d1d"
+  },
+  "stable": true,
+  "cases": [
+    {
+      "id": "C0_actual_raw26_then_source_diagnostics_then_stable_D0",
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "meets_expectation": true,
+      "report": {
+        "status": "PASS_PREFLIGHT_VERIFIED",
+        "valid_samples_count": 120,
+        "corrupt_lines_count": 10,
+        "elapsed_time_s": 13.4,
+        "observation_time_s": 12.2,
+        "rejection_reason": null,
+        "evidence_file": "D:\\HoMinhKhang\\PROJECT\\GITHUB_PROJECT\\CODE XE TU HANH\\evidence_agv_20261001\\parent_startup_0835_v805zbtu\\preflight_raw_evidence_1790905029739_15716_0.json",
+        "first_sample": {
+          "safety": "DISARMED",
+          "mode": "PID",
+          "l_tgt": 0.0,
+          "r_tgt": 0.0,
+          "l_rpm": 0.0,
+          "r_rpm": 0.0,
+          "l_pwm": 0,
+          "r_pwm": 0,
+          "x": 0.0,
+          "y": 0.0,
+          "th": 0.0,
+          "v": 0.0,
+          "w": 0.0
+        },
+        "last_sample": {
+          "safety": "DISARMED",
+          "mode": "PID",
+          "l_tgt": 0,
+          "r_tgt": 0,
+          "l_pwm": 0,
+          "r_pwm": 0,
+          "l_rpm": 0,
+          "r_rpm": 0,
+          "v": 0,
+          "w": 0,
+          "x": 0,
+          "y": 0,
+          "th": 0
+        }
+      },
+      "post_diagnostic_D0_span": 10.499999999999403,
+      "tx": [],
+      "closed": true,
+      "evidence_file": "D:\\HoMinhKhang\\PROJECT\\GITHUB_PROJECT\\CODE XE TU HANH\\evidence_agv_20261001\\parent_startup_0835_v805zbtu\\preflight_raw_evidence_1790905029739_15716_0.json"
+    },
+    {
+      "id": "C1_repeated_scanning_within_startup",
+      "expected_exit": 1,
+      "actual_exit": 0,
+      "meets_expectation": false,
+      "report": {
+        "status": "PASS_PREFLIGHT_VERIFIED",
+        "valid_samples_count": 120,
+        "corrupt_lines_count": 0,
+        "elapsed_time_s": 12.5,
+        "observation_time_s": 11.9,
+        "rejection_reason": null,
+        "evidence_file": "D:\\HoMinhKhang\\PROJECT\\GITHUB_PROJECT\\CODE XE TU HANH\\evidence_agv_20261001\\parent_startup_0835_v805zbtu\\preflight_raw_evidence_1790905029751_15716_0.json",
+        "first_sample": {
+          "safety": "DISARMED",
+          "mode": "PID",
+          "l_tgt": 0,
+          "r_tgt": 0,
+          "l_pwm": 0,
+          "r_pwm": 0,
+          "l_rpm": 0,
+          "r_rpm": 0,
+          "v": 0,
+          "w": 0,
+          "x": 0,
+          "y": 0,
+          "th": 0
+        },
+        "last_sample": {
+          "safety": "DISARMED",
+          "mode": "PID",
+          "l_tgt": 0,
+          "r_tgt": 0,
+          "l_pwm": 0,
+          "r_pwm": 0,
+          "l_rpm": 0,
+          "r_rpm": 0,
+          "v": 0,
+          "w": 0,
+          "x": 0,
+          "y": 0,
+          "th": 0
+        }
+      },
+      "post_diagnostic_D0_span": 11.899999999999324,
+      "tx": [],
+      "closed": true,
+      "evidence_file": "D:\\HoMinhKhang\\PROJECT\\GITHUB_PROJECT\\CODE XE TU HANH\\evidence_agv_20261001\\parent_startup_0835_v805zbtu\\preflight_raw_evidence_1790905029751_15716_0.json"
+    },
+    {
+      "id": "C2_found_without_scan_bad_address",
+      "expected_exit": 1,
+      "actual_exit": 0,
+      "meets_expectation": false,
+      "report": {
+        "status": "PASS_PREFLIGHT_VERIFIED",
+        "valid_samples_count": 120,
+        "corrupt_lines_count": 0,
+        "elapsed_time_s": 12.2,
+        "observation_time_s": 11.9,
+        "rejection_reason": null,
+        "evidence_file": "D:\\HoMinhKhang\\PROJECT\\GITHUB_PROJECT\\CODE XE TU HANH\\evidence_agv_20261001\\parent_startup_0835_v805zbtu\\preflight_raw_evidence_1790905029758_15716_0.json",
+        "first_sample": {
+          "safety": "DISARMED",
+          "mode": "PID",
+          "l_tgt": 0,
+          "r_tgt": 0,
+          "l_pwm": 0,
+          "r_pwm": 0,
+          "l_rpm": 0,
+          "r_rpm": 0,
+          "v": 0,
+          "w": 0,
+          "x": 0,
+          "y": 0,
+          "th": 0
+        },
+        "last_sample": {
+          "safety": "DISARMED",
+          "mode": "PID",
+          "l_tgt": 0,
+          "r_tgt": 0,
+          "l_pwm": 0,
+          "r_pwm": 0,
+          "l_rpm": 0,
+          "r_rpm": 0,
+          "v": 0,
+          "w": 0,
+          "x": 0,
+          "y": 0,
+          "th": 0
+        }
+      },
+      "post_diagnostic_D0_span": null,
+      "tx": [],
+      "closed": true,
+      "evidence_file": "D:\\HoMinhKhang\\PROJECT\\GITHUB_PROJECT\\CODE XE TU HANH\\evidence_agv_20261001\\parent_startup_0835_v805zbtu\\preflight_raw_evidence_1790905029758_15716_0.json"
+    },
+    {
+      "id": "C3_vin_nan",
+      "expected_exit": 1,
+      "actual_exit": 0,
+      "meets_expectation": false,
+      "report": {
+        "status": "PASS_PREFLIGHT_VERIFIED",
+        "valid_samples_count": 120,
+        "corrupt_lines_count": 0,
+        "elapsed_time_s": 12.4,
+        "observation_time_s": 11.9,
+        "rejection_reason": null,
+        "evidence_file": "D:\\HoMinhKhang\\PROJECT\\GITHUB_PROJECT\\CODE XE TU HANH\\evidence_agv_20261001\\parent_startup_0835_v805zbtu\\preflight_raw_evidence_1790905029766_15716_0.json",
+        "first_sample": {
+          "safety": "DISARMED",
+          "mode": "PID",
+          "l_tgt": 0,
+          "r_tgt": 0,
+          "l_pwm": 0,
+          "r_pwm": 0,
+          "l_rpm": 0,
+          "r_rpm": 0,
+          "v": 0,
+          "w": 0,
+          "x": 0,
+          "y": 0,
+          "th": 0
+        },
+        "last_sample": {
+          "safety": "DISARMED",
+          "mode": "PID",
+          "l_tgt": 0,
+          "r_tgt": 0,
+          "l_pwm": 0,
+          "r_pwm": 0,
+          "l_rpm": 0,
+          "r_rpm": 0,
+          "v": 0,
+          "w": 0,
+          "x": 0,
+          "y": 0,
+          "th": 0
+        }
+      },
+      "post_diagnostic_D0_span": 11.899999999999324,
+      "tx": [],
+      "closed": true,
+      "evidence_file": "D:\\HoMinhKhang\\PROJECT\\GITHUB_PROJECT\\CODE XE TU HANH\\evidence_agv_20261001\\parent_startup_0835_v805zbtu\\preflight_raw_evidence_1790905029766_15716_0.json"
+    },
+    {
+      "id": "C4_vin_bool",
+      "expected_exit": 1,
+      "actual_exit": 0,
+      "meets_expectation": false,
+      "report": {
+        "status": "PASS_PREFLIGHT_VERIFIED",
+        "valid_samples_count": 120,
+        "corrupt_lines_count": 0,
+        "elapsed_time_s": 12.4,
+        "observation_time_s": 11.9,
+        "rejection_reason": null,
+        "evidence_file": "D:\\HoMinhKhang\\PROJECT\\GITHUB_PROJECT\\CODE XE TU HANH\\evidence_agv_20261001\\parent_startup_0835_v805zbtu\\preflight_raw_evidence_1790905029773_15716_0.json",
+        "first_sample": {
+          "safety": "DISARMED",
+          "mode": "PID",
+          "l_tgt": 0,
+          "r_tgt": 0,
+          "l_pwm": 0,
+          "r_pwm": 0,
+          "l_rpm": 0,
+          "r_rpm": 0,
+          "v": 0,
+          "w": 0,
+          "x": 0,
+          "y": 0,
+          "th": 0
+        },
+        "last_sample": {
+          "safety": "DISARMED",
+          "mode": "PID",
+          "l_tgt": 0,
+          "r_tgt": 0,
+          "l_pwm": 0,
+          "r_pwm": 0,
+          "l_rpm": 0,
+          "r_rpm": 0,
+          "v": 0,
+          "w": 0,
+          "x": 0,
+          "y": 0,
+          "th": 0
+        }
+      },
+      "post_diagnostic_D0_span": 11.899999999999324,
+      "tx": [],
+      "closed": true,
+      "evidence_file": "D:\\HoMinhKhang\\PROJECT\\GITHUB_PROJECT\\CODE XE TU HANH\\evidence_agv_20261001\\parent_startup_0835_v805zbtu\\preflight_raw_evidence_1790905029773_15716_0.json"
+    },
+    {
+      "id": "C5_vin_negative",
+      "expected_exit": 1,
+      "actual_exit": 0,
+      "meets_expectation": false,
+      "report": {
+        "status": "PASS_PREFLIGHT_VERIFIED",
+        "valid_samples_count": 120,
+        "corrupt_lines_count": 0,
+        "elapsed_time_s": 12.4,
+        "observation_time_s": 11.9,
+        "rejection_reason": null,
+        "evidence_file": "D:\\HoMinhKhang\\PROJECT\\GITHUB_PROJECT\\CODE XE TU HANH\\evidence_agv_20261001\\parent_startup_0835_v805zbtu\\preflight_raw_evidence_1790905029782_15716_0.json",
+        "first_sample": {
+          "safety": "DISARMED",
+          "mode": "PID",
+          "l_tgt": 0,
+          "r_tgt": 0,
+          "l_pwm": 0,
+          "r_pwm": 0,
+          "l_rpm": 0,
+          "r_rpm": 0,
+          "v": 0,
+          "w": 0,
+          "x": 0,
+          "y": 0,
+          "th": 0
+        },
+        "last_sample": {
+          "safety": "DISARMED",
+          "mode": "PID",
+          "l_tgt": 0,
+          "r_tgt": 0,
+          "l_pwm": 0,
+          "r_pwm": 0,
+          "l_rpm": 0,
+          "r_rpm": 0,
+          "v": 0,
+          "w": 0,
+          "x": 0,
+          "y": 0,
+          "th": 0
+        }
+      },
+      "post_diagnostic_D0_span": 11.899999999999324,
+      "tx": [],
+      "closed": true,
+      "evidence_file": "D:\\HoMinhKhang\\PROJECT\\GITHUB_PROJECT\\CODE XE TU HANH\\evidence_agv_20261001\\parent_startup_0835_v805zbtu\\preflight_raw_evidence_1790905029782_15716_0.json"
+    },
+    {
+      "id": "C6_error_after_scan",
+      "expected_exit": 1,
+      "actual_exit": 1,
+      "meets_expectation": true,
+      "report": {
+        "status": "FAIL_HARDWARE_ERROR_REPORTED",
+        "valid_samples_count": 0,
+        "corrupt_lines_count": 0,
+        "elapsed_time_s": 0.3,
+        "observation_time_s": 0.0,
+        "rejection_reason": "Phần cứng báo lỗi: No I2C device found",
+        "evidence_file": "D:\\HoMinhKhang\\PROJECT\\GITHUB_PROJECT\\CODE XE TU HANH\\evidence_agv_20261001\\parent_startup_0835_v805zbtu\\preflight_raw_evidence_1790905029788_15716_0.json",
+        "first_sample": null,
+        "last_sample": null
+      },
+      "post_diagnostic_D0_span": null,
+      "tx": [],
+      "closed": true,
+      "evidence_file": "D:\\HoMinhKhang\\PROJECT\\GITHUB_PROJECT\\CODE XE TU HANH\\evidence_agv_20261001\\parent_startup_0835_v805zbtu\\preflight_raw_evidence_1790905029788_15716_0.json"
+    },
+    {
+      "id": "C7_unsafe_mixed_diagnostic",
+      "expected_exit": 1,
+      "actual_exit": 1,
+      "meets_expectation": true,
+      "report": {
+        "status": "FAIL_TELEMETRY_INVARIANT_VIOLATION",
+        "valid_samples_count": 0,
+        "corrupt_lines_count": 0,
+        "elapsed_time_s": 0.3,
+        "observation_time_s": 0.0,
+        "rejection_reason": "NON_ZERO_PWM: l=1.0, r=0.0",
+        "evidence_file": "D:\\HoMinhKhang\\PROJECT\\GITHUB_PROJECT\\CODE XE TU HANH\\evidence_agv_20261001\\parent_startup_0835_v805zbtu\\preflight_raw_evidence_1790905029791_15716_0.json",
+        "first_sample": null,
+        "last_sample": null
+      },
+      "post_diagnostic_D0_span": null,
+      "tx": [],
+      "closed": true,
+      "evidence_file": "D:\\HoMinhKhang\\PROJECT\\GITHUB_PROJECT\\CODE XE TU HANH\\evidence_agv_20261001\\parent_startup_0835_v805zbtu\\preflight_raw_evidence_1790905029791_15716_0.json"
+    },
+    {
+      "id": "C8_late_diagnostic",
+      "expected_exit": 1,
+      "actual_exit": 1,
+      "meets_expectation": true,
+      "report": {
+        "status": "FAIL_INVALID_BOOT_BANNER",
+        "valid_samples_count": 40,
+        "corrupt_lines_count": 0,
+        "elapsed_time_s": 4.2,
+        "observation_time_s": 0.0,
+        "rejection_reason": "Chuỗi 'info' không hợp lệ hoặc ngoài startup phase: Scanning I2C bus...",
+        "evidence_file": "D:\\HoMinhKhang\\PROJECT\\GITHUB_PROJECT\\CODE XE TU HANH\\evidence_agv_20261001\\parent_startup_0835_v805zbtu\\preflight_raw_evidence_1790905029794_15716_0.json",
+        "first_sample": null,
+        "last_sample": null
+      },
+      "post_diagnostic_D0_span": null,
+      "tx": [],
+      "closed": true,
+      "evidence_file": "D:\\HoMinhKhang\\PROJECT\\GITHUB_PROJECT\\CODE XE TU HANH\\evidence_agv_20261001\\parent_startup_0835_v805zbtu\\preflight_raw_evidence_1790905029794_15716_0.json"
+    },
+    {
+      "id": "R0_actual_gate_positive_velocity",
+      "result": [
+        true,
+        "RUNNING"
+      ],
+      "tx": [
+        "V 0.007 0.000\n"
+      ]
+    },
+    {
+      "id": "R1_failed_STOP_stale_unsafe_D0",
+      "result": [
+        true,
+        "STOP_CONFIRMED"
+      ],
+      "runner_confirmed": true,
+      "gate_confirmed": false,
+      "gate_state": "FAULT",
+      "tx": [
+        "STOP\n"
+      ]
+    },
+    {
+      "id": "R2_stale_D0_without_gate_parser",
+      "result": [
+        true,
+        "STOP_CONFIRMED"
+      ],
+      "runner_confirmed": true,
+      "gate_confirmed": false,
+      "tx": [
+        "STOP\n"
+      ]
+    },
+    {
+      "id": "R3_missing_telemetry",
+      "result": [
+        true,
+        "RUNNING"
+      ],
+      "tx": [
+        "V 0.007 0.000\n"
+      ]
+    },
+    {
+      "id": "R4_same_clock_repeated_ramp",
+      "results": [
+        [
+          true,
+          "RUNNING"
+        ],
+        [
+          true,
+          "RUNNING"
+        ],
+        [
+          true,
+          "RUNNING"
+        ],
+        [
+          true,
+          "RUNNING"
+        ],
+        [
+          true,
+          "RUNNING"
+        ],
+        [
+          true,
+          "RUNNING"
+        ],
+        [
+          true,
+          "RUNNING"
+        ]
+      ],
+      "cmd_v": 0.05,
+      "tx": [
+        "V 0.007 0.000\n",
+        "V 0.015 0.000\n",
+        "V 0.022 0.000\n",
+        "V 0.030 0.000\n",
+        "V 0.037 0.000\n",
+        "V 0.045 0.000\n",
+        "V 0.050 0.000\n"
+      ]
+    }
+  ]
+}

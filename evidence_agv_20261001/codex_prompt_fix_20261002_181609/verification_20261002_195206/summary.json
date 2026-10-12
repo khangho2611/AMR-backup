@@ -1,0 +1,58 @@
+{
+  "time": "2026-10-02T19:52:21.920458+07:00",
+  "scope": "OFFLINE_ONLY; actual reader/HTTP/typed callbacks; mocked Serial and ROS imports; no physical port open",
+  "source_sha_before": {
+    "agv_unified_brain.py": "778e144133c39e59aaf8ceda4e9746d507c8dba7aa9e287d9d9b325fe93a96af",
+    "agv_navigation.py": "22c46260dfdfff1b05d544f8dc08e2b8c5b1034bb076c2d91575f0d5a0cf9e14",
+    "agv_command_session.py": "91b14da3e29f00a9d34db831b55386e00cfff2be2e29a9179104061d12d18803",
+    "index_cyberpunk.html": "ba249a6b4b2b793759436eb3520ef46d3776234c1594a090c85599ab58ed1b63",
+    "tests/test_agv_navigation_fix.py": "c5805a66878de95b398dc09152abf49a1720c517cfc763cf423804976cbc8d5b",
+    "tests/test_agv_brain_integration.py": "08987314c48d9670e2b55d3397b544f268479b38ed0866d526aba85e19a2f90d",
+    "tests/test_agv_startup_lifecycle.py": "2536e45e35241ea649eb159de1cef0974294b3a7ad28038457b55dc0e20671b5",
+    "tests/test_agv_scan_adapter.py": "c72e297fb333573f26e1a61f44f2c03caa88278e50ea2257df184aa8e4de2fe3",
+    "tests/test_agv_pid_ui.cjs": "fea7afd927467a6b496c088d941021f3f64e81791623f5d1063edea272b9b0e9"
+  },
+  "source_sha_after": {
+    "agv_unified_brain.py": "778e144133c39e59aaf8ceda4e9746d507c8dba7aa9e287d9d9b325fe93a96af",
+    "agv_navigation.py": "22c46260dfdfff1b05d544f8dc08e2b8c5b1034bb076c2d91575f0d5a0cf9e14",
+    "agv_command_session.py": "91b14da3e29f00a9d34db831b55386e00cfff2be2e29a9179104061d12d18803",
+    "index_cyberpunk.html": "ba249a6b4b2b793759436eb3520ef46d3776234c1594a090c85599ab58ed1b63",
+    "tests/test_agv_navigation_fix.py": "c5805a66878de95b398dc09152abf49a1720c517cfc763cf423804976cbc8d5b",
+    "tests/test_agv_brain_integration.py": "08987314c48d9670e2b55d3397b544f268479b38ed0866d526aba85e19a2f90d",
+    "tests/test_agv_startup_lifecycle.py": "2536e45e35241ea649eb159de1cef0974294b3a7ad28038457b55dc0e20671b5",
+    "tests/test_agv_scan_adapter.py": "c72e297fb333573f26e1a61f44f2c03caa88278e50ea2257df184aa8e4de2fe3",
+    "tests/test_agv_pid_ui.cjs": "fea7afd927467a6b496c088d941021f3f64e81791623f5d1063edea272b9b0e9"
+  },
+  "stable": true,
+  "tests": [
+    {
+      "args": [
+        "C:\\Users\\Khang\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "-B",
+        "-X",
+        "utf8",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_agv_*.py",
+        "-v"
+      ],
+      "exit": 0,
+      "output": "test_1.txt"
+    },
+    {
+      "args": [
+        "C:\\Users\\Khang\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\node\\bin\\node.exe",
+        "tests/test_agv_pid_ui.cjs"
+      ],
+      "exit": 0,
+      "output": "test_2.txt"
+    }
+  ],
+  "syntax_ast": "PASS",
+  "backup": "D:\\HoMinhKhang\\PROJECT\\GITHUB_PROJECT\\CODE XE TU HANH\\evidence_agv_20261001\\codex_prompt_fix_20261002_181609",
+  "hardware": "NOT_DEPLOYED_NOT_RUN"
+}

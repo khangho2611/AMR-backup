@@ -1,0 +1,65 @@
+{
+  "time_local": "2026-10-02T14:22:34.815307",
+  "timezone": "Asia/Bangkok",
+  "source_before": "56e9e4cbcb070363fd3d29612fa0452cb435455b03ec2a2476c7bb7ba6fe7f15",
+  "source_after": "56e9e4cbcb070363fd3d29612fa0452cb435455b03ec2a2476c7bb7ba6fe7f15",
+  "hardware": false,
+  "ROS": false,
+  "clock": "real/unscaled",
+  "scope": "actual main-reader-HTTP FakeUART + changed component seams; no full typed-stream or ownership acceptance",
+  "fixes_limited": {
+    "actual_firmware_schema_parser": {
+      "count": 1,
+      "l_tgt": 0.0,
+      "v": 0.0
+    },
+    "nonzero_target_resets_preflight": true,
+    "nonzero_v_resets_preflight": true,
+    "gap_more_than_source_half_second_resets": true,
+    "malformed_3x3_data2_HOLD": {
+      "fsm": "EXPLORING"
+    },
+    "footprint_formula_constant_only": {
+      "radius": 0.1885,
+      "formula": 0.18849054127754472,
+      "provenance_full_body_unverified": true
+    },
+    "actual_main_reader_firmware_D0_count81": {
+      "count": 81,
+      "span": 9.547000000020489
+    }
+  },
+  "residuals": {
+    "full_D0_plus_error_accepted_not_fault_latched": {
+      "preflight_count": 2,
+      "latch": false,
+      "error_input": "I2C_FAULT"
+    },
+    "shape_valid_map_res0_crashes_step": "ZeroDivisionError",
+    "actual_entry_passes_before_10s_without_boot_diag": {
+      "span": 9.547000000020489,
+      "count": 81,
+      "passed": true,
+      "BOOT_banner": false,
+      "diag": false,
+      "clock": "real/unscaled, no state timestamp writes"
+    },
+    "actual_entry_cached_stale_preflight_ARM_noACK": {
+      "last_age": 0.6099999999860302,
+      "reply": {
+        "code": 200,
+        "body": "{\"status\": \"ok\", \"action\": \"ARMED\"}"
+      },
+      "tx": [
+        {
+          "mono": 367695.875,
+          "line": "ARM",
+          "written": 5
+        }
+      ],
+      "ARM_ACK_received": false,
+      "session_MCU_bound": false
+    }
+  },
+  "unchanged_STOP_runtime_UI_residuals": "V4.3 review carried by diff/source inspection; not rerun"
+}

@@ -1,0 +1,11 @@
+{
+  "scope": "offline mocks only",
+  "hashes": {
+    "agv_ros2_runtime_adapter.py": "15f460b1f81a566b7381307de275d1434722302d9ebe3d95d7de4db748930a9b",
+    "test_full_integration_slice.py": "77d7d27bcdf12994374961bcf5302d1e52639ab5bcf2674c7f909db008fce1c3"
+  },
+  "suite": "test_full_integration_slice.py",
+  "exit": 0,
+  "stdout": "[PASS TEST 3] Real Watchdog Thread: Đã trip thành công sau khi caller im lặng (1 lần)\n[PASS TEST 4] W1 Escalation: Watchdog bắt lỗi write failure và báo cáo unconfirmed chính xác 100%.\n",
+  "stderr": "...[SerialArbiterGateV3] LỖI GHI SERIAL THỰC TẾ: mock write failure\n.\n----------------------------------------------------------------------\nRan 4 tests in 0.123s\n\nOK\n"
+}
