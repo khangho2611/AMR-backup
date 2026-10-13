@@ -1,0 +1,28 @@
+{
+  "requested_model": "gemini-3-flash",
+  "response_model": "gemini-3-flash",
+  "response_id": "93jNasTaDf_YjuMPk6u72A8",
+  "usage": {
+    "completion_tokens": 1914,
+    "total_tokens": 21043,
+    "prompt_tokens": 19129
+  },
+  "finish_reason": "stop",
+  "prompt_sha256": "036eba23846948bb9c3233a9fb415e7857c0c9c7e301de31b42046de6df05a92",
+  "patch_bytes": 5199,
+  "summary": [
+    "Fixed last/best checkpoint mismatch fallback policy by marking candidate unverified if best file is missing.",
+    "Enforced mandatory full-seed re-acceptance for selected checkpoints and bound metrics to checkpoint SHA256 and contract version.",
+    "Added robust transactional artifact staging and rollback with explicit atomic file replace behavior and proper commit_error reporting.",
+    "Corrected restart/episode boundary initialization and marked warm restart replay/env RNG limitations explicitly.",
+    "Added lifecycle guards to prevent success bonus and steps after terminal/truncated states.",
+    "Expanded parity test coverage with valid binary maps/scalars, all-covered/blocked/no-target cases, and nonfinite forward/ORT checks."
+  ],
+  "limitations": [
+    "No actual physical hardware or ROS training executed.",
+    "Warm restart does not fully restore replay buffer contents or exact environment internal RNG sequences."
+  ],
+  "verification_plan": [
+    "python -m unittest tests/test_coverage_v2.py"
+  ]
+}

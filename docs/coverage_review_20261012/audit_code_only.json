@@ -1,0 +1,32 @@
+{
+  "scope": "Code only; no training or quality evaluation",
+  "sha256": {
+    "train_coverage_20000.py": "ae235055f71df68f8586aa557c0ed4d92c02a799e070ef0e13e68bf275db41bb",
+    "tests\\test_coverage_v2.py": "3f80b1a838609eb58f0a861903db05ffc173e79cdc3a205e79931e8c45dc5b0a",
+    "models\\coverage_model.onnx": "cd36a568398395eaa236e0fa9b87cbdc3aa964018831606a28ec01318e434804",
+    "models\\coverage_model.pth": "4d4045fae15d312e83b1ac39439394001d83d3002cc37667c53749576065cae5"
+  },
+  "nan_export": {
+    "status": "FAIL",
+    "max_abs_error": NaN,
+    "model_output_all_nan": true,
+    "file_size": 0
+  },
+  "actual_promotion_block": {
+    "smoke_export_fail": {
+      "exit_code": 1,
+      "quality_passed": false,
+      "promotion_calls": 0
+    },
+    "completed_export_fail_high_coverage": {
+      "exit_code": 1,
+      "quality_passed": false,
+      "promotion_calls": 0
+    },
+    "completed_export_pass_coverage92": {
+      "exit_code": 1,
+      "quality_passed": false,
+      "promotion_calls": 0
+    }
+  }
+}

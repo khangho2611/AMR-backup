@@ -1,0 +1,721 @@
+{
+  "sha256": {
+    "train_coverage_20000.py": "f89b7f6f0b9b47eb0378ea2ec440d7fc75992a4700db8e2ac4b1b8bf32fe4fb1",
+    "run_train_20000.bat": "e59f3131791df3babc344a42383ce2cb52430f8c19a9a4ec23154c260d8cb73d",
+    "tests\\test_coverage_v2.py": "0a95096a7b59bc698225ddc5df409f2ffa2d97badf6b5336cba022d098a6664b",
+    "models\\coverage_model.onnx": "cd36a568398395eaa236e0fa9b87cbdc3aa964018831606a28ec01318e434804",
+    "models\\coverage_model.pth": "4d4045fae15d312e83b1ac39439394001d83d3002cc37667c53749576065cae5"
+  },
+  "lifecycle_reproductions": {
+    "zero_episodes_pass_export": {
+      "exit_code": 0,
+      "accepted_model_overwritten": true,
+      "manifest_episodes": 0,
+      "eval_history": []
+    },
+    "interrupt_before_first_transition": {
+      "exit_code": 0,
+      "accepted_model_overwritten": true,
+      "manifest_episodes": 20000,
+      "eval_history": []
+    },
+    "failed_export_gate": {
+      "exit_code": 0,
+      "accepted_model_overwritten": false,
+      "manifest_episodes": 0,
+      "eval_history": []
+    },
+    "real_env_blocked_at_budget": {
+      "terminated": false,
+      "truncated": true,
+      "reward": -2.0099687499999996
+    }
+  },
+  "onnx_bytes": 132717,
+  "onnx_metadata": {},
+  "external_initializers": [],
+  "root_equals_smoke_model": true,
+  "onnx_rollout_original_10": {
+    "mean_coverage": 55.38351060586932,
+    "success_ge95": 0,
+    "count": 10,
+    "timeouts": 10,
+    "max_no_progress": 3047
+  },
+  "onnx_rollout_additional_20": {
+    "mean_coverage": 46.754736124803756,
+    "success_ge95": 0,
+    "count": 20,
+    "timeouts": 20,
+    "max_no_progress": 3352
+  },
+  "additional_seeds_bfs_baseline": {
+    "mean_coverage": 100.0,
+    "median_coverage": 100.0,
+    "mean_steps": 899.35
+  },
+  "sampled_pt_onnx_max_abs_error": 1.52587890625e-05,
+  "elapsed_seconds": 19.576735899987398,
+  "episodes": [
+    {
+      "seed": 10000,
+      "coverage_pct": 49.29742388758782,
+      "steps": 3416,
+      "budget": 3416,
+      "blocked": 0,
+      "no_progress_steps": 2909,
+      "last_12_actions": [
+        2,
+        3,
+        2,
+        3,
+        2,
+        3,
+        2,
+        3,
+        2,
+        3,
+        2,
+        3
+      ]
+    },
+    {
+      "seed": 10001,
+      "coverage_pct": 54.3757292882147,
+      "steps": 3428,
+      "budget": 3428,
+      "blocked": 0,
+      "no_progress_steps": 2878,
+      "last_12_actions": [
+        2,
+        3,
+        2,
+        3,
+        2,
+        3,
+        2,
+        3,
+        2,
+        3,
+        2,
+        3
+      ]
+    },
+    {
+      "seed": 10002,
+      "coverage_pct": 33.649289099526065,
+      "steps": 3376,
+      "budget": 3376,
+      "blocked": 0,
+      "no_progress_steps": 3018,
+      "last_12_actions": [
+        3,
+        2,
+        3,
+        2,
+        3,
+        2,
+        3,
+        2,
+        3,
+        2,
+        3,
+        2
+      ]
+    },
+    {
+      "seed": 10003,
+      "coverage_pct": 68.12933025404158,
+      "steps": 3464,
+      "budget": 3464,
+      "blocked": 0,
+      "no_progress_steps": 2707,
+      "last_12_actions": [
+        3,
+        2,
+        3,
+        2,
+        3,
+        2,
+        3,
+        2,
+        3,
+        2,
+        3,
+        2
+      ]
+    },
+    {
+      "seed": 10004,
+      "coverage_pct": 68.5579196217494,
+      "steps": 3384,
+      "budget": 3384,
+      "blocked": 0,
+      "no_progress_steps": 2728,
+      "last_12_actions": [
+        3,
+        2,
+        3,
+        2,
+        3,
+        2,
+        3,
+        2,
+        3,
+        2,
+        3,
+        2
+      ]
+    },
+    {
+      "seed": 10005,
+      "coverage_pct": 49.88151658767772,
+      "steps": 3376,
+      "budget": 3376,
+      "blocked": 0,
+      "no_progress_steps": 2785,
+      "last_12_actions": [
+        2,
+        3,
+        2,
+        3,
+        2,
+        3,
+        2,
+        3,
+        2,
+        3,
+        2,
+        3
+      ]
+    },
+    {
+      "seed": 10006,
+      "coverage_pct": 41.23112659698025,
+      "steps": 3444,
+      "budget": 3444,
+      "blocked": 0,
+      "no_progress_steps": 3047,
+      "last_12_actions": [
+        2,
+        3,
+        2,
+        3,
+        2,
+        3,
+        2,
+        3,
+        2,
+        3,
+        2,
+        3
+      ]
+    },
+    {
+      "seed": 10007,
+      "coverage_pct": 77.44186046511628,
+      "steps": 3440,
+      "budget": 3440,
+      "blocked": 0,
+      "no_progress_steps": 2675,
+      "last_12_actions": [
+        2,
+        3,
+        2,
+        3,
+        2,
+        3,
+        2,
+        3,
+        2,
+        3,
+        2,
+        3
+      ]
+    },
+    {
+      "seed": 10008,
+      "coverage_pct": 66.865315852205,
+      "steps": 3356,
+      "budget": 3356,
+      "blocked": 0,
+      "no_progress_steps": 2668,
+      "last_12_actions": [
+        3,
+        2,
+        3,
+        2,
+        3,
+        2,
+        3,
+        2,
+        3,
+        2,
+        3,
+        2
+      ]
+    },
+    {
+      "seed": 10009,
+      "coverage_pct": 44.40559440559441,
+      "steps": 3432,
+      "budget": 3432,
+      "blocked": 0,
+      "no_progress_steps": 3040,
+      "last_12_actions": [
+        2,
+        3,
+        2,
+        3,
+        2,
+        3,
+        2,
+        3,
+        2,
+        3,
+        2,
+        3
+      ]
+    },
+    {
+      "seed": 20000,
+      "coverage_pct": 63.08243727598566,
+      "steps": 3348,
+      "budget": 3348,
+      "blocked": 0,
+      "no_progress_steps": 2686,
+      "last_12_actions": [
+        2,
+        3,
+        2,
+        3,
+        2,
+        3,
+        2,
+        3,
+        2,
+        3,
+        2,
+        3
+      ]
+    },
+    {
+      "seed": 20001,
+      "coverage_pct": 70.72018890200708,
+      "steps": 3388,
+      "budget": 3388,
+      "blocked": 0,
+      "no_progress_steps": 2593,
+      "last_12_actions": [
+        3,
+        2,
+        3,
+        2,
+        3,
+        2,
+        3,
+        2,
+        3,
+        2,
+        3,
+        2
+      ]
+    },
+    {
+      "seed": 20002,
+      "coverage_pct": 3.900709219858156,
+      "steps": 3384,
+      "budget": 3384,
+      "blocked": 0,
+      "no_progress_steps": 3352,
+      "last_12_actions": [
+        2,
+        3,
+        2,
+        3,
+        2,
+        3,
+        2,
+        3,
+        2,
+        3,
+        2,
+        3
+      ]
+    },
+    {
+      "seed": 20003,
+      "coverage_pct": 37.54305396096441,
+      "steps": 3484,
+      "budget": 3484,
+      "blocked": 0,
+      "no_progress_steps": 3148,
+      "last_12_actions": [
+        1,
+        0,
+        1,
+        0,
+        1,
+        0,
+        1,
+        0,
+        1,
+        0,
+        1,
+        0
+      ]
+    },
+    {
+      "seed": 20004,
+      "coverage_pct": 34.45086705202312,
+      "steps": 3460,
+      "budget": 3460,
+      "blocked": 0,
+      "no_progress_steps": 3116,
+      "last_12_actions": [
+        3,
+        2,
+        3,
+        2,
+        3,
+        2,
+        3,
+        2,
+        3,
+        2,
+        3,
+        2
+      ]
+    },
+    {
+      "seed": 20005,
+      "coverage_pct": 27.77777777777778,
+      "steps": 3456,
+      "budget": 3456,
+      "blocked": 0,
+      "no_progress_steps": 3211,
+      "last_12_actions": [
+        1,
+        0,
+        1,
+        0,
+        1,
+        0,
+        1,
+        0,
+        1,
+        0,
+        1,
+        0
+      ]
+    },
+    {
+      "seed": 20006,
+      "coverage_pct": 44.31554524361949,
+      "steps": 3448,
+      "budget": 3448,
+      "blocked": 0,
+      "no_progress_steps": 3045,
+      "last_12_actions": [
+        2,
+        3,
+        2,
+        3,
+        2,
+        3,
+        2,
+        3,
+        2,
+        3,
+        2,
+        3
+      ]
+    },
+    {
+      "seed": 20007,
+      "coverage_pct": 57.976190476190474,
+      "steps": 3360,
+      "budget": 3360,
+      "blocked": 0,
+      "no_progress_steps": 2734,
+      "last_12_actions": [
+        2,
+        1,
+        3,
+        3,
+        3,
+        0,
+        2,
+        2,
+        2,
+        1,
+        3,
+        3
+      ]
+    },
+    {
+      "seed": 20008,
+      "coverage_pct": 40.49881235154394,
+      "steps": 3368,
+      "budget": 3368,
+      "blocked": 0,
+      "no_progress_steps": 3014,
+      "last_12_actions": [
+        3,
+        2,
+        3,
+        2,
+        3,
+        2,
+        3,
+        2,
+        3,
+        2,
+        3,
+        2
+      ]
+    },
+    {
+      "seed": 20009,
+      "coverage_pct": 53.199052132701425,
+      "steps": 3376,
+      "budget": 3376,
+      "blocked": 0,
+      "no_progress_steps": 2851,
+      "last_12_actions": [
+        3,
+        2,
+        3,
+        2,
+        3,
+        2,
+        3,
+        2,
+        3,
+        2,
+        3,
+        2
+      ]
+    },
+    {
+      "seed": 20010,
+      "coverage_pct": 48.717948717948715,
+      "steps": 3432,
+      "budget": 3432,
+      "blocked": 0,
+      "no_progress_steps": 2984,
+      "last_12_actions": [
+        0,
+        1,
+        0,
+        1,
+        0,
+        1,
+        0,
+        1,
+        0,
+        1,
+        0,
+        1
+      ]
+    },
+    {
+      "seed": 20011,
+      "coverage_pct": 46.70520231213873,
+      "steps": 3460,
+      "budget": 3460,
+      "blocked": 0,
+      "no_progress_steps": 3032,
+      "last_12_actions": [
+        2,
+        3,
+        2,
+        3,
+        2,
+        3,
+        2,
+        3,
+        2,
+        3,
+        2,
+        3
+      ]
+    },
+    {
+      "seed": 20012,
+      "coverage_pct": 70.16317016317016,
+      "steps": 3432,
+      "budget": 3432,
+      "blocked": 0,
+      "no_progress_steps": 2774,
+      "last_12_actions": [
+        0,
+        1,
+        0,
+        1,
+        0,
+        1,
+        0,
+        1,
+        0,
+        1,
+        0,
+        1
+      ]
+    },
+    {
+      "seed": 20013,
+      "coverage_pct": 35.84686774941996,
+      "steps": 3448,
+      "budget": 3448,
+      "blocked": 0,
+      "no_progress_steps": 3125,
+      "last_12_actions": [
+        3,
+        2,
+        3,
+        2,
+        3,
+        2,
+        3,
+        2,
+        3,
+        2,
+        3,
+        2
+      ]
+    },
+    {
+      "seed": 20014,
+      "coverage_pct": 55.93607305936073,
+      "steps": 3504,
+      "budget": 3504,
+      "blocked": 0,
+      "no_progress_steps": 2801,
+      "last_12_actions": [
+        2,
+        3,
+        2,
+        3,
+        2,
+        3,
+        2,
+        3,
+        2,
+        3,
+        2,
+        3
+      ]
+    },
+    {
+      "seed": 20015,
+      "coverage_pct": 34.39340400471143,
+      "steps": 3396,
+      "budget": 3396,
+      "blocked": 0,
+      "no_progress_steps": 3100,
+      "last_12_actions": [
+        2,
+        3,
+        2,
+        3,
+        2,
+        3,
+        2,
+        3,
+        2,
+        3,
+        2,
+        3
+      ]
+    },
+    {
+      "seed": 20016,
+      "coverage_pct": 52.50291036088475,
+      "steps": 3436,
+      "budget": 3436,
+      "blocked": 0,
+      "no_progress_steps": 2917,
+      "last_12_actions": [
+        3,
+        2,
+        3,
+        2,
+        3,
+        2,
+        3,
+        2,
+        3,
+        2,
+        3,
+        2
+      ]
+    },
+    {
+      "seed": 20017,
+      "coverage_pct": 60.476190476190474,
+      "steps": 3360,
+      "budget": 3360,
+      "blocked": 0,
+      "no_progress_steps": 2747,
+      "last_12_actions": [
+        2,
+        3,
+        2,
+        3,
+        2,
+        3,
+        2,
+        3,
+        2,
+        3,
+        2,
+        3
+      ]
+    },
+    {
+      "seed": 20018,
+      "coverage_pct": 52.0979020979021,
+      "steps": 3432,
+      "budget": 3432,
+      "blocked": 0,
+      "no_progress_steps": 2952,
+      "last_12_actions": [
+        3,
+        2,
+        3,
+        2,
+        3,
+        2,
+        3,
+        2,
+        3,
+        2,
+        3,
+        2
+      ]
+    },
+    {
+      "seed": 20019,
+      "coverage_pct": 44.790419161676645,
+      "steps": 3340,
+      "budget": 3340,
+      "blocked": 0,
+      "no_progress_steps": 2923,
+      "last_12_actions": [
+        2,
+        3,
+        2,
+        3,
+        2,
+        3,
+        2,
+        3,
+        2,
+        3,
+        2,
+        3
+      ]
+    }
+  ]
+}

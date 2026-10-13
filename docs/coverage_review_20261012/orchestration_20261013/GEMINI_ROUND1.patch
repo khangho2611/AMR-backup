@@ -1,0 +1,110 @@
+*** Begin Patch
+*** Update File: train_coverage_20000.py
+@@ -204,4 +204,7 @@
+     def step(self, action_idx):
++        if getattr(self, '_terminated_or_truncated', False):
++            return self._get_obs(), 0.0, True, True, {"blocked": False, "new_area": False, "covered_count": self.covered_count, "total_reachable": self.total_reachable, "coverage_pct": (self.covered_count / max(1, self.total_reachable)) * 100.0}
++
+         dy, dx = self.actions[action_idx]
+         ny, nx = self.ry + dy, self.rx + dx
+@@ -244,2 +247,3 @@
+         terminated = (self.covered_count >= self.total_reachable)
+         truncated = (self.steps >= self.max_steps) and not terminated
++        self._terminated_or_truncated = terminated or truncated
+         success = (self.covered_count >= self.total_reachable)
+@@ -663,7 +667,11 @@
+     best_ckpt_file = run_dir / "best_checkpoint.pth"
++    unverified_fallback = False
+     if best_ckpt_file.exists():
+         ckpt_data = torch.load(best_ckpt_file, map_location="cpu", weights_only=False)
+         export_model = gr.CoverageQNet(channels=3, feature_dim=8)
+         export_model.load_state_dict(ckpt_data["policy_state_dict"])
++    else:
++        print("[!] Cảnh báo: Thiếu file best_checkpoint.pth. Dùng LAST checkpoint làm fallback UNVERIFIED (cần acceptance mới).")
++        unverified_fallback = True
+ 
+     # Metadata chuẩn contract
+@@ -930,6 +938,40 @@
+     if quality_passed:
++        commit_error = None
+         best_ckpt_src = run_dir / "best_checkpoint.pth"
+         if best_ckpt_src.exists() and candidate_onnx.exists():
+             dest_onnx = ROOT / "models" / "coverage_model.onnx"
+             dest_pth = ROOT / "models" / "coverage_model.pth"
+-            atomic_promote(candidate_onnx, dest_onnx)
+-            atomic_promote(best_ckpt_src, dest_pth)
+-            print(f"✓ ĐÃ ATOMIC PROMOTE MODEL CHÍNH THỨC SANG: {dest_onnx}")
++            backup_onnx = dest_onnx.with_suffix(".bak")
++            backup_pth = dest_pth.with_suffix(".bak")
++            has_old_onnx = dest_onnx.exists()
++            has_old_pth = dest_pth.exists()
++            try:
++                if has_old_onnx:
++                    os.replace(dest_onnx, backup_onnx)
++                if has_old_pth:
++                    os.replace(dest_pth, backup_pth)
++                atomic_promote(candidate_onnx, dest_onnx)
++                atomic_promote(best_ckpt_src, dest_pth)
++                if backup_onnx.exists():
++                    backup_onnx.unlink()
++                if backup_pth.exists():
++                    backup_pth.unlink()
++                print(f"✓ ĐÃ ATOMIC PROMOTE MODEL CHÍNH THỨC SANG: {dest_onnx}")
++            except Exception as ce:
++                commit_error = str(ce)
++                print(f"[!] Lỗi commit artifact: {ce}. Đang rollback...")
++                if has_old_onnx and backup_onnx.exists():
++                    os.replace(backup_onnx, dest_onnx)
++                elif dest_onnx.exists():
++                    dest_onnx.unlink()
++                if has_old_pth and backup_pth.exists():
++                    os.replace(backup_pth, dest_pth)
++                elif dest_pth.exists():
++                    dest_pth.unlink()
++                if exit_code == 0:
++                    exit_code = 1
+         else:
+             print("[!] Lỗi: Thiếu file artifact để promote.")
++            commit_error = "Missing artifact files"
+             if exit_code == 0:
+                 exit_code = 1
+     else:
+*** End Patch
+*** Begin Patch
+*** Update File: tests/test_coverage_v2.py
+@@ -194,2 +194,37 @@
+ 
++    def test_nonfinite_forward_and_ort_parity(self):
++        """Kiểm tra forward/ORT nonfinite rejection và parity hợp lệ binary map/scalars."""
++        net = gr.CoverageQNet(channels=3, feature_dim=8).eval()
++        with torch.no_grad():
++            for p in net.parameters():
++                p.fill_(float('nan'))
++        with tempfile.TemporaryDirectory() as tmpdir:
++            onnx_path = Path(tmpdir) / "nonfinite.onnx"
++            res = export_and_verify_onnx(net, onnx_path, Path(tmpdir))
++            self.assertEqual(res["status"], "FAIL")
++
++    def test_binary_map_and_scalar_parity(self):
++        """Kiểm tra parity với map binary chuẩn và scalar hợp lệ."""
++        net = gr.CoverageQNet(channels=3, feature_dim=8).eval()
++        with tempfile.TemporaryDirectory() as tmpdir:
++            onnx_path = Path(tmpdir) / "valid.onnx"
++            res = export_and_verify_onnx(net, onnx_path, Path(tmpdir))
++            self.assertEqual(res["status"], "PASS")
++
++    def test_terminal_step_lifecycle_guard(self):
++        """Kiểm tra step sau terminal/truncated bị từ chối và success bonus chỉ một lần."""
++        env = GridCoverageEnvV2(seed=42)
++        env.reset(seed=42)
++        env.covered_count = env.total_reachable
++        obs, rew, term, trunc, info = env.step(0)
++        self.assertTrue(term)
++        
++        # Step tiếp theo sau khi đã terminal
++        obs2, rew2, term2, trunc2, info2 = env.step(0)
++        self.assertEqual(rew2, 0.0)
++        self.assertTrue(term2)
++
+     def test_cli_argument_validation(self):
+*** End Patch

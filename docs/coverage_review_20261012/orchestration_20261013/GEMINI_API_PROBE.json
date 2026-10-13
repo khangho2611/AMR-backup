@@ -1,0 +1,27 @@
+{
+  "id": "uHjNaqKNM8fug8UP0PefkQ8",
+  "object": "chat.completion",
+  "created": 0,
+  "model": "gemini-3.8-flash-n",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "GEMINI_READY",
+        "reasoning_content": null,
+        "tool_calls": null
+      },
+      "finish_reason": "stop",
+      "native_finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "completion_tokens": 82,
+    "total_tokens": 105,
+    "prompt_tokens": 23,
+    "completion_tokens_details": {
+      "reasoning_tokens": 78
+    }
+  }
+}
