@@ -1,0 +1,18 @@
+{
+  "checkpoint": "ai_local_planner\\checkpoints\\ppo_level3_anchored_probe_20261017\\best_level_3.pth",
+  "training_steps": 4096,
+  "level": 2,
+  "episodes": 100,
+  "seed_start": 3002000,
+  "domain_randomization": true,
+  "success_rate": 0.99,
+  "collision_rate": 0.01,
+  "timeout_rate": 0.0,
+  "mean_episode_steps": 224.22,
+  "mean_min_clearance_m": 0.49220900416522356,
+  "collision_seeds": [
+    3002031
+  ],
+  "timeout_seeds": [],
+  "mean_reward": 284.889312417869
+}

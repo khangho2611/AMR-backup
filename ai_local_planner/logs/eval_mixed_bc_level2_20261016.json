@@ -1,0 +1,11 @@
+{
+  "checkpoint": "ai_local_planner\\checkpoints\\expert_level2_mixed_20261016.pth",
+  "training_steps": 0,
+  "level": 2,
+  "episodes": 100,
+  "seed_start": 200000,
+  "domain_randomization": true,
+  "success_rate": 0.99,
+  "collision_rate": 0.01,
+  "mean_reward": 284.0506330958771
+}

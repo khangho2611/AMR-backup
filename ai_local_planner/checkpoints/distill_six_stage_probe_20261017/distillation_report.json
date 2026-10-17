@@ -1,0 +1,233 @@
+[
+  {
+    "candidate": "ai_local_planner\\checkpoints\\distill_six_stage_probe_20261017\\candidate_level_1.pth",
+    "stage": 1,
+    "student_type": "one_actor_critic",
+    "algorithm": "BC_warmstart_not_PPO",
+    "teacher_rollout": {
+      "episodes": 12,
+      "success_rate": 1.0,
+      "collision_rate": 0.0
+    },
+    "dagger_rollout": {
+      "episodes": 6,
+      "success_rate": 1.0,
+      "collision_rate": 0.0
+    },
+    "validation_mse": 1.9720530985978257e-07,
+    "balanced_frames": {
+      "1": {
+        "train_frames": 2471,
+        "heldout_frames": 350,
+        "episodes": 18
+      }
+    },
+    "evaluations": {},
+    "all_gates_passed": false
+  },
+  {
+    "candidate": "ai_local_planner\\checkpoints\\distill_six_stage_probe_20261017\\candidate_level_2.pth",
+    "stage": 2,
+    "student_type": "one_actor_critic",
+    "algorithm": "BC_warmstart_not_PPO",
+    "teacher_rollout": {
+      "episodes": 12,
+      "success_rate": 1.0,
+      "collision_rate": 0.0
+    },
+    "dagger_rollout": {
+      "episodes": 6,
+      "success_rate": 1.0,
+      "collision_rate": 0.0
+    },
+    "validation_mse": 4.428487354601884e-09,
+    "balanced_frames": {
+      "1": {
+        "train_frames": 2471,
+        "heldout_frames": 350,
+        "episodes": 18
+      },
+      "2": {
+        "train_frames": 3500,
+        "heldout_frames": 350,
+        "episodes": 18
+      }
+    },
+    "evaluations": {},
+    "all_gates_passed": false
+  },
+  {
+    "candidate": "ai_local_planner\\checkpoints\\distill_six_stage_probe_20261017\\candidate_level_3.pth",
+    "stage": 3,
+    "student_type": "one_actor_critic",
+    "algorithm": "BC_warmstart_not_PPO",
+    "teacher_rollout": {
+      "episodes": 12,
+      "success_rate": 1.0,
+      "collision_rate": 0.0
+    },
+    "dagger_rollout": {
+      "episodes": 6,
+      "success_rate": 0.0,
+      "collision_rate": 1.0
+    },
+    "validation_mse": 0.023388372734189034,
+    "balanced_frames": {
+      "1": {
+        "train_frames": 2471,
+        "heldout_frames": 350,
+        "episodes": 18
+      },
+      "2": {
+        "train_frames": 3500,
+        "heldout_frames": 350,
+        "episodes": 18
+      },
+      "3": {
+        "train_frames": 2865,
+        "heldout_frames": 221,
+        "episodes": 18
+      }
+    },
+    "evaluations": {},
+    "all_gates_passed": false
+  },
+  {
+    "candidate": "ai_local_planner\\checkpoints\\distill_six_stage_probe_20261017\\candidate_level_4.pth",
+    "stage": 4,
+    "student_type": "one_actor_critic",
+    "algorithm": "BC_warmstart_not_PPO",
+    "teacher_rollout": {
+      "episodes": 12,
+      "success_rate": 1.0,
+      "collision_rate": 0.0
+    },
+    "dagger_rollout": {
+      "episodes": 6,
+      "success_rate": 0.16666666666666666,
+      "collision_rate": 0.8333333333333334
+    },
+    "validation_mse": 0.03700355440378189,
+    "balanced_frames": {
+      "1": {
+        "train_frames": 2471,
+        "heldout_frames": 350,
+        "episodes": 18
+      },
+      "2": {
+        "train_frames": 3500,
+        "heldout_frames": 350,
+        "episodes": 18
+      },
+      "3": {
+        "train_frames": 2865,
+        "heldout_frames": 221,
+        "episodes": 18
+      },
+      "4": {
+        "train_frames": 3500,
+        "heldout_frames": 350,
+        "episodes": 18
+      }
+    },
+    "evaluations": {},
+    "all_gates_passed": false
+  },
+  {
+    "candidate": "ai_local_planner\\checkpoints\\distill_six_stage_probe_20261017\\candidate_level_5.pth",
+    "stage": 5,
+    "student_type": "one_actor_critic",
+    "algorithm": "BC_warmstart_not_PPO",
+    "teacher_rollout": {
+      "episodes": 12,
+      "success_rate": 1.0,
+      "collision_rate": 0.0
+    },
+    "dagger_rollout": {
+      "episodes": 6,
+      "success_rate": 0.0,
+      "collision_rate": 1.0
+    },
+    "validation_mse": 0.04463885724544525,
+    "balanced_frames": {
+      "1": {
+        "train_frames": 2471,
+        "heldout_frames": 350,
+        "episodes": 18
+      },
+      "2": {
+        "train_frames": 3500,
+        "heldout_frames": 350,
+        "episodes": 18
+      },
+      "3": {
+        "train_frames": 2865,
+        "heldout_frames": 221,
+        "episodes": 18
+      },
+      "4": {
+        "train_frames": 3500,
+        "heldout_frames": 350,
+        "episodes": 18
+      },
+      "5": {
+        "train_frames": 1758,
+        "heldout_frames": 184,
+        "episodes": 18
+      }
+    },
+    "evaluations": {},
+    "all_gates_passed": false
+  },
+  {
+    "candidate": "ai_local_planner\\checkpoints\\distill_six_stage_probe_20261017\\candidate_level_6.pth",
+    "stage": 6,
+    "student_type": "one_actor_critic",
+    "algorithm": "BC_warmstart_not_PPO",
+    "teacher_rollout": {
+      "episodes": 12,
+      "success_rate": 1.0,
+      "collision_rate": 0.0
+    },
+    "dagger_rollout": {
+      "episodes": 6,
+      "success_rate": 0.5,
+      "collision_rate": 0.5
+    },
+    "validation_mse": 0.05703004077076912,
+    "balanced_frames": {
+      "1": {
+        "train_frames": 2471,
+        "heldout_frames": 350,
+        "episodes": 18
+      },
+      "2": {
+        "train_frames": 3500,
+        "heldout_frames": 350,
+        "episodes": 18
+      },
+      "3": {
+        "train_frames": 2865,
+        "heldout_frames": 221,
+        "episodes": 18
+      },
+      "4": {
+        "train_frames": 3500,
+        "heldout_frames": 350,
+        "episodes": 18
+      },
+      "5": {
+        "train_frames": 1758,
+        "heldout_frames": 184,
+        "episodes": 18
+      },
+      "6": {
+        "train_frames": 3500,
+        "heldout_frames": 350,
+        "episodes": 18
+      }
+    },
+    "evaluations": {},
+    "all_gates_passed": false
+  }
+]

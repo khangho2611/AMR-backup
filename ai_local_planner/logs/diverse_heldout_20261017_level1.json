@@ -1,0 +1,16 @@
+{
+  "checkpoint": "ai_local_planner\\checkpoints\\retention_level2_diverse_20261017\\retention_candidate.pth",
+  "training_steps": 0,
+  "level": 1,
+  "episodes": 100,
+  "seed_start": 7601000,
+  "domain_randomization": true,
+  "success_rate": 1.0,
+  "collision_rate": 0.0,
+  "timeout_rate": 0.0,
+  "mean_episode_steps": 183.88,
+  "mean_min_clearance_m": 1.0,
+  "collision_seeds": [],
+  "timeout_seeds": [],
+  "mean_reward": 232.52696403232235
+}

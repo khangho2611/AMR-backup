@@ -1,0 +1,28 @@
+{
+  "model": "scene_classifier.onnx",
+  "sha256": "4ac77571248eb04764e82b8526cdd364ea162b874222d5428863126de8dc33bb",
+  "architecture": "six_level_scene_classifier",
+  "trained_by_ppo": false,
+  "source_checkpoint": "ai_local_planner\\checkpoints\\scene_classifier_six_experimental.pth",
+  "opset": 14,
+  "input": {
+    "name": "lidar_and_goal_state",
+    "shape": [
+      "N",
+      365
+    ],
+    "dtype": "float32"
+  },
+  "output": {
+    "name": "scene_logits",
+    "shape": [
+      "N",
+      6
+    ],
+    "dtype": "float32"
+  },
+  "max_torch_onnx_error": 3.0517578125e-05,
+  "validation_accuracy": 0.9513043165206909,
+  "pi4_latency_verified": false,
+  "real_robot_approved": false
+}

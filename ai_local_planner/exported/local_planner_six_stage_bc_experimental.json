@@ -1,0 +1,50 @@
+{
+  "model": "local_planner_six_stage_bc_experimental.onnx",
+  "opset": 14,
+  "sha256": "c14d4bbd4ca34d161e5f8fd6688812d1c38cb59a6cee686a7a5d623e02d5cacf",
+  "created_utc": "2026-10-17T11:17:50.388168+00:00",
+  "source_checkpoint": "ai_local_planner\\checkpoints\\distill_six_stage_probe_20261017\\candidate_level_6.pth",
+  "training_steps": 0,
+  "curriculum_level": 6,
+  "checkpoint_metadata": {
+    "method": "offline_expert_behavioral_cloning",
+    "validation_episode_split": true,
+    "validation_mse": 0.05703004077076912,
+    "independently_gated": false,
+    "eligible_for_real_robot": false
+  },
+  "input": {
+    "name": "lidar_and_goal_state",
+    "shape": [
+      "N",
+      365
+    ],
+    "dtype": "float32",
+    "lidar_normalization": "clip((range_m-0.12)/11.88,0,1)",
+    "angles": "0..359 degrees, counterclockwise from forward"
+  },
+  "output": {
+    "name": "cmd_vel",
+    "shape": [
+      "N",
+      2
+    ],
+    "dtype": "float32",
+    "units": [
+      "m/s",
+      "rad/s"
+    ],
+    "v_range": [
+      0.0,
+      0.35
+    ],
+    "w_range": [
+      -1.5,
+      1.5
+    ]
+  },
+  "max_torch_onnx_error": 7.152557373046875e-07,
+  "pi4_latency_verified": false,
+  "real_robot_approved": false,
+  "deployment_note": "Training quality, real LiDAR alignment, independent E-stop, and Pi4 p99<2ms require separate validation"
+}

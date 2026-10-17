@@ -1,0 +1,108 @@
+[
+  {
+    "epoch": 1,
+    "checkpoint": "ai_local_planner\\checkpoints\\retention_l1_l5_20261017\\candidate_epoch_1.pth",
+    "validation_mse": {
+      "1": 0.006396519020199776,
+      "2": 0.015691829845309258,
+      "3": 0.0031851783860474825,
+      "4": 0.1491849422454834,
+      "5": 0.049417056143283844
+    },
+    "pilot_not_acceptance": {
+      "1": {
+        "level": 1,
+        "episodes": 15,
+        "seed_start": 7901000,
+        "domain_randomization": true,
+        "success_rate": 1.0,
+        "collision_rate": 0.0,
+        "timeout_rate": 0.0,
+        "mean_episode_steps": 180.93333333333334,
+        "mean_min_clearance_m": 1.0,
+        "collision_seeds": [],
+        "timeout_seeds": [],
+        "mean_reward": 241.27347746577556
+      },
+      "2": {
+        "level": 2,
+        "episodes": 15,
+        "seed_start": 7902000,
+        "domain_randomization": true,
+        "success_rate": 0.4,
+        "collision_rate": 0.6,
+        "timeout_rate": 0.0,
+        "mean_episode_steps": 161.13333333333333,
+        "mean_min_clearance_m": 0.24474791681688374,
+        "collision_seeds": [
+          7902002,
+          7902003,
+          7902005,
+          7902007,
+          7902009,
+          7902010,
+          7902011,
+          7902012,
+          7902014
+        ],
+        "timeout_seeds": [],
+        "mean_reward": 141.94703197880983
+      },
+      "3": {
+        "level": 3,
+        "episodes": 15,
+        "seed_start": 7903000,
+        "domain_randomization": true,
+        "success_rate": 0.8666666666666667,
+        "collision_rate": 0.13333333333333333,
+        "timeout_rate": 0.0,
+        "mean_episode_steps": 257.26666666666665,
+        "mean_min_clearance_m": 0.25766873029729304,
+        "collision_seeds": [
+          7903007,
+          7903008
+        ],
+        "timeout_seeds": [],
+        "mean_reward": 168.85069714867637
+      },
+      "4": {
+        "level": 4,
+        "episodes": 15,
+        "seed_start": 7904000,
+        "domain_randomization": true,
+        "success_rate": 0.4666666666666667,
+        "collision_rate": 0.5333333333333333,
+        "timeout_rate": 0.0,
+        "mean_episode_steps": 218.93333333333334,
+        "mean_min_clearance_m": 0.3288776756998432,
+        "collision_seeds": [
+          7904000,
+          7904003,
+          7904005,
+          7904007,
+          7904008,
+          7904011,
+          7904012,
+          7904014
+        ],
+        "timeout_seeds": [],
+        "mean_reward": 185.86357190390083
+      },
+      "5": {
+        "level": 5,
+        "episodes": 15,
+        "seed_start": 7905000,
+        "domain_randomization": true,
+        "success_rate": 1.0,
+        "collision_rate": 0.0,
+        "timeout_rate": 0.0,
+        "mean_episode_steps": 132.2,
+        "mean_min_clearance_m": 0.42107582597305265,
+        "collision_seeds": [],
+        "timeout_seeds": [],
+        "mean_reward": 163.0987149551196
+      }
+    },
+    "pilot_score": -5.526666666666666
+  }
+]

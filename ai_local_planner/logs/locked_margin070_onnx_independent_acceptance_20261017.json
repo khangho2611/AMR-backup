@@ -1,0 +1,68 @@
+{
+  "checkpoint": "ai_local_planner\\exported\\locked_scene_margin070_experimental\\package.json",
+  "simulation_gate_passed": true,
+  "full_six_level_gate": true,
+  "levels": {
+    "1": {
+      "passed": true,
+      "episodes": 100,
+      "domain_randomization": true,
+      "success_rate": 1.0,
+      "collision_rate": 0.0,
+      "timeout_rate": 0.0,
+      "minimum_success_rate": 0.99,
+      "maximum_collision_rate": 0.02
+    },
+    "2": {
+      "passed": true,
+      "episodes": 100,
+      "domain_randomization": true,
+      "success_rate": 0.99,
+      "collision_rate": 0.01,
+      "timeout_rate": 0.0,
+      "minimum_success_rate": 0.98,
+      "maximum_collision_rate": 0.02
+    },
+    "3": {
+      "passed": true,
+      "episodes": 100,
+      "domain_randomization": true,
+      "success_rate": 1.0,
+      "collision_rate": 0.0,
+      "timeout_rate": 0.0,
+      "minimum_success_rate": 0.9,
+      "maximum_collision_rate": 0.02
+    },
+    "4": {
+      "passed": true,
+      "episodes": 100,
+      "domain_randomization": true,
+      "success_rate": 0.99,
+      "collision_rate": 0.0,
+      "timeout_rate": 0.01,
+      "minimum_success_rate": 0.9,
+      "maximum_collision_rate": 0.02
+    },
+    "5": {
+      "passed": true,
+      "episodes": 100,
+      "domain_randomization": true,
+      "success_rate": 1.0,
+      "collision_rate": 0.0,
+      "timeout_rate": 0.0,
+      "minimum_success_rate": 0.9,
+      "maximum_collision_rate": 0.02
+    },
+    "6": {
+      "passed": true,
+      "episodes": 100,
+      "domain_randomization": true,
+      "success_rate": 1.0,
+      "collision_rate": 0.0,
+      "timeout_rate": 0.0,
+      "minimum_success_rate": 0.9,
+      "maximum_collision_rate": 0.02
+    }
+  },
+  "scope": "Fixed curriculum geometry; simulation only; not real-robot approval"
+}

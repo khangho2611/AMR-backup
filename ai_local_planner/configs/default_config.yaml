@@ -1,0 +1,63 @@
+# =====================================================================
+# CẤU HÌNH HUẤN LUYỆN VÀ VẬT LÝ XE: AI 1 - LOCAL MOTION PLANNER (PPO)
+# =====================================================================
+
+robot:
+  type: "differential_drive"
+  radius: 0.20             # m (bán kính vùng an toàn robot)
+  wheel_base: 0.28         # m (khoảng cách 2 bánh dẫn động L)
+  wheel_radius: 0.0325     # m (bán kính bánh xe)
+  v_min: 0.0               # m/s (tiến) - có thể hạ xuống -0.10 khi lùi thoát bẫy
+  v_max: 0.35              # m/s
+  w_min: -1.5              # rad/s
+  w_max: 1.5               # rad/s
+  a_linear_max: 0.5        # m/s^2 (gia tốc tuyến tính tối đa)
+  a_angular_max: 2.0       # rad/s^2 (gia tốc góc tối đa)
+  dt: 0.1                  # giây (chu kỳ điều khiển 10 Hz)
+
+lidar:
+  model: "RPLiDAR C1"
+  num_rays: 360            # 360 tia tương ứng 360 độ (1 độ/tia)
+  min_range: 0.12          # m
+  max_range: 12.0          # m
+  safety_distance: 0.46    # m (software front guard; requires independent hardware E-stop)
+
+sim_to_real:
+  lidar_noise_sigma: [0.03, 0.05] # m, sampled once per episode
+  lidar_dropout_rate: 0.05     # 5% tia rớt / phản xạ sai
+  latency_steps: 1             # 1 step = 100ms trễ phản hồi UART
+  traction_slip_range: [0.05, 0.10] # Each wheel samples magnitude 5-10%, random sign
+  obstacle_jitter_sigma: 0.02  # m, per-step bounded offset from anchor
+
+rewards:
+  progress_scale: 15.0     # Thưởng tiến tới đích
+  goal_reached: 100.0      # Thưởng chạm đích (d_goal < 0.20m)
+  collision_penalty: -50.0 # Phạt khi va chạm
+  clearance_penalty: -2.0  # Phạt khi sát vật cản (< 0.35m)
+  w_smooth_penalty: -0.10  # Phạt giật lái góc
+  v_smooth_penalty: -0.05  # Phạt giật ga tuyến tính
+  w_magnitude_penalty: -0.05 # Phạt bẻ lái gắt không cần thiết
+  heading_bonus: 0.5       # Thưởng hướng đầu xe về phía đích
+  step_penalty: -0.05      # Phạt tồn tại thời gian
+  speed_excess_penalty: -3.0  # Khi d_front < 1 m: -3 * max(0, v - v_safe)
+  speed_front_trigger_m: 1.0
+  speed_braking_margin_m: 0.25
+
+ppo:
+  learning_rate: 0.0003
+  lr_min: 0.00001
+  gamma: 0.99
+  gae_lambda: 0.95
+  clip_range: 0.2
+  target_kl: 0.02            # PPO stops minibatch updates if KL > 1.5*target_kl
+  entropy_coef: 0.01
+  value_loss_coef: 0.5
+  max_grad_norm: 0.5
+  rollout_steps: 2048
+  batch_size: 128
+  epochs_per_update: 10
+  total_timesteps: 5000000
+
+curriculum:
+  threshold_success_rate: 0.90 # Tỷ lệ thành công để mở khóa kịch bản kế tiếp
+  eval_window_episodes: 100    # Đánh giá trên 100 episode gần nhất

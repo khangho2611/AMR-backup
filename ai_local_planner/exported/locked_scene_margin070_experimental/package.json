@@ -1,0 +1,31 @@
+{
+  "architecture": "stateful_scene_locked_multi_onnx",
+  "trained_by_single_ppo": false,
+  "opset": 14,
+  "models": {
+    "reference": "ppo_levels12.onnx",
+    "corridor": "bc_level3.onnx",
+    "pocket": "bc_level5.onnx",
+    "gap_level4": "gap_level4_margin012.onnx",
+    "gap_level6": "gap_level6_margin070.onnx",
+    "classifier": "scene_classifier.onnx"
+  },
+  "sha256": {
+    "reference": "7911cad3468ff296547c383a96bf1d3891bf4934b28332ecbfd9ca2896f44ad0",
+    "corridor": "4c1537b942bd0cc326c8733eb2f9e3c0c53caaa50164577b3aae596169347edc",
+    "pocket": "af4b5f7ae6c5f2192ddf3480cf564ab0c3aa2ae353a06533ea0a60068b544054",
+    "gap_level4": "a1ee9574511c88cfcf4d621c828d40c5cd9589aa8b8ed877f0d7fb9418ff9601",
+    "gap_level6": "29dbc04885f4bf002484a7bfab539647b8e18518ec9d1322060fcd9e49b31e1a",
+    "classifier": "4ac77571248eb04764e82b8526cdd364ea162b874222d5428863126de8dc33bb"
+  },
+  "calibration_frames": 5,
+  "dynamic_inflation_margin_m": 0.7,
+  "created_utc": "2026-10-17T10:31:54.719058+00:00",
+  "pi4_latency_verified": false,
+  "real_robot_approved": false,
+  "limitations": [
+    "Multiple ONNX sessions; not a single static PPO actor",
+    "Classifier is trained on fixed simulator map families",
+    "Hardware E-stop and LiDAR validity still require validation"
+  ]
+}

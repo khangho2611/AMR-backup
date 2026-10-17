@@ -1,0 +1,59 @@
+{
+  "platform": "Windows-11-10.0.26200-SP0",
+  "machine": "AMD64",
+  "package": "ai_local_planner\\exported\\locked_scene_margin070_experimental\\package.json",
+  "iterations_per_mode": 1000,
+  "warmup": 100,
+  "models": {
+    "1": {
+      "p50_ms": 0.3976,
+      "p95_ms": 0.7235999999999999,
+      "p99_ms": 1.0024019999999998,
+      "max_ms": 1.6173,
+      "p99_below_2ms_on_this_host": true
+    },
+    "2": {
+      "p50_ms": 0.27025,
+      "p95_ms": 0.5426899999999999,
+      "p99_ms": 0.7492249999999997,
+      "max_ms": 1.4325,
+      "p99_below_2ms_on_this_host": true
+    },
+    "3": {
+      "p50_ms": 0.28090000000000004,
+      "p95_ms": 0.5138999999999999,
+      "p99_ms": 0.7008629999999999,
+      "max_ms": 0.9814,
+      "p99_below_2ms_on_this_host": true
+    },
+    "4": {
+      "p50_ms": 0.56195,
+      "p95_ms": 0.9870299999999997,
+      "p99_ms": 1.261368,
+      "max_ms": 1.9234,
+      "p99_below_2ms_on_this_host": true
+    },
+    "5": {
+      "p50_ms": 0.38034999999999997,
+      "p95_ms": 0.6490949999999999,
+      "p99_ms": 0.9304699999999999,
+      "max_ms": 1.3528,
+      "p99_below_2ms_on_this_host": true
+    },
+    "6": {
+      "p50_ms": 0.653,
+      "p95_ms": 1.0493799999999998,
+      "p99_ms": 1.360971,
+      "max_ms": 3.2859,
+      "p99_below_2ms_on_this_host": true
+    }
+  },
+  "classifier_calibration_frame": {
+    "p50_ms": 0.3891,
+    "p95_ms": 0.6704249999999999,
+    "p99_ms": 0.9038029999999998,
+    "max_ms": 1.2469,
+    "p99_below_2ms_on_this_host": true
+  },
+  "pi4_latency_verified": false
+}

@@ -1,0 +1,953 @@
+{
+  "checkpoint": "ai_local_planner\\checkpoints\\retention_level2_approach_20261017\\retention_candidate.pth",
+  "episodes": [
+    {
+      "seed": 7402031,
+      "level": 2,
+      "success": false,
+      "collision": true,
+      "timeout": false,
+      "steps": 116,
+      "minimum_clearance_m": 0.1956,
+      "robot_radius_m": 0.2,
+      "near_contact_start": {
+        "step": 111,
+        "pose_xytheta": [
+          4.5692,
+          3.0605,
+          -0.4479
+        ],
+        "action_normalized": [
+          0.8784,
+          0.1178
+        ],
+        "actual_vw": [
+          0.3301,
+          -0.0108
+        ],
+        "clearance_m": 0.3142,
+        "nearest_geometry": "obstacle",
+        "goal_distance_m": 3.4313
+      },
+      "last_steps": [
+        {
+          "step": 102,
+          "pose_xytheta": [
+            4.2916,
+            3.1668,
+            -0.2596
+          ],
+          "action_normalized": [
+            0.8584,
+            0.0114
+          ],
+          "actual_vw": [
+            0.3284,
+            -0.0915
+          ],
+          "clearance_m": 0.5827,
+          "nearest_geometry": "obstacle",
+          "goal_distance_m": 3.7122
+        },
+        {
+          "step": 103,
+          "pose_xytheta": [
+            4.3233,
+            3.158,
+            -0.2781
+          ],
+          "action_normalized": [
+            0.8499,
+            -0.0199
+          ],
+          "actual_vw": [
+            0.3289,
+            -0.1854
+          ],
+          "clearance_m": 0.575,
+          "nearest_geometry": "obstacle",
+          "goal_distance_m": 3.6801
+        },
+        {
+          "step": 104,
+          "pose_xytheta": [
+            4.3547,
+            3.1487,
+            -0.3013
+          ],
+          "action_normalized": [
+            0.8565,
+            -0.0169
+          ],
+          "actual_vw": [
+            0.328,
+            -0.2321
+          ],
+          "clearance_m": 0.5395,
+          "nearest_geometry": "obstacle",
+          "goal_distance_m": 3.6483
+        },
+        {
+          "step": 105,
+          "pose_xytheta": [
+            4.386,
+            3.1385,
+            -0.3242
+          ],
+          "action_normalized": [
+            0.8617,
+            -0.0687
+          ],
+          "actual_vw": [
+            0.3291,
+            -0.2282
+          ],
+          "clearance_m": 0.4886,
+          "nearest_geometry": "obstacle",
+          "goal_distance_m": 3.6166
+        },
+        {
+          "step": 106,
+          "pose_xytheta": [
+            4.4172,
+            3.1275,
+            -0.3549
+          ],
+          "action_normalized": [
+            0.8706,
+            -0.065
+          ],
+          "actual_vw": [
+            0.3309,
+            -0.3074
+          ],
+          "clearance_m": 0.4784,
+          "nearest_geometry": "obstacle",
+          "goal_distance_m": 3.585
+        },
+        {
+          "step": 107,
+          "pose_xytheta": [
+            4.4482,
+            3.1155,
+            -0.3852
+          ],
+          "action_normalized": [
+            0.8803,
+            -0.0559
+          ],
+          "actual_vw": [
+            0.3325,
+            -0.3028
+          ],
+          "clearance_m": 0.4252,
+          "nearest_geometry": "obstacle",
+          "goal_distance_m": 3.5536
+        },
+        {
+          "step": 108,
+          "pose_xytheta": [
+            4.479,
+            3.1025,
+            -0.4142
+          ],
+          "action_normalized": [
+            0.8791,
+            0.0247
+          ],
+          "actual_vw": [
+            0.334,
+            -0.29
+          ],
+          "clearance_m": 0.4092,
+          "nearest_geometry": "obstacle",
+          "goal_distance_m": 3.5225
+        },
+        {
+          "step": 109,
+          "pose_xytheta": [
+            4.5093,
+            3.0889,
+            -0.4309
+          ],
+          "action_normalized": [
+            0.8818,
+            0.0308
+          ],
+          "actual_vw": [
+            0.3323,
+            -0.1675
+          ],
+          "clearance_m": 0.3812,
+          "nearest_geometry": "obstacle",
+          "goal_distance_m": 3.4918
+        },
+        {
+          "step": 110,
+          "pose_xytheta": [
+            4.5394,
+            3.0747,
+            -0.4468
+          ],
+          "action_normalized": [
+            0.8773,
+            0.1278
+          ],
+          "actual_vw": [
+            0.3327,
+            -0.1586
+          ],
+          "clearance_m": 0.3638,
+          "nearest_geometry": "obstacle",
+          "goal_distance_m": 3.4614
+        },
+        {
+          "step": 111,
+          "pose_xytheta": [
+            4.5692,
+            3.0605,
+            -0.4479
+          ],
+          "action_normalized": [
+            0.8784,
+            0.1178
+          ],
+          "actual_vw": [
+            0.3301,
+            -0.0108
+          ],
+          "clearance_m": 0.3142,
+          "nearest_geometry": "obstacle",
+          "goal_distance_m": 3.4313
+        },
+        {
+          "step": 112,
+          "pose_xytheta": [
+            4.599,
+            3.0461,
+            -0.4505
+          ],
+          "action_normalized": [
+            0.8259,
+            0.2158
+          ],
+          "actual_vw": [
+            0.3305,
+            -0.0262
+          ],
+          "clearance_m": 0.2955,
+          "nearest_geometry": "obstacle",
+          "goal_distance_m": 3.4013
+        },
+        {
+          "step": 113,
+          "pose_xytheta": [
+            4.6278,
+            3.0324,
+            -0.4377
+          ],
+          "action_normalized": [
+            0.8381,
+            0.1587
+          ],
+          "actual_vw": [
+            0.3194,
+            0.1284
+          ],
+          "clearance_m": 0.2759,
+          "nearest_geometry": "obstacle",
+          "goal_distance_m": 3.3723
+        },
+        {
+          "step": 114,
+          "pose_xytheta": [
+            4.6571,
+            3.0188,
+            -0.4336
+          ],
+          "action_normalized": [
+            0.4692,
+            0.3241
+          ],
+          "actual_vw": [
+            0.3226,
+            0.0404
+          ],
+          "clearance_m": 0.2569,
+          "nearest_geometry": "obstacle",
+          "goal_distance_m": 3.343
+        },
+        {
+          "step": 115,
+          "pose_xytheta": [
+            4.6817,
+            3.0078,
+            -0.4062
+          ],
+          "action_normalized": [
+            0.6917,
+            0.2765
+          ],
+          "actual_vw": [
+            0.2695,
+            0.2739
+          ],
+          "clearance_m": 0.2158,
+          "nearest_geometry": "obstacle",
+          "goal_distance_m": 3.3183
+        },
+        {
+          "step": 116,
+          "pose_xytheta": [
+            4.7089,
+            2.9965,
+            -0.3827
+          ],
+          "action_normalized": [
+            -0.0591,
+            0.3269
+          ],
+          "actual_vw": [
+            0.2945,
+            0.2351
+          ],
+          "clearance_m": 0.1956,
+          "nearest_geometry": "obstacle",
+          "goal_distance_m": 3.2911
+        }
+      ]
+    },
+    {
+      "seed": 7402059,
+      "level": 2,
+      "success": false,
+      "collision": true,
+      "timeout": false,
+      "steps": 123,
+      "minimum_clearance_m": 0.1498,
+      "robot_radius_m": 0.2,
+      "near_contact_start": {
+        "step": 117,
+        "pose_xytheta": [
+          4.713,
+          3.149,
+          -0.2416
+        ],
+        "action_normalized": [
+          0.8494,
+          -0.0649
+        ],
+        "actual_vw": [
+          0.3151,
+          -0.1129
+        ],
+        "clearance_m": 0.3245,
+        "nearest_geometry": "obstacle",
+        "goal_distance_m": 3.2904
+      },
+      "last_steps": [
+        {
+          "step": 109,
+          "pose_xytheta": [
+            4.4629,
+            3.2009,
+            -0.1923
+          ],
+          "action_normalized": [
+            0.8649,
+            0.1404
+          ],
+          "actual_vw": [
+            0.3263,
+            -0.0783
+          ],
+          "clearance_m": 0.6082,
+          "nearest_geometry": "obstacle",
+          "goal_distance_m": 3.5428
+        },
+        {
+          "step": 110,
+          "pose_xytheta": [
+            4.4944,
+            3.1948,
+            -0.1863
+          ],
+          "action_normalized": [
+            0.8848,
+            0.0722
+          ],
+          "actual_vw": [
+            0.3206,
+            0.0594
+          ],
+          "clearance_m": 0.5749,
+          "nearest_geometry": "obstacle",
+          "goal_distance_m": 3.511
+        },
+        {
+          "step": 111,
+          "pose_xytheta": [
+            4.5263,
+            3.1887,
+            -0.1907
+          ],
+          "action_normalized": [
+            0.8365,
+            0.104
+          ],
+          "actual_vw": [
+            0.3249,
+            -0.0432
+          ],
+          "clearance_m": 0.5304,
+          "nearest_geometry": "obstacle",
+          "goal_distance_m": 3.4788
+        },
+        {
+          "step": 112,
+          "pose_xytheta": [
+            4.5574,
+            3.1828,
+            -0.1899
+          ],
+          "action_normalized": [
+            0.8574,
+            0.0799
+          ],
+          "actual_vw": [
+            0.3161,
+            0.0077
+          ],
+          "clearance_m": 0.5153,
+          "nearest_geometry": "obstacle",
+          "goal_distance_m": 3.4475
+        },
+        {
+          "step": 113,
+          "pose_xytheta": [
+            4.5888,
+            3.1767,
+            -0.1929
+          ],
+          "action_normalized": [
+            0.8347,
+            -0.0237
+          ],
+          "actual_vw": [
+            0.3201,
+            -0.0296
+          ],
+          "clearance_m": 0.4698,
+          "nearest_geometry": "obstacle",
+          "goal_distance_m": 3.4158
+        },
+        {
+          "step": 114,
+          "pose_xytheta": [
+            4.6199,
+            3.1703,
+            -0.211
+          ],
+          "action_normalized": [
+            0.842,
+            0.0463
+          ],
+          "actual_vw": [
+            0.3175,
+            -0.1814
+          ],
+          "clearance_m": 0.4465,
+          "nearest_geometry": "obstacle",
+          "goal_distance_m": 3.3844
+        },
+        {
+          "step": 115,
+          "pose_xytheta": [
+            4.651,
+            3.1635,
+            -0.2188
+          ],
+          "action_normalized": [
+            0.8628,
+            0.0229
+          ],
+          "actual_vw": [
+            0.3179,
+            -0.0783
+          ],
+          "clearance_m": 0.3976,
+          "nearest_geometry": "obstacle",
+          "goal_distance_m": 3.353
+        },
+        {
+          "step": 116,
+          "pose_xytheta": [
+            4.6823,
+            3.1564,
+            -0.2303
+          ],
+          "action_normalized": [
+            0.8239,
+            0.0219
+          ],
+          "actual_vw": [
+            0.3218,
+            -0.1146
+          ],
+          "clearance_m": 0.3505,
+          "nearest_geometry": "obstacle",
+          "goal_distance_m": 3.3214
+        },
+        {
+          "step": 117,
+          "pose_xytheta": [
+            4.713,
+            3.149,
+            -0.2416
+          ],
+          "action_normalized": [
+            0.8494,
+            -0.0649
+          ],
+          "actual_vw": [
+            0.3151,
+            -0.1129
+          ],
+          "clearance_m": 0.3245,
+          "nearest_geometry": "obstacle",
+          "goal_distance_m": 3.2904
+        },
+        {
+          "step": 118,
+          "pose_xytheta": [
+            4.744,
+            3.1409,
+            -0.2659
+          ],
+          "action_normalized": [
+            0.8275,
+            -0.0779
+          ],
+          "actual_vw": [
+            0.3206,
+            -0.2436
+          ],
+          "clearance_m": 0.3257,
+          "nearest_geometry": "obstacle",
+          "goal_distance_m": 3.2591
+        },
+        {
+          "step": 119,
+          "pose_xytheta": [
+            4.7745,
+            3.1322,
+            -0.2921
+          ],
+          "action_normalized": [
+            0.8645,
+            -0.2494
+          ],
+          "actual_vw": [
+            0.317,
+            -0.2612
+          ],
+          "clearance_m": 0.2737,
+          "nearest_geometry": "obstacle",
+          "goal_distance_m": 3.2282
+        },
+        {
+          "step": 120,
+          "pose_xytheta": [
+            4.8054,
+            3.1221,
+            -0.3382
+          ],
+          "action_normalized": [
+            0.8643,
+            -0.1889
+          ],
+          "actual_vw": [
+            0.3252,
+            -0.4617
+          ],
+          "clearance_m": 0.2579,
+          "nearest_geometry": "obstacle",
+          "goal_distance_m": 3.1969
+        },
+        {
+          "step": 121,
+          "pose_xytheta": [
+            4.8358,
+            3.1107,
+            -0.3811
+          ],
+          "action_normalized": [
+            0.8968,
+            -0.2371
+          ],
+          "actual_vw": [
+            0.3249,
+            -0.4285
+          ],
+          "clearance_m": 0.2011,
+          "nearest_geometry": "obstacle",
+          "goal_distance_m": 3.1661
+        },
+        {
+          "step": 122,
+          "pose_xytheta": [
+            4.8662,
+            3.0976,
+            -0.4313
+          ],
+          "action_normalized": [
+            0.8986,
+            -0.1647
+          ],
+          "actual_vw": [
+            0.3311,
+            -0.5027
+          ],
+          "clearance_m": 0.2044,
+          "nearest_geometry": "obstacle",
+          "goal_distance_m": 3.1353
+        },
+        {
+          "step": 123,
+          "pose_xytheta": [
+            4.896,
+            3.0832,
+            -0.4709
+          ],
+          "action_normalized": [
+            0.897,
+            -0.1348
+          ],
+          "actual_vw": [
+            0.3305,
+            -0.3954
+          ],
+          "clearance_m": 0.1498,
+          "nearest_geometry": "obstacle",
+          "goal_distance_m": 3.1052
+        }
+      ]
+    },
+    {
+      "seed": 7402087,
+      "level": 2,
+      "success": false,
+      "collision": true,
+      "timeout": false,
+      "steps": 124,
+      "minimum_clearance_m": 0.1871,
+      "robot_radius_m": 0.2,
+      "near_contact_start": {
+        "step": 117,
+        "pose_xytheta": [
+          4.7294,
+          3.0397,
+          -0.4283
+        ],
+        "action_normalized": [
+          0.8566,
+          0.0994
+        ],
+        "actual_vw": [
+          0.3253,
+          -0.0843
+        ],
+        "clearance_m": 0.3487,
+        "nearest_geometry": "obstacle",
+        "goal_distance_m": 3.2709
+      },
+      "last_steps": [
+        {
+          "step": 110,
+          "pose_xytheta": [
+            4.516,
+            3.1226,
+            -0.2826
+          ],
+          "action_normalized": [
+            0.859,
+            -0.0609
+          ],
+          "actual_vw": [
+            0.3243,
+            -0.1409
+          ],
+          "clearance_m": 0.583,
+          "nearest_geometry": "obstacle",
+          "goal_distance_m": 3.4862
+        },
+        {
+          "step": 111,
+          "pose_xytheta": [
+            4.5471,
+            3.1131,
+            -0.3109
+          ],
+          "action_normalized": [
+            0.8531,
+            -0.0365
+          ],
+          "actual_vw": [
+            0.3258,
+            -0.2832
+          ],
+          "clearance_m": 0.5298,
+          "nearest_geometry": "obstacle",
+          "goal_distance_m": 3.4547
+        },
+        {
+          "step": 112,
+          "pose_xytheta": [
+            4.5779,
+            3.1028,
+            -0.3355
+          ],
+          "action_normalized": [
+            0.8725,
+            -0.0964
+          ],
+          "actual_vw": [
+            0.3244,
+            -0.2461
+          ],
+          "clearance_m": 0.5116,
+          "nearest_geometry": "obstacle",
+          "goal_distance_m": 3.4237
+        },
+        {
+          "step": 113,
+          "pose_xytheta": [
+            4.6087,
+            3.0914,
+            -0.3693
+          ],
+          "action_normalized": [
+            0.8721,
+            -0.0241
+          ],
+          "actual_vw": [
+            0.3288,
+            -0.3377
+          ],
+          "clearance_m": 0.4812,
+          "nearest_geometry": "obstacle",
+          "goal_distance_m": 3.3925
+        },
+        {
+          "step": 114,
+          "pose_xytheta": [
+            4.6391,
+            3.0793,
+            -0.3922
+          ],
+          "action_normalized": [
+            0.8964,
+            0.0243
+          ],
+          "actual_vw": [
+            0.3275,
+            -0.2295
+          ],
+          "clearance_m": 0.4431,
+          "nearest_geometry": "obstacle",
+          "goal_distance_m": 3.3618
+        },
+        {
+          "step": 115,
+          "pose_xytheta": [
+            4.6696,
+            3.0664,
+            -0.4082
+          ],
+          "action_normalized": [
+            0.8898,
+            0.0523
+          ],
+          "actual_vw": [
+            0.3309,
+            -0.1594
+          ],
+          "clearance_m": 0.4084,
+          "nearest_geometry": "obstacle",
+          "goal_distance_m": 3.3311
+        },
+        {
+          "step": 116,
+          "pose_xytheta": [
+            4.6997,
+            3.0531,
+            -0.4199
+          ],
+          "action_normalized": [
+            0.8694,
+            0.0727
+          ],
+          "actual_vw": [
+            0.3292,
+            -0.1169
+          ],
+          "clearance_m": 0.3737,
+          "nearest_geometry": "obstacle",
+          "goal_distance_m": 3.3007
+        },
+        {
+          "step": 117,
+          "pose_xytheta": [
+            4.7294,
+            3.0397,
+            -0.4283
+          ],
+          "action_normalized": [
+            0.8566,
+            0.0994
+          ],
+          "actual_vw": [
+            0.3253,
+            -0.0843
+          ],
+          "clearance_m": 0.3487,
+          "nearest_geometry": "obstacle",
+          "goal_distance_m": 3.2709
+        },
+        {
+          "step": 118,
+          "pose_xytheta": [
+            4.7587,
+            3.0263,
+            -0.4326
+          ],
+          "action_normalized": [
+            0.8485,
+            0.08
+          ],
+          "actual_vw": [
+            0.3226,
+            -0.0429
+          ],
+          "clearance_m": 0.3142,
+          "nearest_geometry": "obstacle",
+          "goal_distance_m": 3.2414
+        },
+        {
+          "step": 119,
+          "pose_xytheta": [
+            4.7879,
+            3.0127,
+            -0.4397
+          ],
+          "action_normalized": [
+            0.8117,
+            0.1752
+          ],
+          "actual_vw": [
+            0.3215,
+            -0.0712
+          ],
+          "clearance_m": 0.2825,
+          "nearest_geometry": "obstacle",
+          "goal_distance_m": 3.2122
+        },
+        {
+          "step": 120,
+          "pose_xytheta": [
+            4.8163,
+            2.9994,
+            -0.4322
+          ],
+          "action_normalized": [
+            0.8432,
+            0.1728
+          ],
+          "actual_vw": [
+            0.3135,
+            0.0751
+          ],
+          "clearance_m": 0.2847,
+          "nearest_geometry": "obstacle",
+          "goal_distance_m": 3.1837
+        },
+        {
+          "step": 121,
+          "pose_xytheta": [
+            4.8453,
+            2.9862,
+            -0.4253
+          ],
+          "action_normalized": [
+            0.4952,
+            0.3038
+          ],
+          "actual_vw": [
+            0.319,
+            0.0684
+          ],
+          "clearance_m": 0.2628,
+          "nearest_geometry": "obstacle",
+          "goal_distance_m": 3.1548
+        },
+        {
+          "step": 122,
+          "pose_xytheta": [
+            4.8697,
+            2.9755,
+            -0.3959
+          ],
+          "action_normalized": [
+            0.5301,
+            0.3241
+          ],
+          "actual_vw": [
+            0.2668,
+            0.2941
+          ],
+          "clearance_m": 0.2378,
+          "nearest_geometry": "obstacle",
+          "goal_distance_m": 3.1304
+        },
+        {
+          "step": 123,
+          "pose_xytheta": [
+            4.894,
+            2.9658,
+            -0.3632
+          ],
+          "action_normalized": [
+            -0.2119,
+            0.3604
+          ],
+          "actual_vw": [
+            0.2617,
+            0.3272
+          ],
+          "clearance_m": 0.206,
+          "nearest_geometry": "obstacle",
+          "goal_distance_m": 3.1061
+        },
+        {
+          "step": 124,
+          "pose_xytheta": [
+            4.9139,
+            2.9587,
+            -0.3221
+          ],
+          "action_normalized": [
+            -0.3137,
+            0.3122
+          ],
+          "actual_vw": [
+            0.2111,
+            0.4112
+          ],
+          "clearance_m": 0.1871,
+          "nearest_geometry": "obstacle",
+          "goal_distance_m": 3.0863
+        }
+      ]
+    }
+  ]
+}

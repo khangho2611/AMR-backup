@@ -1,0 +1,84 @@
+{
+  "model": "ai_local_planner\\exported\\local_planner_six_scene_experimental.onnx",
+  "actual_level": 2,
+  "seed_reports": [
+    {
+      "seed": 1202052,
+      "success": false,
+      "collision": true,
+      "timeout": false,
+      "steps": 130,
+      "modes_count": {
+        "2": 129,
+        "6": 1
+      },
+      "last_20_modes": [
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "mode_transitions": [
+        {
+          "step": 79,
+          "from": 2,
+          "to": 6
+        },
+        {
+          "step": 80,
+          "from": 6,
+          "to": 2
+        }
+      ]
+    },
+    {
+      "seed": 1202069,
+      "success": false,
+      "collision": true,
+      "timeout": false,
+      "steps": 122,
+      "modes_count": {
+        "2": 122
+      },
+      "last_20_modes": [
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "mode_transitions": []
+    }
+  ]
+}

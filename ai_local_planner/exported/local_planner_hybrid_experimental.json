@@ -1,0 +1,55 @@
+{
+  "model": "local_planner_hybrid_experimental.onnx",
+  "opset": 14,
+  "sha256": "af2d6413725ee6664a816422d3d1e2509e082d58d1ef3c2590a906d446507ff2",
+  "created_utc": "2026-10-17T02:32:52.499430+00:00",
+  "source_checkpoint": "ai_local_planner\\checkpoints\\ppo_level2_anchored_20261016\\best_level_2.pth",
+  "specialist_checkpoint": "ai_local_planner\\checkpoints\\bc_level3_dagger_replay_20261016.pth",
+  "architecture": "frozen_two_policy_lidar_router",
+  "input": {
+    "name": "lidar_and_goal_state",
+    "shape": [
+      "N",
+      365
+    ],
+    "dtype": "float32",
+    "angles": "0..359 CCW from forward",
+    "lidar_normalization": "clip((range_m-0.12)/11.88,0,1)"
+  },
+  "output": {
+    "name": "cmd_vel",
+    "shape": [
+      "N",
+      2
+    ],
+    "dtype": "float32",
+    "units": [
+      "m/s",
+      "rad/s"
+    ],
+    "v_range": [
+      0.0,
+      0.35
+    ],
+    "w_range": [
+      -1.5,
+      1.5
+    ]
+  },
+  "routing": {
+    "range_threshold_m": 0.72,
+    "min_close_rays_per_side": 18,
+    "left_slice": [
+      55,
+      125
+    ],
+    "right_slice": [
+      235,
+      305
+    ]
+  },
+  "max_torch_onnx_error": 1.1324882507324219e-06,
+  "pi4_latency_verified": false,
+  "real_robot_approved": false,
+  "deployment_note": "Experimental multi-policy routing on fixed L corridor. Pi4 p99<2ms, varied corridor geometry, LiDAR dropouts, and independent hardware E-stop not validated."
+}

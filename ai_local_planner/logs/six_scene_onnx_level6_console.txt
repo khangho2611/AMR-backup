@@ -1,0 +1,30 @@
+{
+  "level": 6,
+  "episodes": 100,
+  "seed_start": 1206000,
+  "domain_randomization": true,
+  "success_rate": 0.89,
+  "collision_rate": 0.11,
+  "timeout_rate": 0.0,
+  "mean_episode_steps": 289.37,
+  "mean_min_clearance_m": 0.6490177121494192,
+  "collision_seeds": [
+    1206006,
+    1206008,
+    1206010,
+    1206011,
+    1206023,
+    1206026,
+    1206034,
+    1206042,
+    1206064,
+    1206070,
+    1206074
+  ],
+  "timeout_seeds": [],
+  "mean_reward": 278.30082092910976,
+  "model": "ai_local_planner\\exported\\local_planner_six_scene_experimental.onnx",
+  "checkpoint": "ai_local_planner\\exported\\local_planner_six_scene_experimental.onnx",
+  "training_steps": 0,
+  "engine": "onnxruntime_cpu"
+}

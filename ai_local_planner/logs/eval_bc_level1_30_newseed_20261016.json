@@ -1,0 +1,11 @@
+{
+  "checkpoint": "ai_local_planner\\checkpoints\\expert_pretrained_20261016.pth",
+  "training_steps": 0,
+  "level": 1,
+  "episodes": 30,
+  "seed_start": 200000,
+  "domain_randomization": true,
+  "success_rate": 1.0,
+  "collision_rate": 0.0,
+  "mean_reward": 242.43323620259338
+}

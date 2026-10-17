@@ -1,0 +1,32 @@
+{
+  "model": "gap_level6_margin070.onnx",
+  "architecture": "rule_based_lidar_gap_reference",
+  "trained_by_ppo": false,
+  "opset": 14,
+  "sha256": "29dbc04885f4bf002484a7bfab539647b8e18518ec9d1322060fcd9e49b31e1a",
+  "input": {
+    "name": "lidar_and_goal_state",
+    "shape": [
+      "N",
+      365
+    ],
+    "dtype": "float32"
+  },
+  "output": {
+    "name": "cmd_vel",
+    "shape": [
+      "N",
+      2
+    ],
+    "dtype": "float32",
+    "units": [
+      "m/s",
+      "rad/s"
+    ]
+  },
+  "margin_m": 0.7,
+  "max_torch_onnx_error": 1.4901161193847656e-08,
+  "max_numpy_onnx_error": 1.1920928955078125e-07,
+  "pi4_latency_verified": false,
+  "real_robot_approved": false
+}

@@ -1,0 +1,49 @@
+{
+  "model": "local_planner_six_scene_experimental.onnx",
+  "architecture": "six_scene_classifier_hybrid_frozen_experts",
+  "trained_by_ppo": false,
+  "components": {
+    "reference_ppo": "ai_local_planner\\checkpoints\\ppo_level2_anchored_20261016\\best_level_2.pth",
+    "corridor_bc_dagger": "ai_local_planner\\checkpoints\\bc_level3_dagger_replay_20261016.pth",
+    "pocket_bc": "ai_local_planner\\checkpoints\\level5_bc_reactive_experimental.pth",
+    "scene_classifier": "ai_local_planner\\checkpoints\\scene_classifier_six_experimental.pth",
+    "level4_gap_margin_m": 0.12,
+    "level6_gap_margin_m": 0.36
+  },
+  "classification_validation_accuracy": 0.9513043165206909,
+  "opset": 14,
+  "sha256": "627291079bba9d8b247aee9bfd6d247bdd0f0a9ed6a55ae005b240e1e010a26c",
+  "created_utc": "2026-10-17T09:58:36.638430+00:00",
+  "input": {
+    "name": "lidar_and_goal_state",
+    "shape": [
+      "N",
+      365
+    ],
+    "dtype": "float32"
+  },
+  "output": {
+    "name": "cmd_vel",
+    "shape": [
+      "N",
+      2
+    ],
+    "dtype": "float32",
+    "units": [
+      "m/s",
+      "rad/s"
+    ]
+  },
+  "max_torch_onnx_error": 5.066394805908203e-07,
+  "parity_scene_classes": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "pi4_latency_verified": false,
+  "real_robot_approved": false,
+  "status": "experimental_pending_six_level_closed_loop_acceptance"
+}

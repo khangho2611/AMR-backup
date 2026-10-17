@@ -1,0 +1,30 @@
+{
+  "model": "ai_local_planner\\exported\\locked_scene_margin070_experimental\\package.json",
+  "seed_start": 2100000,
+  "episodes": 100,
+  "domain_randomization": true,
+  "perturbation": {
+    "width_min_m": 0.58,
+    "width_max_m": 0.82,
+    "corner_x_jitter_m": 0.3,
+    "center_y_jitter_m": 0.12,
+    "start_yaw_jitter_rad": 0.12,
+    "rng_offset": 20000
+  },
+  "success_rate": 0.99,
+  "collision_rate": 0.01,
+  "timeout_rate": 0.0,
+  "failures": [
+    {
+      "seed": 2100099,
+      "width": 0.5918433754105831,
+      "corner_x": 3.933526078522852,
+      "center_y": 1.8015721580288466,
+      "start_yaw": 0.07304187837351914,
+      "success": false,
+      "collision": true,
+      "timeout": false,
+      "steps": 176
+    }
+  ]
+}

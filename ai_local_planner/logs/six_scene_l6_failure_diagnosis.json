@@ -1,0 +1,496 @@
+{
+  "model": "ai_local_planner\\exported\\local_planner_six_scene_experimental.onnx",
+  "actual_level": 6,
+  "seed_reports": [
+    {
+      "seed": 1206006,
+      "success": false,
+      "collision": true,
+      "timeout": false,
+      "steps": 143,
+      "modes_count": {
+        "6": 97,
+        "2": 28,
+        "4": 18
+      },
+      "last_20_modes": [
+        6,
+        6,
+        6,
+        6,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "mode_transitions": [
+        {
+          "step": 54,
+          "from": 6,
+          "to": 2
+        },
+        {
+          "step": 55,
+          "from": 2,
+          "to": 6
+        },
+        {
+          "step": 56,
+          "from": 6,
+          "to": 2
+        },
+        {
+          "step": 73,
+          "from": 2,
+          "to": 6
+        },
+        {
+          "step": 74,
+          "from": 6,
+          "to": 2
+        },
+        {
+          "step": 75,
+          "from": 2,
+          "to": 6
+        },
+        {
+          "step": 76,
+          "from": 6,
+          "to": 2
+        },
+        {
+          "step": 77,
+          "from": 2,
+          "to": 6
+        },
+        {
+          "step": 98,
+          "from": 6,
+          "to": 4
+        },
+        {
+          "step": 99,
+          "from": 4,
+          "to": 6
+        },
+        {
+          "step": 103,
+          "from": 6,
+          "to": 4
+        },
+        {
+          "step": 104,
+          "from": 4,
+          "to": 6
+        },
+        {
+          "step": 105,
+          "from": 6,
+          "to": 4
+        },
+        {
+          "step": 110,
+          "from": 4,
+          "to": 6
+        },
+        {
+          "step": 112,
+          "from": 6,
+          "to": 4
+        },
+        {
+          "step": 113,
+          "from": 4,
+          "to": 6
+        },
+        {
+          "step": 117,
+          "from": 6,
+          "to": 4
+        },
+        {
+          "step": 118,
+          "from": 4,
+          "to": 6
+        },
+        {
+          "step": 127,
+          "from": 6,
+          "to": 4
+        },
+        {
+          "step": 136,
+          "from": 4,
+          "to": 2
+        }
+      ]
+    },
+    {
+      "seed": 1206008,
+      "success": false,
+      "collision": true,
+      "timeout": false,
+      "steps": 249,
+      "modes_count": {
+        "6": 227,
+        "4": 21,
+        "5": 1
+      },
+      "last_20_modes": [
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        5,
+        6
+      ],
+      "mode_transitions": [
+        {
+          "step": 139,
+          "from": 6,
+          "to": 4
+        },
+        {
+          "step": 141,
+          "from": 4,
+          "to": 6
+        },
+        {
+          "step": 146,
+          "from": 6,
+          "to": 4
+        },
+        {
+          "step": 147,
+          "from": 4,
+          "to": 6
+        },
+        {
+          "step": 148,
+          "from": 6,
+          "to": 4
+        },
+        {
+          "step": 149,
+          "from": 4,
+          "to": 6
+        },
+        {
+          "step": 161,
+          "from": 6,
+          "to": 4
+        },
+        {
+          "step": 162,
+          "from": 4,
+          "to": 6
+        },
+        {
+          "step": 172,
+          "from": 6,
+          "to": 4
+        },
+        {
+          "step": 178,
+          "from": 4,
+          "to": 6
+        },
+        {
+          "step": 183,
+          "from": 6,
+          "to": 4
+        },
+        {
+          "step": 184,
+          "from": 4,
+          "to": 6
+        },
+        {
+          "step": 186,
+          "from": 6,
+          "to": 4
+        },
+        {
+          "step": 189,
+          "from": 4,
+          "to": 6
+        },
+        {
+          "step": 191,
+          "from": 6,
+          "to": 4
+        },
+        {
+          "step": 192,
+          "from": 4,
+          "to": 6
+        },
+        {
+          "step": 195,
+          "from": 6,
+          "to": 4
+        },
+        {
+          "step": 196,
+          "from": 4,
+          "to": 6
+        },
+        {
+          "step": 247,
+          "from": 6,
+          "to": 5
+        },
+        {
+          "step": 248,
+          "from": 5,
+          "to": 6
+        }
+      ]
+    },
+    {
+      "seed": 1206010,
+      "success": false,
+      "collision": true,
+      "timeout": false,
+      "steps": 211,
+      "modes_count": {
+        "6": 183,
+        "4": 28
+      },
+      "last_20_modes": [
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        6,
+        6,
+        4,
+        6,
+        6,
+        6,
+        6,
+        4,
+        6
+      ],
+      "mode_transitions": [
+        {
+          "step": 142,
+          "from": 6,
+          "to": 4
+        },
+        {
+          "step": 143,
+          "from": 4,
+          "to": 6
+        },
+        {
+          "step": 163,
+          "from": 6,
+          "to": 4
+        },
+        {
+          "step": 164,
+          "from": 4,
+          "to": 6
+        },
+        {
+          "step": 165,
+          "from": 6,
+          "to": 4
+        },
+        {
+          "step": 166,
+          "from": 4,
+          "to": 6
+        },
+        {
+          "step": 167,
+          "from": 6,
+          "to": 4
+        },
+        {
+          "step": 168,
+          "from": 4,
+          "to": 6
+        },
+        {
+          "step": 170,
+          "from": 6,
+          "to": 4
+        },
+        {
+          "step": 171,
+          "from": 4,
+          "to": 6
+        },
+        {
+          "step": 182,
+          "from": 6,
+          "to": 4
+        },
+        {
+          "step": 183,
+          "from": 4,
+          "to": 6
+        },
+        {
+          "step": 186,
+          "from": 6,
+          "to": 4
+        },
+        {
+          "step": 187,
+          "from": 4,
+          "to": 6
+        },
+        {
+          "step": 189,
+          "from": 6,
+          "to": 4
+        },
+        {
+          "step": 202,
+          "from": 4,
+          "to": 6
+        },
+        {
+          "step": 204,
+          "from": 6,
+          "to": 4
+        },
+        {
+          "step": 205,
+          "from": 4,
+          "to": 6
+        },
+        {
+          "step": 209,
+          "from": 6,
+          "to": 4
+        },
+        {
+          "step": 210,
+          "from": 4,
+          "to": 6
+        }
+      ]
+    },
+    {
+      "seed": 1206011,
+      "success": false,
+      "collision": true,
+      "timeout": false,
+      "steps": 68,
+      "modes_count": {
+        "6": 53,
+        "4": 1,
+        "1": 7,
+        "5": 6,
+        "2": 1
+      },
+      "last_20_modes": [
+        6,
+        1,
+        5,
+        5,
+        6,
+        6,
+        6,
+        6,
+        6,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        5,
+        2,
+        5,
+        5,
+        5
+      ],
+      "mode_transitions": [
+        {
+          "step": 37,
+          "from": 6,
+          "to": 4
+        },
+        {
+          "step": 38,
+          "from": 4,
+          "to": 6
+        },
+        {
+          "step": 49,
+          "from": 6,
+          "to": 1
+        },
+        {
+          "step": 50,
+          "from": 1,
+          "to": 5
+        },
+        {
+          "step": 52,
+          "from": 5,
+          "to": 6
+        },
+        {
+          "step": 57,
+          "from": 6,
+          "to": 1
+        },
+        {
+          "step": 63,
+          "from": 1,
+          "to": 5
+        },
+        {
+          "step": 64,
+          "from": 5,
+          "to": 2
+        },
+        {
+          "step": 65,
+          "from": 2,
+          "to": 5
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "checkpoint": "ai_local_planner\\checkpoints\\smoke_20261016_v2\\latest_model.pth",
+  "training_steps": 4096,
+  "level": 1,
+  "episodes": 20,
+  "seed_start": 1000,
+  "domain_randomization": true,
+  "success_rate": 0.0,
+  "collision_rate": 1.0,
+  "mean_reward": -66.23802751284015
+}

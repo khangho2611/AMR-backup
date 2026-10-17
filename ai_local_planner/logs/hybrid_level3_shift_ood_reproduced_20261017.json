@@ -1,0 +1,52 @@
+{
+  "model": "ai_local_planner\\exported\\local_planner_hybrid_experimental.onnx",
+  "seed_start": 680000,
+  "episodes": 100,
+  "domain_randomization": true,
+  "perturbation": {
+    "width_min_m": 0.58,
+    "width_max_m": 0.82,
+    "corner_x_jitter_m": 0.3,
+    "center_y_jitter_m": 0.12,
+    "start_yaw_jitter_rad": 0.12,
+    "rng_offset": 20000
+  },
+  "success_rate": 0.97,
+  "collision_rate": 0.03,
+  "timeout_rate": 0.0,
+  "failures": [
+    {
+      "seed": 680035,
+      "width": 0.5834937967889995,
+      "corner_x": 3.644472247984878,
+      "center_y": 1.902081385005609,
+      "start_yaw": 0.07994689765940982,
+      "success": false,
+      "collision": true,
+      "timeout": false,
+      "steps": 225
+    },
+    {
+      "seed": 680045,
+      "width": 0.5996206576082213,
+      "corner_x": 3.782715854679401,
+      "center_y": 1.898783317884334,
+      "start_yaw": 0.10237797418002231,
+      "success": false,
+      "collision": true,
+      "timeout": false,
+      "steps": 163
+    },
+    {
+      "seed": 680065,
+      "width": 0.5969534865200758,
+      "corner_x": 3.7402978991442364,
+      "center_y": 1.8249345272897106,
+      "start_yaw": -0.0800194202790308,
+      "success": false,
+      "collision": true,
+      "timeout": false,
+      "steps": 217
+    }
+  ]
+}

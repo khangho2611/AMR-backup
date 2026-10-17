@@ -1,0 +1,31 @@
+{
+  "checkpoint": "ai_local_planner\\checkpoints\\bc_level3_dagger_replay_20261016.pth",
+  "training_steps": 0,
+  "level": 1,
+  "episodes": 100,
+  "seed_start": 620000,
+  "domain_randomization": true,
+  "success_rate": 0.86,
+  "collision_rate": 0.0,
+  "timeout_rate": 0.14,
+  "mean_episode_steps": 285.58,
+  "mean_min_clearance_m": 0.9878622488552489,
+  "collision_seeds": [],
+  "timeout_seeds": [
+    620005,
+    620011,
+    620035,
+    620038,
+    620041,
+    620042,
+    620065,
+    620069,
+    620070,
+    620074,
+    620079,
+    620083,
+    620086,
+    620097
+  ],
+  "mean_reward": 208.86421767003284
+}

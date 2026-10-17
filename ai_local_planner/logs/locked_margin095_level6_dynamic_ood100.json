@@ -1,0 +1,227 @@
+{
+  "model": "ai_local_planner\\exported\\locked_scene_margin095_experimental\\package.json",
+  "level": 6,
+  "seed_start": 2906000,
+  "episodes": 100,
+  "domain_randomization": true,
+  "stress_test": "novel_dynamic_crossings",
+  "speed_min_m_s": 0.25,
+  "speed_max_m_s": 0.55,
+  "obstacle_count_range": [
+    2,
+    4
+  ],
+  "success_rate": 0.75,
+  "collision_rate": 0.25,
+  "timeout_rate": 0.0,
+  "failures": [
+    {
+      "seed": 2906005,
+      "success": false,
+      "collision": true,
+      "timeout": false,
+      "steps": 191,
+      "selected_level": 6
+    },
+    {
+      "seed": 2906007,
+      "success": false,
+      "collision": true,
+      "timeout": false,
+      "steps": 81,
+      "selected_level": 6
+    },
+    {
+      "seed": 2906009,
+      "success": false,
+      "collision": true,
+      "timeout": false,
+      "steps": 96,
+      "selected_level": 6
+    },
+    {
+      "seed": 2906014,
+      "success": false,
+      "collision": true,
+      "timeout": false,
+      "steps": 221,
+      "selected_level": 6
+    },
+    {
+      "seed": 2906026,
+      "success": false,
+      "collision": true,
+      "timeout": false,
+      "steps": 265,
+      "selected_level": 6
+    },
+    {
+      "seed": 2906032,
+      "success": false,
+      "collision": true,
+      "timeout": false,
+      "steps": 188,
+      "selected_level": 6
+    },
+    {
+      "seed": 2906037,
+      "success": false,
+      "collision": true,
+      "timeout": false,
+      "steps": 177,
+      "selected_level": 6
+    },
+    {
+      "seed": 2906040,
+      "success": false,
+      "collision": true,
+      "timeout": false,
+      "steps": 131,
+      "selected_level": 6
+    },
+    {
+      "seed": 2906041,
+      "success": false,
+      "collision": true,
+      "timeout": false,
+      "steps": 310,
+      "selected_level": 6
+    },
+    {
+      "seed": 2906043,
+      "success": false,
+      "collision": true,
+      "timeout": false,
+      "steps": 174,
+      "selected_level": 6
+    },
+    {
+      "seed": 2906044,
+      "success": false,
+      "collision": true,
+      "timeout": false,
+      "steps": 237,
+      "selected_level": 6
+    },
+    {
+      "seed": 2906048,
+      "success": false,
+      "collision": true,
+      "timeout": false,
+      "steps": 230,
+      "selected_level": 6
+    },
+    {
+      "seed": 2906052,
+      "success": false,
+      "collision": true,
+      "timeout": false,
+      "steps": 87,
+      "selected_level": 6
+    },
+    {
+      "seed": 2906055,
+      "success": false,
+      "collision": true,
+      "timeout": false,
+      "steps": 185,
+      "selected_level": 6
+    },
+    {
+      "seed": 2906056,
+      "success": false,
+      "collision": true,
+      "timeout": false,
+      "steps": 79,
+      "selected_level": 6
+    },
+    {
+      "seed": 2906064,
+      "success": false,
+      "collision": true,
+      "timeout": false,
+      "steps": 133,
+      "selected_level": 6
+    },
+    {
+      "seed": 2906069,
+      "success": false,
+      "collision": true,
+      "timeout": false,
+      "steps": 94,
+      "selected_level": 6
+    },
+    {
+      "seed": 2906071,
+      "success": false,
+      "collision": true,
+      "timeout": false,
+      "steps": 135,
+      "selected_level": 6
+    },
+    {
+      "seed": 2906079,
+      "success": false,
+      "collision": true,
+      "timeout": false,
+      "steps": 83,
+      "selected_level": 6
+    },
+    {
+      "seed": 2906081,
+      "success": false,
+      "collision": true,
+      "timeout": false,
+      "steps": 245,
+      "selected_level": 6
+    },
+    {
+      "seed": 2906087,
+      "success": false,
+      "collision": true,
+      "timeout": false,
+      "steps": 75,
+      "selected_level": 6
+    },
+    {
+      "seed": 2906089,
+      "success": false,
+      "collision": true,
+      "timeout": false,
+      "steps": 83,
+      "selected_level": 6
+    },
+    {
+      "seed": 2906092,
+      "success": false,
+      "collision": true,
+      "timeout": false,
+      "steps": 155,
+      "selected_level": 6
+    },
+    {
+      "seed": 2906096,
+      "success": false,
+      "collision": true,
+      "timeout": false,
+      "steps": 73,
+      "selected_level": 6
+    },
+    {
+      "seed": 2906097,
+      "success": false,
+      "collision": true,
+      "timeout": false,
+      "steps": 279,
+      "selected_level": 6
+    }
+  ],
+  "route_counts": {
+    "1": 0,
+    "2": 0,
+    "3": 0,
+    "4": 0,
+    "5": 0,
+    "6": 100
+  }
+}

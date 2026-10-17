@@ -1,0 +1,23 @@
+{
+  "level": 3,
+  "episodes": 100,
+  "seed_start": 1803000,
+  "domain_randomization": true,
+  "success_rate": 1.0,
+  "collision_rate": 0.0,
+  "timeout_rate": 0.0,
+  "mean_episode_steps": 251.48,
+  "mean_min_clearance_m": 0.287826598578709,
+  "collision_seeds": [],
+  "timeout_seeds": [],
+  "mean_reward": 200.7624272894912,
+  "checkpoint": "ai_local_planner\\exported\\locked_scene_experimental\\package.json",
+  "policy": "locked_scene_multi_onnx",
+  "scene_selections": {
+    "3": 100
+  },
+  "trained_by_single_ppo": false,
+  "calibration_frames": 5,
+  "pi4_latency_verified": false,
+  "real_robot_approved": false
+}

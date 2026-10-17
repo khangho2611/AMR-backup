@@ -1,0 +1,18 @@
+{
+  "level": 5,
+  "episodes": 100,
+  "seed_start": 1205000,
+  "domain_randomization": true,
+  "success_rate": 1.0,
+  "collision_rate": 0.0,
+  "timeout_rate": 0.0,
+  "mean_episode_steps": 144.68,
+  "mean_min_clearance_m": 0.4917500810798488,
+  "collision_seeds": [],
+  "timeout_seeds": [],
+  "mean_reward": 162.35070778961733,
+  "model": "ai_local_planner\\exported\\local_planner_six_scene_experimental.onnx",
+  "checkpoint": "ai_local_planner\\exported\\local_planner_six_scene_experimental.onnx",
+  "training_steps": 0,
+  "engine": "onnxruntime_cpu"
+}

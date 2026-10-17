@@ -1,0 +1,26 @@
+{
+  "checkpoint": "ai_local_planner\\checkpoints\\level6_bc_reactive_experimental.pth",
+  "training_steps": 0,
+  "level": 6,
+  "episodes": 30,
+  "seed_start": 920000,
+  "domain_randomization": true,
+  "success_rate": 0.7,
+  "collision_rate": 0.3,
+  "timeout_rate": 0.0,
+  "mean_episode_steps": 262.4,
+  "mean_min_clearance_m": 0.5149120041277251,
+  "collision_seeds": [
+    920004,
+    920005,
+    920009,
+    920015,
+    920018,
+    920021,
+    920022,
+    920026,
+    920027
+  ],
+  "timeout_seeds": [],
+  "mean_reward": 224.3848446623092
+}

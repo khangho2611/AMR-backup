@@ -1,0 +1,57 @@
+{
+  "model": "bc_level3.onnx",
+  "opset": 14,
+  "sha256": "4c1537b942bd0cc326c8733eb2f9e3c0c53caaa50164577b3aae596169347edc",
+  "created_utc": "2026-10-17T10:49:57.676875+00:00",
+  "source_checkpoint": "ai_local_planner\\checkpoints\\bc_level3_dagger_replay_20261016.pth",
+  "training_steps": 0,
+  "curriculum_level": 3,
+  "checkpoint_metadata": {
+    "method": "mixed_level_behavioral_cloning",
+    "teacher_success_rates": {
+      "level_3": 1.0
+    },
+    "teacher_states": 60002,
+    "validation_mse": 0.0066917771473526955,
+    "validation_scheme": "held_out_episodes",
+    "replay_stats": {
+      "reference_level_1": 1.0,
+      "reference_level_2": 1.0,
+      "dagger_student_level_3": 0.008333333333333333
+    }
+  },
+  "input": {
+    "name": "lidar_and_goal_state",
+    "shape": [
+      "N",
+      365
+    ],
+    "dtype": "float32",
+    "lidar_normalization": "clip((range_m-0.12)/11.88,0,1)",
+    "angles": "0..359 degrees, counterclockwise from forward"
+  },
+  "output": {
+    "name": "cmd_vel",
+    "shape": [
+      "N",
+      2
+    ],
+    "dtype": "float32",
+    "units": [
+      "m/s",
+      "rad/s"
+    ],
+    "v_range": [
+      0.0,
+      0.35
+    ],
+    "w_range": [
+      -1.5,
+      1.5
+    ]
+  },
+  "max_torch_onnx_error": 1.5497207641601562e-06,
+  "pi4_latency_verified": false,
+  "real_robot_approved": false,
+  "deployment_note": "Training quality, real LiDAR alignment, independent E-stop, and Pi4 p99<2ms require separate validation"
+}

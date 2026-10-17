@@ -1,0 +1,18 @@
+{
+  "checkpoint": "routed(ai_local_planner\\checkpoints\\ppo_level2_anchored_20261016\\best_level_2.pth|ai_local_planner\\checkpoints\\bc_level3_dagger_replay_20261016.pth)",
+  "reference_checkpoint": "ai_local_planner\\checkpoints\\ppo_level2_anchored_20261016\\best_level_2.pth",
+  "specialist_checkpoint": "ai_local_planner\\checkpoints\\bc_level3_dagger_replay_20261016.pth",
+  "level": 1,
+  "episodes": 100,
+  "seed_start": 660000,
+  "domain_randomization": true,
+  "success_rate": 1.0,
+  "collision_rate": 0.0,
+  "timeout_rate": 0.0,
+  "mean_episode_steps": 189.25,
+  "mean_min_clearance_m": 1.0,
+  "collision_seeds": [],
+  "timeout_seeds": [],
+  "mean_reward": 233.25349444881974,
+  "specialist_fraction": 0.0
+}

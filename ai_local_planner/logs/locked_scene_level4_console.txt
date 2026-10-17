@@ -1,0 +1,28 @@
+{
+  "level": 4,
+  "episodes": 100,
+  "seed_start": 1704000,
+  "domain_randomization": true,
+  "success_rate": 0.98,
+  "collision_rate": 0.0,
+  "timeout_rate": 0.02,
+  "mean_episode_steps": 311.45,
+  "mean_min_clearance_m": 0.43010270671207906,
+  "collision_seeds": [],
+  "timeout_seeds": [
+    1704018,
+    1704054
+  ],
+  "mean_reward": 305.315803839013,
+  "checkpoint": "locked_scene_hybrid_experimental_v1",
+  "policy": "stateful_scene_lock_5_frame_calibration",
+  "trained_by_single_ppo": false,
+  "backend": "torch_cpu",
+  "scene_selections": {
+    "4": 96,
+    "6": 4
+  },
+  "calibration_frames": 5,
+  "pi4_latency_verified": false,
+  "real_robot_approved": false
+}

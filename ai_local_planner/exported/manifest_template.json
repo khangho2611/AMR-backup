@@ -1,0 +1,31 @@
+{
+  "model_name": "agv_local_planner_v1",
+  "framework": "PyTorch -> ONNX",
+  "opset_version": 14,
+  "date_exported": "2026-10-16",
+  "sha256": "PENDING_TRAINING",
+  "input_signature": {
+    "name": "lidar_and_goal_state",
+    "shape": [1, 365],
+    "dtype": "float32",
+    "description": "360 normalized LiDAR rays + dist_to_goal + sin(d_theta) + cos(d_theta) + norm_v + norm_w"
+  },
+  "output_signature": {
+    "name": "cmd_vel",
+    "shape": [1, 2],
+    "dtype": "float32",
+    "description": "[linear_velocity_m_s, angular_velocity_rad_s]"
+  },
+  "hardware_constraints": {
+    "v_min": 0.0,
+    "v_max": 0.35,
+    "w_min": -1.5,
+    "w_max": 1.5,
+    "safety_boundary_m": 0.18
+  },
+  "evaluation_metrics": {
+    "benchmark_success_rate": 0.0,
+    "mean_latency_cpu_ms": 0.0,
+    "tested_seeds": 100
+  }
+}

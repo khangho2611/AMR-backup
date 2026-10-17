@@ -1,0 +1,210 @@
+{
+  "teacher": {
+    "episodes": 24,
+    "success_rate": 1.0,
+    "collision_rate": 0.0,
+    "corner_frames": 4609,
+    "brake_teacher_labels_at_corner": 589,
+    "braking_label_fraction": 0.12779344760251682
+  },
+  "rounds": [
+    {
+      "round": 1,
+      "student_rollout": {
+        "episodes": 24,
+        "success_rate": 0.0,
+        "collision_rate": 1.0,
+        "corner_frames": 256,
+        "brake_teacher_labels_at_corner": 0,
+        "braking_label_fraction": 0.0
+      },
+      "validation_mse": {
+        "replay": 0.003166218986734748,
+        "corner": 0.0603848472237587
+      },
+      "checkpoint": "ai_local_planner\\checkpoints\\corner_approach_dagger_20261017\\dagger_round_1.pth",
+      "train_frames_replay": 5915,
+      "train_frames_corner": 5583
+    },
+    {
+      "round": 2,
+      "student_rollout": {
+        "episodes": 24,
+        "success_rate": 0.0,
+        "collision_rate": 1.0,
+        "corner_frames": 778,
+        "brake_teacher_labels_at_corner": 0,
+        "braking_label_fraction": 0.0
+      },
+      "validation_mse": {
+        "replay": 0.00458266818895936,
+        "corner": 0.025717686861753464
+      },
+      "checkpoint": "ai_local_planner\\checkpoints\\corner_approach_dagger_20261017\\dagger_round_2.pth",
+      "train_frames_replay": 5915,
+      "train_frames_corner": 6588
+    },
+    {
+      "round": 3,
+      "student_rollout": {
+        "episodes": 24,
+        "success_rate": 0.0,
+        "collision_rate": 1.0,
+        "corner_frames": 1634,
+        "brake_teacher_labels_at_corner": 66,
+        "braking_label_fraction": 0.04039167686658507
+      },
+      "validation_mse": {
+        "replay": 0.00657265679910779,
+        "corner": 0.01041179709136486
+      },
+      "checkpoint": "ai_local_planner\\checkpoints\\corner_approach_dagger_20261017\\dagger_round_3.pth",
+      "train_frames_replay": 5915,
+      "train_frames_corner": 8500
+    }
+  ],
+  "starting_checkpoint": "ai_local_planner\\checkpoints\\single_ppo_curriculum_20261017\\best_model.pth",
+  "training": {
+    "corner_weight": 3.0,
+    "rehearsal_fraction": 0.35,
+    "max_steps": 600
+  },
+  "acceptance_gate": {
+    "1": {
+      "level": 1,
+      "episodes": 100,
+      "seed_start": 5101000,
+      "domain_randomization": true,
+      "success_rate": 0.79,
+      "collision_rate": 0.0,
+      "timeout_rate": 0.21,
+      "mean_episode_steps": 371.91,
+      "mean_min_clearance_m": 1.0,
+      "collision_seeds": [],
+      "timeout_seeds": [
+        5101005,
+        5101010,
+        5101017,
+        5101023,
+        5101024,
+        5101026,
+        5101031,
+        5101046,
+        5101047,
+        5101048,
+        5101051,
+        5101055,
+        5101062,
+        5101063,
+        5101069,
+        5101074,
+        5101078,
+        5101082,
+        5101083,
+        5101085,
+        5101095
+      ],
+      "mean_reward": 198.27826820993346,
+      "passed": false
+    },
+    "2": {
+      "level": 2,
+      "episodes": 100,
+      "seed_start": 5102000,
+      "domain_randomization": true,
+      "success_rate": 0.69,
+      "collision_rate": 0.16,
+      "timeout_rate": 0.15,
+      "mean_episode_steps": 344.94,
+      "mean_min_clearance_m": 0.7384169903663573,
+      "collision_seeds": [
+        5102012,
+        5102031,
+        5102039,
+        5102046,
+        5102048,
+        5102051,
+        5102053,
+        5102056,
+        5102060,
+        5102065,
+        5102067,
+        5102068,
+        5102070,
+        5102074,
+        5102086,
+        5102098
+      ],
+      "timeout_seeds": [
+        5102005,
+        5102006,
+        5102015,
+        5102025,
+        5102029,
+        5102032,
+        5102034,
+        5102038,
+        5102040,
+        5102042,
+        5102047,
+        5102055,
+        5102081,
+        5102082,
+        5102088
+      ],
+      "mean_reward": 223.13716812615164,
+      "passed": false
+    },
+    "3": {
+      "level": 3,
+      "episodes": 100,
+      "seed_start": 5103000,
+      "domain_randomization": true,
+      "success_rate": 0.66,
+      "collision_rate": 0.34,
+      "timeout_rate": 0.0,
+      "mean_episode_steps": 169.56,
+      "mean_min_clearance_m": 0.21542058769714859,
+      "collision_seeds": [
+        5103004,
+        5103005,
+        5103006,
+        5103008,
+        5103010,
+        5103014,
+        5103023,
+        5103024,
+        5103028,
+        5103029,
+        5103034,
+        5103036,
+        5103038,
+        5103040,
+        5103055,
+        5103057,
+        5103060,
+        5103061,
+        5103063,
+        5103065,
+        5103067,
+        5103070,
+        5103073,
+        5103074,
+        5103077,
+        5103079,
+        5103081,
+        5103082,
+        5103084,
+        5103087,
+        5103088,
+        5103091,
+        5103094,
+        5103098
+      ],
+      "timeout_seeds": [],
+      "mean_reward": 120.0844323142092,
+      "passed": false
+    }
+  },
+  "all_gates_passed": false
+}

@@ -1,0 +1,12 @@
+{
+  "host": "Windows-11-10.0.26200-SP0",
+  "machine": "AMD64",
+  "model": "ai_local_planner\\exported\\local_planner.onnx",
+  "inferences": 1000,
+  "warmup": 100,
+  "p50_ms": 0.0812,
+  "p95_ms": 0.22338499999999992,
+  "p99_ms": 0.42213299999999976,
+  "max_ms": 0.9626,
+  "target_p99_below_2ms": true
+}

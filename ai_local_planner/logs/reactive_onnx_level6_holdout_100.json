@@ -1,0 +1,20 @@
+{
+  "level": 6,
+  "episodes": 100,
+  "seed_start": 750000,
+  "domain_randomization": true,
+  "success_rate": 0.99,
+  "collision_rate": 0.01,
+  "timeout_rate": 0.0,
+  "mean_episode_steps": 310.68,
+  "mean_min_clearance_m": 0.6650468994768375,
+  "collision_seeds": [
+    750020
+  ],
+  "timeout_seeds": [],
+  "mean_reward": 307.58623240532285,
+  "model": "ai_local_planner\\exported\\reactive_lidar_reference_experimental.onnx",
+  "checkpoint": "ai_local_planner\\exported\\reactive_lidar_reference_experimental.onnx",
+  "training_steps": 0,
+  "engine": "onnxruntime_cpu"
+}

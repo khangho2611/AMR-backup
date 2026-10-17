@@ -1,0 +1,130 @@
+{
+  "teacher": {
+    "episodes": 24,
+    "success_rate": 1.0,
+    "collision_rate": 0.0,
+    "corner_frames": 4481,
+    "brake_teacher_labels_at_corner": 592,
+    "braking_label_fraction": 0.13211336755188574
+  },
+  "rounds": [
+    {
+      "round": 1,
+      "student_rollout": {
+        "episodes": 24,
+        "success_rate": 1.0,
+        "collision_rate": 0.0,
+        "corner_frames": 4870,
+        "brake_teacher_labels_at_corner": 800,
+        "braking_label_fraction": 0.16427104722792607
+      },
+      "validation_mse": {
+        "replay": 0.0014682725304737687,
+        "corner": 0.00215927604585886
+      },
+      "checkpoint": "ai_local_planner\\checkpoints\\corner_replay_gate_20261017\\dagger_round_1.pth",
+      "train_frames_replay": 8838,
+      "train_frames_corner": 10756
+    },
+    {
+      "round": 2,
+      "student_rollout": {
+        "episodes": 24,
+        "success_rate": 1.0,
+        "collision_rate": 0.0,
+        "corner_frames": 4398,
+        "brake_teacher_labels_at_corner": 658,
+        "braking_label_fraction": 0.14961346066393816
+      },
+      "validation_mse": {
+        "replay": 0.0013870609691366553,
+        "corner": 0.0015257203485816717
+      },
+      "checkpoint": "ai_local_planner\\checkpoints\\corner_replay_gate_20261017\\dagger_round_2.pth",
+      "train_frames_replay": 8838,
+      "train_frames_corner": 15793
+    }
+  ],
+  "starting_checkpoint": "ai_local_planner\\checkpoints\\corner_approach_dagger_v2_20261017\\dagger_round_5.pth",
+  "replay_teacher": "ai_local_planner\\checkpoints\\single_ppo_curriculum_20261017\\best_model.pth",
+  "training": {
+    "corner_weight": 3.0,
+    "rehearsal_fraction": 0.35,
+    "rehearsal_fraction_of_loss": 0.35,
+    "max_steps": 600
+  },
+  "acceptance_gate": {
+    "1": {
+      "level": 1,
+      "episodes": 100,
+      "seed_start": 6301000,
+      "domain_randomization": true,
+      "success_rate": 0.94,
+      "collision_rate": 0.0,
+      "timeout_rate": 0.06,
+      "mean_episode_steps": 292.56,
+      "mean_min_clearance_m": 1.0,
+      "collision_seeds": [],
+      "timeout_seeds": [
+        6301030,
+        6301041,
+        6301055,
+        6301059,
+        6301064,
+        6301089
+      ],
+      "mean_reward": 222.95911177476944,
+      "passed": false
+    },
+    "2": {
+      "level": 2,
+      "episodes": 100,
+      "seed_start": 6302000,
+      "domain_randomization": true,
+      "success_rate": 0.83,
+      "collision_rate": 0.05,
+      "timeout_rate": 0.12,
+      "mean_episode_steps": 303.86,
+      "mean_min_clearance_m": 0.4788136811978726,
+      "collision_seeds": [
+        6302034,
+        6302040,
+        6302041,
+        6302076,
+        6302092
+      ],
+      "timeout_seeds": [
+        6302003,
+        6302005,
+        6302011,
+        6302015,
+        6302017,
+        6302024,
+        6302038,
+        6302061,
+        6302065,
+        6302070,
+        6302071,
+        6302086
+      ],
+      "mean_reward": 252.766756677514,
+      "passed": false
+    },
+    "3": {
+      "level": 3,
+      "episodes": 100,
+      "seed_start": 6303000,
+      "domain_randomization": true,
+      "success_rate": 1.0,
+      "collision_rate": 0.0,
+      "timeout_rate": 0.0,
+      "mean_episode_steps": 243.06,
+      "mean_min_clearance_m": 0.26449677806879957,
+      "collision_seeds": [],
+      "timeout_seeds": [],
+      "mean_reward": 198.82981204532814,
+      "passed": true
+    }
+  },
+  "all_gates_passed": false
+}

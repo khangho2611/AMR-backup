@@ -1,0 +1,63 @@
+{
+  "model": "ai_local_planner\\exported\\locked_scene_experimental\\package.json",
+  "seed_start": 1900000,
+  "episodes": 100,
+  "domain_randomization": true,
+  "perturbation": {
+    "width_min_m": 0.58,
+    "width_max_m": 0.82,
+    "corner_x_jitter_m": 0.3,
+    "center_y_jitter_m": 0.12,
+    "start_yaw_jitter_rad": 0.12,
+    "rng_offset": 20000
+  },
+  "success_rate": 0.96,
+  "collision_rate": 0.04,
+  "timeout_rate": 0.0,
+  "failures": [
+    {
+      "seed": 1900046,
+      "width": 0.5820668611641855,
+      "corner_x": 3.791581965472207,
+      "center_y": 1.8260513453719975,
+      "start_yaw": 0.10539583445370634,
+      "success": false,
+      "collision": true,
+      "timeout": false,
+      "steps": 187
+    },
+    {
+      "seed": 1900056,
+      "width": 0.6157110232397212,
+      "corner_x": 3.8498707622664834,
+      "center_y": 1.7678966293977796,
+      "start_yaw": -0.027101447346377122,
+      "success": false,
+      "collision": true,
+      "timeout": false,
+      "steps": 208
+    },
+    {
+      "seed": 1900082,
+      "width": 0.5801102638888619,
+      "corner_x": 3.3613743863512093,
+      "center_y": 1.908549960061515,
+      "start_yaw": 0.11137597755486714,
+      "success": false,
+      "collision": true,
+      "timeout": false,
+      "steps": 164
+    },
+    {
+      "seed": 1900098,
+      "width": 0.6079225108812618,
+      "corner_x": 3.50830181565508,
+      "center_y": 1.8977285576931986,
+      "start_yaw": 0.1089423032143699,
+      "success": false,
+      "collision": true,
+      "timeout": false,
+      "steps": 183
+    }
+  ]
+}

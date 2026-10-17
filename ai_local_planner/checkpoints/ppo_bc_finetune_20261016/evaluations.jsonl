@@ -1,0 +1,3 @@
+{"level": 1, "episodes": 100, "seed_start": 100000, "domain_randomization": true, "success_rate": 1.0, "collision_rate": 0.0, "mean_reward": 228.7389573298908, "training_steps": 0}
+{"level": 1, "episodes": 100, "seed_start": 100000, "domain_randomization": true, "success_rate": 0.0, "collision_rate": 0.0, "mean_reward": 2.9577833937678264, "training_steps": 10240}
+{"level": 1, "episodes": 100, "seed_start": 100000, "domain_randomization": true, "success_rate": 0.0, "collision_rate": 0.0, "mean_reward": 16.673371429544787, "training_steps": 20000}

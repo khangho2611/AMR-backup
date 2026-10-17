@@ -1,0 +1,154 @@
+{
+  "checkpoint": "ai_local_planner\\checkpoints\\retention_level2_hard_20261017\\retention_candidate.pth",
+  "source": "ai_local_planner\\checkpoints\\retention_level2_20261017\\retention_candidate.pth",
+  "old_teacher": "ai_local_planner\\checkpoints\\single_ppo_curriculum_20261017\\best_model.pth",
+  "sample_report": {
+    "1": {
+      "expert": {
+        "episodes": 18,
+        "success_rate": 1.0,
+        "collision_rate": 0.0
+      },
+      "student": {
+        "episodes": 18,
+        "success_rate": 1.0,
+        "collision_rate": 0.0
+      },
+      "train_frames": 5397,
+      "holdout_frames": 652
+    },
+    "2": {
+      "expert": {
+        "episodes": 18,
+        "success_rate": 1.0,
+        "collision_rate": 0.0
+      },
+      "student": {
+        "episodes": 18,
+        "success_rate": 1.0,
+        "collision_rate": 0.0
+      },
+      "train_frames": 7982,
+      "holdout_frames": 911
+    },
+    "3": {
+      "expert": {
+        "episodes": 18,
+        "success_rate": 1.0,
+        "collision_rate": 0.0
+      },
+      "student": {
+        "episodes": 18,
+        "success_rate": 1.0,
+        "collision_rate": 0.0
+      },
+      "train_frames": 7157,
+      "holdout_frames": 1088
+    }
+  },
+  "validation": [
+    {
+      "1": 0.0004715542891062796,
+      "2": 0.0010033634025603533,
+      "3": 1.2866945326095447e-05
+    },
+    {
+      "1": 0.000448140170192346,
+      "2": 0.0010070176795125008,
+      "3": 2.3984670406207442e-05
+    },
+    {
+      "1": 0.00045038535608910024,
+      "2": 0.0009984135394915938,
+      "3": 5.254949792288244e-05
+    },
+    {
+      "1": 0.00042093233787454665,
+      "2": 0.0009399664704687893,
+      "3": 5.847967622685246e-05
+    },
+    {
+      "1": 0.0003937686560675502,
+      "2": 0.0009241806692443788,
+      "3": 6.309929449344054e-05
+    },
+    {
+      "1": 0.00043090927647426724,
+      "2": 0.0009231324074789882,
+      "3": 8.682299085194245e-05
+    },
+    {
+      "1": 0.0003885985061060637,
+      "2": 0.0008797133923508227,
+      "3": 8.61056541907601e-05
+    },
+    {
+      "1": 0.0003727662260644138,
+      "2": 0.0008726851083338261,
+      "3": 0.00010175346687901765
+    },
+    {
+      "1": 0.00039312674198299646,
+      "2": 0.0008508672472089529,
+      "3": 0.00011521083069965243
+    },
+    {
+      "1": 0.00037598100607283413,
+      "2": 0.0008199384901672602,
+      "3": 0.00012036234693368897
+    }
+  ],
+  "gate": {
+    "1": {
+      "level": 1,
+      "episodes": 100,
+      "seed_start": 7201000,
+      "domain_randomization": true,
+      "success_rate": 1.0,
+      "collision_rate": 0.0,
+      "timeout_rate": 0.0,
+      "mean_episode_steps": 173.72,
+      "mean_min_clearance_m": 1.0,
+      "collision_seeds": [],
+      "timeout_seeds": [],
+      "mean_reward": 227.54388599310846,
+      "passed": true
+    },
+    "2": {
+      "level": 2,
+      "episodes": 100,
+      "seed_start": 7202000,
+      "domain_randomization": true,
+      "success_rate": 0.96,
+      "collision_rate": 0.04,
+      "timeout_rate": 0.0,
+      "mean_episode_steps": 233.7,
+      "mean_min_clearance_m": 0.48141692172180556,
+      "collision_seeds": [
+        7202007,
+        7202018,
+        7202023,
+        7202043
+      ],
+      "timeout_seeds": [],
+      "mean_reward": 277.1811355976708,
+      "passed": false
+    },
+    "3": {
+      "level": 3,
+      "episodes": 100,
+      "seed_start": 7203000,
+      "domain_randomization": true,
+      "success_rate": 1.0,
+      "collision_rate": 0.0,
+      "timeout_rate": 0.0,
+      "mean_episode_steps": 244.31,
+      "mean_min_clearance_m": 0.2717818813324706,
+      "collision_seeds": [],
+      "timeout_seeds": [],
+      "mean_reward": 199.43435512205102,
+      "passed": true
+    }
+  },
+  "all_gates_passed": false
+}

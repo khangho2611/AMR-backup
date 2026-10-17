@@ -1,0 +1,19 @@
+{
+  "level": 6,
+  "episodes": 100,
+  "seed_start": 1706000,
+  "domain_randomization": true,
+  "success_rate": 0.99,
+  "collision_rate": 0.01,
+  "timeout_rate": 0.0,
+  "mean_episode_steps": 317.55,
+  "mean_min_clearance_m": 0.7226018393825397,
+  "collision_seeds": [
+    1706030
+  ],
+  "timeout_seeds": [],
+  "mean_reward": 306.96332446976487,
+  "checkpoint": "untrained_gap_lidar_baseline",
+  "policy": "gap",
+  "inflation_margin_m": 0.6
+}

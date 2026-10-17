@@ -1,0 +1,209 @@
+[
+  {
+    "candidate": "ai_local_planner\\checkpoints\\distill_six_stage_smoke_20261017\\candidate_level_1.pth",
+    "stage": 1,
+    "student_type": "one_actor_critic",
+    "algorithm": "BC_warmstart_not_PPO",
+    "teacher_rollout": {
+      "episodes": 2,
+      "success_rate": 0.0,
+      "collision_rate": 0.0
+    },
+    "dagger_rollout": null,
+    "validation_mse": 6.229414429981261e-05,
+    "balanced_frames": {
+      "1": {
+        "train_frames": 30,
+        "heldout_frames": 6,
+        "episodes": 2
+      }
+    },
+    "evaluations": {},
+    "all_gates_passed": false
+  },
+  {
+    "candidate": "ai_local_planner\\checkpoints\\distill_six_stage_smoke_20261017\\candidate_level_2.pth",
+    "stage": 2,
+    "student_type": "one_actor_critic",
+    "algorithm": "BC_warmstart_not_PPO",
+    "teacher_rollout": {
+      "episodes": 2,
+      "success_rate": 0.0,
+      "collision_rate": 0.0
+    },
+    "dagger_rollout": null,
+    "validation_mse": 3.029418621736113e-05,
+    "balanced_frames": {
+      "1": {
+        "train_frames": 30,
+        "heldout_frames": 6,
+        "episodes": 2
+      },
+      "2": {
+        "train_frames": 30,
+        "heldout_frames": 6,
+        "episodes": 2
+      }
+    },
+    "evaluations": {},
+    "all_gates_passed": false
+  },
+  {
+    "candidate": "ai_local_planner\\checkpoints\\distill_six_stage_smoke_20261017\\candidate_level_3.pth",
+    "stage": 3,
+    "student_type": "one_actor_critic",
+    "algorithm": "BC_warmstart_not_PPO",
+    "teacher_rollout": {
+      "episodes": 2,
+      "success_rate": 0.0,
+      "collision_rate": 0.0
+    },
+    "dagger_rollout": null,
+    "validation_mse": 0.14034204185009003,
+    "balanced_frames": {
+      "1": {
+        "train_frames": 30,
+        "heldout_frames": 6,
+        "episodes": 2
+      },
+      "2": {
+        "train_frames": 30,
+        "heldout_frames": 6,
+        "episodes": 2
+      },
+      "3": {
+        "train_frames": 30,
+        "heldout_frames": 6,
+        "episodes": 2
+      }
+    },
+    "evaluations": {},
+    "all_gates_passed": false
+  },
+  {
+    "candidate": "ai_local_planner\\checkpoints\\distill_six_stage_smoke_20261017\\candidate_level_4.pth",
+    "stage": 4,
+    "student_type": "one_actor_critic",
+    "algorithm": "BC_warmstart_not_PPO",
+    "teacher_rollout": {
+      "episodes": 2,
+      "success_rate": 0.0,
+      "collision_rate": 0.0
+    },
+    "dagger_rollout": null,
+    "validation_mse": 0.1803005337715149,
+    "balanced_frames": {
+      "1": {
+        "train_frames": 30,
+        "heldout_frames": 6,
+        "episodes": 2
+      },
+      "2": {
+        "train_frames": 30,
+        "heldout_frames": 6,
+        "episodes": 2
+      },
+      "3": {
+        "train_frames": 30,
+        "heldout_frames": 6,
+        "episodes": 2
+      },
+      "4": {
+        "train_frames": 30,
+        "heldout_frames": 6,
+        "episodes": 2
+      }
+    },
+    "evaluations": {},
+    "all_gates_passed": false
+  },
+  {
+    "candidate": "ai_local_planner\\checkpoints\\distill_six_stage_smoke_20261017\\candidate_level_5.pth",
+    "stage": 5,
+    "student_type": "one_actor_critic",
+    "algorithm": "BC_warmstart_not_PPO",
+    "teacher_rollout": {
+      "episodes": 2,
+      "success_rate": 0.0,
+      "collision_rate": 0.0
+    },
+    "dagger_rollout": null,
+    "validation_mse": 0.33197396993637085,
+    "balanced_frames": {
+      "1": {
+        "train_frames": 30,
+        "heldout_frames": 6,
+        "episodes": 2
+      },
+      "2": {
+        "train_frames": 30,
+        "heldout_frames": 6,
+        "episodes": 2
+      },
+      "3": {
+        "train_frames": 30,
+        "heldout_frames": 6,
+        "episodes": 2
+      },
+      "4": {
+        "train_frames": 30,
+        "heldout_frames": 6,
+        "episodes": 2
+      },
+      "5": {
+        "train_frames": 30,
+        "heldout_frames": 6,
+        "episodes": 2
+      }
+    },
+    "evaluations": {},
+    "all_gates_passed": false
+  },
+  {
+    "candidate": "ai_local_planner\\checkpoints\\distill_six_stage_smoke_20261017\\candidate_level_6.pth",
+    "stage": 6,
+    "student_type": "one_actor_critic",
+    "algorithm": "BC_warmstart_not_PPO",
+    "teacher_rollout": {
+      "episodes": 2,
+      "success_rate": 0.0,
+      "collision_rate": 0.0
+    },
+    "dagger_rollout": null,
+    "validation_mse": 0.3370302617549896,
+    "balanced_frames": {
+      "1": {
+        "train_frames": 30,
+        "heldout_frames": 6,
+        "episodes": 2
+      },
+      "2": {
+        "train_frames": 30,
+        "heldout_frames": 6,
+        "episodes": 2
+      },
+      "3": {
+        "train_frames": 30,
+        "heldout_frames": 6,
+        "episodes": 2
+      },
+      "4": {
+        "train_frames": 30,
+        "heldout_frames": 6,
+        "episodes": 2
+      },
+      "5": {
+        "train_frames": 30,
+        "heldout_frames": 6,
+        "episodes": 2
+      },
+      "6": {
+        "train_frames": 30,
+        "heldout_frames": 6,
+        "episodes": 2
+      }
+    },
+    "evaluations": {},
+    "all_gates_passed": false
+  }
+]

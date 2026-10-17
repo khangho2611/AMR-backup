@@ -1,0 +1,28 @@
+{
+  "level": 6,
+  "episodes": 15,
+  "seed_start": 960000,
+  "domain_randomization": true,
+  "success_rate": 0.8666666666666667,
+  "collision_rate": 0.13333333333333333,
+  "timeout_rate": 0.0,
+  "mean_episode_steps": 279.4,
+  "mean_min_clearance_m": 0.5716677041819127,
+  "collision_seeds": [
+    960001,
+    960006
+  ],
+  "timeout_seeds": [],
+  "mean_reward": 266.6549780368482,
+  "checkpoint": "full_curriculum_hybrid_experimental",
+  "reference": "ai_local_planner\\checkpoints\\ppo_level2_anchored_20261016\\best_level_2.pth",
+  "corridor": "ai_local_planner\\checkpoints\\bc_level3_dagger_replay_20261016.pth",
+  "pocket": "ai_local_planner\\checkpoints\\level5_bc_reactive_experimental.pth",
+  "routing_calls": {
+    "reference_ppo": 32,
+    "corridor_bc": 0,
+    "pocket_bc": 0,
+    "clutter_gap": 759,
+    "dynamic_gap": 3400
+  }
+}

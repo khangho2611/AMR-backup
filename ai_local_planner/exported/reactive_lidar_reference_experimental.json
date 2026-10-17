@@ -1,0 +1,32 @@
+{
+  "model": "reactive_lidar_reference_experimental.onnx",
+  "architecture": "rule_based_lidar_gap_reference",
+  "trained_by_ppo": false,
+  "opset": 14,
+  "sha256": "8848d7c242acb5250c9f4265258ee01414028435e86bab69effd860c57bf38e4",
+  "input": {
+    "name": "lidar_and_goal_state",
+    "shape": [
+      "N",
+      365
+    ],
+    "dtype": "float32"
+  },
+  "output": {
+    "name": "cmd_vel",
+    "shape": [
+      "N",
+      2
+    ],
+    "dtype": "float32",
+    "units": [
+      "m/s",
+      "rad/s"
+    ]
+  },
+  "margin_m": 0.36,
+  "max_torch_onnx_error": 2.9802322387695312e-08,
+  "max_numpy_onnx_error": 1.1920928955078125e-07,
+  "pi4_latency_verified": false,
+  "real_robot_approved": false
+}

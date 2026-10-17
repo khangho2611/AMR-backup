@@ -1,0 +1,37 @@
+{
+  "checkpoint": "ai_local_planner\\exported\\local_planner_hybrid_experimental.onnx",
+  "simulation_gate_passed": true,
+  "levels": {
+    "1": {
+      "passed": true,
+      "episodes": 100,
+      "domain_randomization": true,
+      "success_rate": 1.0,
+      "collision_rate": 0.0,
+      "timeout_rate": 0.0,
+      "minimum_success_rate": 0.99,
+      "maximum_collision_rate": 0.02
+    },
+    "2": {
+      "passed": true,
+      "episodes": 100,
+      "domain_randomization": true,
+      "success_rate": 1.0,
+      "collision_rate": 0.0,
+      "timeout_rate": 0.0,
+      "minimum_success_rate": 0.98,
+      "maximum_collision_rate": 0.02
+    },
+    "3": {
+      "passed": true,
+      "episodes": 100,
+      "domain_randomization": true,
+      "success_rate": 1.0,
+      "collision_rate": 0.0,
+      "timeout_rate": 0.0,
+      "minimum_success_rate": 0.9,
+      "maximum_collision_rate": 0.02
+    }
+  },
+  "scope": "Fixed curriculum geometry; simulation only; not real-robot approval"
+}

@@ -1,0 +1,58 @@
+{
+  "model": "ppo_levels12.onnx",
+  "opset": 14,
+  "sha256": "7911cad3468ff296547c383a96bf1d3891bf4934b28332ecbfd9ca2896f44ad0",
+  "created_utc": "2026-10-17T10:49:57.503550+00:00",
+  "source_checkpoint": "ai_local_planner\\checkpoints\\ppo_level2_anchored_20261016\\best_level_2.pth",
+  "training_steps": 10000,
+  "curriculum_level": 2,
+  "checkpoint_metadata": {
+    "heldout_evaluation": {
+      "level": 2,
+      "episodes": 100,
+      "seed_start": 110000,
+      "domain_randomization": true,
+      "success_rate": 1.0,
+      "collision_rate": 0.0,
+      "timeout_rate": 0.0,
+      "mean_episode_steps": 235.76,
+      "mean_min_clearance_m": 0.5073169877777544,
+      "mean_reward": 286.45931944734826,
+      "training_steps": 10000
+    }
+  },
+  "input": {
+    "name": "lidar_and_goal_state",
+    "shape": [
+      "N",
+      365
+    ],
+    "dtype": "float32",
+    "lidar_normalization": "clip((range_m-0.12)/11.88,0,1)",
+    "angles": "0..359 degrees, counterclockwise from forward"
+  },
+  "output": {
+    "name": "cmd_vel",
+    "shape": [
+      "N",
+      2
+    ],
+    "dtype": "float32",
+    "units": [
+      "m/s",
+      "rad/s"
+    ],
+    "v_range": [
+      0.0,
+      0.35
+    ],
+    "w_range": [
+      -1.5,
+      1.5
+    ]
+  },
+  "max_torch_onnx_error": 6.556510925292969e-07,
+  "pi4_latency_verified": false,
+  "real_robot_approved": false,
+  "deployment_note": "Training quality, real LiDAR alignment, independent E-stop, and Pi4 p99<2ms require separate validation"
+}

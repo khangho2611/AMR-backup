@@ -1,0 +1,9 @@
+episode,timesteps,level,reward,steps,success,collision,success_rate_100
+1,4333,3,185.866,237,True,False,1.0
+2,4421,3,-34.38,88,False,True,0.5
+3,5021,2,120.403,600,False,False,0.3333
+4,5332,1,269.46,311,True,False,0.5
+5,5364,3,-37.979,32,False,True,0.4
+6,5625,3,192.756,261,True,False,0.5
+7,5723,3,-38.721,98,False,True,0.4286
+8,6016,2,280.023,293,True,False,0.5

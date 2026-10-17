@@ -1,0 +1,153 @@
+{
+  "checkpoint": "ai_local_planner\\checkpoints\\retention_level2_20261017\\retention_candidate.pth",
+  "source": "ai_local_planner\\checkpoints\\retention_repair_20261017\\retention_candidate.pth",
+  "old_teacher": "ai_local_planner\\checkpoints\\single_ppo_curriculum_20261017\\best_model.pth",
+  "sample_report": {
+    "1": {
+      "expert": {
+        "episodes": 18,
+        "success_rate": 1.0,
+        "collision_rate": 0.0
+      },
+      "student": {
+        "episodes": 18,
+        "success_rate": 1.0,
+        "collision_rate": 0.0
+      },
+      "train_frames": 6282,
+      "holdout_frames": 791
+    },
+    "2": {
+      "expert": {
+        "episodes": 18,
+        "success_rate": 1.0,
+        "collision_rate": 0.0
+      },
+      "student": {
+        "episodes": 18,
+        "success_rate": 0.9444444444444444,
+        "collision_rate": 0.05555555555555555
+      },
+      "train_frames": 7362,
+      "holdout_frames": 946
+    },
+    "3": {
+      "expert": {
+        "episodes": 18,
+        "success_rate": 1.0,
+        "collision_rate": 0.0
+      },
+      "student": {
+        "episodes": 18,
+        "success_rate": 1.0,
+        "collision_rate": 0.0
+      },
+      "train_frames": 8002,
+      "holdout_frames": 993
+    }
+  },
+  "validation": [
+    {
+      "1": 0.0011120225535705686,
+      "2": 0.001503798644989729,
+      "3": 4.297215127735399e-05
+    },
+    {
+      "1": 0.0010826265206560493,
+      "2": 0.001334038795903325,
+      "3": 0.00011846102279378101
+    },
+    {
+      "1": 0.00105092313606292,
+      "2": 0.0012311680475249887,
+      "3": 4.4913678721059114e-05
+    },
+    {
+      "1": 0.0010727685876190662,
+      "2": 0.0011648430954664946,
+      "3": 5.869093365618028e-05
+    },
+    {
+      "1": 0.001025545410811901,
+      "2": 0.0011445769341662526,
+      "3": 4.830308898817748e-05
+    },
+    {
+      "1": 0.0009636447066441178,
+      "2": 0.0011419771471992135,
+      "3": 5.091827915748581e-05
+    },
+    {
+      "1": 0.0009538081358186901,
+      "2": 0.0010777147253975272,
+      "3": 4.313259705668315e-05
+    },
+    {
+      "1": 0.0009064784971997142,
+      "2": 0.001059813890606165,
+      "3": 6.706140993628651e-05
+    },
+    {
+      "1": 0.0008595716208219528,
+      "2": 0.001006108126603067,
+      "3": 5.2750168833881617e-05
+    },
+    {
+      "1": 0.0008051411714404821,
+      "2": 0.0009538822341710329,
+      "3": 7.327828643610701e-05
+    }
+  ],
+  "gate": {
+    "1": {
+      "level": 1,
+      "episodes": 100,
+      "seed_start": 7101000,
+      "domain_randomization": true,
+      "success_rate": 1.0,
+      "collision_rate": 0.0,
+      "timeout_rate": 0.0,
+      "mean_episode_steps": 180.04,
+      "mean_min_clearance_m": 1.0,
+      "collision_seeds": [],
+      "timeout_seeds": [],
+      "mean_reward": 230.90431759353015,
+      "passed": true
+    },
+    "2": {
+      "level": 2,
+      "episodes": 100,
+      "seed_start": 7102000,
+      "domain_randomization": true,
+      "success_rate": 0.97,
+      "collision_rate": 0.03,
+      "timeout_rate": 0.0,
+      "mean_episode_steps": 236.24,
+      "mean_min_clearance_m": 0.44144927133084816,
+      "collision_seeds": [
+        7102045,
+        7102062,
+        7102085
+      ],
+      "timeout_seeds": [],
+      "mean_reward": 279.17323444101845,
+      "passed": false
+    },
+    "3": {
+      "level": 3,
+      "episodes": 100,
+      "seed_start": 7103000,
+      "domain_randomization": true,
+      "success_rate": 1.0,
+      "collision_rate": 0.0,
+      "timeout_rate": 0.0,
+      "mean_episode_steps": 237.74,
+      "mean_min_clearance_m": 0.27124012241036705,
+      "collision_seeds": [],
+      "timeout_seeds": [],
+      "mean_reward": 199.7237227165764,
+      "passed": true
+    }
+  },
+  "all_gates_passed": false
+}

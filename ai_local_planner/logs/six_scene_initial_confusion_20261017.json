@@ -1,0 +1,88 @@
+{
+  "seed": 1510000,
+  "episodes_per_level": 100,
+  "confusion_rows_actual_columns_predicted": [
+    [
+      100,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      100,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      100,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      98,
+      0,
+      2
+    ],
+    [
+      0,
+      0,
+      2,
+      0,
+      98,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      100
+    ]
+  ],
+  "accuracies": {
+    "1": 1.0,
+    "2": 1.0,
+    "3": 1.0,
+    "4": 0.98,
+    "5": 0.98,
+    "6": 1.0
+  },
+  "confidence": {
+    "1": {
+      "mean_correct_class_probability": 0.999432384967804,
+      "p10_correct_class_probability": 0.9989397525787354
+    },
+    "2": {
+      "mean_correct_class_probability": 0.987636387348175,
+      "p10_correct_class_probability": 0.9703742861747742
+    },
+    "3": {
+      "mean_correct_class_probability": 0.9991886019706726,
+      "p10_correct_class_probability": 0.9987400770187378
+    },
+    "4": {
+      "mean_correct_class_probability": 0.8844631910324097,
+      "p10_correct_class_probability": 0.7451689839363098
+    },
+    "5": {
+      "mean_correct_class_probability": 0.8961313366889954,
+      "p10_correct_class_probability": 0.7633023262023926
+    },
+    "6": {
+      "mean_correct_class_probability": 0.9577978253364563,
+      "p10_correct_class_probability": 0.9349035024642944
+    }
+  }
+}

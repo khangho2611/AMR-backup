@@ -1,0 +1,618 @@
+[
+  {
+    "epoch": 1,
+    "checkpoint": "ai_local_planner\\checkpoints\\retention_l1_l5_strong_teachers_20261017\\candidate_epoch_1.pth",
+    "validation_mse": {
+      "1": 0.0010301166912540793,
+      "2": 0.0037882598116993904,
+      "3": 0.00019449304090812802,
+      "4": 0.1859430968761444,
+      "5": 0.046668484807014465
+    },
+    "pilot_not_acceptance": {
+      "1": {
+        "level": 1,
+        "episodes": 15,
+        "seed_start": 7901000,
+        "domain_randomization": true,
+        "success_rate": 1.0,
+        "collision_rate": 0.0,
+        "timeout_rate": 0.0,
+        "mean_episode_steps": 198.8,
+        "mean_min_clearance_m": 1.0,
+        "collision_seeds": [],
+        "timeout_seeds": [],
+        "mean_reward": 240.30662443765218
+      },
+      "2": {
+        "level": 2,
+        "episodes": 15,
+        "seed_start": 7902000,
+        "domain_randomization": true,
+        "success_rate": 0.7333333333333333,
+        "collision_rate": 0.26666666666666666,
+        "timeout_rate": 0.0,
+        "mean_episode_steps": 198.8,
+        "mean_min_clearance_m": 0.29488231956771865,
+        "collision_seeds": [
+          7902002,
+          7902005,
+          7902011,
+          7902014
+        ],
+        "timeout_seeds": [],
+        "mean_reward": 222.44577181224395
+      },
+      "3": {
+        "level": 3,
+        "episodes": 15,
+        "seed_start": 7903000,
+        "domain_randomization": true,
+        "success_rate": 0.9333333333333333,
+        "collision_rate": 0.06666666666666667,
+        "timeout_rate": 0.0,
+        "mean_episode_steps": 251.2,
+        "mean_min_clearance_m": 0.26478471956736105,
+        "collision_seeds": [
+          7903008
+        ],
+        "timeout_seeds": [],
+        "mean_reward": 184.13586965020335
+      },
+      "4": {
+        "level": 4,
+        "episodes": 15,
+        "seed_start": 7904000,
+        "domain_randomization": true,
+        "success_rate": 0.3333333333333333,
+        "collision_rate": 0.6666666666666666,
+        "timeout_rate": 0.0,
+        "mean_episode_steps": 222.46666666666667,
+        "mean_min_clearance_m": 0.3173462454101289,
+        "collision_seeds": [
+          7904000,
+          7904002,
+          7904003,
+          7904005,
+          7904006,
+          7904007,
+          7904010,
+          7904011,
+          7904012,
+          7904014
+        ],
+        "timeout_seeds": [],
+        "mean_reward": 153.67906506041513
+      },
+      "5": {
+        "level": 5,
+        "episodes": 15,
+        "seed_start": 7905000,
+        "domain_randomization": true,
+        "success_rate": 1.0,
+        "collision_rate": 0.0,
+        "timeout_rate": 0.0,
+        "mean_episode_steps": 130.73333333333332,
+        "mean_min_clearance_m": 0.4145873456557035,
+        "collision_seeds": [],
+        "timeout_seeds": [],
+        "mean_reward": 163.0767190189883
+      }
+    },
+    "pilot_score": -4.246666666666667
+  },
+  {
+    "epoch": 2,
+    "checkpoint": "ai_local_planner\\checkpoints\\retention_l1_l5_strong_teachers_20261017\\candidate_epoch_2.pth",
+    "validation_mse": {
+      "1": 0.0011048687156289816,
+      "2": 0.005452730227261782,
+      "3": 0.0002095509844366461,
+      "4": 0.17240342497825623,
+      "5": 0.0364803671836853
+    },
+    "pilot_not_acceptance": {
+      "1": {
+        "level": 1,
+        "episodes": 15,
+        "seed_start": 7901000,
+        "domain_randomization": true,
+        "success_rate": 1.0,
+        "collision_rate": 0.0,
+        "timeout_rate": 0.0,
+        "mean_episode_steps": 198.73333333333332,
+        "mean_min_clearance_m": 1.0,
+        "collision_seeds": [],
+        "timeout_seeds": [],
+        "mean_reward": 240.3792166174002
+      },
+      "2": {
+        "level": 2,
+        "episodes": 15,
+        "seed_start": 7902000,
+        "domain_randomization": true,
+        "success_rate": 0.6666666666666666,
+        "collision_rate": 0.3333333333333333,
+        "timeout_rate": 0.0,
+        "mean_episode_steps": 193.66666666666666,
+        "mean_min_clearance_m": 0.2984726905534199,
+        "collision_seeds": [
+          7902002,
+          7902005,
+          7902007,
+          7902011,
+          7902014
+        ],
+        "timeout_seeds": [],
+        "mean_reward": 205.77971076860487
+      },
+      "3": {
+        "level": 3,
+        "episodes": 15,
+        "seed_start": 7903000,
+        "domain_randomization": true,
+        "success_rate": 0.8666666666666667,
+        "collision_rate": 0.13333333333333333,
+        "timeout_rate": 0.0,
+        "mean_episode_steps": 245.2,
+        "mean_min_clearance_m": 0.26417701190398896,
+        "collision_seeds": [
+          7903007,
+          7903008
+        ],
+        "timeout_seeds": [],
+        "mean_reward": 171.43937223044148
+      },
+      "4": {
+        "level": 4,
+        "episodes": 15,
+        "seed_start": 7904000,
+        "domain_randomization": true,
+        "success_rate": 0.26666666666666666,
+        "collision_rate": 0.7333333333333333,
+        "timeout_rate": 0.0,
+        "mean_episode_steps": 199.13333333333333,
+        "mean_min_clearance_m": 0.31174790437135547,
+        "collision_seeds": [
+          7904000,
+          7904002,
+          7904003,
+          7904005,
+          7904006,
+          7904007,
+          7904008,
+          7904010,
+          7904011,
+          7904012,
+          7904014
+        ],
+        "timeout_seeds": [],
+        "mean_reward": 135.50611665404483
+      },
+      "5": {
+        "level": 5,
+        "episodes": 15,
+        "seed_start": 7905000,
+        "domain_randomization": true,
+        "success_rate": 1.0,
+        "collision_rate": 0.0,
+        "timeout_rate": 0.0,
+        "mean_episode_steps": 121.93333333333334,
+        "mean_min_clearance_m": 0.40589726121884256,
+        "collision_seeds": [],
+        "timeout_seeds": [],
+        "mean_reward": 163.70558578992302
+      }
+    },
+    "pilot_score": -5.1899999999999995
+  },
+  {
+    "epoch": 3,
+    "checkpoint": "ai_local_planner\\checkpoints\\retention_l1_l5_strong_teachers_20261017\\candidate_epoch_3.pth",
+    "validation_mse": {
+      "1": 0.0011240839958190918,
+      "2": 0.00597459077835083,
+      "3": 0.00020407572446856648,
+      "4": 0.16525804996490479,
+      "5": 0.032430458813905716
+    },
+    "pilot_not_acceptance": {
+      "1": {
+        "level": 1,
+        "episodes": 15,
+        "seed_start": 7901000,
+        "domain_randomization": true,
+        "success_rate": 1.0,
+        "collision_rate": 0.0,
+        "timeout_rate": 0.0,
+        "mean_episode_steps": 201.86666666666667,
+        "mean_min_clearance_m": 1.0,
+        "collision_seeds": [],
+        "timeout_seeds": [],
+        "mean_reward": 240.1886062257912
+      },
+      "2": {
+        "level": 2,
+        "episodes": 15,
+        "seed_start": 7902000,
+        "domain_randomization": true,
+        "success_rate": 0.6666666666666666,
+        "collision_rate": 0.3333333333333333,
+        "timeout_rate": 0.0,
+        "mean_episode_steps": 194.66666666666666,
+        "mean_min_clearance_m": 0.30252663134270036,
+        "collision_seeds": [
+          7902002,
+          7902005,
+          7902007,
+          7902011,
+          7902014
+        ],
+        "timeout_seeds": [],
+        "mean_reward": 205.7304113484547
+      },
+      "3": {
+        "level": 3,
+        "episodes": 15,
+        "seed_start": 7903000,
+        "domain_randomization": true,
+        "success_rate": 0.8666666666666667,
+        "collision_rate": 0.13333333333333333,
+        "timeout_rate": 0.0,
+        "mean_episode_steps": 241.13333333333333,
+        "mean_min_clearance_m": 0.26239276057633987,
+        "collision_seeds": [
+          7903007,
+          7903008
+        ],
+        "timeout_seeds": [],
+        "mean_reward": 171.82238640011312
+      },
+      "4": {
+        "level": 4,
+        "episodes": 15,
+        "seed_start": 7904000,
+        "domain_randomization": true,
+        "success_rate": 0.4,
+        "collision_rate": 0.6,
+        "timeout_rate": 0.0,
+        "mean_episode_steps": 224.13333333333333,
+        "mean_min_clearance_m": 0.3209954940586772,
+        "collision_seeds": [
+          7904000,
+          7904003,
+          7904005,
+          7904007,
+          7904008,
+          7904010,
+          7904011,
+          7904012,
+          7904014
+        ],
+        "timeout_seeds": [],
+        "mean_reward": 169.46709061448206
+      },
+      "5": {
+        "level": 5,
+        "episodes": 15,
+        "seed_start": 7905000,
+        "domain_randomization": true,
+        "success_rate": 1.0,
+        "collision_rate": 0.0,
+        "timeout_rate": 0.0,
+        "mean_episode_steps": 124.13333333333334,
+        "mean_min_clearance_m": 0.39268511982216997,
+        "collision_seeds": [],
+        "timeout_seeds": [],
+        "mean_reward": 163.61475986875743
+      }
+    },
+    "pilot_score": -4.516666666666667
+  },
+  {
+    "epoch": 4,
+    "checkpoint": "ai_local_planner\\checkpoints\\retention_l1_l5_strong_teachers_20261017\\candidate_epoch_4.pth",
+    "validation_mse": {
+      "1": 0.0011283974163234234,
+      "2": 0.0068209790624678135,
+      "3": 0.00022155194892548025,
+      "4": 0.15819363296031952,
+      "5": 0.030002331361174583
+    },
+    "pilot_not_acceptance": {
+      "1": {
+        "level": 1,
+        "episodes": 15,
+        "seed_start": 7901000,
+        "domain_randomization": true,
+        "success_rate": 1.0,
+        "collision_rate": 0.0,
+        "timeout_rate": 0.0,
+        "mean_episode_steps": 201.46666666666667,
+        "mean_min_clearance_m": 1.0,
+        "collision_seeds": [],
+        "timeout_seeds": [],
+        "mean_reward": 240.32527814203362
+      },
+      "2": {
+        "level": 2,
+        "episodes": 15,
+        "seed_start": 7902000,
+        "domain_randomization": true,
+        "success_rate": 0.6666666666666666,
+        "collision_rate": 0.3333333333333333,
+        "timeout_rate": 0.0,
+        "mean_episode_steps": 196.06666666666666,
+        "mean_min_clearance_m": 0.30038812428295775,
+        "collision_seeds": [
+          7902002,
+          7902005,
+          7902007,
+          7902011,
+          7902014
+        ],
+        "timeout_seeds": [],
+        "mean_reward": 205.55398931124006
+      },
+      "3": {
+        "level": 3,
+        "episodes": 15,
+        "seed_start": 7903000,
+        "domain_randomization": true,
+        "success_rate": 0.8666666666666667,
+        "collision_rate": 0.13333333333333333,
+        "timeout_rate": 0.0,
+        "mean_episode_steps": 244.4,
+        "mean_min_clearance_m": 0.261488565281426,
+        "collision_seeds": [
+          7903007,
+          7903008
+        ],
+        "timeout_seeds": [],
+        "mean_reward": 171.52463340907525
+      },
+      "4": {
+        "level": 4,
+        "episodes": 15,
+        "seed_start": 7904000,
+        "domain_randomization": true,
+        "success_rate": 0.4,
+        "collision_rate": 0.6,
+        "timeout_rate": 0.0,
+        "mean_episode_steps": 231.73333333333332,
+        "mean_min_clearance_m": 0.3284571226652906,
+        "collision_seeds": [
+          7904000,
+          7904003,
+          7904005,
+          7904007,
+          7904008,
+          7904010,
+          7904011,
+          7904012,
+          7904014
+        ],
+        "timeout_seeds": [],
+        "mean_reward": 170.0639736918376
+      },
+      "5": {
+        "level": 5,
+        "episodes": 15,
+        "seed_start": 7905000,
+        "domain_randomization": true,
+        "success_rate": 1.0,
+        "collision_rate": 0.0,
+        "timeout_rate": 0.0,
+        "mean_episode_steps": 137.73333333333332,
+        "mean_min_clearance_m": 0.38109321435745885,
+        "collision_seeds": [],
+        "timeout_seeds": [],
+        "mean_reward": 162.82213059526129
+      }
+    },
+    "pilot_score": -4.516666666666667
+  },
+  {
+    "epoch": 5,
+    "checkpoint": "ai_local_planner\\checkpoints\\retention_l1_l5_strong_teachers_20261017\\candidate_epoch_5.pth",
+    "validation_mse": {
+      "1": 0.0011493503116071224,
+      "2": 0.007789431605488062,
+      "3": 0.00023154400696512312,
+      "4": 0.14983397722244263,
+      "5": 0.028193069621920586
+    },
+    "pilot_not_acceptance": {
+      "1": {
+        "level": 1,
+        "episodes": 15,
+        "seed_start": 7901000,
+        "domain_randomization": true,
+        "success_rate": 1.0,
+        "collision_rate": 0.0,
+        "timeout_rate": 0.0,
+        "mean_episode_steps": 197.0,
+        "mean_min_clearance_m": 1.0,
+        "collision_seeds": [],
+        "timeout_seeds": [],
+        "mean_reward": 240.55621558270605
+      },
+      "2": {
+        "level": 2,
+        "episodes": 15,
+        "seed_start": 7902000,
+        "domain_randomization": true,
+        "success_rate": 0.6,
+        "collision_rate": 0.4,
+        "timeout_rate": 0.0,
+        "mean_episode_steps": 191.33333333333334,
+        "mean_min_clearance_m": 0.2927769260051765,
+        "collision_seeds": [
+          7902002,
+          7902005,
+          7902007,
+          7902009,
+          7902011,
+          7902014
+        ],
+        "timeout_seeds": [],
+        "mean_reward": 190.45289874037516
+      },
+      "3": {
+        "level": 3,
+        "episodes": 15,
+        "seed_start": 7903000,
+        "domain_randomization": true,
+        "success_rate": 0.9333333333333333,
+        "collision_rate": 0.06666666666666667,
+        "timeout_rate": 0.0,
+        "mean_episode_steps": 247.4,
+        "mean_min_clearance_m": 0.2581750191450578,
+        "collision_seeds": [
+          7903008
+        ],
+        "timeout_seeds": [],
+        "mean_reward": 183.10368371703296
+      },
+      "4": {
+        "level": 4,
+        "episodes": 15,
+        "seed_start": 7904000,
+        "domain_randomization": true,
+        "success_rate": 0.4666666666666667,
+        "collision_rate": 0.5333333333333333,
+        "timeout_rate": 0.0,
+        "mean_episode_steps": 247.26666666666668,
+        "mean_min_clearance_m": 0.3308064938887492,
+        "collision_seeds": [
+          7904000,
+          7904003,
+          7904005,
+          7904007,
+          7904008,
+          7904011,
+          7904012,
+          7904014
+        ],
+        "timeout_seeds": [],
+        "mean_reward": 183.57676346763213
+      },
+      "5": {
+        "level": 5,
+        "episodes": 15,
+        "seed_start": 7905000,
+        "domain_randomization": true,
+        "success_rate": 1.0,
+        "collision_rate": 0.0,
+        "timeout_rate": 0.0,
+        "mean_episode_steps": 155.06666666666666,
+        "mean_min_clearance_m": 0.36345160732729814,
+        "collision_seeds": [],
+        "timeout_seeds": [],
+        "mean_reward": 161.83234474539316
+      }
+    },
+    "pilot_score": -4.246666666666667
+  },
+  {
+    "epoch": 6,
+    "checkpoint": "ai_local_planner\\checkpoints\\retention_l1_l5_strong_teachers_20261017\\candidate_epoch_6.pth",
+    "validation_mse": {
+      "1": 0.0011255507124587893,
+      "2": 0.008124864660203457,
+      "3": 0.00030597797012887895,
+      "4": 0.14538834989070892,
+      "5": 0.026645943522453308
+    },
+    "pilot_not_acceptance": {
+      "1": {
+        "level": 1,
+        "episodes": 15,
+        "seed_start": 7901000,
+        "domain_randomization": true,
+        "success_rate": 1.0,
+        "collision_rate": 0.0,
+        "timeout_rate": 0.0,
+        "mean_episode_steps": 202.0,
+        "mean_min_clearance_m": 1.0,
+        "collision_seeds": [],
+        "timeout_seeds": [],
+        "mean_reward": 240.30181632923095
+      },
+      "2": {
+        "level": 2,
+        "episodes": 15,
+        "seed_start": 7902000,
+        "domain_randomization": true,
+        "success_rate": 0.5333333333333333,
+        "collision_rate": 0.4666666666666667,
+        "timeout_rate": 0.0,
+        "mean_episode_steps": 183.0,
+        "mean_min_clearance_m": 0.28993798212818017,
+        "collision_seeds": [
+          7902002,
+          7902003,
+          7902005,
+          7902007,
+          7902009,
+          7902011,
+          7902014
+        ],
+        "timeout_seeds": [],
+        "mean_reward": 173.288196868178
+      },
+      "3": {
+        "level": 3,
+        "episodes": 15,
+        "seed_start": 7903000,
+        "domain_randomization": true,
+        "success_rate": 1.0,
+        "collision_rate": 0.0,
+        "timeout_rate": 0.0,
+        "mean_episode_steps": 256.0,
+        "mean_min_clearance_m": 0.25601633632740894,
+        "collision_seeds": [],
+        "timeout_seeds": [],
+        "mean_reward": 195.1188305803329
+      },
+      "4": {
+        "level": 4,
+        "episodes": 15,
+        "seed_start": 7904000,
+        "domain_randomization": true,
+        "success_rate": 0.4666666666666667,
+        "collision_rate": 0.5333333333333333,
+        "timeout_rate": 0.0,
+        "mean_episode_steps": 259.4,
+        "mean_min_clearance_m": 0.3321963799305597,
+        "collision_seeds": [
+          7904000,
+          7904003,
+          7904005,
+          7904007,
+          7904008,
+          7904011,
+          7904012,
+          7904014
+        ],
+        "timeout_seeds": [],
+        "mean_reward": 183.09823899518534
+      },
+      "5": {
+        "level": 5,
+        "episodes": 15,
+        "seed_start": 7905000,
+        "domain_randomization": true,
+        "success_rate": 1.0,
+        "collision_rate": 0.0,
+        "timeout_rate": 0.0,
+        "mean_episode_steps": 166.73333333333332,
+        "mean_min_clearance_m": 0.35939947429304664,
+        "collision_seeds": [],
+        "timeout_seeds": [],
+        "mean_reward": 161.3168836753941
+      }
+    },
+    "pilot_score": -4.4399999999999995
+  }
+]
