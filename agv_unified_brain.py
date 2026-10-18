@@ -1617,14 +1617,29 @@ class AGVROSNode(Node):
 
             ai1_active = False
             use_ai = (getattr(self, '_auto_task_mode', None) in ('COVERAGE', 'EXPLORE_AI') or os.environ.get('AGV_USE_AI', '0') == '1')
-            if use_ai and getattr(self, 'ai1_runtime', None) is not None and self.goal is not None and len(ranges) == 360 and f_dist >= 0.35:
-                try:
-                    cur_v = float(getattr(self, '_last_measured_v', 0.0))
-                    cur_w = float(getattr(self, '_last_measured_w', 0.0))
-                    cmd_ai1 = self.ai1_runtime.predict_from_sensors(ranges, pose, self.goal, cur_v, cur_w)
-                    v_ai1, w_ai1 = float(cmd_ai1[0]), float(cmd_ai1[1])
-                    if v_ai1 > 0.01 or abs(w_ai1) > 0.05:
-                        ok, reason = self.send_cmd(f'V {v_ai1:.3f} {w_ai1:.3f}', autonomous=True)
+            if use_ai and getattr(self, 'ai1_runtime', None) is not None and self.goal is not None and len(ranges) == 360 and f_dist >= 0.40:
+                # Nếu góc lệch lớn (> 45°), ưu tiên xoay tại chỗ chuẩn của xe để không quẹt hông
+                if heading_err is None or abs(heading_err) <= 0.80:
+                    try:
+                        cur_v = float(getattr(self, '_last_measured_v', 0.0))
+                        cur_w = float(getattr(self, '_last_measured_w', 0.0))
+                        cmd_ai1 = self.ai1_runtime.predict_from_sensors(ranges, pose, self.goal, cur_v, cur_w)
+                        v_ai1, w_ai1 = float(cmd_ai1[0]), float(cmd_ai1[1])
+
+                        # Khớp 100% với cấu hình tốc độ của xe (target_rpm & cruise_speed_mps)
+                        if target_rpm >= 70:
+                            v_cmd = cruise_speed
+                        else:
+                            base_v = min(0.20, cruise_speed) if target_rpm > 30 else min(0.12, cruise_speed)
+                            v_cmd = max(0.04, base_v * min(1.0, max(0.3, v_ai1 / 0.35)))
+
+                        w_cmd = max(-turn_w, min(turn_w, w_ai1))
+                        if l_dist < 0.35 and l_dist < r_dist:
+                            w_cmd = min(w_cmd, -0.22)
+                        elif r_dist < 0.35 and r_dist < l_dist:
+                            w_cmd = max(w_cmd, 0.22)
+
+                        ok, reason = self.send_cmd(f'V {v_cmd:.3f} {w_cmd:.3f}', autonomous=True)
                         if ok:
                             ai1_active = True
                             with state.lock:
@@ -1632,11 +1647,11 @@ class AGVROSNode(Node):
                                 free_cells_count = sum(1 for v in state.map_data if v == 0) if state.map_data else 1
                                 cov_pct = round(len(state.visited_cells) / max(1, free_cells_count) * 100.0, 1)
                                 if goal_type == 'COVERAGE':
-                                    state.explore_phase = f'AI 1 (NÉ CẢN): phủ kín sàn ({cov_pct:.0f}%) | V={v_ai1:.2f}'
+                                    state.explore_phase = f'AI 1 (NÉ CẢN): phủ kín sàn ({cov_pct:.0f}%) | V={v_cmd:.2f} W={w_cmd:.2f}'
                                 else:
-                                    state.explore_phase = f'AI 1 (NÉ CẢN): tiến đến mục tiêu | V={v_ai1:.2f} W={w_ai1:.2f}'
-                except Exception:
-                    ai1_active = False
+                                    state.explore_phase = f'AI 1 (NÉ CẢN): bám mục tiêu | V={v_cmd:.2f} W={w_cmd:.2f}'
+                    except Exception:
+                        ai1_active = False
 
             if ai1_active:
                 return
