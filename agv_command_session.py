@@ -404,8 +404,8 @@ class CommandSession:
         if self.motion_window_s is not None and (parts[0]=='M' or abs(values[0])>.04):
             return self._drive_result(command, False, 'TRIAL_V_ONLY_MAX_0.04')
         is_op = not self.strict_preflight
-        max_v = .70 if is_op else .35
-        max_w = 6.00 if is_op else 1.80
+        max_v = .55 if is_op else .35
+        max_w = 3.50 if is_op else 1.80
         if (parts[0] == 'M' and ((autonomous and not is_op) or any(abs(v)>140 or v != int(v) for v in values)) or
                 parts[0] == 'V' and (abs(values[0]) > max_v or abs(values[1]) > max_w)):
             return self._drive_result(command, False, 'DRIVE_LIMIT')
