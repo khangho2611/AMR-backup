@@ -10,6 +10,10 @@ import os
 import sys
 import json
 import time
+
+_THIS_DIR = os.path.dirname(os.path.abspath(__file__))
+if _THIS_DIR not in sys.path:
+    sys.path.insert(0, _THIS_DIR)
 import math
 import serial
 import threading
@@ -602,8 +606,10 @@ class AGVROSNode(Node):
             ai1_model = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'ai_local_planner', 'exported', 'local_planner.onnx')
             if os.path.exists(ai1_model):
                 self.ai1_runtime = LocalPlannerRuntime(ai1_model)
-        except Exception:
+                print(f"[OK] ĐÃ NẠP MÔ HÌNH AI 1 (NÉ CẢN): {ai1_model}", flush=True)
+        except Exception as e:
             self.ai1_runtime = None
+            print(f"[CẢNH BÁO] Không nạp được AI 1: {e}", flush=True)
 
         try:
             import onnxruntime as ort
@@ -614,8 +620,10 @@ class AGVROSNode(Node):
                 self.ai2_session = ort.InferenceSession(ai2_model, sess_options=opts, providers=["CPUExecutionProvider"])
                 self.ai2_map_name = self.ai2_session.get_inputs()[0].name
                 self.ai2_feat_name = self.ai2_session.get_inputs()[1].name
-        except Exception:
+                print(f"[OK] ĐÃ NẠP MÔ HÌNH AI 2 (PHỦ KÍN SÀN): {ai2_model}", flush=True)
+        except Exception as e:
             self.ai2_session = None
+            print(f"[CẢNH BÁO] Không nạp được AI 2: {e}", flush=True)
 
         with state.lock:
             state.path_history.clear()
