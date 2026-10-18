@@ -1010,7 +1010,7 @@ class AGVROSNode(Node):
             min_d = getattr(state, 'min_dist_m', 9.99)
             ranges = list(state.ranges)
         is_op = getattr(self, 'control', None) is not None and not getattr(self.control, 'strict_preflight', True)
-        turn_w = max(1.20, min(3.50, getattr(state, 'turn_w_rads', 1.60)))
+        turn_w = max(1.20, min(5.50, getattr(state, 'turn_w_rads', 1.60)))
         front_obstacle = (min_d <= 0.38 and abs((min_ang + 180) % 360 - 180) <= 60)
         if is_op:
             l_pts = [ranges[d % 360] for d in range(25, 120) if ranges[d % 360] > 0]
@@ -1151,7 +1151,7 @@ class AGVROSNode(Node):
                 wp=candidate
         dx,dy = wp[0]-pose[0],wp[1]-pose[1]
         error = (math.atan2(dy,dx)-pose[2]+math.pi)%(2*math.pi)-math.pi
-        w_max = max(1.20, min(3.50, getattr(state, 'turn_w_rads', 1.60)))
+        w_max = max(1.20, min(5.50, getattr(state, 'turn_w_rads', 1.60)))
         is_op = getattr(self, 'control', None) is not None and not getattr(self.control, 'strict_preflight', True)
         if is_op:
             if abs(error) > 0.80:
@@ -1366,7 +1366,7 @@ class AGVROSNode(Node):
         if danger_close:
             if is_op:
                 # Tốc độ xoay tại chỗ né cản: Cài chuẩn theo turn_w_rads
-                turn_w = max(1.20, min(3.50, getattr(state, 'turn_w_rads', 1.60)))
+                turn_w = max(1.20, min(5.50, getattr(state, 'turn_w_rads', 1.60)))
                 if getattr(self, '_turn_latch_until', 0) > now:
                     choose_left = getattr(self, '_turn_latch_dir', True)
                 else:
@@ -1621,7 +1621,7 @@ class AGVROSNode(Node):
             l_dist = min(l_pts) if l_pts else 9.99
             r_pts = [ranges[d % 360] for d in range(-90, -25) if ranges[d % 360] > 0]
             r_dist = min(r_pts) if r_pts else 9.99
-            turn_w = max(1.20, min(3.50, getattr(state, 'turn_w_rads', 1.60)))
+            turn_w = max(1.20, min(5.50, getattr(state, 'turn_w_rads', 1.60)))
 
             ai1_active = False
             use_ai = (getattr(self, '_auto_task_mode', None) in ('COVERAGE', 'EXPLORE_AI') or os.environ.get('AGV_USE_AI', '0') == '1')
@@ -2119,13 +2119,13 @@ class WebHandler(BaseHTTPRequestHandler):
             import urllib.parse
             params = urllib.parse.parse_qs(q)
             try:
-                spd_rpm = float(params.get('speed', [80.0])[0])
-                trn_rpm = float(params.get('turn', [80.0])[0])
+                spd_rpm = float(params.get('speed', [110.0])[0])
+                trn_rpm = float(params.get('turn', [110.0])[0])
                 with state.lock:
                     state.auto_target_speed_rpm = spd_rpm
                     state.auto_target_turn_rpm = trn_rpm
-                    state.cruise_speed_mps = max(0.04, min(0.55, (spd_rpm * 2.0 * math.pi * 0.0366) / 60.0))
-                    state.turn_w_rads = max(0.10, min(3.50, (trn_rpm * 2.0 * math.pi * 0.0366) / (60.0 * 0.096)))
+                    state.cruise_speed_mps = max(0.04, min(0.65, (spd_rpm * 2.0 * math.pi * 0.0366) / 60.0))
+                    state.turn_w_rads = max(0.10, min(5.50, (trn_rpm * 2.0 * math.pi * 0.0366) / (60.0 * 0.096)))
                 result = {
                     'status': 'OK',
                     'speed_rpm': spd_rpm,
