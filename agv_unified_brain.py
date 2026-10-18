@@ -2234,10 +2234,10 @@ def main(argv=None):
             previous_term = signal.signal(signal.SIGTERM,lambda *a:(_ for _ in ()).throw(KeyboardInterrupt()))
         if options.operator_control:
             with state.lock:
-                state.auto_target_speed_rpm = 110.0
-                state.auto_target_turn_rpm = 110.0
-                state.cruise_speed_mps = round((110.0 * 2.0 * math.pi * 0.0366) / 60.0, 3)
-                state.turn_w_rads = round((110.0 * 2.0 * math.pi * 0.0366) / (60.0 * 0.096), 3)
+                state.auto_target_speed_rpm = 80.0
+                state.auto_target_turn_rpm = 80.0
+                state.cruise_speed_mps = round((80.0 * 2.0 * math.pi * 0.0366) / 60.0, 3)
+                state.turn_w_rads = round((80.0 * 2.0 * math.pi * 0.0366) / (60.0 * 0.096), 3)
         print(f'=== AGV WEB PORT {PORT}; MODE={"DASHBOARD_ONLY" if options.dashboard_only else "OPERATOR_CONTROL" if options.operator_control else "DISARMED_STARTUP"} ===',flush=True)
         server.serve_forever()
     except KeyboardInterrupt:
