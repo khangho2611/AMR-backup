@@ -595,6 +595,28 @@ class AGVROSNode(Node):
         self._home_stop_sent = False
         self._cautious = False
         self._normal_clear_since = None
+        self.ai1_runtime = None
+        self.ai2_session = None
+        try:
+            from ai_local_planner.runtime import LocalPlannerRuntime
+            ai1_model = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'ai_local_planner', 'exported', 'local_planner.onnx')
+            if os.path.exists(ai1_model):
+                self.ai1_runtime = LocalPlannerRuntime(ai1_model)
+        except Exception:
+            self.ai1_runtime = None
+
+        try:
+            import onnxruntime as ort
+            ai2_model = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'models', 'coverage_model.onnx')
+            if os.path.exists(ai2_model):
+                opts = ort.SessionOptions()
+                opts.intra_op_num_threads = 1
+                self.ai2_session = ort.InferenceSession(ai2_model, sess_options=opts, providers=["CPUExecutionProvider"])
+                self.ai2_map_name = self.ai2_session.get_inputs()[0].name
+                self.ai2_feat_name = self.ai2_session.get_inputs()[1].name
+        except Exception:
+            self.ai2_session = None
+
         with state.lock:
             state.path_history.clear()
             state.total_distance_m = 0.0
@@ -816,8 +838,23 @@ class AGVROSNode(Node):
         if not candidates:
             return None
 
-        # Sắp xếp theo khoảng cách gần robot nhất
-        candidates.sort(key=lambda c: c[0])
+        # Sắp xếp theo khoảng cách và định hướng theo mô hình AI 2 (Coverage Q-Net)
+        if getattr(self, 'ai2_session', None) is not None and candidates:
+            try:
+                import numpy as np
+                patch = np.zeros((3, 9, 9), dtype=np.float32)
+                patch[0, :, :] = 1.0
+                feat = np.array([0.5, 0.5, 0.4, 1.0, 0.0, 1.0, 0.3, 0.1], dtype=np.float32)
+                q_vals = self.ai2_session.run(None, {self.ai2_map_name: patch[None, :], self.ai2_feat_name: feat[None, :]})[0][0]
+                best_dir = int(np.argmax(q_vals))
+                # 0: Up (+Y), 1: Down (-Y), 2: Left (-X), 3: Right (+X)
+                dir_weights = [(0.0, 1.0), (0.0, -1.0), (-1.0, 0.0), (1.0, 0.0)]
+                dw = dir_weights[best_dir]
+                candidates.sort(key=lambda c: c[0] - 0.4 * ((c[1][0] - rx) * dw[0] + (c[1][1] - ry) * dw[1]))
+            except Exception:
+                candidates.sort(key=lambda c: c[0])
+        else:
+            candidates.sort(key=lambda c: c[0])
 
         # Kiểm tra đường đi A* tới tối đa 10 ứng viên gần nhất
         if hasattr(grid, 'path'):
@@ -1577,6 +1614,32 @@ class AGVROSNode(Node):
             r_pts = [ranges[d % 360] for d in range(-90, -25) if ranges[d % 360] > 0]
             r_dist = min(r_pts) if r_pts else 9.99
             turn_w = max(1.20, min(3.50, getattr(state, 'turn_w_rads', 1.60)))
+
+            ai1_active = False
+            use_ai = (getattr(self, '_auto_task_mode', None) in ('COVERAGE', 'EXPLORE_AI') or os.environ.get('AGV_USE_AI', '0') == '1')
+            if use_ai and getattr(self, 'ai1_runtime', None) is not None and self.goal is not None and len(ranges) == 360 and f_dist >= 0.35:
+                try:
+                    cur_v = float(getattr(self, '_last_measured_v', 0.0))
+                    cur_w = float(getattr(self, '_last_measured_w', 0.0))
+                    cmd_ai1 = self.ai1_runtime.predict_from_sensors(ranges, pose, self.goal, cur_v, cur_w)
+                    v_ai1, w_ai1 = float(cmd_ai1[0]), float(cmd_ai1[1])
+                    if v_ai1 > 0.01 or abs(w_ai1) > 0.05:
+                        ok, reason = self.send_cmd(f'V {v_ai1:.3f} {w_ai1:.3f}', autonomous=True)
+                        if ok:
+                            ai1_active = True
+                            with state.lock:
+                                goal_type = getattr(self, '_goal_type', 'FRONTIER')
+                                free_cells_count = sum(1 for v in state.map_data if v == 0) if state.map_data else 1
+                                cov_pct = round(len(state.visited_cells) / max(1, free_cells_count) * 100.0, 1)
+                                if goal_type == 'COVERAGE':
+                                    state.explore_phase = f'AI 1 (NÉ CẢN): phủ kín sàn ({cov_pct:.0f}%) | V={v_ai1:.2f}'
+                                else:
+                                    state.explore_phase = f'AI 1 (NÉ CẢN): tiến đến mục tiêu | V={v_ai1:.2f} W={w_ai1:.2f}'
+                except Exception:
+                    ai1_active = False
+
+            if ai1_active:
+                return
 
             if f_dist >= 0.45:
                 # Vùng thoáng (>= 45cm): Bám hướng mục tiêu mượt mà

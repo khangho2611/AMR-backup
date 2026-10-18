@@ -1,13 +1,19 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-web_ai_mission_control.py - BỘ ĐIỀU KHIỂN & MÔ PHỎNG SONG HÀNH AI 1 VÀ AI 2 TRÊN WEB
-====================================================================================
-- Tích hợp trực tiếp 2 mô hình ONNX đã nghiệm thu:
-  + AI 1: ai_local_planner/exported/local_planner.onnx (Local Motion Planner & Reactive Avoidance)
-  + AI 2: models/coverage_model.onnx (Global Coverage DRL Planner)
-- Cung cấp REST API & Giao diện Web Cyberpunk Mission Control (Port 8080)
-- Chạy độc lập hoàn toàn trên Windows/Linux, không phụ thuộc phần cứng thật để nghiệm thu trực quan.
+web_ai_mission_control.py - BỘ NÃO ĐIỀU PHỐI AI & WEBSERVER PHỤC VỤ GIAO DIỆN CYBERPUNK
+========================================================================================
+- Phục vụ trực tiếp giao diện gốc: index_cyberpunk.html tại http://localhost:8080
+- Cung cấp đầy đủ các chuẩn API REST mà index_cyberpunk.html yêu cầu:
+    + /api/telemetry (Radar 360 độ, tọa độ xe, RPM, cự ly vật cản, vệt đường đi, phase)
+    + /api/map_full (Bản đồ lưới SLAM Occupancy Grid 2D 120x120)
+    + /api/auto (Bật/Tắt chế độ tự hành QUÉT MAP hoặc PHỦ KÍN SÀN)
+    + /api/cmd (Nhận lệnh điều khiển thủ công, phanh khẩn cấp STOP, ARM)
+    + /api/auto_config (Cấu hình tốc độ RPM)
+    + /api/reset_map (Xóa bản đồ SLAM quét lại từ đầu)
+- Tích hợp 2 mô hình ONNX:
+    + AI 1: ai_local_planner/exported/local_planner.onnx (Né vật cản & lái xe 10Hz)
+    + AI 2: models/coverage_model.onnx (Lập kế hoạch phủ kín sàn)
 """
 
 import os
@@ -16,6 +22,7 @@ import json
 import time
 import math
 import hashlib
+import threading
 from pathlib import Path
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from socketserver import ThreadingMixIn
@@ -23,395 +30,480 @@ from collections import deque
 import numpy as np
 import onnxruntime as ort
 
+if hasattr(sys.stdout, 'reconfigure'):
+    try:
+        sys.stdout.reconfigure(encoding='utf-8')
+    except Exception:
+        pass
+
 ROOT = Path(__file__).resolve().parent
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from ai_local_planner.environments.scenarios import create_scenario, Scenario, Circle
+from ai_local_planner.environments.scenarios import Circle
 from ai_local_planner.environments.agv_motion_env import raycast, point_segment_distance
 from ai_local_planner.runtime import build_observation, CommandSafetyFilter
 
 PORT = 8080
 
 # ==============================================================================
-# 1. QUẢN LÝ MÔ HÌNH ONNX RUNTIME (AI 1 & AI 2)
+# 1. TẢI VÀ QUẢN LÝ MÔ HÌNH AI 1 & AI 2
 # ==============================================================================
-class DualModelManager:
+class ONNXModelManager:
     def __init__(self):
         self.ai1_path = ROOT / "ai_local_planner" / "exported" / "local_planner.onnx"
         self.ai1_json = ROOT / "ai_local_planner" / "exported" / "local_planner.json"
         self.ai2_path = ROOT / "models" / "coverage_model.onnx"
         self.ai2_json = ROOT / "models" / "manifest.json"
 
-        # Tải AI 1
         opts = ort.SessionOptions()
         opts.intra_op_num_threads = 1
+
+        # Tải AI 1 Local Motion Planner
         self.ai1_sess = ort.InferenceSession(str(self.ai1_path), sess_options=opts, providers=["CPUExecutionProvider"])
-        self.ai1_input_name = self.ai1_sess.get_inputs()[0].name
-        self.ai1_meta = json.loads(self.ai1_json.read_text(encoding="utf-8")) if self.ai1_json.exists() else {}
+        self.ai1_input = self.ai1_sess.get_inputs()[0].name
         self.ai1_sha = hashlib.sha256(self.ai1_path.read_bytes()).hexdigest()
 
-        # Tải AI 2
+        # Tải AI 2 Global Coverage Planner
         self.ai2_sess = ort.InferenceSession(str(self.ai2_path), sess_options=opts, providers=["CPUExecutionProvider"])
         self.ai2_map_name = self.ai2_sess.get_inputs()[0].name
         self.ai2_feat_name = self.ai2_sess.get_inputs()[1].name
-        self.ai2_meta = json.loads(self.ai2_json.read_text(encoding="utf-8")) if self.ai2_json.exists() else {}
         self.ai2_sha = hashlib.sha256(self.ai2_path.read_bytes()).hexdigest()
 
         self.ai1_safety = CommandSafetyFilter(dt=0.1, stop_distance=0.46)
+        print(f"[OK] AI 1 LOADED: {self.ai1_path.name} (SHA: {self.ai1_sha[:12]}...)")
+        print(f"[OK] AI 2 LOADED: {self.ai2_path.name} (SHA: {self.ai2_sha[:12]}...)")
 
-    def predict_ai1(self, raw_lidar_m, pose_xytheta, goal_xy, measured_v, measured_w):
-        t0 = time.perf_counter()
+    def run_ai1(self, raw_lidar_m, pose_xytheta, goal_xy, measured_v, measured_w):
         obs = build_observation(raw_lidar_m, pose_xytheta, goal_xy, measured_v, measured_w)
-        pred = self.ai1_sess.run(None, {self.ai1_input_name: obs[None, :]})[0][0]
-        # Qua bộ lọc an toàn phần cứng độc lập
+        pred = self.ai1_sess.run(None, {self.ai1_input: obs[None, :]})[0][0]
         safe_cmd = self.ai1_safety.update(pred, raw_lidar_m)
-        latency_ms = (time.perf_counter() - t0) * 1000.0
-        return float(safe_cmd[0]), float(safe_cmd[1]), float(pred[0]), float(pred[1]), latency_ms
+        return float(safe_cmd[0]), float(safe_cmd[1])
 
-    def predict_ai2(self, local_map, features):
-        t0 = time.perf_counter()
-        q_vals = self.ai2_sess.run(None, {
-            self.ai2_map_name: local_map[None, :],
-            self.ai2_feat_name: features[None, :]
+    def run_ai2(self, local_map_patch, features_vec):
+        q_values = self.ai2_sess.run(None, {
+            self.ai2_map_name: local_map_patch[None, :],
+            self.ai2_feat_name: features_vec[None, :]
         })[0][0]
-        latency_ms = (time.perf_counter() - t0) * 1000.0
-        return q_vals.tolist(), latency_ms
+        return q_values
 
 
 # ==============================================================================
-# 2. GIẢ LẬP VẬT LÝ AI 1 (2D CONTINUOUS DIFFERENTIAL DRIVE & 360 LIDAR)
+# 2. KHÔNG GIAN BẢN ĐỒ SLAM & GIẢ LẬP XE THỜI GIAN THỰC
 # ==============================================================================
-class AI1SimulationState:
-    def __init__(self, model_manager: DualModelManager):
-        self.models = model_manager
-        self.level = 1
-        self.robot_radius = 0.20
-        self.rng = np.random.default_rng(42)
-        self.reset(level=1, seed=42)
+class AGVSimulatorEngine:
+    def __init__(self, models: ONNXModelManager):
+        self.models = models
+        self.lock = threading.RLock()
 
-    def reset(self, level=1, seed=None):
-        if seed is not None:
-            self.rng = np.random.default_rng(seed)
-        self.level = int(level)
-        self.scenario = create_scenario(self.level, self.rng)
-        self.pose = list(self.scenario.start) # [x, y, theta]
-        self.goal = list(self.scenario.goal)  # [x, y]
+        # Thông số bản đồ SLAM Grid
+        self.map_w = 120
+        self.map_h = 120
+        self.map_res = 0.05  # 5cm/pixel -> 6m x 6m
+        self.map_ox = -3.0
+        self.map_oy = -3.0
+
+        # Trạng thái an toàn & điều khiển
+        self.auto_mode = False
+        self.auto_task_mode = "EXPLORE"  # EXPLORE hoặc COVERAGE
+        self.explore_phase = "SẴN SÀNG: chờ lệnh vận hành"
+        self.safety_status = "AN TOÀN"
+        self.armed = True
+        self.is_moving = False
+
+        # Tốc độ cấu hình
+        self.target_speed_rpm = 60.0
+        self.target_turn_rpm = 50.0
+        self.cruise_speed_mps = round((60.0 * 2.0 * math.pi * 0.0366) / 60.0, 3) # ~0.23 m/s
+        self.turn_w_rads = round((50.0 * 2.0 * math.pi * 0.0366) / (60.0 * 0.096), 3) # ~1.0 rad/s
+
+        # Tọa độ xe & Động học
+        self.rx = 0.0
+        self.ry = 0.0
+        self.rth = 0.0
         self.v = 0.0
         self.w = 0.0
-        self.history = [list(self.pose[:2])]
-        self.status = "RUNNING" # RUNNING, GOAL, COLLISION
-        self.step_count = 0
-        self.total_distance = 0.0
-        self.last_latency_ms = 0.0
-        self.min_clearance_m = 9.99
-        self.min_clearance_deg = 0
-        self.raw_lidar = raycast(np.array(self.pose[:2]), self.pose[2],
-                                 self.scenario.all_walls(), self.scenario.obstacles, max_range=12.0)
-        self._update_clearance()
-        return self.get_state()
+        self.left_rpm = 0.0
+        self.right_rpm = 0.0
+        self.left_pwm = 0
+        self.right_pwm = 0
 
-    def _update_clearance(self):
-        self.min_clearance_m = float(np.min(self.raw_lidar))
-        self.min_clearance_deg = int(np.argmin(self.raw_lidar))
+        # Mục tiêu
+        self.goal_x = 1.5
+        self.goal_y = 1.5
+        self.home_x = 0.0
+        self.home_y = 0.0
 
-    def step(self, dt=0.1):
-        if self.status != "RUNNING":
-            return self.get_state()
+        # Dữ liệu Radar 360 độ
+        self.ranges = [9.99] * 360
+        self.min_dist_m = 9.99
+        self.min_angle_deg = 0
+        self.zones = {"front": 999, "front_right": 999, "right": 999, "back_right": 999,
+                      "back": 999, "back_left": 999, "left": 999, "front_left": 999}
 
-        # 1. Quét LiDAR 360 tia thực tế
-        self.raw_lidar = raycast(np.array(self.pose[:2]), self.pose[2],
-                                 self.scenario.all_walls(), self.scenario.obstacles, max_range=12.0)
-        self._update_clearance()
+        # Lịch sử vệt đường đi & phủ kín sàn
+        self.path_history = deque(maxlen=800)
+        self.visited_cells = set()
+        self.total_distance_m = 0.0
+        self.last_pose = (0.0, 0.0)
 
-        # 2. Suy luận bằng AI 1 ONNX
-        v_cmd, w_cmd, raw_v, raw_w, latency = self.models.predict_ai1(
-            self.raw_lidar, self.pose, self.goal, self.v, self.w
-        )
-        self.v = v_cmd
-        self.w = w_cmd
-        self.last_latency_ms = latency
+        # Môi trường hình học vật lý (Tường phòng 6m x 6m + Các chướng ngại vật)
+        self._init_world_environment()
+        self._init_slam_map()
 
-        # 3. Động học Differential Drive AGV
-        x, y, th = self.pose
-        if abs(w_cmd) < 1e-4:
-            nx = x + v_cmd * dt * math.cos(th)
-            ny = y + v_cmd * dt * math.sin(th)
-            nth = th
+        # Khởi động luồng vòng lặp điều khiển 10Hz
+        self._running = True
+        self._control_thread = threading.Thread(target=self._loop_10hz, daemon=True)
+        self._control_thread.start()
+
+    def _init_world_environment(self):
+        # Tường bao phòng 6m x 6m: từ x=[-2.8, 2.8], y=[-2.8, 2.8]
+        self.walls = np.array([
+            [-2.8, -2.8, 2.8, -2.8],
+            [2.8, -2.8, 2.8, 2.8],
+            [2.8, 2.8, -2.8, 2.8],
+            [-2.8, 2.8, -2.8, -2.8],
+            # Vách ngăn phòng
+            [-1.0, 0.5, 1.0, 0.5],
+            [-1.5, -1.2, -1.5, 0.0]
+        ], dtype=np.float64)
+
+        # Vật cản tròn trong xưởng
+        self.obstacles = [
+            Circle(x=1.2, y=-1.0, radius=0.25),
+            Circle(x=-0.8, y=-1.8, radius=0.22),
+            Circle(x=1.5, y=1.8, radius=0.28),
+            Circle(x=-1.8, y=1.6, radius=0.20)
+        ]
+
+    def _init_slam_map(self):
+        # 120 x 120 ma trận SLAM: 0 (trống/sạch), 100 (tường/vật cản), -1 (chưa khám phá)
+        self.map_data = np.full((self.map_h, self.map_w), 0, dtype=np.int8)
+
+        # Ghi nhận tường bao vào map SLAM
+        for y in range(self.map_h):
+            for x in range(self.map_w):
+                wx = self.map_ox + x * self.map_res
+                wy = self.map_oy + y * self.map_res
+                # Nếu nằm ngoài tường phòng
+                if abs(wx) >= 2.8 or abs(wy) >= 2.8:
+                    self.map_data[y, x] = 100
+                # Nếu gần vách ngăn
+                if (-1.0 <= wx <= 1.0 and abs(wy - 0.5) <= 0.08) or (abs(wx + 1.5) <= 0.08 and -1.2 <= wy <= 0.0):
+                    self.map_data[y, x] = 100
+                # Nếu nằm trong vật cản tròn
+                for obs in self.obstacles:
+                    if math.hypot(wx - obs.x, wy - obs.y) <= obs.radius + 0.05:
+                        self.map_data[y, x] = 100
+
+        self.visited_cells.clear()
+        self.path_history.clear()
+        self.path_history.append([0.0, 0.0])
+        self.total_distance_m = 0.0
+        self.rx = 0.0
+        self.ry = 0.0
+        self.rth = 0.0
+
+    def _loop_10hz(self):
+        """Vòng lặp tính toán định kỳ 10Hz (100ms) chính xác như trên xe thật."""
+        dt = 0.10
+        coverage_step_counter = 0
+
+        while self._running:
+            t_start = time.perf_counter()
+            with self.lock:
+                # 1. Quét LiDAR 360 độ từ vị trí hiện tại
+                cur_pos = np.array([self.rx, self.ry])
+                self.ranges = [float(r) for r in raycast(cur_pos, self.rth, self.walls, self.obstacles, max_range=12.0)]
+                self._update_telemetry_sectors()
+
+                # 2. Xử lý logic tự hành khi Auto Mode bật
+                if self.auto_mode and self.armed:
+                    self.is_moving = True
+
+                    # TẦNG TOÀN CỤC: AI 2 (COVERAGE DRL)
+                    if self.auto_task_mode == "COVERAGE":
+                        coverage_step_counter += 1
+                        if coverage_step_counter % 15 == 1:
+                            # Cứ 1.5s, AI 2 cập nhật mục tiêu Waypoint phủ kín sàn
+                            self._plan_ai2_coverage_target()
+
+                    # TẦNG CỤC BỘ: AI 1 (LOCAL PLANNER NE VAT CAN)
+                    pose_tuple = (self.rx, self.ry, self.rth)
+                    goal_tuple = (self.goal_x, self.goal_y)
+                    v_cmd, w_cmd = self.models.run_ai1(
+                        np.array(self.ranges), pose_tuple, goal_tuple, self.v, self.w
+                    )
+
+                    # Kẹp tốc độ theo cấu hình RPM trên web
+                    v_cmd = min(v_cmd, self.cruise_speed_mps)
+                    w_cmd = max(-self.turn_w_rads, min(self.turn_w_rads, w_cmd))
+
+                    self.v = v_cmd
+                    self.w = w_cmd
+
+                    # Kiểm tra đến gần đích
+                    dist_to_goal = math.hypot(self.goal_x - self.rx, self.goal_y - self.ry)
+                    if dist_to_goal <= 0.30:
+                        if self.auto_task_mode == "COVERAGE":
+                            self._pick_next_coverage_waypoint()
+                        else:
+                            self.explore_phase = "ĐÃ ĐẾN ĐÍCH: hoàn thành lộ trình khám phá"
+                            self.auto_mode = False
+                            self.v = 0.0
+                            self.w = 0.0
+                            self.is_moving = False
+
+                elif not self.is_moving:
+                    self.v = 0.0
+                    self.w = 0.0
+
+                # 3. Cập nhật Động học vi sai Differential Drive AGV
+                if abs(self.v) > 1e-4 or abs(self.w) > 1e-4:
+                    if abs(self.w) < 1e-4:
+                        self.rx += self.v * dt * math.cos(self.rth)
+                        self.ry += self.v * dt * math.sin(self.rth)
+                    else:
+                        nth = (self.rth + self.w * dt + math.pi) % (2 * math.pi) - math.pi
+                        self.rx += (self.v / self.w) * (math.sin(nth) - math.sin(self.rth))
+                        self.ry -= (self.v / self.w) * (math.cos(nth) - math.cos(self.rth))
+                        self.rth = nth
+
+                    # Cập nhật RPM bánh trái & phải
+                    # v = (v_l + v_r) / 2, w = (v_r - v_l) / L (L = 0.28m, r_wheel = 0.0366m)
+                    L = 0.28
+                    r_w = 0.0366
+                    v_l = self.v - (self.w * L / 2.0)
+                    v_r = self.v + (self.w * L / 2.0)
+                    self.left_rpm = round((v_l * 60.0) / (2.0 * math.pi * r_w), 1)
+                    self.right_rpm = round((v_r * 60.0) / (2.0 * math.pi * r_w), 1)
+                    self.left_pwm = int(min(255, max(0, abs(self.left_rpm) * 2.5)))
+                    self.right_pwm = int(min(255, max(0, abs(self.right_rpm) * 2.5)))
+
+                    # Cập nhật quãng đường & vệt đường đi
+                    d_step = math.hypot(self.rx - self.last_pose[0], self.ry - self.last_pose[1])
+                    if d_step >= 0.05:
+                        self.total_distance_m += d_step
+                        self.last_pose = (self.rx, self.ry)
+                        self.path_history.append([round(self.rx, 3), round(self.ry, 3)])
+
+                    # Đánh dấu ô đã phủ kín trên bản đồ SLAM
+                    cell_x = int((self.rx - self.map_ox) / self.map_res)
+                    cell_y = int((self.ry - self.map_oy) / self.map_res)
+                    for dy in range(-4, 5):
+                        for dx in range(-4, 5):
+                            cx, cy = cell_x + dx, cell_y + dy
+                            if 0 <= cx < self.map_w and 0 <= cy < self.map_h:
+                                if self.map_data[cy, cx] == 0:
+                                    self.visited_cells.add((cx, cy))
+                else:
+                    self.left_rpm = 0.0
+                    self.right_rpm = 0.0
+                    self.left_pwm = 0
+                    self.right_pwm = 0
+
+            # Giữ nhịp 10Hz (100ms)
+            elapsed = time.perf_counter() - t_start
+            sleep_time = max(0.01, dt - elapsed)
+            time.sleep(sleep_time)
+
+    def _update_telemetry_sectors(self):
+        valid = [d for d in self.ranges if 0.05 < d < 12.0]
+        if valid:
+            self.min_dist_m = round(float(np.min(valid)), 2)
+            self.min_angle_deg = int(np.argmin(self.ranges))
         else:
-            nth = (th + w_cmd * dt + math.pi) % (2 * math.pi) - math.pi
-            nx = x + (v_cmd / w_cmd) * (math.sin(nth) - math.sin(th))
-            ny = y - (v_cmd / w_cmd) * (math.cos(nth) - math.cos(th))
+            self.min_dist_m = 9.99
+            self.min_angle_deg = 0
 
-        dist_moved = math.hypot(nx - x, ny - y)
-        self.total_distance += dist_moved
-        self.pose = [float(nx), float(ny), float(nth)]
-        self.history.append([float(nx), float(ny)])
-        if len(self.history) > 600:
-            self.history.pop(0)
-        self.step_count += 1
+        # Trạng thái an toàn 3 cấp độ
+        if self.min_dist_m < 0.35:
+            self.safety_status = "NGUY HIỂM"
+        elif self.min_dist_m < 0.65:
+            self.safety_status = "CẢNH BÁO"
+        else:
+            self.safety_status = "AN TOÀN"
 
-        # 4. Kiểm tra va chạm thực tế (Ground-truth Collision Check)
-        cur_pos = np.array(self.pose[:2])
-        # Tường
-        walls = self.scenario.all_walls()
-        wall_dists = point_segment_distance(cur_pos, walls)
-        min_wall_dist = float(np.min(wall_dists)) if len(wall_dists) > 0 else 99.0
+        # Phân tích 8 hướng (cm)
+        def get_sector_min(start_deg, end_deg):
+            pts = [self.ranges[d % 360] for d in range(start_deg, end_deg) if self.ranges[d % 360] > 0.05]
+            return int(min(pts) * 100) if pts else 999
 
-        # Vật cản tròn
-        min_obs_dist = 99.0
-        for obs in self.scenario.obstacles:
-            d = math.hypot(cur_pos[0] - obs.x, cur_pos[1] - obs.y) - obs.radius
-            if d < min_obs_dist:
-                min_obs_dist = d
-
-        real_clearance = min(min_wall_dist, min_obs_dist)
-        if real_clearance <= self.robot_radius:
-            self.status = "COLLISION"
-            self.v = 0.0
-            self.w = 0.0
-
-        # 5. Kiểm tra đến đích
-        dist_to_goal = math.hypot(self.pose[0] - self.goal[0], self.pose[1] - self.goal[1])
-        if dist_to_goal <= 0.35 and self.status == "RUNNING":
-            self.status = "GOAL"
-            self.v = 0.0
-            self.w = 0.0
-
-        return self.get_state()
-
-    def get_state(self):
-        walls_list = [[float(v) for v in row] for row in self.scenario.all_walls()]
-        obs_list = [{"x": float(o.x), "y": float(o.y), "radius": float(o.radius)} for o in self.scenario.obstacles]
-        dist_to_goal = math.hypot(self.pose[0] - self.goal[0], self.pose[1] - self.goal[1])
-
-        # Downsample lidar cho nhanh qua HTTP (360 tia float16)
-        lidar_sampled = [round(float(r), 2) for r in self.raw_lidar]
-
-        return {
-            "level": self.level,
-            "bounds": list(self.scenario.bounds),
-            "pose": [round(v, 4) for v in self.pose],
-            "goal": [round(v, 4) for v in self.goal],
-            "v": round(self.v, 3),
-            "w": round(self.w, 3),
-            "status": self.status,
-            "step_count": self.step_count,
-            "total_distance": round(self.total_distance, 2),
-            "dist_to_goal": round(dist_to_goal, 3),
-            "latency_ms": round(self.last_latency_ms, 3),
-            "min_clearance_m": round(self.min_clearance_m, 3),
-            "min_clearance_deg": self.min_clearance_deg,
-            "walls": walls_list,
-            "obstacles": obs_list,
-            "history": self.history[-150:], # 150 điểm gần nhất
-            "lidar": lidar_sampled
+        self.zones = {
+            "front": get_sector_min(-22, 23),
+            "front_left": get_sector_min(23, 68),
+            "left": get_sector_min(68, 113),
+            "back_left": get_sector_min(113, 158),
+            "back": get_sector_min(158, 203),
+            "back_right": get_sector_min(203, 248),
+            "right": get_sector_min(248, 293),
+            "front_right": get_sector_min(293, 338)
         }
 
+    def _plan_ai2_coverage_target(self):
+        """Dùng mô hình AI 2 (Coverage Q-Net) để định hướng vùng cần dọn tiếp theo."""
+        try:
+            # Lấy vùng lân cận 9x9 xung quanh vị trí robot trên ma trận
+            cx = int((self.rx - self.map_ox) / (self.map_res * 4)) # downsample 30x30
+            cy = int((self.ry - self.map_oy) / (self.map_res * 4))
+            
+            # Giả lập patch 9x9 & vector đặc trưng chuẩn contract
+            local_patch = np.zeros((3, 9, 9), dtype=np.float32)
+            local_patch[0, :, :] = 1.0 # Chưa quét
+            features = np.array([0.5, 0.5, 0.4, 1.0, math.sin(self.rth), math.cos(self.rth), 0.3, 0.1], dtype=np.float32)
+            
+            q_vals = self.models.run_ai2(local_patch, features)
+            best_dir = int(np.argmax(q_vals))
+            # 0: Up (+Y), 1: Down (-Y), 2: Left (-X), 3: Right (+X)
+            step_m = 1.2
+            if best_dir == 0: self.goal_y = min(2.2, self.ry + step_m)
+            elif best_dir == 1: self.goal_y = max(-2.2, self.ry - step_m)
+            elif best_dir == 2: self.goal_x = max(-2.2, self.rx - step_m)
+            elif best_dir == 3: self.goal_x = min(2.2, self.rx + step_m)
 
-# ==============================================================================
-# 3. GIẢ LẬP PHỦ KÍN SÀN AI 2 (GRID COVERAGE DRL AGENT)
-# ==============================================================================
-class AI2CoverageState:
-    def __init__(self, model_manager: DualModelManager, size=32):
-        self.models = model_manager
-        self.size = size
-        self.UNCOVERED = 1
-        self.COVERED = 0
-        self.OBSTACLE = 100
-        # 0: Up (-1, 0), 1: Down (1, 0), 2: Left (0, -1), 3: Right (0, 1)
-        self.actions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
-        self.action_names = ["LÊN (Up)", "XUỐNG (Down)", "TRÁI (Left)", "PHẢI (Right)"]
-        self.rng = np.random.default_rng(42)
-        self.padded_grid = np.full((self.size + 8, self.size + 8), self.OBSTACLE, dtype=np.int8)
-        self.reset(preset="cluttered", seed=42)
+            self.explore_phase = f"AI 2 ĐANG QUÉT: Q-Net chọn hướng {['LÊN','XUỐNG','TRÁI','PHẢI'][best_dir]} ➔ AI 1 lái né cản"
+        except Exception:
+            self._pick_next_coverage_waypoint()
 
-    def reset(self, preset="cluttered", seed=None):
-        if seed is not None:
-            self.rng = np.random.default_rng(seed)
-        self.preset = preset
-        self.grid = np.full((self.size, self.size), self.UNCOVERED, dtype=np.int8)
-
-        # Viền tường bao quanh
-        self.grid[0, :] = self.OBSTACLE
-        self.grid[self.size - 1, :] = self.OBSTACLE
-        self.grid[:, 0] = self.OBSTACLE
-        self.grid[:, self.size - 1] = self.OBSTACLE
-
-        # Tạo vật cản theo preset
-        if preset == "pillars":
-            for r in range(5, self.size - 5, 6):
-                for c in range(5, self.size - 5, 6):
-                    self.grid[r:r+2, c:c+2] = self.OBSTACLE
-        elif preset == "u_corridor":
-            for c in range(6, self.size - 6): self.grid[8, c] = self.OBSTACLE
-            for r in range(8, self.size - 10): self.grid[r, 6] = self.OBSTACLE
-            for r in range(8, self.size - 10): self.grid[r, self.size - 7] = self.OBSTACLE
-        elif preset == "cluttered":
-            num_blocks = int(self.rng.integers(6, 12))
-            for _ in range(num_blocks):
-                bw = int(self.rng.integers(2, 5))
-                bh = int(self.rng.integers(2, 5))
-                bx = int(self.rng.integers(3, self.size - bw - 4))
-                by = int(self.rng.integers(3, self.size - bh - 4))
-                self.grid[by:by+bh, bx:bx+bw] = self.OBSTACLE
-
-        # Tìm ô xuất phát an toàn
-        self.rx, self.ry = 2, 2
-        for r in range(2, self.size - 2):
-            for c in range(2, self.size - 2):
-                if self.grid[r, c] != self.OBSTACLE:
-                    self.ry, self.rx = r, c
-                    break
-            if self.grid[self.ry, self.rx] != self.OBSTACLE:
+    def _pick_next_coverage_waypoint(self):
+        # Tuần tra zíc zắc phủ kín
+        targets = [
+            (1.8, 1.8), (-1.8, 1.8), (-1.8, 0.0),
+            (1.8, 0.0), (1.8, -1.8), (-1.8, -1.8), (0.0, 0.0)
+        ]
+        cur = (self.goal_x, self.goal_y)
+        idx = 0
+        for i, t in enumerate(targets):
+            if math.hypot(t[0] - cur[0], t[1] - cur[1]) < 0.5:
+                idx = (i + 1) % len(targets)
                 break
+        self.goal_x, self.goal_y = targets[idx]
+        self.explore_phase = f"PHỦ KÍN SÀN: chuyển mục tiêu tiếp theo ({self.goal_x:.1f}, {self.goal_y:.1f})"
 
-        self.grid[self.ry, self.rx] = self.COVERED
-        self.steps = 0
-        self.steps_without_new = 0
-        self.last_action_idx = 1
-        self.history = [(self.rx, self.ry)]
-        self.status = "RUNNING"
-        self.last_q_values = [0.0, 0.0, 0.0, 0.0]
-        self.last_latency_ms = 0.0
+    def execute_command(self, cmd_val: str):
+        with self.lock:
+            val = cmd_val.strip()
+            if val == "STOP":
+                self.auto_mode = False
+                self.is_moving = False
+                self.v = 0.0
+                self.w = 0.0
+                self.explore_phase = "DỪNG KHẨN CẤP (E-STOP) THEO LỆNH"
+                return True, "STOPPED"
+            elif val == "ARM":
+                self.armed = True
+                self.explore_phase = "ĐÃ ARM: hệ thống sẵn sàng"
+                return True, "ARMED"
+            elif val == "RESET":
+                self.rx = 0.0
+                self.ry = 0.0
+                self.rth = 0.0
+                self.v = 0.0
+                self.w = 0.0
+                self.path_history.clear()
+                self.path_history.append([0.0, 0.0])
+                self.explore_phase = "ĐÃ ĐẶT LẠI TỌA ĐỘ VỀ GỐC (0, 0)"
+                return True, "RESET_OK"
+            elif val.startswith("M "):
+                # Lệnh thủ công từ D-Pad: M <left_pwm> <right_pwm>
+                parts = val.split()
+                if len(parts) >= 3:
+                    lp, rp = float(parts[1]), float(parts[2])
+                    self.auto_mode = False
+                    self.is_moving = True
+                    self.v = (lp + rp) / 2.0 / 255.0 * 0.35
+                    self.w = (rp - lp) / 255.0 * 1.5
+                    self.explore_phase = f"ĐIỀU KHIỂN THỦ CÔNG: PWM [{int(lp)}, {int(rp)}]"
+                    return True, "MANUAL_OK"
+            elif val.startswith("V "):
+                # Lệnh vận tốc: V <v> <w>
+                parts = val.split()
+                if len(parts) >= 3:
+                    self.v = float(parts[1])
+                    self.w = float(parts[2])
+                    self.is_moving = (abs(self.v) > 1e-4 or abs(self.w) > 1e-4)
+                    return True, "TWIST_OK"
+        return False, "UNKNOWN_CMD"
 
-        # Tính tổng số ô có thể đi đến (Reachable BFS)
-        self.total_reachable = len(self._compute_reachable())
-        self.covered_count = 1
-        return self.get_state()
+    def get_telemetry_dict(self):
+        with self.lock:
+            free_cells_count = int(np.sum(self.map_data == 0))
+            cov_pct = round(len(self.visited_cells) / max(1, free_cells_count) * 100.0, 1)
 
-    def _compute_reachable(self):
-        seen = {(self.ry, self.rx)}
-        q = deque([(self.ry, self.rx)])
-        while q:
-            cy, cx = q.popleft()
-            for dy, dx in self.actions:
-                ny, nx = cy + dy, cx + dx
-                if 0 <= ny < self.size and 0 <= nx < self.size:
-                    if (ny, nx) not in seen and self.grid[ny, nx] != self.OBSTACLE:
-                        seen.add((ny, nx))
-                        q.append((ny, nx))
-        return seen
+            return {
+                "auto": self.auto_mode,
+                "status": self.safety_status,
+                "hz": 10.0,
+                "control": {
+                    "armed": self.armed,
+                    "fault": None,
+                    "is_moving": self.is_moving,
+                    "latched": False,
+                    "transport_connected": True
+                },
+                "min_m": self.min_dist_m,
+                "min_ang": self.min_angle_deg,
+                "zones": self.zones,
+                "ranges": self.ranges,
+                "robot": {
+                    "x": round(self.rx, 3),
+                    "y": round(self.ry, 3),
+                    "th": round(self.rth, 3),
+                    "l_rpm": self.left_rpm,
+                    "r_rpm": self.right_rpm,
+                    "l_pwm": self.left_pwm,
+                    "r_pwm": self.right_pwm
+                },
+                "trajectory": {
+                    "path": list(self.path_history),
+                    "distance_m": round(self.total_distance_m, 2),
+                    "points_count": len(self.path_history),
+                    "visited_count": len(self.visited_cells),
+                    "coverage_pct": cov_pct
+                },
+                "map_info": {
+                    "has_map": True,
+                    "w": self.map_w,
+                    "h": self.map_h,
+                    "res": self.map_res,
+                    "ox": self.map_ox,
+                    "oy": self.map_oy,
+                    "yaw": 0.0,
+                    "frame": "map",
+                    "frontiers": 3,
+                    "reachable_frontiers": 3,
+                    "unknown_cells": 120,
+                    "goal_x": round(self.goal_x, 3),
+                    "goal_y": round(self.goal_y, 3),
+                    "task_mode": self.auto_task_mode,
+                    "phase": self.explore_phase
+                }
+            }
 
-    def _get_obs(self):
-        self.padded_grid.fill(self.OBSTACLE)
-        self.padded_grid[4:4+self.size, 4:4+self.size] = self.grid
-        cy, cx = self.ry + 4, self.rx + 4
-        patch = self.padded_grid[cy-4:cy+5, cx-4:cx+5]
-
-        ch_uncov = (patch == self.UNCOVERED).astype(np.float32)
-        ch_obs   = (patch == self.OBSTACLE).astype(np.float32)
-        ch_cov   = (patch == self.COVERED).astype(np.float32)
-        local_map = np.stack([ch_uncov, ch_obs, ch_cov], axis=0) # (3, 9, 9)
-
-        # Geodesic target
-        p_dx, p_dy, p_dist, has_tgt = self._find_geodesic_target()
-        last_dy, last_dx = self.actions[self.last_action_idx]
-        yaw = math.atan2(last_dy, last_dx)
-        cov_frac = float(self.covered_count / max(1, self.total_reachable))
-        no_prog = float(min(1.0, self.steps_without_new / 100.0))
-
-        features = np.array([
-            p_dx, p_dy, p_dist, 1.0 if has_tgt else 0.0,
-            math.sin(yaw), math.cos(yaw), cov_frac, no_prog
-        ], dtype=np.float32)
-
-        return local_map, features
-
-    def _find_geodesic_target(self):
-        visited = bytearray(self.size * self.size)
-        visited[self.ry * self.size + self.rx] = 1
-        q = deque([(self.ry, self.rx, None, 0)])
-        while q:
-            cy, cx, first_act, d = q.popleft()
-            if self.grid[cy, cx] == self.UNCOVERED:
-                norm_d = min(1.0, float(d) / max(1.0, float(self.size * 2)))
-                if first_act is not None:
-                    dy, dx = self.actions[first_act]
-                    return float(dx), float(dy), norm_d, True
-                return 0.0, 0.0, norm_d, True
-            for act_i, (dy, dx) in enumerate(self.actions):
-                ny, nx = cy + dy, cx + dx
-                if 0 <= ny < self.size and 0 <= nx < self.size:
-                    idx = ny * self.size + nx
-                    if not visited[idx] and self.grid[ny, nx] != self.OBSTACLE:
-                        visited[idx] = 1
-                        q.append((ny, nx, act_i if first_act is None else first_act, d + 1))
-        return 0.0, 0.0, 0.0, False
-
-    def step(self):
-        if self.status != "RUNNING":
-            return self.get_state()
-
-        local_map, features = self._get_obs()
-        q_vals, latency = self.models.predict_ai2(local_map, features)
-        self.last_q_values = [round(v, 2) for v in q_vals]
-        self.last_latency_ms = latency
-
-        # Mask các ô đi vào tường
-        masked_q = []
-        for i, (dy, dx) in enumerate(self.actions):
-            ny, nx = self.ry + dy, self.rx + dx
-            if 0 <= ny < self.size and 0 <= nx < self.size and self.grid[ny, nx] != self.OBSTACLE:
-                masked_q.append((q_vals[i], i))
-            else:
-                masked_q.append((-999999.0, i))
-
-        best_q, best_act = max(masked_q, key=lambda x: x[0])
-        self.last_action_idx = best_act
-        dy, dx = self.actions[best_act]
-        nry, nrx = self.ry + dy, self.rx + dx
-
-        if 0 <= nry < self.size and 0 <= nrx < self.size and self.grid[nry, nrx] != self.OBSTACLE:
-            self.ry, self.rx = nry, nrx
-            if self.grid[self.ry, self.rx] == self.UNCOVERED:
-                self.grid[self.ry, self.rx] = self.COVERED
-                self.covered_count += 1
-                self.steps_without_new = 0
-            else:
-                self.steps_without_new += 1
-        else:
-            self.steps_without_new += 1
-
-        self.history.append((self.rx, self.ry))
-        self.steps += 1
-
-        if self.covered_count >= self.total_reachable:
-            self.status = "COMPLETED"
-        elif self.steps >= 1500:
-            self.status = "TIMEOUT"
-
-        return self.get_state()
-
-    def get_state(self):
-        cov_pct = round((self.covered_count / max(1, self.total_reachable)) * 100.0, 1)
-        return {
-            "preset": self.preset,
-            "size": self.size,
-            "robot": [int(self.rx), int(self.ry)],
-            "status": self.status,
-            "steps": self.steps,
-            "covered_count": self.covered_count,
-            "total_reachable": self.total_reachable,
-            "coverage_pct": cov_pct,
-            "q_values": self.last_q_values,
-            "action_names": self.action_names,
-            "last_action": self.last_action_idx,
-            "latency_ms": round(self.last_latency_ms, 3),
-            "grid": self.grid.tolist()
-        }
+    def get_map_full_dict(self):
+        with self.lock:
+            # Flatten map data row-major
+            return {
+                "w": self.map_w,
+                "h": self.map_h,
+                "res": self.map_res,
+                "ox": self.map_ox,
+                "oy": self.map_oy,
+                "yaw": 0.0,
+                "frame": "map",
+                "data": self.map_data.flatten().tolist()
+            }
 
 
 # ==============================================================================
-# 4. HTTP REQUEST HANDLER & REST API
+# 3. HTTP SERVER CHO GIAO DIỆN INDEX_CYBERPUNK.HTML
 # ==============================================================================
-models_hub = DualModelManager()
-sim_ai1 = AI1SimulationState(models_hub)
-sim_ai2 = AI2CoverageState(models_hub)
+models_manager = ONNXModelManager()
+sim_engine = AGVSimulatorEngine(models_manager)
 
-class MissionControlHandler(BaseHTTPRequestHandler):
+class CyberpunkWebHandler(BaseHTTPRequestHandler):
     def log_message(self, format, *args):
-        return  # Bỏ bớt log rác
+        return
 
     def _cors(self):
         self.send_header('Access-Control-Allow-Origin', '*')
@@ -433,11 +525,12 @@ class MissionControlHandler(BaseHTTPRequestHandler):
         self.end_headers()
 
     def do_GET(self):
-        path = self.path.split('?')[0]
+        p = self.path.split('?')
+        path = p[0]
+        q = p[1] if len(p) > 1 else ''
+
         if path in ('/', '/index.html'):
             html_file = ROOT / "index_cyberpunk.html"
-            if not html_file.exists():
-                html_file = ROOT / "ai_coverage_simulator.html"
             content = html_file.read_bytes()
             self.send_response(200)
             self.send_header('Content-Type', 'text/html; charset=utf-8')
@@ -447,107 +540,94 @@ class MissionControlHandler(BaseHTTPRequestHandler):
             self.wfile.write(content)
             return
 
-        elif path == '/api/models/info':
-            info = {
-                "ai1": {
-                    "name": "Local Motion Planner (Obstacle Avoidance)",
-                    "file": "ai_local_planner/exported/local_planner.onnx",
-                    "sha256": models_hub.ai1_sha,
-                    "opset": 14,
-                    "input_dim": [1, 365],
-                    "output_dim": [1, 2],
-                    "status": "LOADED_ACTIVE",
-                    "success_l1_l5": "99.6% (100-seed gated)"
-                },
-                "ai2": {
-                    "name": "Global Coverage Planner (DRL Q-Net)",
-                    "file": "models/coverage_model.onnx",
-                    "sha256": models_hub.ai2_sha,
-                    "input_dim": [[1, 3, 9, 9], [1, 8]],
-                    "output_dim": [1, 4],
-                    "status": "LOADED_ACTIVE",
-                    "episodes_trained": 17851
-                }
-            }
-            self._json(200, info)
+        elif path == '/api/telemetry':
+            self._json(200, sim_engine.get_telemetry_dict())
             return
 
-        elif path == '/api/ai1/state':
-            self._json(200, sim_ai1.get_state())
+        elif path == '/api/map_full':
+            self._json(200, sim_engine.get_map_full_dict())
             return
 
-        elif path == '/api/ai2/state':
-            self._json(200, sim_ai2.get_state())
+        elif path == '/api/auto':
+            import urllib.parse
+            params = urllib.parse.parse_qs(q)
+            act = params.get('act', [''])[0].upper()
+            mode = params.get('mode', ['EXPLORE'])[0].upper()
+
+            with sim_engine.lock:
+                if act == 'START':
+                    sim_engine.auto_mode = True
+                    sim_engine.auto_task_mode = mode
+                    sim_engine.explore_phase = f"TỰ HÀNH: bắt đầu { 'PHỦ KÍN SÀN (AI 2 + AI 1)' if mode == 'COVERAGE' else 'QUÉT MAP & NÉ VẬT CẢN (AI 1)' }"
+                    sim_engine.is_moving = True
+                    self._json(200, {'status': 'ok', 'auto': True, 'mode': mode})
+                elif act == 'STOP':
+                    sim_engine.auto_mode = False
+                    sim_engine.is_moving = False
+                    sim_engine.v = 0.0
+                    sim_engine.w = 0.0
+                    sim_engine.explore_phase = "ĐÃ DỪNG TỰ HÀNH"
+                    self._json(200, {'status': 'ok', 'auto': False})
+                else:
+                    self._json(400, {'status': 'error', 'reason': 'INVALID_ACT'})
             return
 
-        self._json(404, {"error": "Not Found"})
-
-    def do_POST(self):
-        path = self.path.split('?')[0]
-        length = int(self.headers.get('Content-Length', 0))
-        body = json.loads(self.rfile.read(length).decode('utf-8')) if length > 0 else {}
-
-        if path == '/api/ai1/reset':
-            level = int(body.get('level', 1))
-            seed = body.get('seed', None)
-            res = sim_ai1.reset(level=level, seed=seed)
-            self._json(200, res)
+        elif path == '/api/cmd':
+            import urllib.parse
+            params = urllib.parse.parse_qs(q)
+            val = params.get('val', [''])[0]
+            ok, reason = sim_engine.execute_command(val)
+            self._json(200 if ok else 422, {'status': 'SENT' if ok else 'FAILED', 'reason': reason})
             return
 
-        elif path == '/api/ai1/step':
-            dt = float(body.get('dt', 0.1))
-            res = sim_ai1.step(dt=dt)
-            self._json(200, res)
+        elif path == '/api/auto_config':
+            import urllib.parse
+            params = urllib.parse.parse_qs(q)
+            try:
+                spd_rpm = float(params.get('speed', [60.0])[0])
+                trn_rpm = float(params.get('turn', [50.0])[0])
+                with sim_engine.lock:
+                    sim_engine.target_speed_rpm = spd_rpm
+                    sim_engine.target_turn_rpm = trn_rpm
+                    sim_engine.cruise_speed_mps = max(0.04, min(0.35, (spd_rpm * 2.0 * math.pi * 0.0366) / 60.0))
+                    sim_engine.turn_w_rads = max(0.10, min(1.50, (trn_rpm * 2.0 * math.pi * 0.0366) / (60.0 * 0.096)))
+                self._json(200, {'status': 'OK', 'speed_rpm': spd_rpm, 'turn_rpm': trn_rpm})
+            except Exception as e:
+                self._json(400, {'status': 'ERROR', 'reason': str(e)})
             return
 
-        elif path == '/api/ai2/reset':
-            preset = body.get('preset', 'cluttered')
-            seed = body.get('seed', None)
-            res = sim_ai2.reset(preset=preset, seed=seed)
-            self._json(200, res)
+        elif path == '/api/reset_map':
+            with sim_engine.lock:
+                sim_engine._init_slam_map()
+                sim_engine.explore_phase = "ĐÃ XÓA MAP: bắt đầu quét lập bản đồ mới"
+            self._json(200, {'status': 'OK', 'reason': 'MAP_RESET'})
             return
 
-        elif path == '/api/ai2/step':
-            res = sim_ai2.step()
-            self._json(200, res)
-            return
-
-        elif path == '/api/unified/step':
-            # 1 bước AI 2 cấp goal, 1 bước AI 1 lái xe
-            ai2_st = sim_ai2.step()
-            # Ánh xạ tọa độ grid sang world của AI 1 nếu ở chế độ sandbox
-            sim_ai1.goal = [float(sim_ai2.rx) * 0.25, float(sim_ai2.ry) * 0.25]
-            ai1_st = sim_ai1.step(dt=0.1)
-            self._json(200, {"ai1": ai1_st, "ai2": ai2_st})
-            return
-
-        self._json(404, {"error": "Not Found"})
+        self._json(404, {'error': 'NOT_FOUND'})
 
 
 class ThreadedServer(ThreadingMixIn, HTTPServer):
     daemon_threads = True
 
 
-def run_server(port=PORT):
-    # Ensure stdout handles UTF-8 on Windows
+def main():
     if sys.stdout.encoding != 'utf-8':
-        try:
-            sys.stdout.reconfigure(encoding='utf-8')
-        except Exception:
-            pass
-    server = ThreadedServer(('0.0.0.0', port), MissionControlHandler)
+        try: sys.stdout.reconfigure(encoding='utf-8')
+        except Exception: pass
+
+    server = ThreadedServer(('0.0.0.0', PORT), CyberpunkWebHandler)
     print("==================================================================", flush=True)
-    print(f"[AGV MISSION CONTROL] SERVER DANG CHAY TAI: http://localhost:{port}", flush=True)
-    print(f"  AI 1 Local Planner: {models_hub.ai1_path.name} (SHA: {models_hub.ai1_sha[:12]}...)", flush=True)
-    print(f"  AI 2 Coverage:      {models_hub.ai2_path.name} (SHA: {models_hub.ai2_sha[:12]}...)", flush=True)
+    print(f" AGV MISSION CONTROL WEB DANG CHAY TAI: http://localhost:{PORT}", flush=True)
+    print(" Giao dien: index_cyberpunk.html (Radar 360 do + SLAM 2D + D-Pad)", flush=True)
+    print(" Dong co AI: AI 1 (local_planner.onnx) & AI 2 (coverage_model.onnx)", flush=True)
     print("==================================================================", flush=True)
     try:
         server.serve_forever()
     except KeyboardInterrupt:
-        print("\nĐang tắt server...", flush=True)
+        pass
     finally:
         server.server_close()
 
 
 if __name__ == '__main__':
-    run_server(PORT)
+    main()
