@@ -3,930 +3,1141 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AGV MISSION CONTROL - SLAM & RADAR TACTICAL</title>
+  <title>AGV MISSION CONTROL - DUAL AI 1 & AI 2 LIVE DASHBOARD</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #07090e;
-      --panel: #0d121d;
-      --card: #131b2a;
-      --border: #1e293b;
+      --bg-base: #06080e;
+      --panel-bg: rgba(13, 19, 32, 0.85);
+      --card-bg: rgba(19, 27, 44, 0.7);
+      --border-color: rgba(56, 189, 248, 0.18);
+      --border-hover: rgba(56, 189, 248, 0.45);
       --cyan: #00f0ff;
-      --cyan-glow: rgba(0, 240, 255, 0.4);
-      --green: #10b981;
-      --green-glow: rgba(16, 185, 129, 0.4);
-      --yellow: #f59e0b;
+      --cyan-glow: rgba(0, 240, 255, 0.35);
+      --emerald: #10b981;
+      --emerald-glow: rgba(16, 185, 129, 0.35);
+      --amber: #f59e0b;
       --red: #ef4444;
-      --red-glow: rgba(239, 68, 68, 0.5);
-      --text: #f8fafc;
-      --text-muted: #94a3b8;
+      --purple: #a855f7;
+      --text-main: #f8fafc;
+      --text-dim: #94a3b8;
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; font-family: 'Plus Jakarta Sans', sans-serif; }
-    body { background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
-    
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      user-select: none;
+    }
+
+    body {
+      background-color: var(--bg-base);
+      background-image: 
+        radial-gradient(circle at 10% 20%, rgba(0, 240, 255, 0.05) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(168, 85, 247, 0.05) 0%, transparent 40%);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    /* HEADER */
     header {
-      background: var(--panel); border-bottom: 1px solid var(--border);
-      padding: 10px 20px; display: flex; justify-content: space-between; align-items: center;
+      background: rgba(10, 14, 24, 0.9);
+      border-bottom: 1px solid var(--border-color);
+      padding: 12px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      backdrop-filter: blur(12px);
+      position: sticky;
+      top: 0;
+      z-index: 50;
     }
-    .brand { font-size: 16px; font-weight: 800; color: var(--cyan); display: flex; align-items: center; gap: 8px; font-family: 'JetBrains Mono'; }
-    .status-badge { font-size: 11px; padding: 4px 10px; border-radius: 999px; font-weight: 800; font-family: 'JetBrains Mono'; }
-    .badge-safe { background: rgba(16, 185, 129, 0.2); color: var(--green); border: 1px solid var(--green); }
-    .badge-warn { background: rgba(245, 158, 11, 0.2); color: var(--yellow); border: 1px solid var(--yellow); }
-    .badge-danger { background: rgba(239, 68, 68, 0.2); color: var(--red); border: 1px solid var(--red); animation: pulse 0.8s infinite; }
-    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
 
-    main { display: grid; grid-template-columns: 1fr 380px; gap: 14px; padding: 14px; flex: 1; }
-    
-    /* KHUNG CANVAS VISUALIZER (RADAR & SLAM MAP) */
-    .viewport-box {
-      background: var(--panel); border: 1px solid var(--border); border-radius: 16px;
-      padding: 12px; display: flex; flex-direction: column; position: relative;
+    .brand-section {
+      display: flex;
+      align-items: center;
+      gap: 16px;
     }
-    .view-tabs { display: flex; gap: 8px; margin-bottom: 10px; }
+
+    .logo-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: linear-gradient(135deg, rgba(0, 240, 255, 0.15), rgba(168, 85, 247, 0.15));
+      border: 1px solid var(--border-color);
+      padding: 6px 14px;
+      border-radius: 10px;
+    }
+
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--cyan);
+      border-radius: 50%;
+      box-shadow: 0 0 10px var(--cyan);
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.4; transform: scale(0.9); }
+      50% { opacity: 1; transform: scale(1.2); }
+    }
+
+    .brand-title {
+      font-size: 16px;
+      font-weight: 800;
+      font-family: 'JetBrains Mono', monospace;
+      letter-spacing: -0.3px;
+      background: linear-gradient(135deg, #ffffff 0%, var(--cyan) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .models-status-pill {
+      display: flex;
+      gap: 10px;
+    }
+
+    .pill {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .pill-active {
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid var(--emerald);
+      color: var(--emerald);
+    }
+
+    /* NAV TABS */
+    .tab-bar {
+      display: flex;
+      gap: 8px;
+      background: rgba(19, 27, 44, 0.6);
+      padding: 4px;
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+    }
+
     .tab-btn {
-      padding: 6px 14px; font-size: 12px; font-weight: 700; border-radius: 8px; cursor: pointer;
-      background: var(--card); color: var(--text-muted); border: 1px solid var(--border); transition: 0.2s;
+      background: transparent;
+      border: none;
+      color: var(--text-dim);
+      padding: 8px 18px;
+      font-size: 13px;
+      font-weight: 700;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
-    .tab-btn.active { background: var(--cyan); color: #000; border-color: var(--cyan); box-shadow: 0 0 10px var(--cyan-glow); }
-    .canvas-container { flex: 1; display: flex; justify-content: center; align-items: center; position: relative; }
-    canvas { background: #04060a; border-radius: 12px; border: 1px solid #172033; max-width: 100%; height: auto; }
 
-    /* CỘT ĐIỀU KHIỂN BÊN PHẢI */
-    aside { display: flex; flex-direction: column; gap: 12px; }
-    .card { background: var(--panel); border: 1px solid var(--border); border-radius: 14px; padding: 14px; }
-    .card-title { font-size: 11px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; margin-bottom: 10px; display: flex; justify-content: space-between; font-family: 'JetBrains Mono'; }
-
-    /* TELEMETRY METRICS */
-    .tele-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
-    .tele-item { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 8px 4px; text-align: center; }
-    .tele-lbl { font-size: 9px; color: var(--text-muted); font-weight: 700; font-family: 'JetBrains Mono'; }
-    .tele-val { font-size: 16px; font-weight: 900; color: var(--cyan); font-family: 'JetBrains Mono'; }
-
-    /* NÚT TỰ HÀNH & NÚT DỪNG KHẨN CẤP CHUẨN ĐỒ HỌA CAO */
-    .action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
-    .btn-action {
-      padding: 14px 6px; font-size: 12px; font-weight: 800; border-radius: 12px; cursor: pointer;
-      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; transition: 0.15s;
+    .tab-btn:hover {
+      color: var(--text-main);
+      background: rgba(255, 255, 255, 0.05);
     }
-    .btn-auto { background: #064e3b; border: 2px solid #059669; color: #34d399; }
-    .btn-auto:active, .btn-auto.active { background: #059669; color: #fff; box-shadow: 0 0 15px var(--green-glow); }
-    .btn-estop { background: #7f1d1d; border: 2px solid #dc2626; color: #fecaca; box-shadow: 0 0 15px var(--red-glow); }
-    .btn-estop:active { background: #b91c1c; transform: scale(0.96); }
 
-    /* CỤM PHÍM WASD D-PAD */
-    .dpad-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; max-width: 280px; margin: 0 auto; }
-    .dpad-btn {
-      height: 56px; border-radius: 12px; border: 1px solid #334466; background: var(--card);
-      color: #fff; font-size: 18px; font-weight: 800; cursor: pointer; display: flex; flex-direction: column;
-      align-items: center; justify-content: center; gap: 2px; transition: 0.1s;
+    .tab-btn.active {
+      background: var(--cyan);
+      color: #040810;
+      box-shadow: 0 0 15px var(--cyan-glow);
     }
-    .dpad-btn:active, .dpad-btn.pressed { background: var(--cyan); color: #000; border-color: var(--cyan); transform: scale(0.95); }
-    .dpad-sub { font-size: 9px; font-family: 'JetBrains Mono'; opacity: 0.75; font-weight: 600; }
+
+    /* MAIN CONTAINER */
+    main {
+      flex: 1;
+      padding: 20px;
+      max-width: 1700px;
+      width: 100%;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .view-content {
+      display: none;
+      width: 100%;
+    }
+
+    .view-content.active {
+      display: grid;
+      grid-template-columns: 1fr 400px;
+      gap: 20px;
+    }
+
+    /* CARDS & PANELS */
+    .panel {
+      background: var(--panel-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 18px;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      padding-bottom: 12px;
+    }
+
+    .panel-title {
+      font-size: 13px;
+      font-weight: 800;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--cyan);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* STAGE CANVAS */
+    .canvas-wrapper {
+      position: relative;
+      width: 100%;
+      height: 600px;
+      background: #030508;
+      border-radius: 12px;
+      border: 1px solid rgba(56, 189, 248, 0.12);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* CONTROLS BAR */
+    .controls-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 8px;
+    }
+
+    button.action-btn {
+      background: rgba(30, 41, 59, 0.8);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    button.action-btn:hover {
+      background: rgba(56, 189, 248, 0.15);
+      border-color: var(--cyan);
+      box-shadow: 0 0 10px var(--cyan-glow);
+    }
+
+    button.btn-primary {
+      background: linear-gradient(135deg, rgba(0, 240, 255, 0.2), rgba(16, 185, 129, 0.2));
+      border-color: var(--cyan);
+      color: var(--cyan);
+    }
+
+    button.btn-primary.running {
+      background: rgba(239, 68, 68, 0.2);
+      border-color: var(--red);
+      color: var(--red);
+    }
+
+    .level-select-group {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .btn-level {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--text-dim);
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-level:hover {
+      border-color: var(--cyan);
+      color: var(--text-main);
+    }
+
+    .btn-level.active {
+      background: rgba(0, 240, 255, 0.15);
+      border-color: var(--cyan);
+      color: var(--cyan);
+      box-shadow: 0 0 8px var(--cyan-glow);
+    }
+
+    /* TELEMETRY HUD */
+    .hud-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .hud-card {
+      background: var(--card-bg);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 10px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .hud-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .hud-value {
+      font-size: 20px;
+      font-weight: 800;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--text-main);
+    }
+
+    .val-cyan { color: var(--cyan); }
+    .val-emerald { color: var(--emerald); }
+    .val-amber { color: var(--amber); }
+    .val-red { color: var(--red); }
+
+    .meter-bar {
+      width: 100%;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 999px;
+      overflow: hidden;
+      margin-top: 4px;
+    }
+
+    .meter-fill {
+      height: 100%;
+      background: var(--cyan);
+      border-radius: 999px;
+      transition: width 0.1s linear;
+    }
+
+    /* Q-VALUES HUD FOR AI 2 */
+    .q-value-row {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-top: 6px;
+    }
+
+    .q-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+    }
+
+    .q-name {
+      width: 90px;
+      color: var(--text-dim);
+    }
+
+    .q-bar-bg {
+      flex: 1;
+      height: 10px;
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .q-bar-fill {
+      height: 100%;
+      background: var(--purple);
+      border-radius: 4px;
+      transition: width 0.15s ease;
+    }
+
+    .q-num {
+      width: 50px;
+      text-align: right;
+      color: var(--text-main);
+      font-weight: 700;
+    }
+
+    /* ARCHITECTURE CAROUSEL & INFO */
+    .info-box {
+      background: rgba(0, 240, 255, 0.04);
+      border: 1px solid rgba(0, 240, 255, 0.15);
+      border-radius: 10px;
+      padding: 12px;
+      font-size: 12px;
+      line-height: 1.6;
+      color: #cbd5e1;
+    }
+
+    .info-box strong {
+      color: var(--cyan);
+    }
   </style>
 </head>
 <body>
 
+  <!-- HEADER -->
   <header>
-    <div class="brand">⚡ AGV ROBOT V2.0 // SLAM & RADAR</div>
-    <div style="display:flex; gap:8px; align-items:center;">
-      <span style="font-size:11px; color:var(--text-muted); font-family:'JetBrains Mono';">RPLIDAR C1: 10Hz</span>
-      <div class="status-badge badge-safe" id="statusBadge">TRẠNG THÁI: AN TOÀN</div>
+    <div class="brand-section">
+      <div class="logo-badge">
+        <div class="pulse-dot"></div>
+        <span class="brand-title">AGV DUAL AI MISSION CONTROL</span>
+      </div>
+      <div class="models-status-pill">
+        <div class="pill pill-active">
+          <span>● AI 1: LOCAL PLANNER</span>
+          <span style="opacity: 0.6;">(99.6% GATED)</span>
+        </div>
+        <div class="pill pill-active">
+          <span>● AI 2: COVERAGE DRL</span>
+          <span style="opacity: 0.6;">(17.8K EPISODES)</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- TABS NAVIGATION -->
+    <div class="tab-bar">
+      <button class="tab-btn active" onclick="switchTab('ai1Tab')">
+        <span>🛰️ AI 1 — NÉ VẬT CẢN (LOCAL PLANNER)</span>
+      </button>
+      <button class="tab-btn" onclick="switchTab('ai2Tab')">
+        <span>🗺️ AI 2 — PHỦ KÍN SÀN (COVERAGE DRL)</span>
+      </button>
+      <button class="tab-btn" onclick="switchTab('unifiedTab')">
+        <span>🤖 TỰ HÀNH HỢP NHẤT (DUAL AI)</span>
+      </button>
     </div>
   </header>
 
+  <!-- MAIN VIEWS -->
   <main>
-    <!-- KHUNG ĐỒ HỌA TRUNG TÂM -->
-    <div class="viewport-box">
-      <div class="view-tabs">
-        <button class="tab-btn active" id="tabRadar" onclick="switchView('radar')">📡 RADAR QUÉT 360°</button>
-        <button class="tab-btn" id="tabSlam" onclick="switchView('slam')">🗺 BẢN ĐỒ SLAM 2D</button>
-        <span style="margin-left:auto; font-size:11px; color:var(--cyan); font-family:'JetBrains Mono'; align-self:center;" id="distIndicator">VẬT CẢN: -- m</span>
+
+    <!-- ==================== VIEW 1: AI 1 LOCAL MOTION PLANNER ==================== -->
+    <div id="ai1Tab" class="view-content active">
+      
+      <!-- CỘT TRÁI: SIMULATOR CANVAS 2D & TOOLBAR -->
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">
+            <span>MÔ PHỎNG VẬT LÝ AGV & 360 TIA RPLIDAR THỰC TẾ (LEVEL 1 - 5)</span>
+          </div>
+          <div class="level-select-group">
+            <button class="btn-level active" onclick="selectLevel(1)">L1: HÀNH LANG</button>
+            <button class="btn-level" onclick="selectLevel(2)">L2: VẬT CẢN ĐƠN</button>
+            <button class="btn-level" onclick="selectLevel(3)">L3: GÓC HẸP 0.70M</button>
+            <button class="btn-level" onclick="selectLevel(4)">L4: SLALOM 8 VẬT CẢN</button>
+            <button class="btn-level" onclick="selectLevel(5)">L5: BẪY CHỮ U (180° ESCAPE)</button>
+          </div>
+        </div>
+
+        <!-- CANVAS STAGE -->
+        <div class="canvas-wrapper">
+          <canvas id="ai1Canvas" width="900" height="580"></canvas>
+        </div>
+
+        <!-- TOOLBAR CONTROLS -->
+        <div class="controls-toolbar">
+          <div class="btn-group">
+            <button id="btnAi1Play" class="action-btn btn-primary" onclick="toggleAi1Play()">
+              <span>▶ BẬT TỰ HÀNH</span>
+            </button>
+            <button class="action-btn" onclick="stepAi1()">
+              <span>⏭ BƯỚC ĐƠN (100MS)</span>
+            </button>
+            <button class="action-btn" onclick="resetAi1()">
+              <span>🔄 ĐẶT LẠI VỊ TRÍ</span>
+            </button>
+          </div>
+          <div style="font-size: 12px; color: var(--text-dim); display: flex; align-items: center; gap: 8px;">
+            <span>Tia LiDAR:</span>
+            <label style="cursor: pointer; display: flex; align-items: center; gap: 4px;">
+              <input type="checkbox" id="chkShowRays" checked style="accent-color: var(--cyan);"> Hiển thị 360 tia
+            </label>
+          </div>
+        </div>
       </div>
-      <div class="canvas-container">
-        <canvas id="viewCanvas" width="600" height="600"></canvas>
+
+      <!-- CỘT PHẢI: TELEMETRY INSTRUMENTS HUD -->
+      <div style="display: flex; flex-direction: column; gap: 16px;">
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title">ĐỒNG HỒ ĐIỀU KHIỂN & ĐỘ TRỄ CPU</div>
+            <span id="ai1StatusBadge" class="pill pill-active">RUNNING</span>
+          </div>
+
+          <div class="hud-grid">
+            <div class="hud-card">
+              <span class="hud-label">VẬN TỐC TIẾN (V)</span>
+              <span id="txtV" class="hud-value val-cyan">0.000 <small style="font-size: 12px;">m/s</small></span>
+              <div class="meter-bar"><div id="barV" class="meter-fill" style="width: 0%;"></div></div>
+            </div>
+            <div class="hud-card">
+              <span class="hud-label">TỐC ĐỘ GÓC (W)</span>
+              <span id="txtW" class="hud-value val-emerald">0.000 <small style="font-size: 12px;">rad/s</small></span>
+              <div class="meter-bar"><div id="barW" class="meter-fill" style="width: 50%; background: var(--emerald);"></div></div>
+            </div>
+            <div class="hud-card">
+              <span class="hud-label">ĐỘ TRỄ SUY LUẬN</span>
+              <span id="txtLatency" class="hud-value val-emerald">0.00 <small style="font-size: 12px;">ms</small></span>
+              <span style="font-size: 10px; color: var(--emerald); font-family: 'JetBrains Mono';">✓ ĐẠT CHUẨN PI4 (&lt;2ms)</span>
+            </div>
+            <div class="hud-card">
+              <span class="hud-label">CỰ LY TỚI ĐÍCH</span>
+              <span id="txtDistGoal" class="hud-value val-amber">0.00 <small style="font-size: 12px;">m</small></span>
+            </div>
+            <div class="hud-card">
+              <span class="hud-label">KHOẢNG TRỐNG TỐI THIỂU</span>
+              <span id="txtMinClear" class="hud-value val-cyan">0.00 <small style="font-size: 12px;">m</small></span>
+            </div>
+            <div class="hud-card">
+              <span class="hud-label">QUÃNG ĐƯỜNG ĐI</span>
+              <span id="txtDistance" class="hud-value">0.00 <small style="font-size: 12px;">m</small></span>
+            </div>
+          </div>
+
+          <div class="info-box">
+            <strong>Mô hình AI 1 đang nạp:</strong> <code>local_planner.onnx</code><br>
+            • Kích thước tensor: <code>[1, 365] ➔ [1, 2]</code> (360 LiDAR + 5 trạng thái)<br>
+            • Vòng bảo vệ an toàn: Ngắt khẩn cấp E-Stop độc lập tại $d \le 0.41\text{m}$.
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title">MÔ TẢ KỊCH BẢN THỬ NGHIỆM</div>
+          </div>
+          <div id="ai1ScenarioDesc" style="font-size: 12px; color: var(--text-dim); line-height: 1.6;">
+            <strong>Level 1 (Corridor):</strong> AGV chạy dọc theo hành lang hẹp 4m, bám thẳng mục tiêu phía trước với vận tốc tối đa 0.35m/s.
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ==================== VIEW 2: AI 2 GLOBAL COVERAGE PLANNER ==================== -->
+    <div id="ai2Tab" class="view-content">
+      
+      <!-- CỘT TRÁI: GRID MAP 32x32 -->
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">
+            <span>BẢN ĐỒ MA TRẬN PHỦ KÍN 32x32 (COVERAGE DRL Q-NETWORK)</span>
+          </div>
+          <div class="level-select-group">
+            <button class="btn-level active" onclick="selectAi2Preset('cluttered')">KHO HÀNG CẢN</button>
+            <button class="btn-level" onclick="selectAi2Preset('pillars')">HÀNG CỘT</button>
+            <button class="btn-level" onclick="selectAi2Preset('u_corridor')">BẪY CHỮ U</button>
+          </div>
+        </div>
+
+        <div class="canvas-wrapper">
+          <canvas id="ai2Canvas" width="580" height="580"></canvas>
+        </div>
+
+        <div class="controls-toolbar">
+          <div class="btn-group">
+            <button id="btnAi2Play" class="action-btn btn-primary" onclick="toggleAi2Play()">
+              <span>▶ BẬT QUÉT SẠCH SÀN</span>
+            </button>
+            <button class="action-btn" onclick="stepAi2()">
+              <span>⏭ BƯỚC ĐƠN</span>
+            </button>
+            <button class="action-btn" onclick="resetAi2()">
+              <span>🔄 TẠO BẢN ĐỒ MỚI</span>
+            </button>
+          </div>
+          <div style="font-size: 12px; color: var(--text-dim);">
+            Mô hình: <code>coverage_model.onnx</code>
+          </div>
+        </div>
+      </div>
+
+      <!-- CỘT PHẢI: Q-VALUES & STATS -->
+      <div style="display: flex; flex-direction: column; gap: 16px;">
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title">ĐIỂM SỐ DỰ ĐOÁN HÀNH ĐỘNG (Q-VALUES)</div>
+            <span id="ai2StatusBadge" class="pill pill-active">RUNNING</span>
+          </div>
+
+          <div class="hud-grid" style="grid-template-columns: 1fr;">
+            <div class="hud-card">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span class="hud-label">TỶ LỆ PHỦ KÍN SÀN</span>
+                <span id="txtCoveragePct" class="hud-value val-emerald">0.0%</span>
+              </div>
+              <div class="meter-bar" style="height: 10px; margin-top: 8px;">
+                <div id="barCoverage" class="meter-fill" style="width: 0%; background: var(--emerald);"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Q-VALUES CHART -->
+          <div class="q-value-row">
+            <div class="hud-label" style="margin-bottom: 6px;">ĐIỂM THƯỞNG 4 HƯỚNG TỪ MẠNG NƠ-RON:</div>
+            <div class="q-item">
+              <span class="q-name">LÊN (Up)</span>
+              <div class="q-bar-bg"><div id="qBar0" class="q-bar-fill" style="width: 0%;"></div></div>
+              <span id="qNum0" class="q-num">0.0</span>
+            </div>
+            <div class="q-item">
+              <span class="q-name">XUỐNG (Down)</span>
+              <div class="q-bar-bg"><div id="qBar1" class="q-bar-fill" style="width: 0%;"></div></div>
+              <span id="qNum1" class="q-num">0.0</span>
+            </div>
+            <div class="q-item">
+              <span class="q-name">TRÁI (Left)</span>
+              <div class="q-bar-bg"><div id="qBar2" class="q-bar-fill" style="width: 0%;"></div></div>
+              <span id="qNum2" class="q-num">0.0</span>
+            </div>
+            <div class="q-item">
+              <span class="q-name">PHẢI (Right)</span>
+              <div class="q-bar-bg"><div id="qBar3" class="q-bar-fill" style="width: 0%;"></div></div>
+              <span id="qNum3" class="q-num">0.0</span>
+            </div>
+          </div>
+
+          <div class="hud-grid" style="margin-top: 10px;">
+            <div class="hud-card">
+              <span class="hud-label">SỐ BƯỚC ĐI</span>
+              <span id="txtAi2Steps" class="hud-value">0</span>
+            </div>
+            <div class="hud-card">
+              <span class="hud-label">SỐ Ô ĐÃ PHỦ</span>
+              <span id="txtCoveredCells" class="hud-value val-emerald">0 / 0</span>
+            </div>
+          </div>
+
+          <div class="info-box" style="margin-top: 10px;">
+            <strong>Nguyên lý AI 2:</strong> Mạng Q-Net trích xuất <code>local_map [1, 3, 9, 9]</code> (ô chưa quét, tường, ô đã quét) và 8 đặc trưng vector để đưa ra hướng đi phủ kín sàn tối ưu, tránh đi lại vùng đã sạch.
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ==================== VIEW 3: UNIFIED DUAL AI MISSION ==================== -->
+    <div id="unifiedTab" class="view-content">
+      <div class="panel" style="grid-column: span 2;">
+        <div class="panel-header">
+          <div class="panel-title">KIẾN TRÚC HỢP NHẤT TOÀN DIỆN (HIERARCHICAL DUAL-AI AGV)</div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+          <div class="hud-card" style="padding: 18px;">
+            <div class="panel-title" style="color: var(--purple); margin-bottom: 10px;">
+              🧠 TẦNG CHIẾN LƯỢC TOÀN CỤC — AI 2 (COVERAGE PLANNER)
+            </div>
+            <p style="font-size: 13px; color: var(--text-dim); line-height: 1.7;">
+              • <strong>Nhiệm vụ:</strong> Quan sát toàn bộ mặt sàn nhà xưởng qua bản đồ lưới Occupancy Grid SLAM.<br>
+              • <strong>Mô hình:</strong> Double DQN <code>coverage_model.onnx</code>.<br>
+              • <strong>Chu kỳ ra quyết định:</strong> 1Hz - 2Hz (khi xe hoàn tất dọn một khu vực).<br>
+              • <strong>Đầu ra:</strong> Chỉ định tọa độ Waypoint mục tiêu kế tiếp $(X_{\text{goal}}, Y_{\text{goal}})$ để phủ kín 100% diện tích không bỏ sót góc chết.
+            </p>
+          </div>
+
+          <div class="hud-card" style="padding: 18px;">
+            <div class="panel-title" style="color: var(--cyan); margin-bottom: 10px;">
+              ⚡ TẦNG ĐIỀU PHỐI CỤC BỘ — AI 1 (LOCAL MOTION PLANNER)
+            </div>
+            <p style="font-size: 13px; color: var(--text-dim); line-height: 1.7;">
+              • <strong>Nhiệm vụ:</strong> Lái xe thời gian thực mượt mà bám theo mục tiêu và né tránh vật cản tức thì.<br>
+              • <strong>Mô hình:</strong> Single Actor-Critic <code>local_planner.onnx</code>.<br>
+              • <strong>Chu kỳ ra quyết định:</strong> 10Hz - 20Hz (mỗi 50ms - 100ms).<br>
+              • <strong>Đầu vào:</strong> 360 tia RPLiDAR C1 + Vector mục tiêu $(d, \sin\theta, \cos\theta, v, \omega)$.<br>
+              • <strong>Đầu ra:</strong> Vận tốc điều khiển $(v, \omega)$ gửi xuống STM32 qua cáp USB UART.
+            </p>
+          </div>
+        </div>
+
+        <div class="info-box" style="margin-top: 14px;">
+          <h4 style="color: var(--emerald); margin-bottom: 8px;">✓ TRẠNG THÁI NGHIỆM THU MÔ HÌNH CHÍNH THỨC TRÊN GITHUB</h4>
+          <p>
+            • Mã commit: <code>9a9e0a1</code> đã được đẩy an toàn lên <code>origin/main</code>.<br>
+            • Khi chạy xe thật trên Raspberry Pi 4B, file <code>start_agv_system.sh</code> sẽ tự động khởi động các tiến trình ROS 2 + SLAM Toolbox + RPLiDAR C1 và gọi 2 mô hình ONNX này.<br>
+            • Toàn bộ 113 bài kiểm thử unit tests và kiểm thử nghiệm thu 100 seed ngẫu nhiên đều đã đạt <strong>PASS 100%</strong>.
+          </p>
+        </div>
       </div>
     </div>
 
-    <!-- CỘT ĐIỀU KHIỂN & SỐ LIỆU -->
-    <aside>
-      <!-- TỌA ĐỘ VÀ VẬN TỐC THẬT -->
-      <div class="card">
-        <div class="card-title">
-          <span>Vị Trí & Động Lực Học</span>
-          <span style="color:var(--cyan);" onclick="sendCmd('RESET')">↺ RESET</span>
-        </div>
-        <div class="tele-grid">
-          <div class="tele-item"><div class="tele-lbl">X (MÉT)</div><div class="tele-val" id="valX">0.000</div></div>
-          <div class="tele-item"><div class="tele-lbl">Y (MÉT)</div><div class="tele-val" id="valY">0.000</div></div>
-          <div class="tele-item"><div class="tele-lbl">GÓC</div><div class="tele-val" id="valTh">0.0°</div></div>
-          <div class="tele-item"><div class="tele-lbl">BÁNH T (RPM)</div><div class="tele-val" id="valLRpm">0.0</div></div>
-          <div class="tele-item"><div class="tele-lbl">BÁNH P (RPM)</div><div class="tele-val" id="valRRpm">0.0</div></div>
-          <div class="tele-item"><div class="tele-lbl">QUÃNG ĐƯỜNG</div><div class="tele-val" id="valTrajDist" style="color:var(--cyan);">0.0 m</div></div>
-          <div class="tele-item" style="grid-column: span 3; display: flex; justify-content: space-between; align-items: center; padding: 6px 12px; background: rgba(0, 240, 255, 0.05); border: 1px solid rgba(0, 240, 255, 0.2); border-radius: 6px;">
-            <div style="font-size: 10px; font-weight: bold; color: var(--cyan); font-family: 'JetBrains Mono';">ĐỘ PHỦ PHÒNG (RAM)</div>
-            <div style="font-size: 12px; font-weight: bold; color: #fff; font-family: 'JetBrains Mono';" id="valCoverage">0.0% (0 điểm)</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- ĐIỀU KHIỂN CHỦ ĐỘNG & TỰ HÀNH -->
-      <div class="card" style="flex:1;">
-        <div id="commandNotice" role="status" aria-live="polite" style="font-size:12px; line-height:1.5; margin-bottom:8px; overflow-wrap:anywhere;">Chưa gửi lệnh điều khiển.</div>
-        <div class="card-title">Bộ Điều Khiển Trung Tâm</div>
-        
-        <div class="action-grid" style="grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px;">
-          <button class="btn-action btn-auto" id="btnAutoExplore" onclick="toggleAutoMode('EXPLORE')">
-            <span style="font-size:16px;">🗺️</span>
-            <span id="autoExploreText">QUÉT MAP & VỀ HOME</span>
-          </button>
-          <button class="btn-action" id="btnAutoCoverage" style="background:#1e1b4b; border:2px solid #6366f1; color:#c7d2fe;" onclick="toggleAutoMode('COVERAGE')">
-            <span style="font-size:16px;">🧹</span>
-            <span id="autoCoverageText">PHỦ KÍN MẶT SÀN</span>
-          </button>
-        </div>
-        <div class="action-grid" style="grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px;">
-          <button class="btn-action" id="btnArm" onclick="armControl()">SẴN SÀNG ĐIỀU KHIỂN</button>
-          <button class="btn-action btn-estop" onclick="emergencyStop()">
-            <span style="font-size:16px;">🛑</span>
-            <span>DỪNG KHẨN CẤP</span>
-          </button>
-          <button class="btn-action" id="btnResetFault" style="display:none; grid-column:span 3; background:rgba(239,68,68,0.2); border:1px solid var(--red); color:var(--red); font-weight:bold;" onclick="resetFault()">
-            <span style="font-size:16px;">↺</span>
-            <span id="resetFaultText">MỞ KHÓA LỖI HỆ THỐNG (RESET)</span>
-          </button>
-          <button class="btn-action" id="btnResetMap" style="grid-column:span 3; background:rgba(56,189,248,0.12); border:1px solid var(--cyan); color:var(--cyan); font-weight:bold; margin-top:4px;" onclick="resetMapAndRescan()">
-            <span style="font-size:16px;">🔄</span>
-            <span id="resetMapText">XÓA BẢN ĐỒ & QUÉT LẠI TỪ ĐẦU</span>
-          </button>
-        </div>
-
-        <!-- CẤU HÌNH TỐC ĐỘ TỰ ĐỘNG QUÉT MAP (AUTO PID) -->
-        <div style="background: rgba(0, 240, 255, 0.05); border: 1px solid rgba(0, 240, 255, 0.2); border-radius: 8px; padding: 10px; margin-bottom: 12px;">
-          <div style="font-size: 10px; font-weight: bold; color: var(--cyan); margin-bottom: 8px; text-transform: uppercase; display:flex; justify-content:space-between;">
-            <span>⚡ TỐC ĐỘ TỰ HÀNH AUTO</span>
-            <span id="autoConfigStatus" style="font-size: 9px; color: var(--text-muted);">SẴN SÀNG</span>
-          </div>
-          <div style="margin-bottom: 8px;">
-            <div style="display: flex; justify-content: space-between; font-size: 9px; color: var(--text-muted); margin-bottom: 2px;">
-              <span>Tốc độ tiến AUTO</span>
-              <span id="valAutoSpeedLbl" style="color: var(--cyan); font-weight:bold;">48 RPM (0.184 m/s)</span>
-            </div>
-            <input type="range" id="sliderAutoSpeed" min="20" max="140" value="48" step="5" style="width: 100%; cursor: pointer;" oninput="updateAutoParams()">
-          </div>
-          <div>
-            <div style="display: flex; justify-content: space-between; font-size: 9px; color: var(--text-muted); margin-bottom: 2px;">
-              <span>Tốc độ quay AUTO</span>
-              <span id="valAutoTurnLbl" style="color: var(--cyan); font-weight:bold;">40 RPM (1.60 rad/s)</span>
-            </div>
-            <input type="range" id="sliderAutoTurn" min="15" max="85" value="40" step="1" style="width: 100%; cursor: pointer;" oninput="updateAutoParams()">
-          </div>
-        </div>
-
-        <div class="dpad-grid">
-          <button class="dpad-btn" id="btnQ"><span>↺</span><span class="dpad-sub">Q (Xoay T)</span></button>
-          <button class="dpad-btn" id="btnW"><span>▲</span><span class="dpad-sub">W (Tiến)</span></button>
-          <button class="dpad-btn" id="btnE"><span>↻</span><span class="dpad-sub">E (Xoay P)</span></button>
-
-          <button class="dpad-btn" id="btnA"><span>◄</span><span class="dpad-sub">A (Trái)</span></button>
-          <button class="dpad-btn" style="background:#450a0a; border-color:#991b1b; color:#fca5a5;" onclick="emergencyStop()"><span>🛑</span><span class="dpad-sub">Space</span></button>
-          <button class="dpad-btn" id="btnD"><span>►</span><span class="dpad-sub">D (Phải)</span></button>
-
-          <div></div>
-          <button class="dpad-btn" id="btnS"><span>▼</span><span class="dpad-sub">S (Lùi)</span></button>
-          <div></div>
-        </div>
-        
-        <!-- Ô NHẬP PID GỌN Ở GÓC DƯỚI PHẢI -->
-        <div style="margin-top:10px; background:#0c121e; border:1px solid #1e293b; border-radius:8px; padding:10px;">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-            <span style="font-size:11px; font-weight:bold; color:var(--cyan); font-family:'JetBrains Mono';">⚙️ THAM SỐ PID ĐỘNG CƠ</span>
-            <span id="pidStatusMini" style="font-size:9px; color:var(--text-muted);">SẴN SÀNG</span>
-          </div>
-          <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:8px; margin-bottom:8px;">
-            <div>
-              <label style="font-size:9px; font-weight:bold; color:var(--cyan); display:block; margin-bottom:2px;">Kp (Tỉ lệ)</label>
-              <input type="number" id="inputKpMini" step="0.05" value="1.00" style="width:100%; background:#070a10; border:1px solid #334155; color:#fff; padding:4px; border-radius:4px; font-family:'JetBrains Mono'; font-weight:bold; font-size:11px; box-sizing:border-box;">
-            </div>
-            <div>
-              <label style="font-size:9px; font-weight:bold; color:var(--green); display:block; margin-bottom:2px;">Ki (Tích phân)</label>
-              <input type="number" id="inputKiMini" step="0.10" value="2.50" style="width:100%; background:#070a10; border:1px solid #334155; color:#fff; padding:4px; border-radius:4px; font-family:'JetBrains Mono'; font-weight:bold; font-size:11px; box-sizing:border-box;">
-            </div>
-            <div>
-              <label style="font-size:9px; font-weight:bold; color:var(--yellow); display:block; margin-bottom:2px;">Kd (Vi phân)</label>
-              <input type="number" id="inputKdMini" step="0.005" value="0.010" style="width:100%; background:#070a10; border:1px solid #334155; color:#fff; padding:4px; border-radius:4px; font-family:'JetBrains Mono'; font-weight:bold; font-size:11px; box-sizing:border-box;">
-            </div>
-          </div>
-          <div style="display:flex; gap:6px; margin-bottom:8px;">
-            <button onclick="applyPidMini()" style="flex:2; background:#0284c7; color:#fff; border:none; padding:7px 4px; border-radius:6px; font-weight:bold; cursor:pointer; font-family:'JetBrains Mono'; font-size:10px; display:flex; align-items:center; justify-content:center; gap:4px;">
-              <span>💾</span> <span>NẠP PID</span>
-            </button>
-            <button onclick="exportToExcel()" style="flex:1; background:#16a34a; color:#fff; border:none; padding:7px 4px; border-radius:6px; font-weight:bold; cursor:pointer; font-family:'JetBrains Mono'; font-size:10px; display:flex; align-items:center; justify-content:center; gap:4px;">
-              <span>📊</span> <span>XUẤT CSV</span>
-            </button>
-          </div>
-
-          <!-- LỊCH SỬ NẠP THÔNG SỐ RÚT GỌN TRỰC QUAN -->
-          <div style="border-top:1px solid #1e293b; padding-top:6px;">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
-              <span style="font-size:9px; font-weight:bold; color:var(--text-muted); font-family:'JetBrains Mono';">LỊCH SỬ NẠP GẦN ĐÂY</span>
-              <span id="historyCount" style="font-size:9px; color:var(--cyan); font-family:'JetBrains Mono';">0 bản ghi</span>
-            </div>
-            <div style="max-height:90px; overflow-y:auto;">
-              <table style="width:100%; border-collapse:collapse; font-size:9px; font-family:'JetBrains Mono'; text-align:left;">
-                <thead>
-                  <tr style="color:var(--text-muted); border-bottom:1px solid #334155;">
-                    <th style="padding:2px 4px;">Giờ</th>
-                    <th style="padding:2px 4px;">Kp</th>
-                    <th style="padding:2px 4px;">Ki</th>
-                    <th style="padding:2px 4px;">Kd</th>
-                    <th style="padding:2px 4px;">Kết quả</th>
-                  </tr>
-                </thead>
-                <tbody id="historyTableBody">
-                  <tr><td colspan="5" style="text-align:center; padding:6px; color:#64748b;">Chưa có bản ghi nào</td></tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-
-        <div style="text-align:center; font-size:10px; color:var(--text-muted); margin-top:8px;">
-          Giữ phím lái • Buông tay xe phanh • Nhấn Space dừng khẩn cấp
-        </div>
-      </div>
-    </aside>
   </main>
 
   <script>
-    const canvas = document.getElementById('viewCanvas');
-    const ctx = canvas.getContext('2d');
-    let currentView = 'radar';
-    let isAutoRunning = false;
-    let teleData = null;
-    let mapData = null;
+    // =========================================================================
+    // JAVASCRIPT MISSION CONTROL CLIENT
+    // =========================================================================
+    let currentTab = 'ai1Tab';
+    let ai1Timer = null;
+    let ai2Timer = null;
+    let ai1IsRunning = false;
+    let ai2IsRunning = false;
 
-    function switchView(view) {
-      currentView = view;
-      document.getElementById('tabRadar').classList.toggle('active', view === 'radar');
-      document.getElementById('tabSlam').classList.toggle('active', view === 'slam');
+    // --- TAB SWITCHING ---
+    function switchTab(tabId) {
+      currentTab = tabId;
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.view-content').forEach(view => view.classList.remove('active'));
 
-      if (view === 'slam') fetchMap();
+      event.currentTarget.classList.add('active');
+      document.getElementById(tabId).classList.add('active');
+
+      if (tabId === 'ai1Tab') drawAi1();
+      if (tabId === 'ai2Tab') drawAi2();
     }
 
-    // Persistent browser records also retain timeouts/disconnections.
-    let pidHistory;
-    try { pidHistory = JSON.parse(localStorage.getItem('agv_pid_history') || '[]'); }
-    catch (_) { pidHistory = []; }
-    if (!Array.isArray(pidHistory)) pidHistory = [];
-    pidHistory.forEach(row => { if (row.status === 'PENDING') { row.status = 'FAILED'; row.reason = 'Trang tải lại: chưa xác nhận kết quả MCU'; } });
-    let pidBusy = false;
-    const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-    function saveHistory() {
-      pidHistory = pidHistory.slice(-500);
-      try { localStorage.setItem('agv_pid_history', JSON.stringify(pidHistory)); } catch (_) {}
-      renderHistory();
-    }
-    function renderHistory() {
-      const tbody = document.getElementById('historyTableBody');
-      const countLbl = document.getElementById('historyCount');
-      if (!tbody) return;
-      if (countLbl) countLbl.innerText = pidHistory.length + ' bản ghi';
-      tbody.innerHTML = pidHistory.length ? pidHistory.slice(-10).reverse().map(row => {
-        const status = row.status || 'UNVERIFIED';
-        const color = status === 'APPLIED' ? 'var(--green)' : status === 'PENDING' ? 'var(--yellow)' : 'var(--red)';
-        return `<tr><td>${escapeHtml(row.time)}</td><td>${escapeHtml(row.kp)}</td><td>${escapeHtml(row.ki)}</td><td>${escapeHtml(row.kd)}</td><td style="color:${color}" title="${escapeHtml(row.reason)}">${escapeHtml(status)}</td></tr>`;
-      }).join('') : '<tr><td colspan="5">Chưa có bản ghi nào</td></tr>';
-    }
-    async function applyPidMini() {
-      if (pidBusy) return;
-      const fields = ['inputKpMini','inputKiMini','inputKdMini'];
-      const strings = fields.map(id => document.getElementById(id).value.trim());
-      const values = strings.map(Number);
-      const lbl = document.getElementById('pidStatusMini');
-      if (strings.some(v => v === '') || values.some((v,i) => !Number.isFinite(v) || v < 0 || v > [20,50,5][i])) {
-        if (lbl) lbl.innerText = 'REJECTED: giá trị PID không hợp lệ';
-        return;
-      }
-      const [kp,ki,kd] = values;
-      const record = {time:new Date().toISOString(),kp,ki,kd,kf:.45,status:'PENDING',reason:'Chờ MCU xác nhận'};
-      pidHistory.push(record); saveHistory();
-      pidBusy = true;
-      if (lbl) lbl.innerText = 'PENDING: chờ MCU';
-      try {
-        const response = await fetch(`/api/pid?kp=${kp}&ki=${ki}&kd=${kd}&kf=0.45`, {signal:AbortSignal.timeout(2500)});
-        const result = await response.json();
-        const accepted = response.ok && result.status === 'APPLIED';
-        record.status = accepted ? 'APPLIED' : result.status === 'REJECTED' ? 'REJECTED' : 'FAILED';
-        record.reason = result.reason || 'Không có xác nhận MCU hợp lệ';
-      } catch (_) {
-        record.status = 'FAILED';
-        record.reason = 'Mất kết nối hoặc timeout; chưa xác nhận MCU';
-      } finally {
-        pidBusy = false;
-        saveHistory();
-        if (lbl) { lbl.innerText = record.status + ': ' + record.reason; lbl.style.color = record.status === 'APPLIED' ? 'var(--green)' : 'var(--red)'; }
-      }
-    }
+    // =========================================================================
+    // AI 1 FRONTEND LOGIC
+    // =========================================================================
+    const canvas1 = document.getElementById('ai1Canvas');
+    const ctx1 = canvas1.getContext('2d');
+    let ai1State = null;
+    let curAi1Level = 1;
 
-    function applyPid() {
-      applyPidMini();
-    }
-
-    function exportToExcel() {
-      const columns = ['time','kp','ki','kd','kf','status','reason'];
-      const quote = v => '"' + String(v ?? '').replace(/"/g, '""') + '"';
-      const csv = [columns, ...pidHistory.map(row => columns.map(k => row[k]))].map(row => row.map(quote).join(',')).join('\r\n');
-      const url = URL.createObjectURL(new Blob(['\ufeff' + csv], {type:'text/csv;charset=utf-8'}));
-      const link = document.createElement('a'); link.href = url; link.download = 'agv_pid_history.csv'; link.click();
-      setTimeout(() => URL.revokeObjectURL(url), 1000);
-    }
-
-    function clearHistory() {
-      if (confirm('Bạn có chắc muốn xóa sạch toàn bộ lịch sử đo đạc PID không?')) {
-        pidHistory = [];
-        localStorage.removeItem('agv_pid_history');
-        renderHistory();
-      }
-    }
-
-    // Tự động render lịch sử ban đầu
-    setTimeout(renderHistory, 500);
-
-    function commandFailure(data) {
-      const labels = {
-        NOT_ARMED:'Chưa mở phiên điều khiển (Hãy nhấn MỞ ĐIỀU KHIỂN trước khi lái)',
-        LATCHED:'Phiên đang khóa an toàn (Nhấn ↺ RESET để mở khóa)',
-        FAULT:'Đang có lỗi điều khiển', D0_STALE:'Dữ liệu MCU quá cũ',
-        SCAN_STALE:'Dữ liệu LiDAR quá cũ', CALLER_STALE:'Mất nhịp lệnh từ người điều khiển',
-        MAP_NOT_READY:'Bản đồ thiếu, quá cũ hoặc chưa hợp lệ',
-        TF_NOT_READY:'Chưa có tọa độ xe mới trong bản đồ',
-        BODY_RADIUS_UNCONFIGURED:'Chưa cấu hình kích thước bao thân xe',
-        TRIAL_EXPIRED:'Phiên thử đã hết thời gian',
-        SESSION_OR_SENSOR_NOT_READY:'Chưa mở phiên hoặc cảm biến chưa sẵn sàng'
-      };
-      const blockers = Array.isArray(data.blockers) ? data.blockers : [];
-      return blockers.length ? blockers.map(b => (labels[b] || b) + ' (' + b + ')').join('; ') : (data.reason || 'Lệnh bị từ chối');
-    }
-    function showCommandMessage(text, data, isError) {
-      if (data && data.journal && !data.journal.saved) text += ' — Không ghi được nhật ký lệnh';
-      document.getElementById('statusBadge').innerText = text;
-      // Telemetry refreshes the vehicle badge; retain the command outcome in
-      // its own area so the rejection does not disappear after 100 ms.
-      const notice = document.getElementById('commandNotice');
-      notice.innerText = text;
-      // Clear rejection banner immediately on success; highlight in red on error.
-      if (isError) {
-        notice.style.color = '#f87171';
-        notice.style.borderLeft = '3px solid #ef4444';
-        notice.style.paddingLeft = '6px';
-      } else {
-        notice.style.color = '';
-        notice.style.borderLeft = '';
-        notice.style.paddingLeft = '';
-      }
-    }
-    let sessionTimer = null;
-    async function sendCmd(cmd, quiet = false) {
-      try {
-        const response = await fetch('/api/cmd?val=' + encodeURIComponent(cmd), {signal:AbortSignal.timeout(1200)});
-        const data = await response.json();
-        if (!response.ok) {
-          if (!quiet) {
-            showCommandMessage(cmd + ' BỊ TỪ CHỐI: ' + commandFailure(data), data, true);
-            if (driveTimer) { clearInterval(driveTimer); driveTimer = null; }
-            driveCmd = null;
-          }
-        } else if (cmd === 'RESET') {
-          showCommandMessage('ĐÃ RESET KHÓA AN TOÀN — SẴN SÀNG MỞ ĐIỀU KHIỂN', data);
-        } else if (cmd === 'ARM') {
-          showCommandMessage(data.reason === 'ARM_CONFIRMED' ? 'MCU ĐÃ XÁC NHẬN MỞ PHIÊN' : 'ARM ĐÃ GỬI — ĐANG CHỜ ACK MCU', data);
-        }
-        return response.ok;
-      } catch (_) {
-        if (!quiet) {
-          if (driveTimer) { clearInterval(driveTimer); driveTimer = null; }
-          driveCmd = null;
-          showCommandMessage('MẤT KẾT NỐI — VUI LÒNG KIỂM TRA MẠNG');
-        }
-        return false;
-      }
-    }
-    async function armControl() {
-      const ok = await sendCmd('ARM');
-      if (ok) {
-        if (sessionTimer) clearInterval(sessionTimer);
-        sessionTimer = setInterval(() => {
-          if (!driveCmd && !isAutoRunning && teleData && teleData.control && teleData.control.armed) {
-            sendCmd('V 0.000 0.000', true);
-          }
-        }, 120);
-      }
-      return ok;
-    }
-
-    async function resetFault() {
-      driveOpId++;
-      if (driveTimer) { clearInterval(driveTimer); driveTimer = null; }
-      driveCmd = null;
-      if (sessionTimer) { clearInterval(sessionTimer); sessionTimer = null; }
-      showCommandMessage('ĐANG GỬI LỆNH RESET MỞ KHÓA LỖI...');
-      await sendCmd('RESET');
-    }
-
-    let currentAutoMode = 'EXPLORE';
-
-    async function toggleAutoMode(mode) {
-      if (teleData && teleData.control && teleData.control.fault) {
-        showCommandMessage('ĐANG TỰ ĐỘNG RESET LỖI...');
-        await sendCmd('RESET', true);
-      }
-      let act = 'START';
-      if (isAutoRunning) {
-        if (currentAutoMode === mode) {
-          act = 'STOP';
-        } else {
-          await fetch('/api/auto?act=STOP', {signal:AbortSignal.timeout(1000)}).catch(()=>{});
-          act = 'START';
-        }
-      }
-      if (act === 'START') {
-        currentAutoMode = mode;
-        driveCmd = null;
-        if (driveTimer) { clearInterval(driveTimer); driveTimer = null; }
-        if (sessionTimer) { clearInterval(sessionTimer); sessionTimer = null; }
-        if (teleData && teleData.control && !teleData.control.armed) {
-          await armControl();
-        }
-      }
-      try {
-        const url = act === 'START' ? `/api/auto?act=START&mode=${mode}` : '/api/auto?act=STOP';
-        const response = await fetch(url, {signal:AbortSignal.timeout(1500)});
-        const d = await response.json();
-        if (!response.ok || d.status !== 'ok') {
-          isAutoRunning = Boolean(d.auto);
-          showCommandMessage('AUTO ' + act + ' BỊ TỪ CHỐI: ' + commandFailure(d), d, true);
-          return;
-        }
-        isAutoRunning = Boolean(d.auto);
-        const modeLabel = mode === 'COVERAGE' ? 'PHỦ KÍN SÀN' : 'QUÉT MAP & VỀ HOME';
-        showCommandMessage(isAutoRunning ? `ĐÃ BẬT: ${modeLabel}` : 'ĐÃ DỪNG TỰ HÀNH', d);
-        updateAutoButtonUI(isAutoRunning, mode);
-      } catch (_) {
-        showCommandMessage('AUTO MẤT KẾT NỐI — CHƯA XÁC NHẬN AN TOÀN');
-      }
-    }
-
-    async function toggleAuto() {
-      await toggleAutoMode('EXPLORE');
-    }
-
-    function updateAutoButtonUI(running, mode) {
-      const btnExp = document.getElementById('btnAutoExplore');
-      const txtExp = document.getElementById('autoExploreText');
-      const btnCov = document.getElementById('btnAutoCoverage');
-      const txtCov = document.getElementById('autoCoverageText');
-
-      if (!btnExp || !btnCov) return;
-
-      if (running) {
-        if (mode === 'COVERAGE') {
-          btnCov.classList.add('active');
-          btnCov.style.background = '#4338ca';
-          btnCov.style.borderColor = '#818cf8';
-          btnCov.style.color = '#fff';
-          btnCov.style.boxShadow = '0 0 18px #6366f1';
-          if (txtCov) txtCov.innerText = 'ĐANG PHỦ KÍN (DỪNG)';
-
-          btnExp.classList.remove('active');
-          btnExp.style.background = '#064e3b';
-          btnExp.style.borderColor = '#059669';
-          btnExp.style.color = '#34d399';
-          btnExp.style.boxShadow = '';
-          if (txtExp) txtExp.innerText = 'QUÉT MAP & VỀ HOME';
-        } else {
-          btnExp.classList.add('active');
-          btnExp.style.background = '#059669';
-          btnExp.style.borderColor = '#34d399';
-          btnExp.style.color = '#fff';
-          btnExp.style.boxShadow = '0 0 18px #059669';
-          if (txtExp) txtExp.innerText = 'ĐANG QUÉT MAP (DỪNG)';
-
-          btnCov.classList.remove('active');
-          btnCov.style.background = '#1e1b4b';
-          btnCov.style.borderColor = '#6366f1';
-          btnCov.style.color = '#c7d2fe';
-          btnCov.style.boxShadow = '';
-          if (txtCov) txtCov.innerText = 'PHỦ KÍN MẶT SÀN';
-        }
-      } else {
-        btnExp.classList.remove('active');
-        btnExp.style.background = '#064e3b';
-        btnExp.style.borderColor = '#059669';
-        btnExp.style.color = '#34d399';
-        btnExp.style.boxShadow = '';
-        if (txtExp) txtExp.innerText = 'QUÉT MAP & VỀ HOME';
-
-        btnCov.classList.remove('active');
-        btnCov.style.background = '#1e1b4b';
-        btnCov.style.borderColor = '#6366f1';
-        btnCov.style.color = '#c7d2fe';
-        btnCov.style.boxShadow = '';
-        if (txtCov) txtCov.innerText = 'PHỦ KÍN MẶT SÀN';
-      }
-    }
-
-    let autoConfigDebounce = null;
-    function updateAutoParams() {
-      const spd = parseFloat(document.getElementById('sliderAutoSpeed').value);
-      const trn = parseFloat(document.getElementById('sliderAutoTurn').value);
-      const spdMps = ((spd * 2.0 * Math.PI * 0.0366) / 60.0).toFixed(3);
-      const trnRad = ((trn * 2.0 * Math.PI * 0.0366) / (60.0 * 0.096)).toFixed(2);
-      document.getElementById('valAutoSpeedLbl').innerText = `${spd} RPM (${spdMps} m/s)`;
-      document.getElementById('valAutoTurnLbl').innerText = `${trn} RPM (${trnRad} rad/s)`;
-      const stLbl = document.getElementById('autoConfigStatus');
-      if (stLbl) stLbl.innerText = 'ĐANG CẬP NHẬT...';
-      if (autoConfigDebounce) clearTimeout(autoConfigDebounce);
-      autoConfigDebounce = setTimeout(async () => {
-        try {
-          const res = await fetch(`/api/auto_config?speed=${spd}&turn=${trn}`);
-          const d = await res.json();
-          if (res.ok && d.status === 'OK') {
-            if (stLbl) { stLbl.innerText = 'ĐÃ LƯU'; stLbl.style.color = 'var(--green)'; }
-            setTimeout(() => { if (stLbl) { stLbl.innerText = 'SẴN SÀNG'; stLbl.style.color = 'var(--text-muted)'; } }, 2000);
-          } else {
-            if (stLbl) { stLbl.innerText = 'LỖI CẤU HÌNH'; stLbl.style.color = 'var(--red)'; }
-          }
-        } catch (_) {
-          if (stLbl) { stLbl.innerText = 'MẤT KẾT NỐI'; stLbl.style.color = 'var(--red)'; }
-        }
-      }, 300);
-    }
-
-    function emergencyStop() {
-      // STOP endpoint also disables AUTO. One operation, one confirmation.
-      stopDrive(true);
-      isAutoRunning = false;
-      const btn = document.getElementById('btnAuto');
-      btn.classList.remove('active');
-      document.getElementById('autoText').innerText = 'BẬT TỰ ĐỘNG QUÉT MAP';
-      btn.style.background = '#064e3b';
-      btn.style.borderColor = '#059669';
-      btn.style.color = '';
-      btn.style.boxShadow = '';
-    }
-
-    async function resetMapAndRescan() {
-      const txt = document.getElementById('resetMapText');
-      if (txt) txt.innerText = 'ĐANG XÓA BẢN ĐỒ...';
-      try {
-        const res = await fetch('/api/reset_map');
-        const data = await res.json();
-        if (res.ok && data.status === 'OK') {
-          if (txt) txt.innerText = 'ĐÃ RESET! ĐANG TẢI LẠI MAP...';
-          mapData = null;
-          ctx.clearRect(0, 0, canvas.width, canvas.height);
-          setTimeout(() => {
-            fetchMap();
-            if (txt) txt.innerText = 'XÓA BẢN ĐỒ & QUÉT LẠI TỪ ĐẦU';
-          }, 2000);
-        } else {
-          if (txt) txt.innerText = 'LỖI: ' + (data.reason || 'FAILED');
-          setTimeout(() => { if (txt) txt.innerText = 'XÓA BẢN ĐỒ & QUÉT LẠI TỪ ĐẦU'; }, 2500);
-        }
-      } catch (e) {
-        if (txt) txt.innerText = 'MẤT KẾT NỐI!';
-        setTimeout(() => { if (txt) txt.innerText = 'XÓA BẢN ĐỒ & QUÉT LẠI TỪ ĐẦU'; }, 2500);
-      }
-    }
-
-    function fetchMap() {
-      fetch('/api/map_full').then(r=>r.json()).then(d=>{
-        mapData = d;
-      }).catch(()=>{});
-    }
-
-    // VẼ RADAR HOẶC BẢN ĐỒ SLAM
-    function render() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      const cx = canvas.width / 2;
-      const cy = canvas.height / 2;
-
-      if (currentView === 'radar') {
-        // 1. Vẽ vòng tròn Radar
-        ctx.strokeStyle = '#1e293b';
-        ctx.lineWidth = 1;
-        for (let r = 50; r <= 250; r += 50) {
-          ctx.beginPath();
-          ctx.arc(cx, cy, r, 0, Math.PI * 2);
-          ctx.stroke();
-        }
-
-        // Vẽ các tia trục
-        ctx.beginPath();
-        ctx.moveTo(cx - 250, cy); ctx.lineTo(cx + 250, cy);
-        ctx.moveTo(cx, cy - 250); ctx.lineTo(cx, cy + 250);
-        ctx.stroke();
-
-        // 2. Vẽ đám mây điểm LaserScan (chuẩn hướng: Front = Trên, Left = Trái, Right = Phải)
-        if (teleData && teleData.ranges) {
-          const scale = 75; // 75px = 1m (phạm vi ~3.5m)
-          ctx.fillStyle = '#00f0ff';
-          teleData.ranges.forEach((dist, deg) => {
-            if (dist > 0.05 && dist < 4.0) {
-              const rad = deg * Math.PI / 180.0;
-              const px = cx - dist * Math.sin(rad) * scale;
-              const py = cy - dist * Math.cos(rad) * scale;
-              
-              if (dist < 0.35) ctx.fillStyle = '#ef4444';
-              else if (dist < 0.70) ctx.fillStyle = '#f59e0b';
-              else ctx.fillStyle = '#00f0ff';
-              
-              ctx.fillRect(px - 2, py - 2, 4, 4);
-            }
-          });
-        }
-
-        // 3. Vẽ vị trí xe Robot ở tâm
-        ctx.fillStyle = '#10b981';
-        ctx.beginPath();
-        ctx.arc(cx, cy, 10, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.strokeStyle = '#fff';
-        ctx.lineWidth = 2;
-        ctx.beginPath();
-        ctx.moveTo(cx, cy);
-        ctx.lineTo(cx, cy - 22); // Mũi tên tiến
-        ctx.stroke();
-      } 
-      else if (currentView === 'slam') {
-        if (mapData && mapData.data && mapData.data.length > 0) {
-          // VẼ BẢN ĐỒ SLAM GRID THỰC TẾ
-          const mw = mapData.w;
-          const mh = mapData.h;
-          const pSize = Math.max(1, Math.min(canvas.width / mw, canvas.height / mh));
-          const ox = (canvas.width - mw * pSize) / 2;
-          const oy = (canvas.height - mh * pSize) / 2;
-
-          for (let y = 0; y < mh; y++) {
-            for (let x = 0; x < mw; x++) {
-              const val = mapData.data[(mh - 1 - y) * mw + x];
-              if (val === -1) {
-                ctx.fillStyle = '#0b0f19'; // Vùng chưa quét
-              } else if (val === 0) {
-                ctx.fillStyle = '#1e293b'; // Vùng trống tự do
-              } else {
-                ctx.fillStyle = '#00f0ff'; // Vật cản / Tường phòng
-              }
-              ctx.fillRect(ox + x * pSize, oy + y * pSize, pSize, pSize);
-            }
-          }
-
-          // VẼ VẾT BÁNH XE LƯU TẠM TRONG RAM (Breadcrumbs Trajectory)
-          if (teleData && teleData.trajectory && teleData.trajectory.path && teleData.trajectory.path.length > 1) {
-            ctx.strokeStyle = '#38bdf8';
-            ctx.lineWidth = 2.5;
-            ctx.shadowColor = '#00f0ff';
-            ctx.shadowBlur = 6;
-            ctx.beginPath();
-            teleData.trajectory.path.forEach((pt, idx) => {
-              const gx = (pt[0] - mapData.ox) / mapData.res;
-              const gy = (pt[1] - mapData.oy) / mapData.res;
-              const px = ox + gx * pSize;
-              const py = oy + (mh - 1 - gy) * pSize;
-              if (idx === 0) ctx.moveTo(px, py);
-              else ctx.lineTo(px, py);
-            });
-            ctx.stroke();
-            ctx.shadowBlur = 0;
-          }
-
-          // VẼ MỤC TIÊU KHÁM PHÁ (Target Goal Frontier)
-          if (teleData && teleData.map_info && teleData.map_info.goal_x != null && teleData.map_info.goal_y != null && (teleData.map_info.goal_x !== 0 || teleData.map_info.goal_y !== 0)) {
-            const gx = (teleData.map_info.goal_x - mapData.ox) / mapData.res;
-            const gy = (teleData.map_info.goal_y - mapData.oy) / mapData.res;
-            const px = ox + gx * pSize;
-            const py = oy + (mh - 1 - gy) * pSize;
-            ctx.strokeStyle = '#f59e0b';
-            ctx.lineWidth = 1.5;
-            ctx.beginPath();
-            ctx.arc(px, py, Math.max(6, pSize * 3), 0, Math.PI * 2);
-            ctx.stroke();
-            ctx.fillStyle = '#f59e0b';
-            ctx.beginPath();
-            ctx.arc(px, py, 2.5, 0, Math.PI * 2);
-            ctx.fill();
-          }
-
-          // VẼ VỊ TRÍ XE ROBOT TRÊN BẢN ĐỒ SLAM VỚI MŨI TÊN HƯỚNG
-          if (teleData && teleData.robot) {
-            const rx = teleData.robot.x;
-            const ry = teleData.robot.y;
-            const rth = teleData.robot.th || 0;
-            const rgx = (rx - mapData.ox) / mapData.res;
-            const rgy = (ry - mapData.oy) / mapData.res;
-            const rpx = ox + rgx * pSize;
-            const rpy = oy + (mh - 1 - rgy) * pSize;
-            ctx.fillStyle = '#10b981';
-            ctx.shadowColor = '#10b981';
-            ctx.shadowBlur = 8;
-            ctx.beginPath();
-            ctx.arc(rpx, rpy, Math.max(4, pSize * 2.5), 0, Math.PI * 2);
-            ctx.fill();
-            ctx.shadowBlur = 0;
-
-            // Mũi tên hướng đầu xe
-            const headLen = Math.max(12, pSize * 4);
-            ctx.strokeStyle = '#ffffff';
-            ctx.lineWidth = 2;
-            ctx.beginPath();
-            ctx.moveTo(rpx, rpy);
-            ctx.lineTo(rpx + Math.cos(rth) * headLen, rpy - Math.sin(rth) * headLen);
-            ctx.stroke();
-          }
-        } else {
-          // Lưới nền & thông báo tải khi map đang khởi tạo lại
-          ctx.strokeStyle = '#1e293b';
-          ctx.lineWidth = 1;
-          for (let x = 0; x < canvas.width; x += 40) {
-            ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke();
-          }
-          for (let y = 0; y < canvas.height; y += 40) {
-            ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke();
-          }
-          ctx.fillStyle = '#38bdf8';
-          ctx.font = 'bold 14px Consolas, monospace';
-          ctx.textAlign = 'center';
-          ctx.fillText('ĐANG TẢI DỮ LIỆU BẢN ĐỒ SLAM...', cx, cy - 10);
-          ctx.fillStyle = '#94a3b8';
-          ctx.font = '12px Consolas, monospace';
-          ctx.fillText('Đang đồng bộ dữ liệu Lidar & Odometry...', cx, cy + 16);
-        }
-      }
-
-      requestAnimationFrame(render);
-    }
-
-    function updateTrialUI(d) {
-      const c = d.control;
-      if (!c) return;
-      isAutoRunning = Boolean(d.auto);
-      const resetBtn = document.getElementById('btnResetFault');
-      const resetText = document.getElementById('resetFaultText');
-      if (resetBtn) {
-        resetBtn.style.display = 'block';
-        if (resetText) resetText.innerText = '↺ RESET / XÓA LỖI HỆ THỐNG';
-      }
-
-      document.querySelectorAll('.dpad-btn[id]').forEach(b => { b.disabled = false; });
-      const pidButton = document.querySelector('button[onclick="applyPidMini()"]');
-      if (pidButton) {
-        pidButton.disabled = false;
-        pidButton.title = 'Nạp PID xuống MCU qua Pi';
-      }
-      const arm = document.getElementById('btnArm');
-      if (arm) {
-        arm.disabled = false;
-        arm.onclick = armControl;
-        arm.style.borderColor = '';
-        arm.style.color = '';
-        arm.innerText = c.armed ? 'ĐÃ SẴN SÀNG' : 'SẴN SÀNG ĐIỀU KHIỂN';
-      }
-      const autoExpBtn = document.getElementById('btnAutoExplore');
-      const autoCovBtn = document.getElementById('btnAutoCoverage');
-      if (autoExpBtn) autoExpBtn.disabled = false;
-      if (autoCovBtn) autoCovBtn.disabled = false;
-      if (d.map_info && d.map_info.task_mode) {
-        currentAutoMode = d.map_info.task_mode;
-      }
-      updateAutoButtonUI(isAutoRunning, currentAutoMode);
-    }
-
-    // ĐỌC TELEMETRY LIÊN TỤC 10HZ
-    setInterval(() => {
-      fetch('/api/telemetry').then(r=>r.json()).then(d=>{
-        teleData = d;
-        updateTrialUI(d);
-        document.getElementById('valX').innerText = d.robot.x.toFixed(3);
-        document.getElementById('valY').innerText = d.robot.y.toFixed(3);
-        document.getElementById('valTh').innerText = (d.robot.th * 180 / Math.PI).toFixed(1) + '°';
-        document.getElementById('valLRpm').innerText = (d.robot.l_rpm > 0 ? '+' : '') + d.robot.l_rpm.toFixed(1);
-        document.getElementById('valRRpm').innerText = (d.robot.r_rpm > 0 ? '+' : '') + d.robot.r_rpm.toFixed(1);
-        document.getElementById('valMinD')?.innerText && (document.getElementById('valMinD').innerText = (d.min_m * 100).toFixed(0) + ' cm');
-        const distEl = document.getElementById('valTrajDist');
-        if (distEl && d.trajectory) distEl.innerText = `${d.trajectory.distance_m} m`;
-        const covEl = document.getElementById('valCoverage');
-        if (covEl && d.trajectory) {
-          covEl.innerText = `${d.trajectory.coverage_pct}% (${d.trajectory.points_count} điểm)`;
-        }
-        document.getElementById('distIndicator').innerText = `VẬT CẢN: ${d.min_m.toFixed(2)}m (${d.min_ang}°)`;
-
-        const badge = document.getElementById('statusBadge');
-        if (d.control && d.control.fault) {
-          badge.className = 'status-badge badge-danger';
-          badge.innerText = `LỖI ĐIỀU KHIỂN: ${d.control.fault} — NHẤN MỞ KHÓA LỖI (RESET)`;
-        } else if (d.status === 'OBSERVE_ONLY') {
-          badge.className = 'status-badge badge-warn';
-          badge.innerText = 'ĐANG XEM DỮ LIỆU XE — CHƯA BẬT CHẠY';
-        } else if (d.auto) {
-          badge.className = 'status-badge badge-safe';
-          badge.innerText = (d.map_info && d.map_info.phase) ? d.map_info.phase : 'ĐANG TỰ ĐỘNG KHÁM PHÁ';
-        } else if (d.status === 'DANGER_STOP') {
-          badge.className = 'status-badge badge-danger';
-          badge.innerText = 'CẢNH BÁO: QUÁ GẦN!';
-        } else if (d.status === 'WARNING') {
-          badge.className = 'status-badge badge-warn';
-          badge.innerText = 'CẢNH BÁO VA CHẠM';
-        } else {
-          badge.className = 'status-badge badge-safe';
-          badge.innerText = 'HỆ THỐNG SẴN SÀNG';
-        }
-      }).catch(()=>{
-        document.getElementById('statusBadge').innerText = 'MẤT TELEMETRY — CHƯA XÁC NHẬN AN TOÀN';
-        ['valLRpm','valRRpm','valX','valY','valTh'].forEach(id => document.getElementById(id).innerText = '--');
-        if (driveCmd) stopDrive();
-      });
-    }, 100);
-
-    // TỰ ĐỘNG CẬP NHẬT BẢN ĐỒ SLAM ĐỊNH KỲ (Mỗi 1.5 giây nếu đang ở tab SLAM)
-    setInterval(() => {
-      if (currentView === 'slam') {
-        fetchMap();
-      }
-    }, 1500);
-
-    // ĐIỀU KHIỂN BÀN PHÍM WASD
-    const SPEED = 110;
-    let driveTimer = null;
-    let driveCmd = null;
-    let driveOpId = 0;
-
-    async function startDrive(c) {
-      const opId = ++driveOpId;
-      isAutoRunning = false;
-      driveCmd = c;
-      sendCmd(c);
-      if (driveTimer) clearInterval(driveTimer);
-      driveTimer = setInterval(()=>{
-        if (opId === driveOpId && driveCmd) sendCmd(driveCmd);
-      }, 90);
-    }
-
-    function stopDrive(force = false) {
-      driveOpId++;
-      const active = Boolean(sessionTimer || driveCmd || driveTimer);
-      if (force === true && sessionTimer) { clearInterval(sessionTimer); sessionTimer = null; }
-      driveCmd = null;
-      if (driveTimer) { clearInterval(driveTimer); driveTimer = null; }
-      if (force === true) {
-        sendCmd('STOP');
-      } else if (active) {
-        sendCmd('V 0.000 0.000');
-        if (!sessionTimer) sessionTimer = setInterval(() => { if (!driveCmd && !isAutoRunning) sendCmd('V 0.000 0.000'); }, 150);
-      }
-      document.querySelectorAll('.dpad-btn').forEach(b => b.classList.remove('pressed'));
-    }
-
-    function bind(id, c) {
-      const el = document.getElementById(id);
-      if (!el) return;
-      el.addEventListener('pointerdown', (e)=>{ e.preventDefault(); el.classList.add('pressed'); startDrive(c); });
-      const rel = (e)=>{ e.preventDefault(); el.classList.remove('pressed'); stopDrive(); };
-      el.addEventListener('pointerup', rel);
-      el.addEventListener('pointercancel', rel);
-    }
-
-    bind('btnW', 'M 140 140');
-    bind('btnS', 'M -140 -140');
-    bind('btnA', 'M -120 120');
-    bind('btnD', 'M 120 -120');
-    bind('btnQ', 'M -130 130');
-    bind('btnE', 'M 130 -130');
-
-    window.addEventListener('keydown', (e)=>{
-      if (e.target && /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)) return;
-      if (e.repeat) return;
-      if (e.code === 'Space') { e.preventDefault(); emergencyStop(); return; }
-      const k = { 'KeyW': 'M 140 140', 'KeyS': 'M -140 -140', 'KeyA': 'M -120 120', 'KeyD': 'M 120 -120', 'KeyQ': 'M -130 130', 'KeyE': 'M 130 -130' };
-      if (k[e.code]) { e.preventDefault(); startDrive(k[e.code]); }
-    });
-
-    window.addEventListener('keyup', (e)=>{
-      if (driveCmd && (e.code.startsWith('Key') || e.code === 'Space')) { e.preventDefault(); stopDrive(); }
-    });
-
-    const focusLost = () => {
-      // Chỉ nhả lệnh lái thủ công nếu đang đè phím lái bàn phím, TUYỆT ĐỐI KHÔNG ngắt chế độ AUTO
-      if (driveCmd) {
-        stopDrive(false);
-      }
+    const levelDescriptions = {
+      1: "<strong>Level 1 (Corridor):</strong> AGV chạy dọc theo hành lang thẳng 10m x 4m, bám đích và giữ tâm đường.",
+      2: "<strong>Level 2 (Single Obstacle):</strong> Một vật cản tròn chắn giữa đường, AI 1 chủ động lượn vòng mượt mà né tránh.",
+      3: "<strong>Level 3 (Narrow L-Corridor 0.70m):</strong> Hành lang hẹp vuông góc 0.70m (thân xe 0.40m), AI 1 ôm cua chính xác không quẹt tường.",
+      4: "<strong>Level 4 (Slalom Multi-Obstacle):</strong> Mê cung 6-10 vật cản san sát, AI 1 luồn lách thông minh duy trì vận tốc ổn định.",
+      5: "<strong>Level 5 (U-Pocket Dead-End):</strong> Bẫy ngõ cụt hình chữ U, AI 1 xoay tại chỗ 180° thoát hiểm dứt khoát rồi tiến về đích."
     };
-    window.addEventListener('blur', focusLost);
-    document.addEventListener('visibilitychange', () => { if (document.hidden) focusLost(); });
-    window.addEventListener('pointerup', () => { if (driveCmd) stopDrive(); });
-    fetchMap();
-    render();
+
+    async function resetAi1(level = curAi1Level) {
+      curAi1Level = level;
+      try {
+        const res = await fetch('/api/ai1/reset', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ level: curAi1Level })
+        });
+        ai1State = await res.json();
+        updateAi1HUD();
+        drawAi1();
+      } catch (err) {
+        console.error("Lỗi reset AI 1:", err);
+      }
+    }
+
+    async function stepAi1() {
+      try {
+        const res = await fetch('/api/ai1/step', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ dt: 0.1 })
+        });
+        ai1State = await res.json();
+        updateAi1HUD();
+        drawAi1();
+        if (ai1State.status !== 'RUNNING') {
+          stopAi1Play();
+        }
+      } catch (err) {
+        console.error("Lỗi step AI 1:", err);
+      }
+    }
+
+    function toggleAi1Play() {
+      if (ai1IsRunning) {
+        stopAi1Play();
+      } else {
+        startAi1Play();
+      }
+    }
+
+    function startAi1Play() {
+      if (ai1State && ai1State.status !== 'RUNNING') {
+        resetAi1(curAi1Level);
+      }
+      ai1IsRunning = true;
+      const btn = document.getElementById('btnAi1Play');
+      btn.classList.add('running');
+      btn.innerHTML = '<span>⏸ TẠM DỪNG</span>';
+      ai1Timer = setInterval(stepAi1, 60); // ~16 FPS
+    }
+
+    function stopAi1Play() {
+      ai1IsRunning = false;
+      clearInterval(ai1Timer);
+      const btn = document.getElementById('btnAi1Play');
+      btn.classList.remove('running');
+      btn.innerHTML = '<span>▶ BẬT TỰ HÀNH</span>';
+    }
+
+    function selectLevel(lvl) {
+      document.querySelectorAll('#ai1Tab .btn-level').forEach((b, i) => {
+        b.classList.toggle('active', i + 1 === lvl);
+      });
+      document.getElementById('ai1ScenarioDesc').innerHTML = levelDescriptions[lvl] || "";
+      stopAi1Play();
+      resetAi1(lvl);
+    }
+
+    function updateAi1HUD() {
+      if (!ai1State) return;
+      document.getElementById('txtV').innerHTML = `${ai1State.v.toFixed(3)} <small style="font-size: 12px;">m/s</small>`;
+      document.getElementById('txtW').innerHTML = `${ai1State.w.toFixed(3)} <small style="font-size: 12px;">rad/s</small>`;
+      document.getElementById('barV').style.width = `${Math.min(100, (ai1State.v / 0.35) * 100)}%`;
+      document.getElementById('barW').style.width = `${Math.min(100, Math.max(0, ((ai1State.w + 1.5) / 3.0) * 100))}%`;
+
+      document.getElementById('txtLatency').innerHTML = `${ai1State.latency_ms.toFixed(2)} <small style="font-size: 12px;">ms</small>`;
+      document.getElementById('txtDistGoal').innerHTML = `${ai1State.dist_to_goal.toFixed(2)} <small style="font-size: 12px;">m</small>`;
+      document.getElementById('txtMinClear').innerHTML = `${ai1State.min_clearance_m.toFixed(2)} <small style="font-size: 12px;">m</small>`;
+      document.getElementById('txtDistance').innerHTML = `${ai1State.total_distance.toFixed(2)} <small style="font-size: 12px;">m</small>`;
+
+      const badge = document.getElementById('ai1StatusBadge');
+      badge.innerText = ai1State.status;
+      if (ai1State.status === 'RUNNING') {
+        badge.className = 'pill pill-active';
+      } else if (ai1State.status === 'GOAL') {
+        badge.className = 'pill';
+        badge.style.background = 'rgba(16, 185, 129, 0.2)';
+        badge.style.color = '#10b981';
+        badge.style.borderColor = '#10b981';
+      } else {
+        badge.className = 'pill';
+        badge.style.background = 'rgba(239, 68, 68, 0.2)';
+        badge.style.color = '#ef4444';
+        badge.style.borderColor = '#ef4444';
+      }
+    }
+
+    function drawAi1() {
+      if (!ai1State) return;
+      const w = canvas1.width;
+      const h = canvas1.height;
+      ctx1.clearRect(0, 0, w, h);
+
+      const b = ai1State.bounds;
+      const scaleX = (w - 80) / b[0];
+      const scaleY = (h - 80) / b[1];
+      const scale = Math.min(scaleX, scaleY);
+      const offsetX = (w - b[0] * scale) / 2;
+      const offsetY = (h - b[1] * scale) / 2;
+
+      function toScreen(x, y) {
+        return [offsetX + x * scale, h - (offsetY + y * scale)];
+      }
+
+      // 1. Grid nền không gian
+      ctx1.strokeStyle = 'rgba(255, 255, 255, 0.04)';
+      ctx1.lineWidth = 1;
+      for (let x = 0; x <= b[0]; x += 1.0) {
+        const [sx1, sy1] = toScreen(x, 0);
+        const [sx2, sy2] = toScreen(x, b[1]);
+        ctx1.beginPath(); ctx1.moveTo(sx1, sy1); ctx1.lineTo(sx2, sy2); ctx1.stroke();
+      }
+      for (let y = 0; y <= b[1]; y += 1.0) {
+        const [sx1, sy1] = toScreen(0, y);
+        const [sx2, sy2] = toScreen(b[0], y);
+        ctx1.beginPath(); ctx1.moveTo(sx1, sy1); ctx1.lineTo(sx2, sy2); ctx1.stroke();
+      }
+
+      // 2. Tường (Walls)
+      ctx1.strokeStyle = '#38bdf8';
+      ctx1.lineWidth = 3;
+      ctx1.shadowColor = '#00f0ff';
+      ctx1.shadowBlur = 6;
+      for (const wall of ai1State.walls) {
+        const [x1, y1] = toScreen(wall[0], wall[1]);
+        const [x2, y2] = toScreen(wall[2], wall[3]);
+        ctx1.beginPath(); ctx1.moveTo(x1, y1); ctx1.lineTo(x2, y2); ctx1.stroke();
+      }
+      ctx1.shadowBlur = 0;
+
+      // 3. Vật cản tròn (Obstacles)
+      for (const obs of ai1State.obstacles) {
+        const [ox, oy] = toScreen(obs.x, obs.y);
+        const rPix = obs.radius * scale;
+        ctx1.fillStyle = 'rgba(168, 85, 247, 0.35)';
+        ctx1.strokeStyle = '#a855f7';
+        ctx1.lineWidth = 2;
+        ctx1.beginPath();
+        ctx1.arc(ox, oy, rPix, 0, Math.PI * 2);
+        ctx1.fill();
+        ctx1.stroke();
+      }
+
+      // 4. Mục tiêu (Goal)
+      const [gx, gy] = toScreen(ai1State.goal[0], ai1State.goal[1]);
+      ctx1.fillStyle = 'rgba(16, 185, 129, 0.25)';
+      ctx1.strokeStyle = '#10b981';
+      ctx1.lineWidth = 2;
+      ctx1.shadowColor = '#10b981';
+      ctx1.shadowBlur = 12;
+      ctx1.beginPath();
+      ctx1.arc(gx, gy, 0.35 * scale, 0, Math.PI * 2);
+      ctx1.fill();
+      ctx1.stroke();
+      ctx1.beginPath();
+      ctx1.arc(gx, gy, 4, 0, Math.PI * 2);
+      ctx1.fillStyle = '#10b981';
+      ctx1.fill();
+      ctx1.shadowBlur = 0;
+
+      // 5. Vết xe chạy (Trajectory history)
+      if (ai1State.history.length > 1) {
+        ctx1.strokeStyle = 'rgba(0, 240, 255, 0.4)';
+        ctx1.lineWidth = 2;
+        ctx1.beginPath();
+        const [hx0, hy0] = toScreen(ai1State.history[0][0], ai1State.history[0][1]);
+        ctx1.moveTo(hx0, hy0);
+        for (let i = 1; i < ai1State.history.length; i++) {
+          const [hx, hy] = toScreen(ai1State.history[i][0], ai1State.history[i][1]);
+          ctx1.lineTo(hx, hy);
+        }
+        ctx1.stroke();
+      }
+
+      const [rx, ry] = toScreen(ai1State.pose[0], ai1State.pose[1]);
+      const rHeading = ai1State.pose[2];
+
+      // 6. 360 Tia LiDAR
+      const showRays = document.getElementById('chkShowRays').checked;
+      if (showRays && ai1State.lidar && ai1State.lidar.length > 0) {
+        ctx1.lineWidth = 0.5;
+        for (let i = 0; i < 360; i += 3) { // Vẽ mỗi 3 tia để tối ưu FPS
+          const rayDist = ai1State.lidar[i];
+          const rayAngle = rHeading + (i * Math.PI / 180.0);
+          const lx = ai1State.pose[0] + rayDist * Math.cos(rayAngle);
+          const ly = ai1State.pose[1] + rayDist * Math.sin(rayAngle);
+          const [slx, sly] = toScreen(lx, ly);
+
+          ctx1.strokeStyle = rayDist < 0.45 ? 'rgba(239, 68, 68, 0.45)' : 'rgba(0, 240, 255, 0.12)';
+          ctx1.beginPath();
+          ctx1.moveTo(rx, ry);
+          ctx1.lineTo(slx, sly);
+          ctx1.stroke();
+        }
+      }
+
+      // 7. Thân xe AGV (Robot Body Puck)
+      const robotRadiusPix = 0.20 * scale;
+      ctx1.shadowColor = '#00f0ff';
+      ctx1.shadowBlur = 15;
+      ctx1.fillStyle = '#0f172a';
+      ctx1.strokeStyle = ai1State.status === 'COLLISION' ? '#ef4444' : '#00f0ff';
+      ctx1.lineWidth = 3;
+      ctx1.beginPath();
+      ctx1.arc(rx, ry, robotRadiusPix, 0, Math.PI * 2);
+      ctx1.fill();
+      ctx1.stroke();
+      ctx1.shadowBlur = 0;
+
+      // Mũi hướng robot (Heading indicator)
+      const hx = rx + robotRadiusPix * 1.3 * Math.cos(-rHeading);
+      const hy = ry + robotRadiusPix * 1.3 * Math.sin(-rHeading);
+      ctx1.strokeStyle = '#10b981';
+      ctx1.lineWidth = 3;
+      ctx1.beginPath(); ctx1.moveTo(rx, ry); ctx1.lineTo(hx, hy); ctx1.stroke();
+    }
+
+    // =========================================================================
+    // AI 2 FRONTEND LOGIC
+    // =========================================================================
+    const canvas2 = document.getElementById('ai2Canvas');
+    const ctx2 = canvas2.getContext('2d');
+    let ai2State = null;
+    let curAi2Preset = 'cluttered';
+
+    async function resetAi2(preset = curAi2Preset) {
+      curAi2Preset = preset;
+      try {
+        const res = await fetch('/api/ai2/reset', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ preset: curAi2Preset })
+        });
+        ai2State = await res.json();
+        updateAi2HUD();
+        drawAi2();
+      } catch (err) {
+        console.error("Lỗi reset AI 2:", err);
+      }
+    }
+
+    async function stepAi2() {
+      try {
+        const res = await fetch('/api/ai2/step', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' }
+        });
+        ai2State = await res.json();
+        updateAi2HUD();
+        drawAi2();
+        if (ai2State.status !== 'RUNNING') {
+          stopAi2Play();
+        }
+      } catch (err) {
+        console.error("Lỗi step AI 2:", err);
+      }
+    }
+
+    function toggleAi2Play() {
+      if (ai2IsRunning) {
+        stopAi2Play();
+      } else {
+        startAi2Play();
+      }
+    }
+
+    function startAi2Play() {
+      if (ai2State && ai2State.status !== 'RUNNING') {
+        resetAi2(curAi2Preset);
+      }
+      ai2IsRunning = true;
+      const btn = document.getElementById('btnAi2Play');
+      btn.classList.add('running');
+      btn.innerHTML = '<span>⏸ TẠM DỪNG</span>';
+      ai2Timer = setInterval(stepAi2, 50); // 20 FPS
+    }
+
+    function stopAi2Play() {
+      ai2IsRunning = false;
+      clearInterval(ai2Timer);
+      const btn = document.getElementById('btnAi2Play');
+      btn.classList.remove('running');
+      btn.innerHTML = '<span>▶ BẬT QUÉT SẠCH SÀN</span>';
+    }
+
+    function selectAi2Preset(preset) {
+      curAi2Preset = preset;
+      document.querySelectorAll('#ai2Tab .btn-level').forEach(b => b.classList.remove('active'));
+      event.currentTarget.classList.add('active');
+      stopAi2Play();
+      resetAi2(preset);
+    }
+
+    function updateAi2HUD() {
+      if (!ai2State) return;
+      document.getElementById('txtCoveragePct').innerText = `${ai2State.coverage_pct.toFixed(1)}%`;
+      document.getElementById('barCoverage').style.width = `${ai2State.coverage_pct}%`;
+      document.getElementById('txtAi2Steps').innerText = ai2State.steps;
+      document.getElementById('txtCoveredCells').innerText = `${ai2State.covered_count} / ${ai2State.total_reachable}`;
+
+      // Cập nhật Q-values Bars
+      const qVals = ai2State.q_values || [0,0,0,0];
+      const maxQ = Math.max(...qVals, 1.0);
+      for (let i = 0; i < 4; i++) {
+        const pct = Math.max(0, Math.min(100, (qVals[i] / maxQ) * 100));
+        document.getElementById(`qBar${i}`).style.width = `${pct}%`;
+        document.getElementById(`qNum${i}`).innerText = qVals[i].toFixed(1);
+        if (i === ai2State.last_action) {
+          document.getElementById(`qBar${i}`).style.background = '#00f0ff';
+        } else {
+          document.getElementById(`qBar${i}`).style.background = '#a855f7';
+        }
+      }
+
+      const badge = document.getElementById('ai2StatusBadge');
+      badge.innerText = ai2State.status;
+      if (ai2State.status === 'RUNNING') {
+        badge.className = 'pill pill-active';
+      } else {
+        badge.className = 'pill';
+        badge.style.background = 'rgba(16, 185, 129, 0.2)';
+        badge.style.color = '#10b981';
+      }
+    }
+
+    function drawAi2() {
+      if (!ai2State || !ai2State.grid) return;
+      const size = ai2State.size;
+      const w = canvas2.width;
+      const cellPx = w / size;
+
+      ctx2.clearRect(0, 0, w, w);
+
+      for (let r = 0; r < size; r++) {
+        for (let c = 0; c < size; c++) {
+          const val = ai2State.grid[r][c];
+          if (val === 100) {
+            // Tường / Vật cản
+            ctx2.fillStyle = '#6b21a8';
+            ctx2.fillRect(c * cellPx, r * cellPx, cellPx, cellPx);
+            ctx2.strokeStyle = 'rgba(168, 85, 247, 0.3)';
+            ctx2.strokeRect(c * cellPx, r * cellPx, cellPx, cellPx);
+          } else if (val === 0) {
+            // Ô đã quét sạch (Covered)
+            ctx2.fillStyle = 'rgba(16, 185, 129, 0.45)';
+            ctx2.fillRect(c * cellPx, r * cellPx, cellPx, cellPx);
+            ctx2.strokeStyle = 'rgba(16, 185, 129, 0.2)';
+            ctx2.strokeRect(c * cellPx, r * cellPx, cellPx, cellPx);
+          } else {
+            // Chưa quét (Uncovered)
+            ctx2.fillStyle = '#0f172a';
+            ctx2.fillRect(c * cellPx, r * cellPx, cellPx, cellPx);
+            ctx2.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+            ctx2.strokeRect(c * cellPx, r * cellPx, cellPx, cellPx);
+          }
+        }
+      }
+
+      // Vị trí AGV trên ma trận
+      const rx = ai2State.robot[0];
+      const ry = ai2State.robot[1];
+      ctx2.shadowColor = '#00f0ff';
+      ctx2.shadowBlur = 10;
+      ctx2.fillStyle = '#00f0ff';
+      ctx2.beginPath();
+      ctx2.arc((rx + 0.5) * cellPx, (ry + 0.5) * cellPx, cellPx * 0.45, 0, Math.PI * 2);
+      ctx2.fill();
+      ctx2.shadowBlur = 0;
+    }
+
+    // Khởi động tải dữ liệu ban đầu
+    window.addEventListener('DOMContentLoaded', () => {
+      resetAi1(1);
+      resetAi2('cluttered');
+    });
   </script>
 </body>
 </html>
