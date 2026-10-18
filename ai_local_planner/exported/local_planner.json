@@ -1,25 +1,22 @@
 {
   "model": "local_planner.onnx",
   "opset": 14,
-  "sha256": "7911cad3468ff296547c383a96bf1d3891bf4934b28332ecbfd9ca2896f44ad0",
-  "created_utc": "2026-10-16T12:54:22.788159+00:00",
-  "source_checkpoint": "ai_local_planner\\checkpoints\\ppo_level2_anchored_20261016\\best_level_2.pth",
-  "training_steps": 10000,
-  "curriculum_level": 2,
+  "sha256": "7e860423f0dce2308c2ef637bf3d945872a100870876416bd350cbf85cad99f7",
+  "created_utc": "2026-10-18T13:54:54.665532+00:00",
+  "source_checkpoint": "ai_local_planner\\checkpoints\\single_actor_fast_gate_pass_20261018\\verified_release_checkpoint\\gated_model.pth",
+  "training_steps": 0,
+  "curriculum_level": 5,
   "checkpoint_metadata": {
-    "heldout_evaluation": {
-      "level": 2,
-      "episodes": 100,
-      "seed_start": 110000,
-      "domain_randomization": true,
-      "success_rate": 1.0,
-      "collision_rate": 0.0,
-      "timeout_rate": 0.0,
-      "mean_episode_steps": 235.76,
-      "mean_min_clearance_m": 0.5073169877777544,
-      "mean_reward": 286.45931944734826,
-      "training_steps": 10000
-    }
+    "method": "context_residual_micro_dagger_not_ppo",
+    "independently_gated": true,
+    "eligible_for_real_robot": false,
+    "train_context": false,
+    "source_checkpoint_sha256": "a2f3c23813b4099dfa497adc26313ceb19908154abb109f5720af74434766cac",
+    "rounds": 1,
+    "updates": 180,
+    "learning_rate": 3e-05,
+    "evaluated_checkpoint_sha256": "781152955c4ceb8e040bc8569cf6669ea5fb57bace69739ebc9cb2f573e917e2",
+    "verified_model_sha256": "56bed382a3990873775c953f0d6516a4931c88b98f3b1086425ac17a02edb109"
   },
   "input": {
     "name": "lidar_and_goal_state",
@@ -51,7 +48,7 @@
       1.5
     ]
   },
-  "max_torch_onnx_error": 6.556510925292969e-07,
+  "max_torch_onnx_error": 1.3113021850585938e-06,
   "pi4_latency_verified": false,
   "real_robot_approved": false,
   "deployment_note": "Training quality, real LiDAR alignment, independent E-stop, and Pi4 p99<2ms require separate validation"

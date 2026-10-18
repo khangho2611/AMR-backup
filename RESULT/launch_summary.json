@@ -1,0 +1,12 @@
+{
+  "trainer_exit_code": 130,
+  "source_commit": "c61a1913d0323e190d20da1bcd0ed6760f84914e",
+  "checkpoint_sha256": "6e4a8a079d55c1b7c4aa3906aec745310fea10517a1c94091bcbabfb854f19e9",
+  "manifest_status": "INTERRUPTED",
+  "requested_episodes": 20000,
+  "completed_episodes": 17851,
+  "promoted": false,
+  "promotion_reason": "interrupted run is never promoted",
+  "outcome": "GRACEFUL_PARTIAL_DEADLINE",
+  "partial_due_to_deadline": true
+}

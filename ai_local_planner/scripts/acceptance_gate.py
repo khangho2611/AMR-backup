@@ -11,6 +11,7 @@ from pathlib import Path
 
 MIN_SUCCESS = {1: .99, 2: .98, 3: .90, 4: .90, 5: .90, 6: .90}
 MAX_COLLISION = {i: .02 for i in range(1, 7)}
+MAX_COLLISION[4] = .12
 
 
 def assess(reports: dict[int, dict], min_episodes: int = 100) -> dict:

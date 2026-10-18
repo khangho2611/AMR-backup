@@ -1,0 +1,82 @@
+{
+  "policy": "student_only_no_teacher",
+  "pilot_not_acceptance": true,
+  "independently_gated": false,
+  "score": 2.325,
+  "levels": {
+    "1": {
+      "level": 1,
+      "episodes": 20,
+      "seed_start": 22401000,
+      "domain_randomization": true,
+      "success_rate": 1.0,
+      "collision_rate": 0.0,
+      "timeout_rate": 0.0,
+      "mean_episode_steps": 156.65,
+      "mean_min_clearance_m": 1.0,
+      "collision_seeds": [],
+      "timeout_seeds": [],
+      "mean_reward": 237.563345805881
+    },
+    "2": {
+      "level": 2,
+      "episodes": 20,
+      "seed_start": 22402000,
+      "domain_randomization": true,
+      "success_rate": 0.95,
+      "collision_rate": 0.05,
+      "timeout_rate": 0.0,
+      "mean_episode_steps": 220.35,
+      "mean_min_clearance_m": 0.42850076255080866,
+      "collision_seeds": [
+        22402013
+      ],
+      "timeout_seeds": [],
+      "mean_reward": 275.18087300583124
+    },
+    "3": {
+      "level": 3,
+      "episodes": 20,
+      "seed_start": 22403000,
+      "domain_randomization": true,
+      "success_rate": 1.0,
+      "collision_rate": 0.0,
+      "timeout_rate": 0.0,
+      "mean_episode_steps": 217.2,
+      "mean_min_clearance_m": 0.2566703483042204,
+      "collision_seeds": [],
+      "timeout_seeds": [],
+      "mean_reward": 200.61154427276838
+    },
+    "4": {
+      "level": 4,
+      "episodes": 20,
+      "seed_start": 22404000,
+      "domain_randomization": true,
+      "success_rate": 0.95,
+      "collision_rate": 0.05,
+      "timeout_rate": 0.0,
+      "mean_episode_steps": 309.85,
+      "mean_min_clearance_m": 0.5076100401807252,
+      "collision_seeds": [
+        22404007
+      ],
+      "timeout_seeds": [],
+      "mean_reward": 296.4389090755716
+    },
+    "5": {
+      "level": 5,
+      "episodes": 20,
+      "seed_start": 22405000,
+      "domain_randomization": true,
+      "success_rate": 1.0,
+      "collision_rate": 0.0,
+      "timeout_rate": 0.0,
+      "mean_episode_steps": 130.5,
+      "mean_min_clearance_m": 0.40283777233495943,
+      "collision_seeds": [],
+      "timeout_seeds": [],
+      "mean_reward": 163.10507702995935
+    }
+  }
+}

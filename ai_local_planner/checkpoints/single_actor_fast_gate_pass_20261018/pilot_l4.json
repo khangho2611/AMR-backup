@@ -1,0 +1,18 @@
+{
+  "policy": "student_only_no_teacher",
+  "independent_gate": false,
+  "level": 4,
+  "episodes": 20,
+  "seed_start": 22404000,
+  "domain_randomization": true,
+  "success_rate": 0.95,
+  "collision_rate": 0.05,
+  "timeout_rate": 0.0,
+  "mean_episode_steps": 309.85,
+  "mean_min_clearance_m": 0.5076100401807252,
+  "collision_seeds": [
+    22404007
+  ],
+  "timeout_seeds": [],
+  "mean_reward": 296.4389090755716
+}

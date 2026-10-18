@@ -6,7 +6,9 @@ import numpy as np
 import torch
 from torch.nn import functional as F
 
-from ai_local_planner.models.actor_critic import (ActorCritic, is_legacy_state_dict,
+from ai_local_planner.models.actor_critic import (ActorCritic, ContextualResidualActorCritic,
+                                                  ConservativeContextualResidualActorCritic,
+                                                  DirectionalContextualResidualActorCritic, MeanPolicy, is_legacy_state_dict,
                                                   migrate_legacy_state_dict)
 from ai_local_planner.trainers.rollout_buffer import RolloutBuffer
 
@@ -63,8 +65,13 @@ class PPOAgent:
     def act(self, obs: np.ndarray, deterministic: bool = False):
         x = torch.as_tensor(obs[None, :], dtype=torch.float32, device=self.device)
         if deterministic:
-            mean, val = self.network(x)
-            return torch.tanh(mean)[0].cpu().numpy(), float(val.item()), 0.
+            # Closed-loop simulation and exported ONNX must use the same
+            # observation-only Safety Shield, otherwise the gate certifies
+            # a different controller than the deployable model.
+            physical = MeanPolicy(self.network)(x)[0]
+            normalized = torch.stack((physical[0] * (2. / .35) - 1.,
+                                      physical[1] / 1.5))
+            return normalized.cpu().numpy(), float(self.network.value(x).item()), 0.
         action, logp, val = self.network.sample(x)
         return action[0].cpu().numpy(), float(val.item()), float(logp.item())
 
@@ -146,10 +153,28 @@ class PPOAgent:
         torch.save({"model": self.network.state_dict(),
                     "optimizer": self.optimizer.state_dict(),
                     "steps": steps, "level": level, "metadata": metadata,
-                    "architecture": "lidar30_fusion128"}, output)
+                    "architecture": ("lidar30_context_directional" if isinstance(
+                        self.network, DirectionalContextualResidualActorCritic) else
+                        "lidar30_context_conservative" if isinstance(
+                        self.network, ConservativeContextualResidualActorCritic) else
+                        "lidar30_context_residual" if isinstance(
+                            self.network, ContextualResidualActorCritic) else "lidar30_fusion128")}, output)
+
+    def _prepare_checkpoint_architecture(self, state: dict):
+        contextual = any(key.startswith('correction.') for key in state['model'])
+        conservative = 'gate_min_probability' in state['model']
+        directional = 'directional_pool_version' in state['model']
+        expected_type = (DirectionalContextualResidualActorCritic if directional else
+                         ConservativeContextualResidualActorCritic if conservative else
+                         ContextualResidualActorCritic if contextual else ActorCritic)
+        if type(self.network) is not expected_type:
+            self.network = expected_type().to(self.device)
+            self.optimizer = torch.optim.Adam(self.network.parameters(),
+                                              lr=self.config['learning_rate'], eps=1e-5)
 
     def load(self, path: str | Path):
         state = torch.load(path, map_location=self.device, weights_only=True)
+        self._prepare_checkpoint_architecture(state)
         legacy = is_legacy_state_dict(state["model"])
         self.network.load_state_dict(migrate_legacy_state_dict(state["model"]))
         # Adam moment shapes from a 10-sector policy cannot be loaded into the
@@ -163,5 +188,6 @@ class PPOAgent:
     def initialize_from(self, path: str | Path):
         """Use pretrained weights as a new PPO run, with fresh Adam and step=0."""
         state = torch.load(path, map_location=self.device, weights_only=True)
+        self._prepare_checkpoint_architecture(state)
         self.network.load_state_dict(migrate_legacy_state_dict(state["model"]))
         return state

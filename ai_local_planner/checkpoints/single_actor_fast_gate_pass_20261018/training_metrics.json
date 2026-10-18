@@ -1,0 +1,48 @@
+{
+  "method": "DAgger_imitation_not_PPO",
+  "rounds": 1,
+  "updates_total": 180,
+  "collection_mixed_rollout_not_self_drive": {
+    "level": 4,
+    "stage": "micro_dagger_1",
+    "episodes": 40,
+    "frames": 12072,
+    "success_rate": 1.0,
+    "collision_rate": 0.0,
+    "fraction_disagreement_gt_015": 0.5005798542080848,
+    "fraction_weighted": 0.6973989396951623,
+    "perturbation_probability": 0.15,
+    "teacher_rollout_fraction": 0.6226805831676607,
+    "mean_teacher_normalized_speed": 0.5539835691452026,
+    "mean_student_normalized_speed": 0.5103845000267029,
+    "rollout_type": "mixed_teacher_student_not_self_drive",
+    "seed_start": 22500000,
+    "seed_end": 22500039,
+    "unique_groups": 40
+  },
+  "replay": {
+    "1": {
+      "episodes": 10,
+      "frames": 1393
+    },
+    "2": {
+      "episodes": 40,
+      "frames": 8841
+    },
+    "3": {
+      "episodes": 10,
+      "frames": 2226
+    },
+    "5": {
+      "episodes": 10,
+      "frames": 1269
+    }
+  },
+  "optimizer": {
+    "updates": 180,
+    "batch_size": 256,
+    "context_finetuned": false,
+    "mean_loss_over_sampled_steps": 0.11115688178688288,
+    "last_sampled_loss": 0.08771779388189316
+  }
+}

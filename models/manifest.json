@@ -1,0 +1,334 @@
+{
+  "run_id": "run_1791865134",
+  "timestamp": 1791865147.6907253,
+  "requested_episodes": 20000,
+  "completed_episodes": 17851,
+  "seed": 42,
+  "threads": 2,
+  "is_smoke": false,
+  "run_mode": "warm_restart",
+  "resume_from": "/kaggle/working/AMR-backup/models/runs/run_1791853137/incomplete_checkpoint.pth",
+  "warm_restart_limitations": {
+    "replay_buffer_restored": false,
+    "environment_rng_restored": false,
+    "global_rng_restored_when_available": true
+  },
+  "status": "INTERRUPTED",
+  "bfs_baseline": {
+    "mean_coverage": 100.0,
+    "median_coverage": 100.0,
+    "mean_steps": 903.34
+  },
+  "eval_history": [
+    {
+      "episode": 2000,
+      "env_steps": 6635667,
+      "elapsed_sec": 1501.5560717582703,
+      "eval_coverage": 45.031979286568394,
+      "eval_steps": 3397.6,
+      "success_ge_95": 0,
+      "success_rate_pct": 0.0
+    },
+    {
+      "episode": 2500,
+      "env_steps": 7923023,
+      "elapsed_sec": 3122.4792482852936,
+      "eval_coverage": 46.306060165825876,
+      "eval_steps": 3397.6,
+      "success_ge_95": 0,
+      "success_rate_pct": 0.0
+    },
+    {
+      "episode": 3000,
+      "env_steps": 9109968,
+      "elapsed_sec": 4703.198625326157,
+      "eval_coverage": 60.31105931809725,
+      "eval_steps": 3397.6,
+      "success_ge_95": 0,
+      "success_rate_pct": 0.0
+    },
+    {
+      "episode": 3500,
+      "env_steps": 10214552,
+      "elapsed_sec": 6252.819377183914,
+      "eval_coverage": 74.99806696087771,
+      "eval_steps": 3111.44,
+      "success_ge_95": 4,
+      "success_rate_pct": 16.0
+    },
+    {
+      "episode": 4000,
+      "env_steps": 11239343,
+      "elapsed_sec": 7696.647503614426,
+      "eval_coverage": 85.22597368237774,
+      "eval_steps": 3164.2,
+      "success_ge_95": 8,
+      "success_rate_pct": 32.0
+    },
+    {
+      "episode": 4500,
+      "env_steps": 12164477,
+      "elapsed_sec": 9034.529975652695,
+      "eval_coverage": 83.82462597036906,
+      "eval_steps": 2649.92,
+      "success_ge_95": 9,
+      "success_rate_pct": 36.0
+    },
+    {
+      "episode": 5000,
+      "env_steps": 13041675,
+      "elapsed_sec": 10337.41284608841,
+      "eval_coverage": 93.6436135551336,
+      "eval_steps": 2125.72,
+      "success_ge_95": 18,
+      "success_rate_pct": 72.0
+    },
+    {
+      "episode": 5500,
+      "env_steps": 13865214,
+      "elapsed_sec": 11572.014179229736,
+      "eval_coverage": 91.92036296266203,
+      "eval_steps": 3142.52,
+      "success_ge_95": 16,
+      "success_rate_pct": 64.0
+    },
+    {
+      "episode": 6000,
+      "env_steps": 14656526,
+      "elapsed_sec": 12827.905796766281,
+      "eval_coverage": 90.5138771932033,
+      "eval_steps": 2138.92,
+      "success_ge_95": 15,
+      "success_rate_pct": 60.0
+    },
+    {
+      "episode": 6500,
+      "env_steps": 15427829,
+      "elapsed_sec": 14003.025255680084,
+      "eval_coverage": 99.99528301886792,
+      "eval_steps": 1319.88,
+      "success_ge_95": 25,
+      "success_rate_pct": 100.0
+    },
+    {
+      "episode": 7000,
+      "env_steps": 16189341,
+      "elapsed_sec": 15174.325413942337,
+      "eval_coverage": 97.14142495284602,
+      "eval_steps": 1562.96,
+      "success_ge_95": 22,
+      "success_rate_pct": 88.0
+    },
+    {
+      "episode": 7500,
+      "env_steps": 16926120,
+      "elapsed_sec": 16333.00770664215,
+      "eval_coverage": 95.74196723476513,
+      "eval_steps": 1750.32,
+      "success_ge_95": 20,
+      "success_rate_pct": 80.0
+    },
+    {
+      "episode": 8000,
+      "env_steps": 17638225,
+      "elapsed_sec": 17451.6092813015,
+      "eval_coverage": 91.69740652602947,
+      "eval_steps": 1806.2,
+      "success_ge_95": 18,
+      "success_rate_pct": 72.0
+    },
+    {
+      "episode": 8500,
+      "env_steps": 18346425,
+      "elapsed_sec": 18597.29827594757,
+      "eval_coverage": 97.01676816690762,
+      "eval_steps": 1521.36,
+      "success_ge_95": 22,
+      "success_rate_pct": 88.0
+    },
+    {
+      "episode": 9000,
+      "env_steps": 19042963,
+      "elapsed_sec": 19723.172813415527,
+      "eval_coverage": 94.78851617542277,
+      "eval_steps": 2196.32,
+      "success_ge_95": 15,
+      "success_rate_pct": 60.0
+    },
+    {
+      "episode": 9500,
+      "env_steps": 19722998,
+      "elapsed_sec": 20851.413528442383,
+      "eval_coverage": 99.74286233860701,
+      "eval_steps": 1337.72,
+      "success_ge_95": 24,
+      "success_rate_pct": 96.0
+    },
+    {
+      "episode": 10000,
+      "env_steps": 20390436,
+      "elapsed_sec": 21953.379890680313,
+      "eval_coverage": 94.73908104080294,
+      "eval_steps": 1724.64,
+      "success_ge_95": 20,
+      "success_rate_pct": 80.0
+    },
+    {
+      "episode": 10500,
+      "env_steps": 21069740,
+      "elapsed_sec": 23083.158829689026,
+      "eval_coverage": 98.03398058252428,
+      "eval_steps": 1278.88,
+      "success_ge_95": 24,
+      "success_rate_pct": 96.0
+    },
+    {
+      "episode": 11000,
+      "env_steps": 21749009,
+      "elapsed_sec": 24186.665734529495,
+      "eval_coverage": 97.7129411764706,
+      "eval_steps": 1244.48,
+      "success_ge_95": 24,
+      "success_rate_pct": 96.0
+    },
+    {
+      "episode": 11500,
+      "env_steps": 22422147,
+      "elapsed_sec": 25270.133162498474,
+      "eval_coverage": 97.496281815425,
+      "eval_steps": 1576.16,
+      "success_ge_95": 24,
+      "success_rate_pct": 96.0
+    },
+    {
+      "episode": 12000,
+      "env_steps": 23098682,
+      "elapsed_sec": 26360.14141345024,
+      "eval_coverage": 92.18334923035613,
+      "eval_steps": 1862.84,
+      "success_ge_95": 20,
+      "success_rate_pct": 80.0
+    },
+    {
+      "episode": 12500,
+      "env_steps": 23767303,
+      "elapsed_sec": 27446.78943181038,
+      "eval_coverage": 96.873786407767,
+      "eval_steps": 1277.2,
+      "success_ge_95": 24,
+      "success_rate_pct": 96.0
+    },
+    {
+      "episode": 13000,
+      "env_steps": 24455150,
+      "elapsed_sec": 28567.08001422882,
+      "eval_coverage": 96.99730140836218,
+      "eval_steps": 1996.6,
+      "success_ge_95": 20,
+      "success_rate_pct": 80.0
+    },
+    {
+      "episode": 13500,
+      "env_steps": 25128167,
+      "elapsed_sec": 29694.37965774536,
+      "eval_coverage": 99.55244755244756,
+      "eval_steps": 1303.84,
+      "success_ge_95": 24,
+      "success_rate_pct": 96.0
+    },
+    {
+      "episode": 14000,
+      "env_steps": 25810409,
+      "elapsed_sec": 30800.749411582947,
+      "eval_coverage": 99.91100702576112,
+      "eval_steps": 1322.24,
+      "success_ge_95": 25,
+      "success_rate_pct": 100.0
+    },
+    {
+      "episode": 14500,
+      "env_steps": 26504923,
+      "elapsed_sec": 31933.824192762375,
+      "eval_coverage": 97.01886792452831,
+      "eval_steps": 1279.04,
+      "success_ge_95": 24,
+      "success_rate_pct": 96.0
+    },
+    {
+      "episode": 15000,
+      "env_steps": 27180922,
+      "elapsed_sec": 33033.49768638611,
+      "eval_coverage": 99.04825576767362,
+      "eval_steps": 1866.12,
+      "success_ge_95": 24,
+      "success_rate_pct": 96.0
+    },
+    {
+      "episode": 15500,
+      "env_steps": 27875600,
+      "elapsed_sec": 34165.400753974915,
+      "eval_coverage": 99.83770883054893,
+      "eval_steps": 1280.2,
+      "success_ge_95": 25,
+      "success_rate_pct": 100.0
+    },
+    {
+      "episode": 16000,
+      "env_steps": 28576494,
+      "elapsed_sec": 35286.24930739403,
+      "eval_coverage": 99.70441001191895,
+      "eval_steps": 1383.84,
+      "success_ge_95": 24,
+      "success_rate_pct": 96.0
+    },
+    {
+      "episode": 16500,
+      "env_steps": 29291751,
+      "elapsed_sec": 36464.87767267227,
+      "eval_coverage": 97.91303059188144,
+      "eval_steps": 1747.84,
+      "success_ge_95": 21,
+      "success_rate_pct": 84.0
+    },
+    {
+      "episode": 17000,
+      "env_steps": 30017248,
+      "elapsed_sec": 37684.12101602554,
+      "eval_coverage": 99.63127187864644,
+      "eval_steps": 1276.68,
+      "success_ge_95": 24,
+      "success_rate_pct": 96.0
+    },
+    {
+      "episode": 17500,
+      "env_steps": 30694491,
+      "elapsed_sec": 38796.661893844604,
+      "eval_coverage": 96.42763846842216,
+      "eval_steps": 1460.24,
+      "success_ge_95": 23,
+      "success_rate_pct": 92.0
+    }
+  ],
+  "best_eval_coverage": 99.99528301886792,
+  "best_success_rate": 100.0,
+  "candidate": {
+    "path": "/kaggle/working/output/best_checkpoint.pth",
+    "source": "best_checkpoint",
+    "unverified_before_acceptance": false,
+    "checkpoint_sha256": "95b73db87abdf1ed89f144d1507010dfa21fcf19136d426ce5f3dd99fa241f0c"
+  },
+  "promoted": false,
+  "commit_error": null,
+  "rollback_errors": [],
+  "acceptance": null,
+  "artifact_hashes": null,
+  "onnx_verification": {
+    "onnx_path": "/kaggle/working/output/coverage_model.onnx",
+    "file_size_bytes": 133207,
+    "sha256": "8344842fcc5670e6f38a00b548e8a0b522ba136fe7a913d197afd1fcc7c4abc7",
+    "max_abs_error": 3.0517578125e-05,
+    "argmax_disagreements": 0,
+    "status": "PASS"
+  },
+  "promotion_reason": "interrupted run is never promoted"
+}

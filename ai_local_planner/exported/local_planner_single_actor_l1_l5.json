@@ -1,0 +1,55 @@
+{
+  "model": "local_planner_single_actor_l1_l5.onnx",
+  "opset": 14,
+  "sha256": "7e860423f0dce2308c2ef637bf3d945872a100870876416bd350cbf85cad99f7",
+  "created_utc": "2026-10-18T13:54:54.665532+00:00",
+  "source_checkpoint": "ai_local_planner\\checkpoints\\single_actor_fast_gate_pass_20261018\\verified_release_checkpoint\\gated_model.pth",
+  "training_steps": 0,
+  "curriculum_level": 5,
+  "checkpoint_metadata": {
+    "method": "context_residual_micro_dagger_not_ppo",
+    "independently_gated": true,
+    "eligible_for_real_robot": false,
+    "train_context": false,
+    "source_checkpoint_sha256": "a2f3c23813b4099dfa497adc26313ceb19908154abb109f5720af74434766cac",
+    "rounds": 1,
+    "updates": 180,
+    "learning_rate": 3e-05,
+    "evaluated_checkpoint_sha256": "781152955c4ceb8e040bc8569cf6669ea5fb57bace69739ebc9cb2f573e917e2",
+    "verified_model_sha256": "56bed382a3990873775c953f0d6516a4931c88b98f3b1086425ac17a02edb109"
+  },
+  "input": {
+    "name": "lidar_and_goal_state",
+    "shape": [
+      "N",
+      365
+    ],
+    "dtype": "float32",
+    "lidar_normalization": "clip((range_m-0.12)/11.88,0,1)",
+    "angles": "0..359 degrees, counterclockwise from forward"
+  },
+  "output": {
+    "name": "cmd_vel",
+    "shape": [
+      "N",
+      2
+    ],
+    "dtype": "float32",
+    "units": [
+      "m/s",
+      "rad/s"
+    ],
+    "v_range": [
+      0.0,
+      0.35
+    ],
+    "w_range": [
+      -1.5,
+      1.5
+    ]
+  },
+  "max_torch_onnx_error": 1.3113021850585938e-06,
+  "pi4_latency_verified": false,
+  "real_robot_approved": false,
+  "deployment_note": "Training quality, real LiDAR alignment, independent E-stop, and Pi4 p99<2ms require separate validation"
+}

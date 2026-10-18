@@ -1,0 +1,12 @@
+{
+  "host": "Windows-11-10.0.26200-SP0",
+  "machine": "AMD64",
+  "model": "ai_local_planner\\checkpoints\\single_actor_fast_gate_pass_20261018\\verified_release_checkpoint\\local_planner_single_actor_l1_l5.onnx",
+  "inferences": 1000,
+  "warmup": 100,
+  "p50_ms": 0.44345,
+  "p95_ms": 1.1462449999999997,
+  "p99_ms": 1.4988119999999998,
+  "max_ms": 2.1225,
+  "target_p99_below_2ms": true
+}

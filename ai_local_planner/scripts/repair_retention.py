@@ -376,7 +376,11 @@ def train(args):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--init-from", type=Path, required=True)
+    parser.add_argument("--init-from", type=Path)
+    parser.add_argument("--resume", type=Path,
+                        help="Enable staged L2-repair/L4-perturbation DAgger from a single-actor checkpoint")
+    parser.add_argument("--stage-b-only", action="store_true",
+                        help="Re-evaluate retained L1/L2/L3/L5 skills and train L4 directly from --resume")
     parser.add_argument("--gated-old-checkpoint", type=Path,
                         help="Previously verified L1/L2 teacher for legacy --max-level 3")
     parser.add_argument("--output-dir", type=Path, required=True)
@@ -388,6 +392,8 @@ def main():
                         default=Path("ai_local_planner/checkpoints/level5_bc_reactive_experimental.pth"))
     parser.add_argument("--level4-teacher-onnx", type=Path,
                         help="Verified specialist alternative when legacy L4 teacher is weak")
+    parser.add_argument("--level2-teacher-onnx", type=Path,
+                        default=Path("ai_local_planner/exported/locked_scene_margin070_experimental/ppo_levels12.onnx"))
     parser.add_argument("--level5-teacher-onnx", type=Path,
                         help="Optional verified Level-5 ONNX specialist")
     parser.add_argument("--old-skill-loss-scale", type=float, default=6.,
@@ -396,6 +402,24 @@ def main():
                         default=[15, 25, 25, 40, 35],
                         metavar="N", help="Total expert+DAgger episodes for L1..L5")
     parser.add_argument("--level4-obstacle-weight", type=float, default=3.)
+    parser.add_argument("--level4-weight", type=float, default=5.,
+                        help="Stage B sample multiplier for frontal approach to L4 obstacles")
+    parser.add_argument("--teacher-probability", type=float, default=.5,
+                        help="Fraction of Level-4 mixed DAgger rollout steps using teacher")
+    parser.add_argument("--old-loss-threshold", type=float, default=0.,
+                        help="Below this retained-task imitation loss, allow L4 gradients unprojected; "
+                             "zero conservatively enables projection whenever gradients conflict")
+    parser.add_argument("--gradient-projection-relaxation", type=float, default=.5,
+                        help="Fraction of conflicting L4 gradient removed (0..1)")
+    parser.add_argument("--perturbation-prob", type=float, default=.15,
+                        help="Stage B probability of angular perturbation per step")
+    parser.add_argument("--gradient-surgery", action="store_true",
+                        help="Stage B: project conflicting Level-4 gradients away from retained tasks")
+    parser.add_argument("--no-gradient-surgery", dest="gradient_surgery", action="store_false",
+                        help="Disable default relaxed projection of Stage-B gradients")
+    parser.set_defaults(gradient_surgery=True)
+    parser.add_argument("--device", choices=("cpu",), default="cpu")
+    parser.add_argument("--stage-a-eval-seed", type=int, default=9300000)
     parser.add_argument("--level5-trap-weight", type=float, default=3.)
     parser.add_argument("--pilot-episodes", type=int, default=15,
                         help="Per-epoch model selection only, NEVER acceptance")
@@ -424,6 +448,20 @@ def main():
     parser.add_argument("--eval-seed", type=int, default=7000000)
     parser.add_argument("--seed", type=int, default=5600000)
     args = parser.parse_args()
+    if args.resume is not None:
+        if args.gated_old_checkpoint is None:
+            args.gated_old_checkpoint = Path(
+                "ai_local_planner/checkpoints/retention_level2_diverse_20261017/retention_candidate.pth")
+        if args.level4_teacher_onnx is None:
+            args.level4_teacher_onnx = Path(
+                "ai_local_planner/exported/locked_scene_margin070_experimental/gap_level4_margin012.onnx")
+        from ai_local_planner.scripts.repair_stages_l2_l4 import run
+        summary = run(args)
+        if not summary['all_gates_passed']:
+            raise SystemExit(1)
+        return
+    if args.init_from is None:
+        parser.error("Provide --init-from (legacy repair) or --resume (two-stage repair)")
     if args.max_level == 5:
         try:
             five_level_budgets(args.episode_budgets)

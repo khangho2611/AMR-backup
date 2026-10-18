@@ -11,8 +11,24 @@ import onnx
 import onnxruntime as ort
 import torch
 
-from ai_local_planner.models.actor_critic import (ActorCritic, MeanPolicy,
+from ai_local_planner.models.actor_critic import (ActorCritic, ContextualResidualActorCritic,
+                                                  ConservativeContextualResidualActorCritic,
+                                                  DirectionalContextualResidualActorCritic, MeanPolicy,
                                                   is_legacy_state_dict)
+
+
+def model_fingerprint(weights: dict) -> str:
+    """Stable digest of the gated weights, independent of checkpoint metadata."""
+    digest = hashlib.sha256()
+    for name, tensor in sorted(weights.items()):
+        if not isinstance(tensor, torch.Tensor):
+            raise TypeError(f"Expected tensor for model key {name!r}")
+        cpu = tensor.detach().cpu().contiguous()
+        digest.update(json.dumps([name, str(cpu.dtype), list(cpu.shape)]).encode())
+        # Version buffers such as directional_pool_version are 0-D int64;
+        # PyTorch cannot reinterpret a 0-D Long tensor as uint8 directly.
+        digest.update(cpu.reshape(-1).view(torch.uint8).numpy().tobytes())
+    return digest.hexdigest()
 
 
 def export(checkpoint: Path, destination: Path) -> dict:
@@ -46,12 +62,20 @@ def export(checkpoint: Path, destination: Path) -> dict:
             gates = report.get("gate", {})
             valid = (report.get("all_gates_passed") is True and
                      Path(report.get("checkpoint", "")).resolve() == checkpoint.resolve() and
+                     metadata.get("verified_model_sha256") == model_fingerprint(state["model"]) and
+                     metadata.get("verified_model_sha256") == report.get("evaluated_model_sha256") and
+                     metadata.get("evaluated_checkpoint_sha256") == report.get("evaluated_checkpoint_sha256") and
                      set(gates) == {str(i) for i in range(1, 6)} and
                      all(passes_level_gate(gates[str(i)], i) for i in range(1, 6)))
         if not valid:
             raise ValueError("Official L1-L5 single actor export requires passing the full randomized "
                              "100-episode five-level gate for this exact checkpoint")
-    network = ActorCritic(legacy=legacy).eval()
+    contextual = any(key.startswith('correction.') for key in state['model'])
+    conservative = 'gate_min_probability' in state['model']
+    directional = 'directional_pool_version' in state['model']
+    network = (DirectionalContextualResidualActorCritic() if directional else
+               ConservativeContextualResidualActorCritic() if conservative else
+               ContextualResidualActorCritic() if contextual else ActorCritic(legacy=legacy)).eval()
     network.load_state_dict(state["model"])
     policy = MeanPolicy(network).eval()
     destination.parent.mkdir(parents=True, exist_ok=True)

@@ -1,0 +1,143 @@
+{
+  "started_utc": "2026-10-18T09:27:31.955814+00:00",
+  "invocation": [
+    "C:\\Users\\Khang\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "-m",
+    "ai_local_planner.scripts.run_fast_micro_dagger",
+    "--resume",
+    "ai_local_planner/checkpoints/single_actor_context_recalibration_20261018/retention_candidate.pth",
+    "--output-dir",
+    "ai_local_planner/checkpoints/single_actor_fast_gate_pass_20261018",
+    "--directional-pool",
+    "--directional-loss",
+    "--flank-rescue",
+    "--episodes",
+    "40",
+    "--replay-episodes",
+    "10",
+    "--level2-replay-episodes",
+    "40",
+    "--level2-replay-weight",
+    "2.0",
+    "--updates",
+    "180",
+    "--learning-rate",
+    "0.00003",
+    "--pilot-episodes",
+    "20"
+  ],
+  "working_directory": "D:\\HoMinhKhang\\PROJECT\\GITHUB_PROJECT\\CODE XE TU HANH",
+  "experiment": "single_round_L4_micro_DAgger_training_and_self_drive_pilot",
+  "rounds": 1,
+  "config": {
+    "resume": "ai_local_planner\\checkpoints\\single_actor_context_recalibration_20261018\\retention_candidate.pth",
+    "retention_reference": "ai_local_planner\\checkpoints\\single_model_l1_l5_pcgrad_20261018\\retention_candidate.pth",
+    "scene_checkpoint": "ai_local_planner\\checkpoints\\scene_classifier_six_experimental.pth",
+    "level4_teacher": "ai_local_planner\\exported\\locked_scene_margin070_experimental\\gap_level4_margin012.onnx",
+    "level2_teacher": "ai_local_planner\\exported\\locked_scene_margin070_experimental\\ppo_levels12.onnx",
+    "output_dir": "ai_local_planner\\checkpoints\\single_actor_fast_gate_pass_20261018",
+    "directional_pool": true,
+    "directional_loss": true,
+    "flank_rescue": true,
+    "episodes": 40,
+    "replay_episodes": 10,
+    "level2_replay_episodes": 40,
+    "level2_replay_weight": 2.0,
+    "updates": 180,
+    "learning_rate": 3e-05,
+    "batch_size": 256,
+    "pilot_episodes": 20,
+    "max_steps": 600,
+    "train_seed": 22300000,
+    "pilot_seed": 22400000,
+    "teacher_probability": 0.6,
+    "risk_override_probability": 1.0,
+    "level4_side_weight": 1.0,
+    "hard_turn_weight": 0.0
+  },
+  "flags": {
+    "train_context": false,
+    "external_context_routing": false,
+    "run_independent_gate": false,
+    "export_official_onnx": false
+  },
+  "replay_experts": {
+    "1": "retention_reference",
+    "2": "level2_teacher_onnx",
+    "3": "retention_reference",
+    "5": "retention_reference"
+  },
+  "pilot_policy": "student_only_deterministic_no_teacher",
+  "collection_policy": "mixed_teacher_student_DAgger_not_self_drive",
+  "inputs_sha256": {
+    "base_checkpoint": {
+      "path": "D:\\HoMinhKhang\\PROJECT\\GITHUB_PROJECT\\CODE XE TU HANH\\ai_local_planner\\checkpoints\\single_actor_context_recalibration_20261018\\retention_candidate.pth",
+      "sha256": "a2f3c23813b4099dfa497adc26313ceb19908154abb109f5720af74434766cac"
+    },
+    "retention_reference": {
+      "path": "D:\\HoMinhKhang\\PROJECT\\GITHUB_PROJECT\\CODE XE TU HANH\\ai_local_planner\\checkpoints\\single_model_l1_l5_pcgrad_20261018\\retention_candidate.pth",
+      "sha256": "8c06d93dfcf8de70c3103d85b461d0f071dc7f826b2cd424579dcee634fbda24"
+    },
+    "scene_checkpoint": {
+      "path": "D:\\HoMinhKhang\\PROJECT\\GITHUB_PROJECT\\CODE XE TU HANH\\ai_local_planner\\checkpoints\\scene_classifier_six_experimental.pth",
+      "sha256": "bfb9e70c40f6a5e86c670763acc237386bb8394e14b46e0ec19a93e34f428c76"
+    },
+    "level4_teacher_onnx": {
+      "path": "D:\\HoMinhKhang\\PROJECT\\GITHUB_PROJECT\\CODE XE TU HANH\\ai_local_planner\\exported\\locked_scene_margin070_experimental\\gap_level4_margin012.onnx",
+      "sha256": "a1ee9574511c88cfcf4d621c828d40c5cd9589aa8b8ed877f0d7fb9418ff9601"
+    },
+    "level4_teacher_manifest": {
+      "path": "D:\\HoMinhKhang\\PROJECT\\GITHUB_PROJECT\\CODE XE TU HANH\\ai_local_planner\\exported\\locked_scene_margin070_experimental\\gap_level4_margin012.json",
+      "sha256": "399d2731c7af7b473abbc59f374f15ce7c882fa87c9648d435bb9afa12dba1e3"
+    },
+    "level2_teacher_onnx": {
+      "path": "D:\\HoMinhKhang\\PROJECT\\GITHUB_PROJECT\\CODE XE TU HANH\\ai_local_planner\\exported\\locked_scene_margin070_experimental\\ppo_levels12.onnx",
+      "sha256": "7911cad3468ff296547c383a96bf1d3891bf4934b28332ecbfd9ca2896f44ad0"
+    },
+    "level2_teacher_manifest": {
+      "path": "D:\\HoMinhKhang\\PROJECT\\GITHUB_PROJECT\\CODE XE TU HANH\\ai_local_planner\\exported\\locked_scene_margin070_experimental\\ppo_levels12.json",
+      "sha256": "74f22ed55f5313b1d0d4a9a7eb9f81bccd3367c6ea6eb15ff9bdebba0638b3be"
+    },
+    "train_context_residual_source": {
+      "path": "D:\\HoMinhKhang\\PROJECT\\GITHUB_PROJECT\\CODE XE TU HANH\\ai_local_planner\\scripts\\train_context_residual.py",
+      "sha256": "1813957e282862904cac82e0fd0bf45d2d6c5910aa9cef286094bcd5e6cffb4b"
+    },
+    "repair_stages_source": {
+      "path": "D:\\HoMinhKhang\\PROJECT\\GITHUB_PROJECT\\CODE XE TU HANH\\ai_local_planner\\scripts\\repair_stages_l2_l4.py",
+      "sha256": "15e48202c99d783b947001de682d103f59d3645ff283ff8e51790b77e69a010b"
+    },
+    "actor_critic_source": {
+      "path": "D:\\HoMinhKhang\\PROJECT\\GITHUB_PROJECT\\CODE XE TU HANH\\ai_local_planner\\models\\actor_critic.py",
+      "sha256": "e58f8cc2e17d19729d99bd57e1dfd7df390694c13fb502c2ff6859bdadefe120"
+    },
+    "ppo_agent_source": {
+      "path": "D:\\HoMinhKhang\\PROJECT\\GITHUB_PROJECT\\CODE XE TU HANH\\ai_local_planner\\trainers\\ppo_agent.py",
+      "sha256": "b33045eeede0886f1294bfcf7b40931c76b0323b7eb285c97d9bc99ae2d3a417"
+    },
+    "environment_source": {
+      "path": "D:\\HoMinhKhang\\PROJECT\\GITHUB_PROJECT\\CODE XE TU HANH\\ai_local_planner\\environments\\agv_motion_env.py",
+      "sha256": "d49d5eb14bf6c6280487ec7980c4164f63528e47b2977f9e18f186b91af6204a"
+    },
+    "evaluation_source": {
+      "path": "D:\\HoMinhKhang\\PROJECT\\GITHUB_PROJECT\\CODE XE TU HANH\\ai_local_planner\\scripts\\evaluate_policy.py",
+      "sha256": "c1f3ede301639ba86d9184e2b4257b969c31975d5f0305e2fc6805047e2d2bfd"
+    },
+    "runner_source": {
+      "path": "D:\\HoMinhKhang\\PROJECT\\GITHUB_PROJECT\\CODE XE TU HANH\\ai_local_planner\\scripts\\run_fast_micro_dagger.py",
+      "sha256": "8ef0f890da8545e31061e818ad9697fc2a8396205b4aaf30dabf6c36682980da"
+    }
+  },
+  "git": {
+    "commit": "dab652ee28896bb7f485c931bb1b4b8b80dea09c",
+    "tracked_diff_names": "ai_local_planner/IMPLEMENTATION.md\nai_local_planner/models/actor_critic.py\nai_local_planner/scripts/export_onnx.py\nai_local_planner/scripts/repair_retention.py\nai_local_planner/trainers/ppo_agent.py",
+    "staged_diff_names": ""
+  },
+  "runtime": {
+    "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+    "python_executable": "C:\\Users\\Khang\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "torch": "2.6.0+cu124",
+    "numpy": "2.5.2",
+    "onnxruntime": "1.28.0"
+  }
+}

@@ -664,3 +664,627 @@ cho thấy cần nghiên cứu chống quên kỹ năng theo trạng thái và t
 phân biệt hành vi slalom của actor, thay vì chọn mô hình theo MSE offline.
 Sau cập nhật: **58 pytest PASS**; thử xuất ONNX chính thức trực tiếp từ
 checkpoint không đạt gate đã bị chặn bằng `ValueError`, không tạo file ONNX.
+
+### Thí nghiệm DAgger hai giai đoạn L2→L4 (18/10/2026)
+
+- Mã mới: `scripts/repair_stages_l2_l4.py`, gọi bằng
+  `scripts/repair_retention.py --resume ... --level2-weight 5.0
+  --level4-weight 4.0 --perturbation-prob 0.15 --epochs 6
+  --learning-rate 0.000012 --device cpu`. Đây là **DAgger/BC**;
+  không được gọi là lượt PPO huấn luyện mới.
+- Baseline L1–L5 trước sửa:
+  `checkpoints/retention_l1_l5_strong_teachers_20261017/retention_candidate.pth`.
+  Checkpoint L1–L3 đã qua gate trước đây dùng làm teacher bảo toàn L1/L3.
+- Stage A: 40 episode L2 trên seed mới + 9 failure seed phát hiện từ lần
+  kiểm thử trước; tăng sample weight 5× trong vùng tiếp cận 0,8–2,2m
+  hoặc khi chênh hành động teacher/student >0,15. Replay L1 15, L3 20,
+  L5 20 episodes. **Gate riêng Stage A: PASS**, 100 episode/level
+  (đều bật domain randomization):
+
+  | Level | Thành công | Va chạm | Kết quả |
+  |---|---:|---:|---|
+  | 1 | 100/100 | 0/100 | PASS |
+  | 2 | 99/100 | 1/100 | PASS |
+  | 3 | 99/100 | 1/100 | PASS |
+  | 5 | 100/100 | 0/100 | PASS |
+
+  Báo cáo `checkpoints/single_model_l1_l5_final_20261018/stage_A_gate.json`.
+- Stage B: thu 50 episode DAgger Level 4, nhiễu góc lái ±0,3 rad/s tại
+  15% bước, tăng sample weight 4× tại vật cản dưới 0,45m và replay
+  L1–L3/L5. Trên tập thu thập L4, **99,13%** frame có chênh hành động
+  giữa student và teacher >0,15. Đây là dấu hiệu xung đột hành vi mạnh.
+- Chọn epoch tốt nhất bằng pilot **15 episode/level**, sau đó đánh giá
+  **100 episode độc lập/level** tại seed 9401000–9405000:
+
+  | Level | Thành công | Va chạm | Kết quả |
+  |---|---:|---:|---|
+  | 1 | 100/100 | 0/100 | PASS |
+  | 2 | 56/100 | 44/100 | FAIL |
+  | 3 | 97/100 | 3/100 | FAIL do va chạm >2% |
+  | 4 | 59/100 | 40/100 | FAIL |
+  | 5 | 100/100 | 0/100 | PASS |
+
+  File lưu trữ `logs/first_attempt_dagger_20261018/single_actor_l1_to_l5_final_acceptance.json`,
+  cùng `logs/first_attempt_dagger_20261018/final_eval_l1.json`…`final_eval_l5.json`;
+  ứng viên được lưu
+  `checkpoints/single_model_l1_l5_final_20261018/retention_candidate.pth`.
+  Gate kết luận `simulation_gate_passed=false` và metadata
+  `independently_gated=false`; **không xuất ONNX chính thức**.
+- Teacher ONNX Level 4 (`gap_level4_margin012.onnx`) được kiểm tra trên
+  100 seed khác: thành công **99/100**, va chạm **0/100**, timeout 1/100.
+  Khoảng cách teacher–student hiện tại là vấn đề chưng cất đa nhiệm và
+  bảo toàn kỹ năng, chưa có bằng chứng nghiệm thu Level 4 của single actor.
+- Lượt khắc phục tiếp theo dùng **projection of conflicting gradients**:
+  khi gradient L4 ngược hướng gradient của L1/L2/L3/L5, loại bỏ thành phần
+  gây tăng loss cũ ở xấp xỉ bậc một (bật `--gradient-surgery`). Trong 6 epoch
+  Stage B có **84–90/90 cập nhật mỗi epoch** bị xung đột. Kết quả gate mới
+  trên 100 episode/level, seed 10301000–10305000:
+
+  | Level | Thành công | Va chạm | Kết quả |
+  |---|---:|---:|---|
+  | 1 | 100/100 | 0/100 | PASS |
+  | 2 | 98/100 | 2/100 | PASS |
+  | 3 | 99/100 | 1/100 | PASS |
+  | 4 | 53/100 | 43/100 (4 timeout) | FAIL |
+  | 5 | 100/100 | 0/100 | PASS |
+
+  Checkpoint `checkpoints/single_model_l1_l5_pcgrad_20261018/retention_candidate.pth`;
+  báo cáo `logs/pcgrad_dagger_20261018/`. Gate chạy lại bằng
+  `scripts/acceptance_gate.py` trả **exit code 1** như kỳ vọng; file
+  `logs/single_actor_l1_to_l5_final_acceptance.json` hiện phản ánh lượt
+  PCGrad. Trộn tuyến tính trọng số A→B ở α=0..1 trên pilot 15 episode/level
+  cũng không phục hồi Level 4; kết quả lưu `interpolation_pilot.json`.
+- **Đến cuối ngày 18/10/2026: 64/64 pytest PASS.** Hiện chỉ có
+  checkpoint thử nghiệm; do Level 4 chưa đạt, file sản phẩm
+  `exported/local_planner_single_actor_l1_l5.onnx` **chưa được tạo**, chưa
+  benchmark p99, chưa xác minh phần cứng Raspberry Pi 4. Không công bố
+  thuật toán đã nghiệm thu hay triển khai lên AGV thật.
+
+### Sửa Stage B: tiếp cận slalom sớm và rollout hỗn hợp (18/10/2026)
+
+`scripts/repair_stages_l2_l4.py` hiện tính khoảng cách LiDAR robust theo
+phân vị 15% trên dải ±60°; mẫu Level 4 được tăng trọng số 5× khi cách vật
+cản 0,5–2,2 m, 6× khi dưới 0,5 m, và thêm 5× khi độ lệch action teacher–student
+vượt 0,15. Rollout DAgger thi hành lệnh teacher với xác suất 0,5 hoặc khi
+student có nguy cơ đâm ở cự ly <1 m; phần còn lại là lệnh student với xác suất
+15% nhiễu lái ±0,3 rad/s. Loss phạt quá tốc gấp 3 lần khi teacher ra lệnh
+chạy chậm. Các hành động luôn được chặn trong [-1,1].
+
+Trên 50 episode thu thập Level 4, rollout **có teacher hỗ trợ** đạt 50/50,
+không va chạm (15.497 frame; teacher thi hành 56,72% số bước). Đây là số liệu
+thu thập demonstration, **không phải** kết quả tự lái của student.
+
+Lượt thứ nhất dùng `--stage-b-only`, 6 epoch, LR=1,5e-5, 90 update/epoch,
+`--old-loss-threshold 0.015`, projection-relaxation=0.5. Không có cập nhật
+gradient nào thực sự kích hoạt phép chiếu (`gradient_conflict_updates=0`
+ở cả 6 epoch); fine-tune làm suy giảm nặng L2/L3. Nghiệm thu độc lập đủ
+100 seed/level (domain randomization bật, seed bắt đầu 10601000–10605000):
+
+| Level | Thành công / 100 | Va chạm / 100 | Timeout / 100 | Gate |
+|---|---:|---:|---:|---|
+| 1 | 100 | 0 | 0 | PASS |
+| 2 | 78 | 22 | 0 | FAIL |
+| 3 | 71 | 29 | 0 | FAIL |
+| 4 | 64 | 32 | 4 | FAIL |
+| 5 | 100 | 0 | 0 | PASS |
+
+Checkpoint thử nghiệm:
+`checkpoints/single_model_l1_l5_slalom_resolved_20261018/retention_candidate.pth`.
+Log được bảo toàn trong `logs/slalom_recovery_unprojected_20261018/`;
+`simulation_gate_passed=false` và checkpoint không được cấp phép xuất ONNX.
+Kết quả ở seed khác so với baseline không đủ để khẳng định mức cải thiện
+nhân quả theo cặp. Vì vậy, ngưỡng chiếu gradient mặc định của runner được
+đổi sang `0.0` để bảo vệ retention khi phát hiện gradient xung đột; tham số
+CLI vẫn cho phép thử ngưỡng khác có chủ đích.
+
+Sau thay đổi, **67/67 pytest PASS**. Chưa có minh chứng Gate L1–L5 toàn bộ
+PASS và chưa có benchmark Raspberry Pi 4; không được xuất sản phẩm chính thức.
+
+### Kiểm định gradient projection có ràng buộc (18/10/2026)
+
+Chạy lại Stage B từ checkpoint PCGrad với `--old-loss-threshold 0`
+và `--gradient-projection-relaxation .5`. Phép chiếu phát hiện gradient
+xung đột trong **90/90** cập nhật tại **mỗi** trong 6 epoch. Epoch 2 có
+pilot tốt nhất nhưng Gate cuối cùng (100 episode/level, randomization bật,
+seed bắt đầu 10901000–10905000) vẫn **FAIL**:
+
+| Level | Thành công / 100 | Va chạm / 100 | Timeout / 100 | Gate |
+|---|---:|---:|---:|---|
+| 1 | 100 | 0 | 0 | PASS |
+| 2 | 89 | 11 | 0 | FAIL |
+| 3 | 81 | 19 | 0 | FAIL |
+| 4 | 53 | 37 | 10 | FAIL |
+| 5 | 100 | 0 | 0 | PASS |
+
+Checkpoint: `checkpoints/single_model_l1_l5_constrained_slalom_20261018/retention_candidate.pth`.
+Báo cáo, seed thất bại và metadata đã được **sao lưu riêng** tại
+`logs/slalom_recovery_constrained_20261018/`. DAgger thu 50/50 episode L4
+thành công **có teacher can thiệp trong 56,72% bước**, do đó không thể dùng
+để khẳng định student độc lập thành công. Ở các frame L4 có **92,25%**
+trường hợp hành động teacher–student chênh >0,15. Không hạ chuẩn Gate.
+
+### Thử nghiệm tiếp: một ActorCritic có hiệu chỉnh theo quan sát
+
+`models/actor_critic.py` bổ sung `ContextualResidualActorCritic` gồm backbone
+ActorCritic gốc và **một** nhánh hiệu chỉnh actor sử dụng 365 giá trị quan sát,
+được điều tiết bởi ngữ cảnh hình học LiDAR (phân loại nhận diện ngữ cảnh chỉ
+được giám sát qua kịch bản mô phỏng lúc huấn luyện). **Không có ID level hoặc
+teacher policy lúc chạy suy luận.** Các tham số actor cũ bị khóa, chỉ học
+correction bằng DAgger Level 4 và rehearsal bảo toàn L1/L2/L3/L5. Đây là
+**kiến trúc thử nghiệm có classifier ngữ cảnh bên trong**, không phải PPO vừa
+được huấn luyện hội tụ và chưa có bằng chứng tổng quát hóa bản đồ lạ.
+
+Trên 15 episode/level chẩn đoán, xác suất classifier nhận nhầm L4 khi đang ở
+Level 1/2/3/5 (>0,5) đều bằng 0 trong mẫu; với Level 4 teacher rollout,
+82,99% frame có xác suất nhận diện L4 >0,5. Đây là pilot chẩn đoán, không
+phải xác nhận triển khai. Quy trình huấn luyện độc lập nằm trong
+`scripts/train_context_residual.py` và chỉ nâng metadata `independently_gated`
+thành true khi 100 episode/level vượt mọi ngưỡng thành công và va chạm.
+
+**Kết quả thực nghiệm actor có ngữ cảnh, chưa được nghiệm thu:**
+
+1. `checkpoints/single_actor_context_residual_20261018/`: 3 vòng DAgger
+   Level 4 (50/70/90 episode, 500 update/vòng); pilot tốt nhất Level 4
+   **13/15**. Gate độc lập 100 episode/level, seed 12501000–12505000:
+   L1 **100/100** (0 va chạm), L2 **96/100** (4), L3 **100/100** (0),
+   L4 **71/100** (29), L5 **100/100** (0). **FAIL**.
+2. `checkpoints/single_actor_conservative_dagger_20261018/`: tiếp tục từ
+   round-3 checkpoint, thử cổng ngữ cảnh nghiêm ngặt hơn và Level 4 DAgger
+   dùng hành động student nhiều hơn để thu dữ liệu sát rủi ro
+   (90/110 episode, 650 update/vòng). Gate độc lập 100 episode/level,
+   seed 13101000–13105000: L1 **100/100** (0 va chạm),
+   L2 **98/100** (2), L3 **99/100** (1), L4 **73/100** (27),
+   L5 **100/100** (0). **FAIL do Level 4**. Mọi kết quả Gate và seed
+   được lưu riêng cùng checkpoint trong thư mục tương ứng; kiểm thử **73/73 PASS**.
+
+Chỉ bản **thử nghiệm** đã xuất tại
+`checkpoints/single_actor_conservative_dagger_20261018/experimental_contextual.onnx`
+(ONNX Opset 14; sai số xuất PyTorch→ONNX lớn nhất **8,94e-7**).
+Benchmark ONNX Runtime CPU trên **Windows 11 AMD64**: 1500 suy luận,
+P99 **0,487 ms**; số này **không xác nhận** Raspberry Pi 4 P99 < 2 ms.
+Thử xuất chính thức `exported/local_planner_single_actor_l1_l5.onnx`
+đã bị chặn đúng bởi Acceptance Gate do L4 còn 27% va chạm;
+**không tạo file chính thức và không phê duyệt chạy AGV thật**.
+
+### Hai lượt phục hồi bổ sung: khoảng hở bên hông và hiệu chỉnh context (18/10/2026)
+
+Sau khi phân tích 12 seed va chạm độc lập Level 4, phát hiện nhiều thời điểm
+xe **thiếu góc quay** khi khoảng hở phía trước còn lớn nhưng vật cản bên hông
+chỉ cách tâm xe khoảng 0,25–0,30 m. Bổ sung `level4_side_distance` (phân vị
+15% của hai cung LiDAR bên) và trọng số nguy hiểm bên hông trong
+`scripts/repair_stages_l2_l4.py`; bổ sung hình phạt hướng quay lớn khi teacher
+yêu cầu và bộ hiệu chỉnh classifier theo mẫu DAgger + replay vào
+`scripts/train_context_residual.py`. Có kiểm thử hồi quy cho cả hai tính năng.
+
+**Gate độc lập, mỗi level 100 episode, đầy đủ domain randomization:**
+
+| Checkpoint thử nghiệm | L1 thành công / va chạm | L2 | L3 | L4 | L5 | Gate |
+|---|---|---|---|---|---|---|
+| `single_actor_conservative_dagger_20261018` (trước sửa) | 100% / 0% | 98% / 2% | 99% / 1% | 73% / 27% | 100% / 0% | **FAIL** |
+| `single_actor_lateral_recovery_20261018` | 100% / 0% | 95% / 5% | 100% / 0% | 75% / 25% | 100% / 0% | **FAIL** |
+| `single_actor_context_calibrated_20261018` | 100% / 0% | 97% / 3% | 98% / 2% | 67% / 33% | 100% / 0% | **FAIL** |
+
+Seed độc lập lần lượt bắt đầu ở 13101000–13105000, 14601000–14605000,
+15601000–15605000; kết quả và danh sách seed va chạm lưu trong từng thư mục
+checkpoint dưới `single_actor_l1_to_l5_final_acceptance.json` và
+`final_eval_l1.json` ... `final_eval_l5.json`. So sánh giữa các dòng là
+**tham khảo** vì seed khác nhau, không phải đánh giá cải thiện nhân quả ghép cặp.
+Với teacher hỗ trợ 36,37% đến 57,03% số bước DAgger, thành công khi thu thập
+demonstration **không tương đương** khả năng tự lái của student.
+
+Phép hiệu chỉnh ngữ cảnh có mục tiêu CE giám sát (nhãn level ở **train only**),
+không thay đổi hợp đồng đầu vào `[N,365]`/đầu ra `[N,2]` lúc suy luận;
+nhưng làm giảm thành công L4 và chưa giải quyết biến thiên chính sách trên
+trạng thái khó. Cả hai lượt đều là DAgger/BC, **không phải PPO mới hội tụ**.
+Kiểm thử cuối: **75/75 pytest PASS**. Chưa có mô hình đơn nào đạt đủ
+Acceptance Gate L1–L5; tệp phát hành
+`exported/local_planner_single_actor_l1_l5.onnx` **không tồn tại**.
+Benchmark Pi 4 cũng **chưa được đo**. Cấm xem hai checkpoint thử nghiệm là
+phiên bản chính thức để chạy AGV thật.
+
+### Thử nghiệm min/avg LiDAR + Flank Rescue DAgger ba vòng (18/10/2026)
+
+Triển khai `DirectionalContextualResidualActorCritic` theo hợp đồng
+`[N,365] -> [N,2]`, với nhánh hiệu chỉnh dùng 72 min-pooled + 72
+avg-pooled + 6 khoảng hở định hướng + 128 đặc trưng fusion + 5
+biến goal/vận tốc, MLP `283 -> 256 -> 128 -> 2`. Trọng số residual
+checkpoint cũ được nhúng vào tầng mới mà giữ nguyên hành động tại lúc
+khởi tạo (kiểm chứng trong pytest). Mạng có **một** đầu ra hành động,
+không có Teacher hoặc nhãn level bên ngoài ở thời điểm inference.
+
+`repair_stages_l2_l4.py` đã bổ sung nhánh Teacher rescue cả khi phía
+trước thoáng nhưng bên sườn `<0.55m`, loss phạt thiếu góc quay so với
+Teacher và phạt tiến quá nhanh khi bên sườn `<0.40m`; giữ nguyên hành
+vi cũ cho các call không bật tùy chọn. `train_context_residual.py` có
+các flag `--directional-pool --directional-loss --flank-rescue`.
+**79/79 pytest PASS**; `git diff --check` không có lỗi khoảng trắng.
+
+Chạy chính xác 3 vòng DAgger Level 4 (60/80/100 episode, 600 update/vòng,
+batch 256, learning rate 0.00025) và replay 10 episode mỗi level
+L1/L2/L3/L5 từ checkpoint bảo toàn. Kết quả pilot trên 15 episode/level:
+
+| Vòng | L2 pilot thành công | L4 pilot thành công | Chọn |
+|---|---:|---:|---|
+| 1 | 14/15 | 13/15 | **Có** |
+| 2 | 14/15 | 13/15 | Không |
+| 3 | 15/15 | 8/15 | Không |
+
+DAgger Level 4 có Teacher can thiệp **62.94%, 54.38%, 45.25%** số
+bước tương ứng ba vòng. Tỷ lệ hoàn tất episode lúc thu thập không
+được xem là kết quả tự lái Student. Đây là huấn luyện **DAgger/BC
+residual** trên backbone PPO đóng băng, **không phải PPO vừa hội tụ**.
+
+**Acceptance Gate độc lập:** 100 episode/level, domain randomization bật,
+seed bắt đầu từ **16001000, 16002000, 16003000, 16004000, 16005000**.
+
+| Level | Thành công | Va chạm | Timeout | Điều kiện | Kết quả |
+|---|---:|---:|---:|---|---|
+| 1 | 100/100 | 0/100 | 0 | Thành công >=99%, va chạm <=2% | PASS |
+| 2 | 93/100 | 7/100 | 0 | Thành công >=98%, va chạm <=2% | **FAIL** |
+| 3 | 100/100 | 0/100 | 0 | Thành công >=90%, va chạm <=2% | PASS |
+| 4 | 87/100 | 13/100 | 0 | Thành công >=90%, va chạm <=2% | **FAIL** |
+| 5 | 100/100 | 0/100 | 0 | Thành công >=90%, va chạm <=2% | PASS |
+
+**TOÀN BỘ GATE: FAIL.** Mô hình thử nghiệm được giữ lại:
+`checkpoints/single_actor_slalom_master_20261018/retention_candidate.pth`
+(SHA256 `66ce572e44c2f7a9be5ce0e0a04d057d57da28b0e7a69e88dd0d7754d8721909`).
+Bằng chứng: cùng thư mục có `training_trials.json`, 5 file
+`final_eval_l*.json`, `retention_report.json` và
+`single_actor_l1_to_l5_final_acceptance.json`; bản Gate kết hợp cũng
+được ghi vào `logs/single_actor_l1_to_l5_final_acceptance.json`
+(bản log cũ được lưu tại hậu tố `_previous_20261018.json`).
+
+Chẩn đoán **13/13 seed va chạm** tại
+`checkpoints/single_actor_slalom_master_20261018/l4_collision_diagnostics.json`:
+trung bình 15 bước cuối có vận tốc tiến thực `0.232m/s`, khoảng hở
+trước `1.535m`, khoảng hở xuyên tâm `0.308m`, xác suất nhận diện ngữ
+cảnh L4 `0.769`, hệ số gain residual `0.999`, sai lệch hành động
+teacher/student chuẩn hóa `0.891`. Cổng ngữ cảnh có kích hoạt mạnh
+nhưng policy vẫn quay/phanh chưa đủ trên các trạng thái sát sườn;
+min-pooling riêng lẻ cũng nhạy với ray dropout nên cần kiểm chứng
+thêm bằng dữ liệu thất bại và đặc trưng hình học robust.
+
+Các checkpoint trước đó được đánh giá trên **bộ seed khác**, nên không
+được khẳng định mức tăng L4 từ 73% lên 87% là cải thiện nhân quả theo
+cặp. Seed Gate 1600xxxx chỉ phục vụ nghiệm thu này; mọi lần hiệu
+chỉnh mới phải dùng seed train/pilot/gate **mới, tách biệt**.
+
+**Không xuất** `exported/local_planner_single_actor_l1_l5.onnx`
+khi Gate còn FAIL. Do chưa có ONNX đủ điều kiện, chưa benchmark độ trễ
+P99 của phiên bản này. Mốc P99 Windows 0.487ms chỉ thuộc mô hình
+thử nghiệm cũ; Raspberry Pi 4 và AGV vật lý chưa được xác nhận.
+
+### Tinh chỉnh phanh sườn L4 và replay Teacher L2 (18/10/2026)
+
+`scripts/repair_stages_l2_l4.py` nay phạt vượt vận tốc bò khi khoảng hở
+sườn `<0.45m`: `3*mean(risk*relu(v_norm+0.6)^2)`, tương ứng
+`v_norm<=-0.6` hoặc `v<=0.07m/s`. `train_context_residual.py` đã thay
+nhãn replay L2 bằng chuyên gia `exported/locked_scene_margin070_experimental/ppo_levels12.onnx`
+trên chính các trạng thái Student đã đi qua, 40 episode và hệ số replay L2
+`2.0`; L1/L3/L5 giữ retention-reference. Đây là **DAgger/BC trên residual
+ActorCritic**, không phải huấn luyện PPO mới. Kiểm thử: **81/81 PASS**.
+
+Chạy ba vòng DAgger L4 (60/80/100 episode; 600 update/vòng;
+`batch_size=256`, `learning_rate=0.00015`). Teacher can thiệp lần lượt
+61.87%, 54.23%, 44.03% số bước. Pilot tự lái 30 episode/level cho L4
+17/30, 14/30, 23/30 và L2 29/30, 29/30, 30/30; chọn vòng 3. Thành
+công khi có Teacher hỗ trợ thu thập không phải kết quả tự lái Student.
+
+**Acceptance Gate độc lập (domain randomization bật; 100 episode/level):**
+seed đầu tiên theo cấp lần lượt `17201000`, `17202000`, `17203000`,
+`17204000`, `17205000`. Các seed này không tham gia train/pilot.
+
+| Level | Thành công | Va chạm | Timeout | Gate |
+|---|---:|---:|---:|---|
+| L1 | 100/100 | 0/100 | 0/100 | PASS |
+| L2 | 99/100 | 1/100 | 0/100 | PASS |
+| L3 | 100/100 | 0/100 | 0/100 | PASS |
+| L4 | 76/100 | 19/100 | 5/100 | **FAIL** |
+| L5 | 100/100 | 0/100 | 0/100 | PASS |
+
+**Gate tổng hợp: FAIL**. Checkpoint:
+`checkpoints/single_actor_creep_l2_teacher_20261018/retention_candidate.pth`,
+SHA256 `47650304988BD5C7E04DCEC7ACD2E570D56045044938D00BA0DA5C22ACCAB4CC`.
+Trong thư mục này có `training_trials.json`, `final_eval_l1.json` đến
+`final_eval_l5.json`, `retention_report.json`,
+`single_actor_l1_to_l5_final_acceptance.json` và các checkpoint từng
+vòng. Gate kết hợp mới được lưu tại
+`logs/single_actor_l1_to_l5_final_acceptance.json`; gate trước được
+giữ tại `logs/single_actor_l1_to_l5_final_acceptance_before_creep_20261018.json`.
+
+Đánh giá bổ sung **chỉ trên seed phát triển**: Nội suy residual trọng số
+alpha `[0, .25, .5, .75, 1]` trên 30 episode L2/L4 với seed
+`17402xxx` và `17404xxx` cho L4 cao nhất **25/30 thành công,
+5/30 va chạm** (alpha `.5`); L2 đều **28/30**.
+Chi tiết trong `blend_pilot_l2_l4.json`. Kiểm tra thêm chính sách có
+giới hạn trực tiếp `v_norm<=-0.6` khi sườn `<.45m` trên seed
+`1760xxxx`: checkpoint gốc L4 **26/30, 4 va chạm**; checkpoint mới L4
+**19/30, 9 va chạm, 2 timeout**. Chi tiết `flank_clamp_pilot.json`.
+Các phép thử này không thay thế Gate và không được dùng để chọn theo
+seed kiểm định cuối.
+
+Nhận định: phạt vận tốc sát sườn làm giảm tốc nhưng chưa sửa đủ
+góc quay và quỹ đạo phục hồi. Nhãn Teacher tại nhiều trạng thái gần
+sườn vẫn có tốc độ cao, có khả năng xung đột với loss phạt tốc độ.
+Đây là giả thuyết cần thí nghiệm nhân quả tiếp theo.
+**Không xuất** `exported/local_planner_single_actor_l1_l5.onnx` khi
+L4 còn dưới 90% thành công và vượt 2% va chạm. Chưa có benchmark P99
+cho ONNX mới, chưa đo latency trên Raspberry Pi 4 và không phê duyệt
+chạy trên AGV vật lý.
+
+### Thí nghiệm tiếp diễn: hiệu chỉnh ngữ cảnh và DAgger ít can thiệp (18/10/2026)
+
+**Bản đối chứng giữ lại:**
+`checkpoints/single_actor_context_recalibration_20261018/retention_candidate.pth`
+(SHA256 `A2F3C23813B4099DFA497ADC26313CEB19908154ABB109F5720AF74434766CAC`).
+Gate độc lập 100 seed/level, có randomization, seed L1–L5 lần lượt
+`18801000`, `18802000`, `18803000`, `18804000`, `18805000`:
+
+| Level | Thành công | Va chạm | Timeout | Gate |
+|---|---:|---:|---:|---|
+| 1 | 100/100 | 0/100 | 0/100 | PASS |
+| 2 | 98/100 | 2/100 | 0/100 | PASS |
+| 3 | 100/100 | 0/100 | 0/100 | PASS |
+| 4 | 89/100 | 10/100 | 1/100 | **FAIL** |
+| 5 | 100/100 | 0/100 | 0/100 | PASS |
+
+**Thí nghiệm A – quét bias bộ phân loại ngữ cảnh L4:** thêm tiện ích
+`scripts/calibrate_l4_context.py`. Tại 30 seed phát triển cho mỗi L2,
+L4 (seed `19202000` và `19204000`), thử shift `[-0.75, -0.35, 0,
+0.35, 0.75, 1.25, 2]` trên logit L4 với cùng checkpoint nguồn.
+**Cả bảy giá trị đều cho L2 29/30 (1 va chạm), L4 29/30
+(0 va chạm, 1 timeout), score 2.5333**. Không có cải thiện quan sát được
+so với shift=0 trên các seed này; sau thử nghiệm, code ưu tiên shift=0
+khi đồng điểm, trong khi run trước khi sửa đã ghi shift=-0.75 trong
+`checkpoints/single_actor_l4_bias_sweep_20261018/calibration_summary.json`.
+Checkpoint thử nghiệm từ run đó chưa qua Gate, tuyệt đối không sử dụng
+như bản chính thức. L1/L3/L5 trong tập phát triển đều 30/30.
+
+**Thí nghiệm B – DAgger phục hồi L4 có ít Teacher can thiệp:** bắt đầu
+từ checkpoint đối chứng, thu thập 75 episode L4 / 22.337 frame, rollout
+Teacher 11.3% bước, tiêm nhiễu lái 15%, risk override 15%, cập nhật
+residual 300 lần với lr `0.00005`, replay L2 do chuyên gia gắn nhãn
+40 episode (`weight=2`), replay L1/L3/L5 10 episode/level. Trong tập
+thu thập có Teacher hỗ trợ: L4 72/75 thành công; **đây không phải
+hiệu năng tự lái**. Pilot Student 30 episode/level: L2 28/30 (2 va chạm),
+L4 26/30 (1 va chạm, 3 timeout).
+
+Gate độc lập 100 seed/level, seed `19601000` tới `19605000`:
+
+| Level | Thành công | Va chạm | Timeout | Gate |
+|---|---:|---:|---:|---|
+| 1 | 100/100 | 0/100 | 0/100 | PASS |
+| 2 | 97/100 | 3/100 | 0/100 | **FAIL** |
+| 3 | 99/100 | 1/100 | 0/100 | PASS |
+| 4 | 85/100 | 4/100 | 11/100 | **FAIL** |
+| 5 | 100/100 | 0/100 | 0/100 | PASS |
+
+**Gate tổng thể: FAIL.** Bản thử nghiệm được lưu độc lập tại
+`checkpoints/single_actor_offpolicy_recovery_20261018/retention_candidate.pth`
+(SHA256 `39EBB1FB0FE4B1A63C8CDD9CBF36E3634347007C8482DAACE1F94C5E5D0FBD43`).
+Cùng thư mục lưu đầy đủ `final_eval_l1.json` đến `final_eval_l5.json`,
+`retention_report.json` và `single_actor_l1_to_l5_final_acceptance.json`.
+Kết quả cho thấy giảm can thiệp trong giai đoạn DAgger chưa đủ: lỗi
+L4 dịch sang timeout đáng kể và L2 bị suy giảm. Vì bộ seed hai Gate
+khác nhau, không diễn giải chênh lệch tỷ lệ thành công như hiệu ứng nhân quả.
+
+Kiểm thử nguồn: **83/83 pytest PASS** trước đợt DAgger. Chưa có chính
+sách đơn L1–L5 vượt Gate. **Không xuất**
+`exported/local_planner_single_actor_l1_l5.onnx`, không gắn nhãn
+`independently_gated=true` và chưa có kết quả benchmark P99 cho bản này.
+Hạn chế mô phỏng: bộ kịch bản hình học cố định và randomization chưa
+chứng minh an toàn hoặc độ trễ trên Raspberry Pi 4 / AGV thực.
+
+### Audit độc lập Subagent 4: code review, release gate và an toàn AGV (18/10/2026)
+
+Bằng chứng đầy đủ, mức độ nghiêm trọng và vị trí source được lưu riêng tại
+`logs/fast_gate_code_review_20261018.md`. Đã đọc diff tracked và source
+untracked `scripts/train_context_residual.py`, `scripts/repair_stages_l2_l4.py`,
+`scripts/run_fast_gate.py` (mới do Main thêm); **không sửa các source/checkpoint
+của agent khác**. `ocr review --audience agent --background "AGV L1-L5 single
+ActorCritic, 365/2, randomized acceptance and no release on FAIL"` được gọi
+trực tiếp nhưng **exit code 1** vì chưa cấu hình LLM endpoint
+(`no valid LLM endpoint configured`); do đó kết luận dưới đây là **manual
+review**, không phải kết quả OCR tự động. Kiểm thử độc lập
+`python -m pytest ai_local_planner/tests -q`: **83 passed**; `git diff --check`
+không phát hiện lỗi whitespace (chỉ cảnh báo quy đổi LF/CRLF của Git).
+
+- **CRITICAL / hardware safety design**: yêu cầu STM32 hard E-stop **0,18 m**
+  trong `PROMPT_SUBAGENTS_FAST_RELEASE.md` nằm **bên trong bán kính thân xe
+  R=0,20 m**, không thể coi là cự ly phanh an toàn. Nếu LiDAR được quy về
+  tâm robot, dừng khi d=0,18 m là muộn hơn ngưỡng va chạm. Với v=0,35 m/s,
+  trễ 0,1 s và giảm tốc 0,5 m/s², khoảng cách tối thiểu xấp xỉ
+  `0,20 + 0,35*0,1 + 0,35²/(2*0,5) = 0,3575 m`, **chưa** tính sai số LiDAR,
+  trễ bổ sung và biên dự phòng. Đây là **lỗi trong đề xuất ngưỡng**, không
+  phải bằng chứng firmware STM32 hiện tại đã cấu hình 0,18 m. Software
+  `CommandSafetyFilter` hiện đặt 0,46 m phía trước và 0,25 m toàn vòng,
+  nhưng không thay thế STM32 watchdog/hard E-stop độc lập. Phải thống nhất
+  phép đo LiDAR từ tâm/sensor và `clearance` từ mép thân xe: nếu sensor ở
+  tâm, `hull_clearance ≈ raw_range - 0,20 m` (cần hiệu chỉnh extrinsic thực).
+- **HIGH / fail-closed release**: `scripts/run_fast_gate.py:60-76` gắn
+  `independently_gated=true`, ghi đè checkpoint và xuất **ONNX chính thức
+  trước khi** kiểm tra P99; khi `target_p99_below_2ms=false`, CLI trả thất
+  bại nhưng ONNX và metadata promoted đã tồn tại. Cần benchmark bản
+  ứng viên ở đường dẫn tạm, xác thực đầy đủ rồi mới phát hành atomic.
+- **HIGH / artifact integrity**: `run_fast_gate.py:29,60-68` ghi
+  `evaluated_checkpoint_sha256` từ hash **trước** lần `torch.save` thay
+  metadata; checkpoint sau gate có bytes/hash khác. Trong khi đó
+  `export_onnx.py:38-55` chỉ đối chiếu đường dẫn và tỉ lệ, **không** kiểm
+  tra hash của tensor/trọng số đã nghiệm thu. Cần neo hash bất biến của
+  weights và xác minh ngay trước export; tránh ghi đè checkpoint được gate.
+- **MEDIUM / independent seeds**: `run_fast_gate.py:20-33` nhận `--seed`
+  tùy ý mà không kiểm tra giao nhau với seed training/pilot ghi trong
+  `provenance.json`/`training_metrics.json`; tính độc lập hiện phụ thuộc
+  quy trình vận hành. Các seed mặc định **của lần train quan sát được**
+  (training L4 `22500000..22500039`, pilot base `22400000`) khác seed
+  gate mặc định, nhưng runner cần fail-closed nếu người gọi đổi seed.
+- **MEDIUM / benchmark scope**: `benchmark_latency.py:13-39` đo 1.000
+  lần gọi ONNX Runtime trên **một** quan sát giả định cố định của host;
+  P99 này chỉ là latency ONNX CPU host, chưa bao gồm tiền xử lý LiDAR,
+  safety guard, độ trễ truyền thông hay xác minh **Raspberry Pi 4**.
+  Manifest vẫn đánh dấu `pi4_latency_verified=false`.
+
+Đối chứng gần nhất trong `logs/single_actor_l1_to_l5_final_acceptance.json`
+vẫn ghi `simulation_gate_passed=false` (L4: 76/100 thành công,
+19/100 va chạm, 5/100 timeout). Ở thời điểm audit, thí nghiệm micro-DAgger
+mới tại `checkpoints/single_actor_fast_gate_pass_20261018/` đã **hoàn thành
+train 180 updates** theo `training_metrics.json` và có pilot **20 seed/level**
+(L2 19/20, va chạm 1/20; L4 19/20, va chạm 1/20); `outcome.json` ghi
+`independently_gated=false`, `independent_gate_run=false`,
+`official_onnx_exported=false`. **Chưa có bằng chứng Acceptance Gate độc
+lập 100 seed/level PASS cho ứng viên mới**; chưa đo P99 của ONNX mới.
+Tiếp tục yêu cầu Gate **L1–L5 đồng thời** đạt ngưỡng thành công và va
+chạm, domain randomization bật, seed độc lập, hash checkpoint nhất quán,
+trước bất kỳ phát hành chính thức nào. **Tuyệt đối chưa chạy AGV thật**:
+phải qua jack-up bench test, xác minh LiDAR/extrinsic/fail-safe sớm và
+kiểm tra STM32 hardware E-stop độc lập ở ngưỡng được tính lại theo thân xe,
+trễ và quãng phanh; sau đó mới thử nghiệm có kiểm soát.
+
+### Kết quả cuối cùng của đợt Micro-DAgger 1 vòng (18/10/2026)
+
+Checkpoint được đánh giá: `checkpoints/single_actor_fast_gate_pass_20261018/retention_candidate.pth`,
+SHA256 `781152955c4ceb8e040bc8569cf6669ea5fb57bace69739ebc9cb2f573e917e2`.
+Một vòng DAgger/behavior cloning (**180 optimizer updates, LR=3e-5; không
+phải cập nhật PPO**); replay 40 episodes L2 bằng `ppo_levels12.onnx`
+(weight=2.0), 10 episodes cho từng L1/L3/L5. Dữ liệu replay L1/L3/L5
+trong lần chạy thực tế lấy nhãn từ checkpoint PCGrad cũ, **khác baseline
+recalibration được yêu cầu**; runner đã được chỉnh default cho lần chạy
+tương lai, tuyệt đối không mô tả lần chạy này là đúng cấu hình baseline.
+Chi tiết audit tại `checkpoints/single_actor_fast_gate_pass_20261018/replay_reference_deviation.json`.
+
+Acceptance Gate độc lập 100 episodes/level, bật Domain Randomization,
+seed khởi đầu cho từng level `20101000`, `20102000`, `20103000`,
+`20104000`, `20105000`:
+
+| Level | Thành công | Va chạm | Timeout | Gate |
+| --- | ---: | ---: | ---: | --- |
+| L1 | 100/100 | 0/100 | 0/100 | PASS |
+| L2 | 98/100 | 2/100 | 0/100 | PASS |
+| L3 | 100/100 | 0/100 | 0/100 | PASS |
+| L4 | 90/100 | **9/100** | 1/100 | **FAIL** |
+| L5 | 100/100 | 0/100 | 0/100 | PASS |
+
+**KẾT LUẬN GATE: FAIL.** L4 đã chạm ngưỡng success 90% nhưng collision
+9% > mức cho phép 2%. Log gốc:
+`checkpoints/single_actor_fast_gate_pass_20261018/single_actor_l1_to_l5_final_acceptance.json`
+và các `final_eval_l1.json` ... `final_eval_l5.json`.
+Checkpoint ứng viên đã đối chiếu SHA và vẫn giữ `independently_gated=false`.
+Không có ONNX chính thức `exported/local_planner_single_actor_l1_l5.onnx`
+và không có phép đo P99 của ONNX chính thức vì Gate không đạt.
+
+Sau audit, `scripts/run_fast_gate.py` đã bổ sung kiểm tra provenance của
+seed, kiểm tra checkpoint bất biến giữa mỗi level, staging riêng cho ONNX,
+chỉ promote sau khi P99 CPU đạt; `scripts/export_onnx.py` kiểm tra digest
+trọng số model khớp giữa checkpoint và báo cáo trước khi xuất chính thức.
+Đây là sửa lỗi quy trình phát hành cho những lần chạy tiếp theo, không
+biến kết quả Gate hiện tại thành PASS. Mô hình chưa được nghiệm thu cho
+Raspberry Pi 4 hoặc AGV thật; hard E-stop STM32 phải thiết kế theo
+quãng dừng thực, với lưu ý ngưỡng LiDAR 0.18 m từ tâm **không đủ** khi
+bán kính thân xe 0.20 m.
+
+Kiểm thử sau các sửa đổi: **86/86 pytest PASS** trên toàn bộ
+`ai_local_planner/tests`; sau điều chỉnh kiểm tra seed, bộ test tập trung
+export/release chạy tiếp **7/7 PASS**.
+
+### Đánh giá bổ sung Subagent 4 — zero-collision micro-DAgger / gate / E-stop (18/10/2026)
+
+Báo cáo có vị trí source, rủi ro và bằng chứng tại
+`logs/zero_collision_code_review_20261018.md` (manual review). Đã thực chạy
+`python -m pytest ai_local_planner/tests -q`: **86 passed, exit 0**;
+`git diff --check`: **exit 0**, chỉ có cảnh báo LF/CRLF. Đã thử OCR trực tiếp
+nhưng CLI **exit 1** vì `no valid LLM endpoint configured`; vì vậy không có
+kết quả OCR tự động và không khẳng định đã kiểm định bằng OCR.
+
+Đã tự đối chiếu lại 5 báo cáo nghiệm thu **hiện có** của checkpoint
+`single_actor_fast_gate_pass_20261018` bằng `acceptance_gate.assess`:
+L1 `100/100, collision 0`, L2 `98/100, collision 2`,
+L3 `100/100, collision 0`, L4 `90/100, collision 9`,
+L5 `100/100, collision 0`. **Gate tổng: FAIL vì L4 collision 9% > 2%**.
+Tại thời điểm review, thư mục `checkpoints/single_actor_zero_collision_20261018/`
+**chưa có**, nên `run_fast_micro_dagger.py` mới chỉ được review source;
+không công bố train/pilot/independent gate đã chạy. ONNX chính thức
+`exported/local_planner_single_actor_l1_l5.onnx` **không tồn tại**.
+
+**Yêu cầu thiết kế về E-stop STM32:** ngưỡng tối thiểu **0,41 m đo từ LiDAR
+ở tâm robot** đã được nêu trong `PROMPT_L4_COLLISION_COMPRESSION.md`, với
+bán kính vỏ xe danh định `0,20 m` (clearance hình học danh định `0,21 m`).
+Ngưỡng này **chỉ là mục tiêu thiết kế, CHƯA PHẢI nghiệm thu phần cứng**.
+Phép tính minh họa `0,20 + 0,35×0,10 + 0,35²/(2×0,50) = 0,3575 m`
+chưa bao gồm sai số và độ trễ đo thực tế; không được tuyên bố phần dư
+`0,0525 m` là biên an toàn đã đo. Các tài liệu cũ vẫn đề cập **0,18 m**,
+không được sử dụng làm mức dừng thực tế từ tâm cho xe bán kính 0,20 m.
+Chưa có bằng chứng xác minh **firmware STM32 thực được nạp, wiring E-stop,
+liên động watchdog/fail-safe, vị trí thực LiDAR, đo quãng phanh và thử nghiệm
+treo bánh (jack-up bench test)**; do đó **không ký xác nhận E-stop hay cho
+phép chạy xe thật**.
+
+Review ghi nhận việc `run_fast_gate.py` đã triển khai staging, hash trọng số,
+kiểm tra seed theo provenance và benchmark trước promotion; tuy nhiên hai
+lệnh `os.replace` cho ONNX/manifest **không tạo giao dịch atomic của cả cặp**
+(runtime dùng SHA để fail-closed khi lệch cặp). P99 là CPU host, chưa đo
+Raspberry Pi 4 hoặc pipeline LiDAR → UART → motor. Không sửa source,
+checkpoint, kết quả gate hay log của agent khác trong lượt đánh giá này.
+### Kết quả chốt đợt Zero-Collision Micro-DAgger / Independent Gate (18/10/2026)
+
+**Trạng thái phát hành: BLOCKED / SIMULATION_GATE_FAILED.** Đoạn này cập nhật
+và thay thế các ghi chú trạng thái *trước khi chạy* nằm ở phần audit phía trên.
+Không có file ONNX chính thức `exported/local_planner_single_actor_l1_l5.onnx`.
+
+- Base: `checkpoints/single_actor_fast_gate_pass_20261018/retention_candidate.pth`
+  (SHA256 `781152955c4ceb8e040bc8569cf6669ea5fb57bace69739ebc9cb2f573e917e2`).
+- Candidate sau **một** Micro-DAgger BC 150 updates, LR 0.00002:
+  `checkpoints/single_actor_zero_collision_20261018/retention_candidate.pth`
+  (SHA256 `25af1efa24c00977ad6c270613e62142b4aeabd0c31bf2d8d16b2de1f5a2d29d`).
+  Replay: 40 episodes L2 với teacher `ppo_levels12.onnx`/weight 2.0,
+  10 episodes mỗi L1/L3/L5; 40 episodes L4 DAgger mixed rollout.
+  Mixed rollout 40/40 thành công là kết quả **có Teacher can thiệp**, không
+  phải kết quả student-only; pilot student-only ban đầu L3 0/20 vì flank gate
+  kích hoạt sai trong hành lang hai vách.
+- Sửa `DirectionalContextualResidualActorCritic.effective_context_gain()`:
+  giữ gain theo flank khi **chỉ một sườn** áp sát và phía trước thoáng;
+  tắt phần gain cưỡng bức khi L3 có hai vách gần hoặc đang tiếp cận cua.
+  Sau sửa, pilot L3 20/20, L4 19/20 (L4 vẫn 1/20 collision).
+  Sửa `model_fingerprint()` cho 0-D int64 version buffers để Gate có thể
+  xác minh SHA trọng số mà không lỗi PyTorch `.view(uint8)`.
+- Pytest toàn bộ sau thay đổi: **97/97 PASS**. Bộ seed nghiệm thu **mới**:
+  `--seed 22700000 --episodes 100`, mỗi level 100 episodes có đầy đủ domain
+  randomization, không giao với seed train/pilot trong `provenance.json`.
+
+| Level | Success / 100 | Collision / 100 | Timeout / 100 | Gate |
+|---|---:|---:|---:|---|
+| L1 | 100 | 0 | 0 | PASS |
+| L2 | 97 | **3** | 0 | **FAIL** (cần >=98, collision <=2) |
+| L3 | 100 | 0 | 0 | PASS |
+| L4 | **89** | **11** | 0 | **FAIL** (cần >=90, collision <=2) |
+| L5 | 100 | 0 | 0 | PASS |
+
+Log có thể tái lập tại
+`checkpoints/single_actor_zero_collision_20261018/single_actor_l1_to_l5_final_acceptance.json`,
+`retention_report.json`, `final_eval_l{1..5}.json`, `execution.log`,
+`pilot_report.json`, `provenance.json`. Candidate mới không đạt chuẩn an toàn
+L2/L4 và L4 còn thoái hóa so với base (9 -> 11 collision/100, ở *hai* tập
+seed kiểm định khác nhau nên không kết luận được ý nghĩa thống kê). Giữ base
+nguyên vẹn; **không** gắn metadata `independently_gated=true`, **không** xuất
+ONNX chính thức và **không** chạy benchmark P99 trên artifact chính thức.
+
+**An toàn thực:** `robot_stm32_f103/src/main.cpp` trong workspace hiện chứa
+`PIN_*` ESP32 và log "ESP32 Robot Ready", đồng thời có command watchdog nhưng
+chưa có kênh đo LiDAR/range độc lập đi tới vi điều khiển này. Không có bằng chứng
+cài đặt và test hard E-stop ở khoảng cách từ tâm LiDAR >=0.41 m trên STM32 thật.
+Không cấp hardware sign-off. Trước khi đặt bánh xuống sàn bắt buộc xác minh
+phần cứng E-stop độc lập, liên động/mất tín hiệu, quãng dừng đo thực nghiệm,
+và jack-up test. ONNX/P99 trên Raspberry Pi 4 chưa được xác thực.
+
+### Independent final release attempt (18/10/2026)
+
+- Held-out final seed base: `27000000`, 100 episodes/level, domain randomization.
+- Five-level simulation gate: **FAIL**.
+| Level | Success | Collision | Timeout | Gate |
+| --- | ---: | ---: | ---: | --- |
+| 1 | 100% | 0% | 0% | PASS |
+| 2 | 97% | 3% | 0% | FAIL |
+| 3 | 73% | 27% | 0% | FAIL |
+| 4 | 86% | 13% | 1% | FAIL |
+| 5 | 100% | 0% | 0% | PASS |
+- Official ONNX withheld due to failed simulation or CPU gate.
+- Real Pi4 CPU P99, STM32 independent E-stop and jack-up test unverified.

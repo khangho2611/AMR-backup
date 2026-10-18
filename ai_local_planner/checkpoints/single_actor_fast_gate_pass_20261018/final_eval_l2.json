@@ -1,0 +1,18 @@
+{
+  "checkpoint": "ai_local_planner\\checkpoints\\single_actor_fast_gate_pass_20261018\\retention_candidate.pth",
+  "training_steps": 0,
+  "level": 2,
+  "episodes": 100,
+  "seed_start": 33002000,
+  "domain_randomization": true,
+  "success_rate": 1.0,
+  "collision_rate": 0.0,
+  "timeout_rate": 0.0,
+  "mean_episode_steps": 230.19,
+  "mean_min_clearance_m": 0.4601043444991669,
+  "collision_seeds": [],
+  "timeout_seeds": [],
+  "mean_reward": 286.8408511431881,
+  "evaluated_checkpoint_sha256": "781152955c4ceb8e040bc8569cf6669ea5fb57bace69739ebc9cb2f573e917e2",
+  "evaluated_model_sha256": "56bed382a3990873775c953f0d6516a4931c88b98f3b1086425ac17a02edb109"
+}

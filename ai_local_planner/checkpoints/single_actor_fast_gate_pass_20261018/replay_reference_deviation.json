@@ -1,0 +1,39 @@
+{
+  "issue": "L1/L3/L5 replay labels came from the older pcgrad checkpoint instead of the requested recalibrated BASE checkpoint",
+  "actual_run_restarted": false,
+  "additional_training_rounds": 0,
+  "student_initialized_from": "ai_local_planner/checkpoints/single_actor_context_recalibration_20261018/retention_candidate.pth",
+  "student_base_sha256": "a2f3c23813b4099dfa497adc26313ceb19908154abb109f5720af74434766cac",
+  "requested_replay_reference": "ai_local_planner/checkpoints/single_actor_context_recalibration_20261018/retention_candidate.pth",
+  "actual_replay_reference": "ai_local_planner/checkpoints/single_model_l1_l5_pcgrad_20261018/retention_candidate.pth",
+  "actual_replay_reference_sha256": "8c06d93dfcf8de70c3103d85b461d0f071dc7f826b2cd424579dcee634fbda24",
+  "affected_replay_levels": {
+    "1": {
+      "episodes": 10,
+      "student_visited_frames": 1393,
+      "teacher_student_disagreement_fraction_gt_0_15": 0.0
+    },
+    "3": {
+      "episodes": 10,
+      "student_visited_frames": 2226,
+      "teacher_student_disagreement_fraction_gt_0_15": 0.0
+    },
+    "5": {
+      "episodes": 10,
+      "student_visited_frames": 1269,
+      "teacher_student_disagreement_fraction_gt_0_15": 0.0015760441292356187
+    }
+  },
+  "unaffected_level2_teacher": "ai_local_planner/exported/locked_scene_margin070_experimental/ppo_levels12.onnx",
+  "level2_replay_episodes": 40,
+  "interpretation": "Replay was collected on student-visited states; only the retention reference used for L1/L3/L5 action labels differed. Replay-label impact relative to the requested BASE source was not measured. Pilot rates and checkpoint are valid results for the run actually executed, not proof of the originally specified replay configuration.",
+  "runner_correction_after_run": {
+    "change": "Set REFERENCE = BASE for future invocations",
+    "before_run_runner_sha256": "8ef0f890da8545e31061e818ad9697fc2a8396205b4aaf30dabf6c36682980da",
+    "after_run_runner_sha256": "54bd81fa5668d1681321aba01f42436899ac3b8ee4b350a8ba29cda36a5da1df"
+  },
+  "checkpoint_independently_gated": false,
+  "official_onnx_exported": false,
+  "independent_gate_run": false,
+  "provenance_source_of_truth": "provenance.json contains the original command, exact effective arguments and pre-correction runner hash"
+}

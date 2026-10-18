@@ -1,0 +1,31 @@
+{
+  "status": "completed_training_and_pilot",
+  "finished_utc": "2026-10-18T09:34:22.902702+00:00",
+  "candidate": "D:\\HoMinhKhang\\PROJECT\\GITHUB_PROJECT\\CODE XE TU HANH\\ai_local_planner\\checkpoints\\single_actor_fast_gate_pass_20261018\\retention_candidate.pth",
+  "candidate_sha256": "781152955c4ceb8e040bc8569cf6669ea5fb57bace69739ebc9cb2f573e917e2",
+  "candidate_architecture": "lidar30_context_directional",
+  "independently_gated": false,
+  "independent_gate_run": false,
+  "official_onnx_exported": false,
+  "pilot_episodes_per_level": 20,
+  "pilot_policy": "self_drive_student_only",
+  "pilot_score": 2.325,
+  "pilot_success_rate": {
+    "1": 1.0,
+    "2": 0.95,
+    "3": 1.0,
+    "4": 0.95,
+    "5": 1.0
+  },
+  "pilot_collision_rate": {
+    "1": 0.0,
+    "2": 0.05,
+    "3": 0.0,
+    "4": 0.05,
+    "5": 0.0
+  },
+  "mixed_rollout_success_rate_is_not_self_drive": 1.0,
+  "training_metrics_file": "training_metrics.json",
+  "pilot_report_file": "pilot_report.json",
+  "provenance_file": "provenance.json"
+}

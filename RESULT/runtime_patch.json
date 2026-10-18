@@ -1,0 +1,9 @@
+{
+  "source_commit": "c61a1913d0323e190d20da1bcd0ed6760f84914e",
+  "trainer_path": "/kaggle/working/AMR-backup/train_coverage_20000.py",
+  "original_sha256": "4ec34ba3da097d8a106c02631dd87b652e7e6f13994784e6c045876abfd87a02",
+  "patched_sha256": "a73ede3562b5f5b3287349c8beda87c428f247ea75e15ee7354fc74d0930e38e",
+  "match_count": 1,
+  "description": "Restore selected_model to device before completed-run fresh acceptance after ONNX export moved it to CPU.",
+  "inserted_statement": "selected_model = selected_model.to(device)"
+}
