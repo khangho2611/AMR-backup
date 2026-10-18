@@ -1,4 +1,4 @@
-﻿#include <Arduino.h>
+#include <Arduino.h>
 #include <stdio.h>
 #include <string.h>
 #include "encoder.h"
@@ -198,20 +198,20 @@ void Execute_Robot_Command(const char *cmd)
                 return;
             }
 
-            /* Giới hạn trần an toàn phần cứng: v <= 0.15 m/s, w <= 0.60 rad/s */
-            if (v_req > 0.15f) v_req = 0.15f;
-            if (v_req < -0.15f) v_req = -0.15f;
-            if (w_req > 0.60f) w_req = 0.60f;
-            if (w_req < -0.60f) w_req = -0.60f;
+            /* Giới hạn trần an toàn phần cứng: v <= 0.60 m/s (~156 RPM), w <= 6.00 rad/s */
+            if (v_req > 0.60f) v_req = 0.60f;
+            if (v_req < -0.60f) v_req = -0.60f;
+            if (w_req > 6.00f) w_req = 6.00f;
+            if (w_req < -6.00f) w_req = -6.00f;
 
             float target_l_rpm = 0.0f, target_r_rpm = 0.0f;
             Kinematics_Inverse(v_req, w_req, &target_l_rpm, &target_r_rpm);
 
-            /* Giới hạn tốc độ trong dải an toàn RPM tối đa 65 RPM */
-            if (target_l_rpm > 65.0f) target_l_rpm = 65.0f;
-            if (target_l_rpm < -65.0f) target_l_rpm = -65.0f;
-            if (target_r_rpm > 65.0f) target_r_rpm = 65.0f;
-            if (target_r_rpm < -65.0f) target_r_rpm = -65.0f;
+            /* Giới hạn tốc độ trong dải an toàn RPM tối đa 140 RPM */
+            if (target_l_rpm > 140.0f) target_l_rpm = 140.0f;
+            if (target_l_rpm < -140.0f) target_l_rpm = -140.0f;
+            if (target_r_rpm > 140.0f) target_r_rpm = 140.0f;
+            if (target_r_rpm < -140.0f) target_r_rpm = -140.0f;
 
             g_target_rpm_left  = target_l_rpm;
             g_target_rpm_right = target_r_rpm;
@@ -269,10 +269,10 @@ void Execute_Robot_Command(const char *cmd)
                 return;
             }
 
-            if (l_rpm > 65.0f) l_rpm = 65.0f;
-            if (l_rpm < -65.0f) l_rpm = -65.0f;
-            if (r_rpm > 65.0f) r_rpm = 65.0f;
-            if (r_rpm < -65.0f) r_rpm = -65.0f;
+            if (l_rpm > 140.0f) l_rpm = 140.0f;
+            if (l_rpm < -140.0f) l_rpm = -140.0f;
+            if (r_rpm > 140.0f) r_rpm = 140.0f;
+            if (r_rpm < -140.0f) r_rpm = -140.0f;
 
             g_target_rpm_left  = l_rpm;
             g_target_rpm_right = r_rpm;
@@ -294,10 +294,10 @@ void Execute_Robot_Command(const char *cmd)
         int l_pwm = 0, r_pwm = 0;
         if (sscanf(p + 1, "%d %d", &l_pwm, &r_pwm) == 2)
         {
-            if (l_pwm > 120) l_pwm = 120;
-            if (l_pwm < -120) l_pwm = -120;
-            if (r_pwm > 120) r_pwm = 120;
-            if (r_pwm < -120) r_pwm = -120;
+            if (l_pwm > 200) l_pwm = 200;
+            if (l_pwm < -200) l_pwm = -200;
+            if (r_pwm > 200) r_pwm = 200;
+            if (r_pwm < -200) r_pwm = -200;
 
             g_control_mode = MODE_OPEN_LOOP;
             g_speed_left   = (int16_t)l_pwm;
