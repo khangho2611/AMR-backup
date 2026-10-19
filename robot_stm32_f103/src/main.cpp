@@ -1,4 +1,4 @@
-﻿#include <Arduino.h>
+#include <Arduino.h>
 #include <stdio.h>
 #include <string.h>
 #include "encoder.h"
@@ -198,11 +198,11 @@ void Execute_Robot_Command(const char *cmd)
                 return;
             }
 
-            /* Giới hạn trần an toàn phần cứng: v <= 0.15 m/s, w <= 0.60 rad/s */
-            if (v_req > 0.15f) v_req = 0.15f;
-            if (v_req < -0.15f) v_req = -0.15f;
-            if (w_req > 0.60f) w_req = 0.60f;
-            if (w_req < -0.60f) w_req = -0.60f;
+            /* Giới hạn trần an toàn phần cứng cho vận tốc đã hiệu chuẩn (48 RPM tiến = 0.184 m/s, 40 RPM quay = 1.60 rad/s) */
+            if (v_req > 0.25f) v_req = 0.25f;
+            if (v_req < -0.25f) v_req = -0.25f;
+            if (w_req > 1.80f) w_req = 1.80f;
+            if (w_req < -1.80f) w_req = -1.80f;
 
             float target_l_rpm = 0.0f, target_r_rpm = 0.0f;
             Kinematics_Inverse(v_req, w_req, &target_l_rpm, &target_r_rpm);

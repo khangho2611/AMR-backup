@@ -846,19 +846,55 @@ class AGVROSNode(Node):
         if not candidates:
             return None
 
-        # Sắp xếp theo khoảng cách và định hướng theo mô hình AI 2 (Coverage Q-Net)
-        if getattr(self, 'ai2_session', None) is not None and candidates:
+        # Sắp xếp và định hướng theo mô hình AI 2 (Coverage Q-Net)
+        if getattr(self, 'ai2_session', None) is not None and candidates and start_cell is not None:
             try:
                 import numpy as np
+                rcx, rcy = start_cell
+                # Trích xuất ma trận 9x9 thực tế từ bản đồ SLAM OccupancyGrid xung quanh xe:
+                # Kênh 0: Ô trống tiếp cận được chưa dọn (Uncovered)
+                # Kênh 1: Vật cản / Tường (Obstacle)
+                # Kênh 2: Ô đã đi qua / Đã dọn (Covered)
                 patch = np.zeros((3, 9, 9), dtype=np.float32)
-                patch[0, :, :] = 1.0
-                feat = np.array([0.5, 0.5, 0.4, 1.0, 0.0, 1.0, 0.3, 0.1], dtype=np.float32)
+                for dy in range(-4, 5):
+                    for dx in range(-4, 5):
+                        cx, cy = rcx + dx, rcy + dy
+                        py, px = dy + 4, dx + 4
+                        if 0 <= cx < gw and 0 <= cy < gh:
+                            if hasattr(grid, 'traversable') and not grid.traversable((cx, cy)):
+                                patch[1, py, px] = 1.0
+                            elif (cx, cy) in v_cells:
+                                patch[2, py, px] = 1.0
+                            else:
+                                patch[0, py, px] = 1.0
+                        else:
+                            patch[1, py, px] = 1.0
+
+                # Trích xuất 8 đặc trưng số học (features) chuẩn của mô hình Coverage:
+                # [p_dx, p_dy, p_dist, has_tgt, sin_yaw, cos_yaw, cov_frac, no_prog_frac]
+                best_cand = min(candidates, key=lambda c: c[0])
+                c_dist, (c_wx, c_wy) = best_cand
+                norm = max(1e-5, c_dist)
+                p_dx = float((c_wx - rx) / norm)
+                p_dy = float((c_wy - ry) / norm)
+                p_dist = float(min(1.0, c_dist / 10.0))
+                has_tgt = 1.0
+                rth = float(getattr(self, '_last_th', 0.0))
+                sin_yaw = float(math.sin(rth))
+                cos_yaw = float(math.cos(rth))
+                total_free = sum(1 for v in state.map_data if v == 0) if state.map_data else 1
+                cov_frac = float(len(v_cells) / max(1, total_free))
+                no_prog_frac = float(min(1.0, getattr(self, '_stuck_count', 0) / 20.0))
+
+                feat = np.array([p_dx, p_dy, p_dist, has_tgt, sin_yaw, cos_yaw, cov_frac, no_prog_frac], dtype=np.float32)
                 q_vals = self.ai2_session.run(None, {self.ai2_map_name: patch[None, :], self.ai2_feat_name: feat[None, :]})[0][0]
-                best_dir = int(np.argmax(q_vals))
+                best_action = int(np.argmax(q_vals))
+                setattr(self, '_ai2_best_action', best_action)
+                setattr(self, '_ai2_q_vals', [round(float(q), 3) for q in q_vals])
                 # 0: Up (+Y), 1: Down (-Y), 2: Left (-X), 3: Right (+X)
                 dir_weights = [(0.0, 1.0), (0.0, -1.0), (-1.0, 0.0), (1.0, 0.0)]
-                dw = dir_weights[best_dir]
-                candidates.sort(key=lambda c: c[0] - 0.4 * ((c[1][0] - rx) * dw[0] + (c[1][1] - ry) * dw[1]))
+                dw = dir_weights[best_action]
+                candidates.sort(key=lambda c: c[0] - 0.5 * ((c[1][0] - rx) * dw[0] + (c[1][1] - ry) * dw[1]))
             except Exception:
                 candidates.sort(key=lambda c: c[0])
         else:
@@ -1624,42 +1660,51 @@ class AGVROSNode(Node):
             turn_w = max(1.20, min(3.50, getattr(state, 'turn_w_rads', 1.60)))
 
             ai1_active = False
-            use_ai = (getattr(self, '_auto_task_mode', None) in ('COVERAGE', 'EXPLORE_AI') or os.environ.get('AGV_USE_AI', '0') == '1')
-            if use_ai and getattr(self, 'ai1_runtime', None) is not None and self.goal is not None and len(ranges) == 360 and f_dist >= 0.40:
-                # Nếu góc lệch lớn (> 45°), ưu tiên xoay tại chỗ chuẩn của xe để không quẹt hông
+            ai1_available = (getattr(self, 'ai1_runtime', None) is not None and self.goal is not None and len(ranges) == 360)
+            if ai1_available:
                 if heading_err is None or abs(heading_err) <= 0.80:
                     try:
                         cur_v = float(getattr(self, '_last_measured_v', 0.0))
                         cur_w = float(getattr(self, '_last_measured_w', 0.0))
                         cmd_ai1 = self.ai1_runtime.predict_from_sensors(ranges, pose, self.goal, cur_v, cur_w)
                         v_ai1, w_ai1 = float(cmd_ai1[0]), float(cmd_ai1[1])
+                        setattr(self, '_ai1_v', round(v_ai1, 3))
+                        setattr(self, '_ai1_w', round(w_ai1, 3))
 
-                        # Khớp 100% với cấu hình tốc độ của xe (target_rpm & cruise_speed_mps)
-                        if target_rpm >= 70:
-                            v_cmd = cruise_speed
+                        # Nếu AI 1 dự đoán vận tốc dương hoặc quay né cản
+                        if v_ai1 > 0.01 or abs(w_ai1) > 0.05:
+                            if target_rpm >= 70:
+                                v_cmd = cruise_speed
+                            else:
+                                base_v = min(0.20, cruise_speed) if target_rpm > 30 else min(0.12, cruise_speed)
+                                v_cmd = max(0.04, base_v * min(1.0, max(0.3, v_ai1 / 0.35)))
+                            w_cmd = max(-turn_w, min(turn_w, w_ai1))
+                            if l_dist < 0.35 and l_dist < r_dist:
+                                w_cmd = min(w_cmd, -0.22)
+                            elif r_dist < 0.35 and r_dist < l_dist:
+                                w_cmd = max(w_cmd, 0.22)
+
+                            ok, reason = self.send_cmd(f'V {v_cmd:.3f} {w_cmd:.3f}', autonomous=True)
+                            if ok:
+                                ai1_active = True
+                                setattr(self, '_ai1_active', True)
+                                with state.lock:
+                                    goal_type = getattr(self, '_goal_type', 'FRONTIER')
+                                    free_cells_count = sum(1 for v in state.map_data if v == 0) if state.map_data else 1
+                                    cov_pct = round(len(state.visited_cells) / max(1, free_cells_count) * 100.0, 1)
+                                    if goal_type == 'COVERAGE':
+                                        state.explore_phase = f'AI 1 (NÉ CẢN): phủ kín sàn ({cov_pct:.0f}%) | V={v_cmd:.2f} W={w_cmd:.2f}'
+                                    elif goal_type == 'HOME':
+                                        state.explore_phase = f'AI 1 (NÉ CẢN): về Home | V={v_cmd:.2f} W={w_cmd:.2f}'
+                                    else:
+                                        state.explore_phase = f'AI 1 (NÉ CẢN): bám mục tiêu | V={v_cmd:.2f} W={w_cmd:.2f}'
+                            else:
+                                setattr(self, '_ai1_active', False)
                         else:
-                            base_v = min(0.20, cruise_speed) if target_rpm > 30 else min(0.12, cruise_speed)
-                            v_cmd = max(0.04, base_v * min(1.0, max(0.3, v_ai1 / 0.35)))
-
-                        w_cmd = max(-turn_w, min(turn_w, w_ai1))
-                        if l_dist < 0.35 and l_dist < r_dist:
-                            w_cmd = min(w_cmd, -0.22)
-                        elif r_dist < 0.35 and r_dist < l_dist:
-                            w_cmd = max(w_cmd, 0.22)
-
-                        ok, reason = self.send_cmd(f'V {v_cmd:.3f} {w_cmd:.3f}', autonomous=True)
-                        if ok:
-                            ai1_active = True
-                            with state.lock:
-                                goal_type = getattr(self, '_goal_type', 'FRONTIER')
-                                free_cells_count = sum(1 for v in state.map_data if v == 0) if state.map_data else 1
-                                cov_pct = round(len(state.visited_cells) / max(1, free_cells_count) * 100.0, 1)
-                                if goal_type == 'COVERAGE':
-                                    state.explore_phase = f'AI 1 (NÉ CẢN): phủ kín sàn ({cov_pct:.0f}%) | V={v_cmd:.2f} W={w_cmd:.2f}'
-                                else:
-                                    state.explore_phase = f'AI 1 (NÉ CẢN): bám mục tiêu | V={v_cmd:.2f} W={w_cmd:.2f}'
+                            setattr(self, '_ai1_active', False)
                     except Exception:
                         ai1_active = False
+                        setattr(self, '_ai1_active', False)
 
             if ai1_active:
                 return
@@ -2064,6 +2109,15 @@ class WebHandler(BaseHTTPRequestHandler):
                         "goal_x": state.target_goal_x, "goal_y": state.target_goal_y,
                         "task_mode": getattr(ros_node, '_auto_task_mode', 'EXPLORE') if ros_node else 'EXPLORE',
                         "phase": state.explore_phase
+                    },
+                    "ai": {
+                        "ai1_loaded": getattr(ros_node, 'ai1_runtime', None) is not None,
+                        "ai1_active": bool(getattr(ros_node, '_ai1_active', False)),
+                        "ai1_v": float(getattr(ros_node, '_ai1_v', 0.0)),
+                        "ai1_w": float(getattr(ros_node, '_ai1_w', 0.0)),
+                        "ai2_loaded": getattr(ros_node, 'ai2_session', None) is not None,
+                        "ai2_action": getattr(ros_node, '_ai2_best_action', None),
+                        "ai2_q": getattr(ros_node, '_ai2_q_vals', None)
                     }
                 }
             payload = json.dumps(d).encode('utf-8')

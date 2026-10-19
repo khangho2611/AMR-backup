@@ -128,6 +128,10 @@
             <div style="font-size: 10px; font-weight: bold; color: var(--cyan); font-family: 'JetBrains Mono';">ĐỘ PHỦ PHÒNG (RAM)</div>
             <div style="font-size: 12px; font-weight: bold; color: #fff; font-family: 'JetBrains Mono';" id="valCoverage">0.0% (0 điểm)</div>
           </div>
+          <div class="tele-item" style="grid-column: span 3; display: flex; justify-content: space-between; align-items: center; padding: 6px 12px; background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 6px; margin-top: 4px;">
+            <div style="font-size: 10px; font-weight: bold; color: var(--green); font-family: 'JetBrains Mono';">🤖 AI 1 & AI 2 TRỰC TIẾP</div>
+            <div style="font-size: 11px; font-weight: bold; color: #fff; font-family: 'JetBrains Mono';" id="valAiStatus">SẴN SÀNG</div>
+          </div>
         </div>
       </div>
 
@@ -819,6 +823,19 @@
         const covEl = document.getElementById('valCoverage');
         if (covEl && d.trajectory) {
           covEl.innerText = `${d.trajectory.coverage_pct}% (${d.trajectory.points_count} điểm)`;
+        }
+        const aiEl = document.getElementById('valAiStatus');
+        if (aiEl && d.ai) {
+          if (d.ai.ai1_active) {
+            aiEl.innerText = `AI 1: V=${d.ai.ai1_v.toFixed(2)} W=${d.ai.ai1_w.toFixed(2)}`;
+            aiEl.style.color = 'var(--cyan)';
+          } else if (d.ai.ai1_loaded) {
+            aiEl.innerText = d.ai.ai2_loaded ? 'AI 1 & AI 2 ĐÃ SẴN SÀNG' : 'AI 1 ĐÃ SẴN SÀNG';
+            aiEl.style.color = 'var(--green)';
+          } else {
+            aiEl.innerText = 'CHƯA NẠP AI';
+            aiEl.style.color = 'var(--yellow)';
+          }
         }
         document.getElementById('distIndicator').innerText = `VẬT CẢN: ${d.min_m.toFixed(2)}m (${d.min_ang}°)`;
 
