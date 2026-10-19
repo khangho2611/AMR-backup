@@ -1277,11 +1277,11 @@ class AGVROSNode(Node):
         if not getattr(self, '_initial_pid_tuned', False) and getattr(self, 'control', None) is not None:
             if hasattr(self.control, 'preflight_ready') and self.control.preflight_ready(self.control.clock()) and not getattr(self.control, 'armed', False):
                 try:
-                    res = self.control.tuning(1.00, 3.20, 0.010, kf=1.80)
+                    res = self.control.tuning(0.50, 1.50, 0.010, kf=0.45)
                     if res.get('status') == 'APPLIED':
                         self._initial_pid_tuned = True
                         if hasattr(self, 'get_logger'):
-                            self.get_logger().info('ĐÃ TỰ ĐỘNG NẠP BỘ THÔNG SỐ PID TỐI ƯU (kp=1.0, ki=3.2, kd=0.01, kf=1.80)')
+                            self.get_logger().info('ĐÃ TỰ ĐỘNG NẠP BỘ THÔNG SỐ PID HIỆU CHUẨN (kp=0.50, ki=1.50, kd=0.01, kf=0.45)')
                 except Exception:
                     pass
         if not auto:
@@ -1677,12 +1677,19 @@ class AGVROSNode(Node):
                                 v_cmd = cruise_speed
                             else:
                                 base_v = min(0.20, cruise_speed) if target_rpm > 30 else min(0.12, cruise_speed)
-                                v_cmd = max(0.04, base_v * min(1.0, max(0.3, v_ai1 / 0.35)))
+                                # Đảm bảo v_cmd >= 0.10 m/s khi tiến để động cơ GA25-370 quay mượt mà, không giật
+                                v_cmd = max(0.10, base_v * min(1.0, max(0.4, v_ai1 / 0.35)))
                             w_cmd = max(-turn_w, min(turn_w, w_ai1))
                             if l_dist < 0.35 and l_dist < r_dist:
                                 w_cmd = min(w_cmd, -0.22)
                             elif r_dist < 0.35 and r_dist < l_dist:
                                 w_cmd = max(w_cmd, 0.22)
+
+                            # Bộ lọc gia tốc mượt mà (Slew Rate Limiter) chống giật xe
+                            last_v = getattr(self, '_last_smooth_v', None)
+                            if last_v is not None and target_rpm < 70:
+                                v_cmd = max(last_v - 0.05, min(last_v + 0.05, v_cmd))
+                            setattr(self, '_last_smooth_v', v_cmd)
 
                             ok, reason = self.send_cmd(f'V {v_cmd:.3f} {w_cmd:.3f}', autonomous=True)
                             if ok:
