@@ -406,7 +406,8 @@ class CommandSession:
         is_op = not self.strict_preflight
         max_v = .55 if is_op else .35
         max_w = 3.50 if is_op else 1.80
-        if (parts[0] == 'M' and ((autonomous and not is_op) or any(abs(v)>140 or v != int(v) for v in values)) or
+        max_m = 220 if is_op else 140
+        if (parts[0] == 'M' and ((autonomous and not is_op) or any(abs(v)>max_m or v != int(v) for v in values)) or
                 parts[0] == 'V' and (abs(values[0]) > max_v or abs(values[1]) > max_w)):
             return self._drive_result(command, False, 'DRIVE_LIMIT')
         with self.lock:
@@ -589,7 +590,7 @@ class CommandSession:
                         keepalive=self.last_command is None or now-self.last_command>=.10
                 elif self.strict_preflight and (self.last_command is None or not 0 <= now-self.last_command <= (.50 if self.autonomy_allowed else .20)):
                     reason = 'CALLER_TIMEOUT'
-                elif not self.strict_preflight and self.motion and (self.last_command is None or not 0 <= now-self.last_command <= (.50 if self.autonomy_allowed else .35)):
+                elif not self.strict_preflight and self.motion and (self.last_command is None or not 0 <= now-self.last_command <= (.50 if self.autonomy_allowed else 1.00)):
                     reason = 'CALLER_TIMEOUT'
                 elif not self.strict_preflight and not self.motion and not self.fault:
                     keepalive = self.last_command is None or now-self.last_command >= .12

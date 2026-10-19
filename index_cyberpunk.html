@@ -873,75 +873,150 @@
       }
     }, 1500);
 
-    // ĐIỀU KHIỂN BÀN PHÍM WASD
-    const SPEED = 110;
+    // ĐIỀU KHIỂN BÀN PHÍM WASD SIÊU MƯỢT & NHANH (M 200 PWM)
     let driveTimer = null;
     let driveCmd = null;
     let driveOpId = 0;
+    let isDrivingHttpInFlight = false;
+    const activeKeys = new Set();
 
-    async function startDrive(c) {
+    const CMD_SPEED = {
+      W: 'M 200 200',
+      S: 'M -190 -190',
+      A: 'M -180 180',
+      D: 'M 180 -180',
+      Q: 'M -180 180',
+      E: 'M 180 -180'
+    };
+
+    const KEY_COMMANDS = {
+      'KeyW': CMD_SPEED.W,
+      'KeyS': CMD_SPEED.S,
+      'KeyA': CMD_SPEED.A,
+      'KeyD': CMD_SPEED.D,
+      'KeyQ': CMD_SPEED.Q,
+      'KeyE': CMD_SPEED.E,
+      'ArrowUp': CMD_SPEED.W,
+      'ArrowDown': CMD_SPEED.S,
+      'ArrowLeft': CMD_SPEED.A,
+      'ArrowRight': CMD_SPEED.D
+    };
+
+    async function sendDriveFast(c) {
+      if (isDrivingHttpInFlight) return;
+      isDrivingHttpInFlight = true;
+      try {
+        await fetch('/api/cmd?val=' + encodeURIComponent(c), { cache: 'no-store' });
+      } catch (_) {}
+      finally {
+        isDrivingHttpInFlight = false;
+      }
+    }
+
+    function startDrive(c) {
       const opId = ++driveOpId;
       isAutoRunning = false;
       driveCmd = c;
-      sendCmd(c);
+      sendDriveFast(c);
       if (driveTimer) clearInterval(driveTimer);
-      driveTimer = setInterval(()=>{
-        if (opId === driveOpId && driveCmd) sendCmd(driveCmd);
-      }, 90);
+      // Gửi duy trì liên tục mỗi 75ms: cực kỳ mượt mà, không bao giờ bị khựng hay delay
+      driveTimer = setInterval(() => {
+        if (opId === driveOpId && driveCmd) {
+          sendDriveFast(driveCmd);
+        }
+      }, 75);
     }
 
     function stopDrive(force = false) {
       driveOpId++;
-      const active = Boolean(sessionTimer || driveCmd || driveTimer);
-      if (force === true && sessionTimer) { clearInterval(sessionTimer); sessionTimer = null; }
+      const active = Boolean(driveCmd || driveTimer || activeKeys.size > 0);
       driveCmd = null;
+      activeKeys.clear();
       if (driveTimer) { clearInterval(driveTimer); driveTimer = null; }
       if (force === true) {
         sendCmd('STOP');
       } else if (active) {
-        sendCmd('V 0.000 0.000');
-        if (!sessionTimer) sessionTimer = setInterval(() => { if (!driveCmd && !isAutoRunning) sendCmd('V 0.000 0.000'); }, 150);
+        sendDriveFast('V 0.000 0.000');
+        setTimeout(() => sendDriveFast('V 0.000 0.000'), 80);
       }
       document.querySelectorAll('.dpad-btn').forEach(b => b.classList.remove('pressed'));
+    }
+
+    function getCombinedKeyCommand() {
+      if (activeKeys.has('KeyW') || activeKeys.has('ArrowUp')) {
+        if (activeKeys.has('KeyA') || activeKeys.has('ArrowLeft')) return 'M 120 200';
+        if (activeKeys.has('KeyD') || activeKeys.has('ArrowRight')) return 'M 200 120';
+        return CMD_SPEED.W;
+      }
+      if (activeKeys.has('KeyS') || activeKeys.has('ArrowDown')) {
+        if (activeKeys.has('KeyA') || activeKeys.has('ArrowLeft')) return 'M -120 -190';
+        if (activeKeys.has('KeyD') || activeKeys.has('ArrowRight')) return 'M -190 -120';
+        return CMD_SPEED.S;
+      }
+      if (activeKeys.has('KeyA') || activeKeys.has('ArrowLeft') || activeKeys.has('KeyQ')) return CMD_SPEED.A;
+      if (activeKeys.has('KeyD') || activeKeys.has('ArrowRight') || activeKeys.has('KeyE')) return CMD_SPEED.D;
+      return null;
     }
 
     function bind(id, c) {
       const el = document.getElementById(id);
       if (!el) return;
-      el.addEventListener('pointerdown', (e)=>{ e.preventDefault(); el.classList.add('pressed'); startDrive(c); });
-      const rel = (e)=>{ e.preventDefault(); el.classList.remove('pressed'); stopDrive(); };
+      el.addEventListener('pointerdown', (e) => {
+        e.preventDefault();
+        el.classList.add('pressed');
+        startDrive(c);
+      });
+      const rel = (e) => {
+        e.preventDefault();
+        el.classList.remove('pressed');
+        stopDrive();
+      };
       el.addEventListener('pointerup', rel);
       el.addEventListener('pointercancel', rel);
     }
 
-    bind('btnW', 'M 140 140');
-    bind('btnS', 'M -140 -140');
-    bind('btnA', 'M -120 120');
-    bind('btnD', 'M 120 -120');
-    bind('btnQ', 'M -130 130');
-    bind('btnE', 'M 130 -130');
+    bind('btnW', CMD_SPEED.W);
+    bind('btnS', CMD_SPEED.S);
+    bind('btnA', CMD_SPEED.A);
+    bind('btnD', CMD_SPEED.D);
+    bind('btnQ', CMD_SPEED.Q);
+    bind('btnE', CMD_SPEED.E);
 
-    window.addEventListener('keydown', (e)=>{
+    window.addEventListener('keydown', (e) => {
       if (e.target && /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)) return;
-      if (e.repeat) return;
       if (e.code === 'Space') { e.preventDefault(); emergencyStop(); return; }
-      const k = { 'KeyW': 'M 140 140', 'KeyS': 'M -140 -140', 'KeyA': 'M -120 120', 'KeyD': 'M 120 -120', 'KeyQ': 'M -130 130', 'KeyE': 'M 130 -130' };
-      if (k[e.code]) { e.preventDefault(); startDrive(k[e.code]); }
+      if (KEY_COMMANDS[e.code]) {
+        e.preventDefault();
+        activeKeys.add(e.code);
+        const nextCmd = getCombinedKeyCommand();
+        if (nextCmd && nextCmd !== driveCmd) {
+          startDrive(nextCmd);
+        }
+      }
     });
 
-    window.addEventListener('keyup', (e)=>{
-      if (driveCmd && (e.code.startsWith('Key') || e.code === 'Space')) { e.preventDefault(); stopDrive(); }
+    window.addEventListener('keyup', (e) => {
+      if (e.target && /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)) return;
+      if (KEY_COMMANDS[e.code]) {
+        e.preventDefault();
+        activeKeys.delete(e.code);
+        const nextCmd = getCombinedKeyCommand();
+        if (nextCmd) {
+          startDrive(nextCmd);
+        } else {
+          stopDrive();
+        }
+      }
     });
 
     const focusLost = () => {
-      // Chỉ nhả lệnh lái thủ công nếu đang đè phím lái bàn phím, TUYỆT ĐỐI KHÔNG ngắt chế độ AUTO
-      if (driveCmd) {
+      if (driveCmd || activeKeys.size > 0) {
         stopDrive(false);
       }
     };
     window.addEventListener('blur', focusLost);
     document.addEventListener('visibilitychange', () => { if (document.hidden) focusLost(); });
-    window.addEventListener('pointerup', () => { if (driveCmd) stopDrive(); });
+    window.addEventListener('pointerup', () => { if (driveCmd && activeKeys.size === 0) stopDrive(); });
     fetchMap();
     render();
   </script>
