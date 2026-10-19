@@ -986,6 +986,9 @@ class AGVROSNode(Node):
             if v < 0:
                 rear_pts = [points[deg % 360] for deg in range(135, 226) if points[deg % 360] > 0]
                 return (not rear_pts) or (min(rear_pts) >= 0.18)
+            if v > 0:
+                front_pts = [points[deg % 360] for deg in range(-30, 31) if points[deg % 360] > 0]
+                return (not front_pts) or (min(front_pts) >= 0.28)
         max_map_age = 15.0 if is_op else 2.0
         with state.lock:
             epoch=(state.map_version,state.map_frame,state.body_radius_m,state.body_bounds_m,state.wall_margin_m,state.scan_mono)
@@ -1378,34 +1381,54 @@ class AGVROSNode(Node):
                 self._hold('Né kẹt: phát hiện kẹt bánh động cơ, chuyển hướng')
             return
 
+        # PHÁT HIỆN KẸT & LẮC ĐẢO TẠI CHỖ (Anti-Oscillation & Anti-Deadlock)
+        if is_op and pose is not None:
+            if not hasattr(self, '_recent_pos_history'):
+                self._recent_pos_history = deque(maxlen=40)
+            self._recent_pos_history.append((now, pose[0], pose[1]))
+            oldest = self._recent_pos_history[0]
+            if now - oldest[0] >= 2.2:
+                disp = math.hypot(pose[0] - oldest[1], pose[1] - oldest[2])
+                if disp < 0.08:  # Di chuyển dưới 8cm trong hơn 2.2s -> Bị kẹt hoặc lắc đảo tại chỗ!
+                    self._stuck_spin_count = getattr(self, '_stuck_spin_count', 0) + 1
+                    if self._stuck_spin_count >= 2:
+                        if self.goal is not None:
+                            self._exclude_goal(now, failed=True)
+                            self.goal = None
+                        self._turn_latch_until = 0
+                        self._is_pure_spinning = False
+                        self._escape_index = (getattr(self, '_escape_index', 0) + 1) % 8
+                        self._try_escape()
+                        self._stuck_spin_count = 0
+                        self._recent_pos_history.clear()
+                        return
+                else:
+                    self._stuck_spin_count = 0
+
         target_rpm = getattr(state, 'auto_target_speed_rpm', 0)
         with state.lock:
             ranges = list(state.ranges)
             f_pts = [ranges[d % 360] for d in range(-25, 26) if ranges[d % 360] > 0]
             f_dist = min(f_pts) if f_pts else 9.99
             if is_op:
-                # Quá sát cản (< 26cm) thì kích hoạt né cản dứt khoát
-                danger_close = (f_dist < 0.26)
+                # Quá sát cản (< 25cm) thì kích hoạt né cản dứt khoát
+                danger_close = (f_dist < 0.25)
             else:
                 danger_close = (state.safety_status == 'DANGER_STOP' or (state.min_dist_m is not None and state.min_dist_m <= 0.35))
 
-        # Kiểm tra chu kỳ xoay né cản dứt khoát 90° đến 120° (1.15s ở 40 RPM ~ 1.60 rad/s)
-        # Sớm dừng xoay phóng thẳng ngay khi trước mũi xe đạt khoảng trống >= 50cm (0.50m)
+        # Kiểm tra chu kỳ xoay né cản dứt khoát (1.20s ở 40 RPM ~ 1.60 rad/s)
+        # Sớm dừng xoay khi trước mũi xe đạt khoảng trống >= 48cm (0.48m)
         turn_latch_active = getattr(self, '_turn_latch_until', 0) > now
         if turn_latch_active:
-            if f_dist >= 0.50:
+            if f_dist >= 0.48:
                 self._turn_latch_until = 0
                 turn_latch_active = False
-            elif is_op:
-                danger_close = True
 
         if danger_close:
             if is_op:
                 # Tốc độ xoay tại chỗ né cản: Cài chuẩn theo turn_w_rads
                 turn_w = max(1.20, min(3.50, getattr(state, 'turn_w_rads', 1.60)))
-                if getattr(self, '_turn_latch_until', 0) > now:
-                    choose_left = getattr(self, '_turn_latch_dir', True)
-                else:
+                if getattr(self, '_turn_latch_until', 0) <= now:
                     cand_angles = [45, -45, 90, -90, 135, -135, 180]
                     best_ang = 90
                     max_clearance = -1.0
@@ -1438,16 +1461,17 @@ class AGVROSNode(Node):
                             elif r_visited and not l_visited:
                                 choose_left = True
                     self._turn_latch_dir = choose_left
-                    # Khóa hướng xoay 1.80s: quay trọn vẹn 180° thoát ngõ cụt
-                    self._turn_latch_until = now + 1.80
+                    # Khóa hướng xoay 1.20s: quay ~110° ra góc thoáng
+                    self._turn_latch_until = now + 1.20
+                else:
+                    choose_left = getattr(self, '_turn_latch_dir', True)
 
                 w = turn_w if choose_left else -turn_w
 
-                if self.goal is not None and f_dist < 0.20:
+                if self.goal is not None and f_dist < 0.22:
                     self._exclude_goal(now, failed=True)
+                    self.goal = None
 
-                # Tuyệt đối KHÔNG gài số lùi làm giật cục / bẻ gập bánh caster.
-                # Xoay tròn tại chỗ quanh tâm trục bánh (v=0) 75-80 RPM để hướng mũi xe vào góc thoáng:
                 ok, reason = self.send_cmd(f'V 0.000 {w:.3f}', autonomous=True)
                 if not ok:
                     self._try_escape()
@@ -1479,7 +1503,7 @@ class AGVROSNode(Node):
                 # Nếu đang trong chế độ Return to Home và đã về tới đích an toàn:
                 if goal_type == 'HOME':
                     dist_to_home = math.hypot(pose[0] - self.home[0], pose[1] - self.home[1]) if self.home else dist_to_goal
-                    if dist_to_goal <= 0.28 or dist_to_home <= 0.28 or goal_age > 45.0:
+                    if dist_to_goal <= 0.35 or dist_to_home <= 0.35 or (dist_to_home <= 0.50 and goal_age > 15.0) or goal_age > 35.0:
                         self.send_cmd('V 0.000 0.000', autonomous=True)
                         with state.lock:
                             free_cells_count = sum(1 for v in state.map_data if v == 0) if state.map_data else 1
@@ -1493,11 +1517,13 @@ class AGVROSNode(Node):
                         self.goal = None
                         return
 
-                if dist_to_goal <= 0.22:
+                # Coi mục tiêu ĐÃ ĐẠT nếu cách <= 0.30m, hoặc cách <= 0.45m khi phía trước đã gần vật cản
+                goal_satisfied = (dist_to_goal <= 0.30) or (dist_to_goal <= 0.45 and f_dist < 0.40)
+                if goal_satisfied:
                     self._exclude_goal(now, failed=False)
                     self.goal = None
                     self._goal_blocked_count = 0
-                elif goal_age > 25.0:
+                elif goal_age > 15.0:
                     self._exclude_goal(now, failed=True)
                     self.goal = None
                     self._goal_blocked_count = 0
@@ -1717,13 +1743,32 @@ class AGVROSNode(Node):
                 return
 
             if f_dist >= 0.45:
-                # Vùng thoáng (>= 45cm): Bám hướng mục tiêu mượt mà
-                if heading_err is not None and abs(heading_err) > 0.80:
-                    # Lệch góc lớn (> 45°): Nếu ở hành lang hẹp hoặc phía trước gần cản (< 55cm),
-                    # BẮT BUỘC xoay tại chỗ thuần túy (v = 0.000) không bẻ lái quẹt hông tường
+                # Vùng thoáng (>= 45cm): Bám hướng mục tiêu mượt mà bằng Hysteresis
+                is_pure_spin = getattr(self, '_is_pure_spinning', False)
+                if heading_err is not None:
+                    if abs(heading_err) > 1.22:  # > 70° mới xoay tại chỗ
+                        is_pure_spin = True
+                    elif abs(heading_err) < 0.40:  # < 23° dừng xoay, tiến mượt
+                        is_pure_spin = False
+                else:
+                    is_pure_spin = False
+                setattr(self, '_is_pure_spinning', is_pure_spin)
+
+                # Giới hạn thời gian xoay tại chỗ liên tục không quá 1.4s
+                if is_pure_spin:
+                    spin_start = getattr(self, '_spin_start_time', None)
+                    if spin_start is None:
+                        self._spin_start_time = now
+                    elif now - spin_start > 1.4:
+                        is_pure_spin = False
+                        self._spin_start_time = None
+                else:
+                    self._spin_start_time = None
+
+                if is_pure_spin and heading_err is not None:
                     w_spin = turn_w if heading_err > 0 else -turn_w
-                    v_arc = 0.000 if (target_rpm >= 70 or f_dist < 0.55 or l_dist < 0.38 or r_dist < 0.38) else 0.050
-                    ok, reason = self.send_cmd(f'V {v_arc:.3f} {w_spin:.3f}', autonomous=True)
+                    v_cmd = 0.000 if (target_rpm >= 70 or f_dist < 0.55 or l_dist < 0.38 or r_dist < 0.38) else 0.050
+                    w_cmd = w_spin
                     with state.lock:
                         goal_type = getattr(self, '_goal_type', 'FRONTIER')
                         if goal_type == 'HOME':
@@ -1731,88 +1776,85 @@ class AGVROSNode(Node):
                         else:
                             state.explore_phase = f'TỰ HÀNH: xoay ngắm mục tiêu ({math.degrees(heading_err):.0f}°)'
                 else:
+                    # LƯỢN CUNG TRÒN TIẾN MƯỢT MÀ (KHÔNG GIẬT CỤC)
+                    cos_factor = max(0.40, math.cos(heading_err if heading_err is not None else 0.0))
                     if target_rpm >= 70:
                         base_v = cruise_speed
                     else:
                         base_v = min(0.20, cruise_speed) if target_rpm > 30 else min(0.12, cruise_speed)
-                    if heading_err is not None:
-                        if target_rpm >= 70:
-                            v = base_v
-                            w = max(-0.50, min(0.50, heading_err * 0.8))
+                    v_cmd = max(0.08, base_v * cos_factor)
+                    w_cmd = max(-turn_w, min(turn_w, (heading_err or 0.0) * 0.85))
+
+                    if l_dist < 0.35 and l_dist < r_dist:
+                        w_cmd = min(w_cmd, -0.22)
+                    elif r_dist < 0.35 and r_dist < l_dist:
+                        w_cmd = max(w_cmd, 0.22)
+
+                # Bộ lọc gia tốc mượt mà (Slew Rate Limiter)
+                last_v = getattr(self, '_last_smooth_v', None)
+                if last_v is not None and not is_pure_spin:
+                    v_cmd = max(last_v - 0.04, min(last_v + 0.04, v_cmd))
+                setattr(self, '_last_smooth_v', v_cmd)
+
+                ok, reason = self.send_cmd(f'V {v_cmd:.3f} {w_cmd:.3f}', autonomous=True)
+                if not ok:
+                    w_turn = turn_w if l_dist >= r_dist else -turn_w
+                    ok_turn, r_turn = self.send_cmd(f'V 0.000 {w_turn:.3f}', autonomous=True)
+                    if not ok_turn:
+                        self._try_escape()
+                    with state.lock:
+                        state.explore_phase = 'TỰ HÀNH: đổi hướng tránh cản' if ok_turn else f'TỰ HÀNH: cản phía trước ({r_turn})'
+                else:
+                    with state.lock:
+                        goal_type = getattr(self, '_goal_type', 'FRONTIER')
+                        free_cells_count = sum(1 for v in state.map_data if v == 0) if state.map_data else 1
+                        cov_pct = round(len(state.visited_cells) / max(1, free_cells_count) * 100.0, 1)
+                        if goal_type == 'HOME':
+                            dist_h = math.hypot(pose[0] - self.home[0], pose[1] - self.home[1]) if self.home else 0.0
+                            state.explore_phase = f'TỰ HÀNH: đang về Home ({dist_h:.1f}m)'
+                        elif goal_type == 'COVERAGE':
+                            state.explore_phase = f'TỰ HÀNH: đi phủ kín sàn ({cov_pct:.0f}%)'
+                        elif target_pt is not None:
+                            state.explore_phase = 'TỰ HÀNH: tiến vào vùng khám phá mới'
                         else:
-                            v = max(0.04, base_v * max(0.3, math.cos(heading_err)))
-                            w = max(-turn_w, min(turn_w, heading_err * 0.8))
-                        if l_dist < 0.35 and l_dist < r_dist:
-                            w = min(w, -0.22)
-                        elif r_dist < 0.35 and r_dist < l_dist:
-                            w = max(w, 0.22)
-                    else:
-                        v = base_v
-                        w = 0.0
-                        if l_dist < 0.35 and l_dist < r_dist:
-                            w = -0.22
-                        elif r_dist < 0.35 and r_dist < l_dist:
-                            w = 0.22
-                    ok, reason = self.send_cmd(f'V {v:.3f} {w:.3f}', autonomous=True)
-                    if not ok:
-                        w_turn = turn_w if l_dist >= r_dist else -turn_w
-                        ok_turn, r_turn = self.send_cmd(f'V 0.000 {w_turn:.3f}', autonomous=True)
-                        if not ok_turn:
-                            self._try_escape()
-                        with state.lock:
-                            state.explore_phase = 'TỰ HÀNH: đổi hướng tránh cản' if ok_turn else f'TỰ HÀNH: cản phía trước ({r_turn})'
-                    else:
-                        with state.lock:
-                            goal_type = getattr(self, '_goal_type', 'FRONTIER')
-                            free_cells_count = sum(1 for v in state.map_data if v == 0) if state.map_data else 1
-                            cov_pct = round(len(state.visited_cells) / max(1, free_cells_count) * 100.0, 1)
-                            if goal_type == 'HOME':
-                                dist_h = math.hypot(pose[0] - self.home[0], pose[1] - self.home[1]) if self.home else 0.0
-                                state.explore_phase = f'TỰ HÀNH: đang về Home ({dist_h:.1f}m)'
-                            elif goal_type == 'COVERAGE':
-                                state.explore_phase = f'TỰ HÀNH: đi phủ kín sàn ({cov_pct:.0f}%)'
-                            elif target_pt is not None:
-                                state.explore_phase = 'TỰ HÀNH: tiến vào vùng khám phá mới'
-                            else:
-                                state.explore_phase = 'TỰ HÀNH: tuần tra mở rộng & quét phòng'
+                            state.explore_phase = 'TỰ HÀNH: tuần tra mở rộng & quét phòng'
             else:
-                # Vùng đệm (26cm <= f_dist < 45cm): Né cản an toàn
-                # Nếu hai bên hông đều hẹp (< 0.38m) và phía trước có cản (< 0.42m) -> HÀNH LANG CỤT (DEAD END):
-                # BẮT BUỘC xoay tại chỗ 180° (v = 0.000) quay đầu xe ra ngoài, tuyệt đối không tiến (v > 0)
+                # Vùng đệm (25cm <= f_dist < 45cm): Né cản an toàn
                 is_corridor_dead_end = (l_dist < 0.38 and r_dist < 0.38 and f_dist < 0.42)
                 if is_corridor_dead_end:
-                    choose_left = (l_dist >= r_dist)
-                    self._turn_latch_dir = choose_left
-                    self._turn_latch_until = now + 1.80
+                    if getattr(self, '_turn_latch_until', 0) <= now:
+                        choose_left = (l_dist >= r_dist)
+                        self._turn_latch_dir = choose_left
+                        self._turn_latch_until = now + 1.40
+                    else:
+                        choose_left = getattr(self, '_turn_latch_dir', True)
                     v = 0.000
                     w = turn_w if choose_left else -turn_w
                 else:
-                    if getattr(self, '_turn_latch_until', 0) > now:
-                        choose_left = getattr(self, '_turn_latch_dir', (l_dist >= r_dist))
-                    else:
+                    if getattr(self, '_turn_latch_until', 0) <= now:
                         choose_left = (l_dist >= r_dist)
                         self._turn_latch_dir = choose_left
-                        self._turn_latch_until = now + 0.45
+                        self._turn_latch_until = now + 0.90
+                    else:
+                        choose_left = getattr(self, '_turn_latch_dir', (l_dist >= r_dist))
+
                     if target_rpm <= 30:
                         v = 0.040
                         w = 0.450 if choose_left else -0.450
                     elif target_rpm >= 70:
-                        if f_dist < 0.35:
+                        if f_dist < 0.32:
                             v = 0.000
                             w = turn_w if choose_left else -turn_w
                         else:
-                            v = cruise_speed
-                            w = 0.450 if choose_left else -0.450
+                            v = min(0.15, cruise_speed * 0.7)
+                            w = 0.700 if choose_left else -0.700
                     else:
-                        # Chỉ dừng hẳn tiến (v = 0) nếu phía trước cản sát (< 30cm)
-                        # Nếu phía trước còn >= 30cm (dù bên hông có tường):
-                        # Duy trì bò chậm v = 0.050 m/s đồng thời bẻ lái w né ra xa tường!
-                        # Tuyệt đối không ép v = 0.000 khi bên hông gần tường vì sẽ bị kẹt vĩnh viễn
                         if f_dist < 0.30:
                             v = 0.000
                         else:
                             v = 0.050
                         w = turn_w if choose_left else -turn_w
+
                 ok, reason = self.send_cmd(f'V {v:.3f} {w:.3f}', autonomous=True)
                 if not ok:
                     ok_turn, _ = self.send_cmd(f'V 0.000 {w:.3f}', autonomous=True)
