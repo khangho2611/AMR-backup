@@ -240,9 +240,11 @@ class AGVROSNode(Node):
             raise
 
     def broadcast_tf(self):
-        with self.control.lock:
-            if self.control.last_d0 is None or not 0 <= self.control.clock()-self.control.last_d0 <= .25:
-                return
+        is_op = getattr(self, 'control', None) is not None and not getattr(self.control, 'strict_preflight', True)
+        if not is_op:
+            with self.control.lock:
+                if self.control.last_d0 is None or not 0 <= self.control.clock()-self.control.last_d0 <= .25:
+                    return
         with state.lock:
             rx = state.robot_x
             ry = state.robot_y
