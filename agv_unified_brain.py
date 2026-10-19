@@ -1345,6 +1345,17 @@ class AGVROSNode(Node):
         while self.progress and now-self.progress[0][0] > 2.:
             self.progress.popleft()
 
+        target_rpm = getattr(state, 'auto_target_speed_rpm', 0)
+        with state.lock:
+            ranges = list(state.ranges)
+            f_pts = [ranges[d % 360] for d in range(-25, 26) if ranges[d % 360] > 0]
+            f_dist = min(f_pts) if f_pts else 9.99
+            if is_op:
+                # Quá sát cản (< 25cm) thì kích hoạt né cản dứt khoát
+                danger_close = (f_dist < 0.25)
+            else:
+                danger_close = (state.safety_status == 'DANGER_STOP' or (state.min_dist_m is not None and state.min_dist_m <= 0.35))
+
         # Phát hiện kẹt bánh động cơ thực tế qua telemetry ESP32 (Chống kẹt ma sát trên sàn gạch)
         wheel_stalled = False
         control = getattr(self, 'control', None)
@@ -1400,17 +1411,6 @@ class AGVROSNode(Node):
                         return
                 else:
                     self._stuck_spin_count = 0
-
-        target_rpm = getattr(state, 'auto_target_speed_rpm', 0)
-        with state.lock:
-            ranges = list(state.ranges)
-            f_pts = [ranges[d % 360] for d in range(-25, 26) if ranges[d % 360] > 0]
-            f_dist = min(f_pts) if f_pts else 9.99
-            if is_op:
-                # Quá sát cản (< 25cm) thì kích hoạt né cản dứt khoát
-                danger_close = (f_dist < 0.25)
-            else:
-                danger_close = (state.safety_status == 'DANGER_STOP' or (state.min_dist_m is not None and state.min_dist_m <= 0.35))
 
         # Kiểm tra chu kỳ xoay né cản dứt khoát (1.20s ở 40 RPM ~ 1.60 rad/s)
         # Sớm dừng xoay khi trước mũi xe đạt khoảng trống >= 48cm (0.48m)
