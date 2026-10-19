@@ -734,30 +734,27 @@ class AGVROSNode(Node):
         yaw = pose[2] if pose is not None else None
         best_goal = None
         best_score = float('inf')
-        with state.lock:
-            v_cells = set(state.visited_cells) if state.visited_cells else set()
-        for g in summary['goals']:
+        cand_goals = list(summary['goals'])
+        # Sắp xếp ưu tiên các mục tiêu gần vị trí xe trước (Local Greedy Exploration)
+        cand_goals.sort(key=lambda g: math.hypot(g[0] - rx, g[1] - ry))
+        for g in cand_goals:
             path = grid.path((qx, qy), g)
             if path is None:
                 continue
             path_len = len(path) * grid.res
-            # Phạt điểm nếu vùng này đã được xe đi qua (Visited Penalty), ưu tiên vùng xám mới
-            visited_penalty = 0.0
-            if is_op and v_cells:
-                g_cell = grid.world_to_cell(*g)
-                if g_cell in v_cells:
-                    visited_penalty = 3.0
+            euclid_dist = math.hypot(g[0] - rx, g[1] - ry)
+            heading_err = 0.0
             if yaw is not None:
                 dx, dy = g[0] - rx, g[1] - ry
                 target_heading = math.atan2(dy, dx)
                 heading_err = abs((target_heading - yaw + math.pi) % (2 * math.pi) - math.pi)
-                score = path_len + 0.35 * heading_err + visited_penalty
-            else:
-                score = path_len + visited_penalty
+
+            # Điểm gần xe chiếm ưu thế tuyệt đối (euclid_dist * 2.0), không chọn điểm xa tít mù tắp
+            score = euclid_dist * 2.0 + path_len * 0.5 + 0.20 * heading_err
             if score < best_score:
                 best_score = score
                 best_goal = g
-        return best_goal if best_goal is not None else summary['goals'][0]
+        return best_goal if best_goal is not None else cand_goals[0]
 
     def _get_safe_home_target(self):
         """Tìm tọa độ đích Home an toàn và traversable."""
@@ -1381,22 +1378,21 @@ class AGVROSNode(Node):
                 self._hold('Né kẹt: phát hiện kẹt bánh động cơ, chuyển hướng')
             return
 
-        # PHÁT HIỆN KẸT & LẮC ĐẢO TẠI CHỖ (Anti-Oscillation & Anti-Deadlock)
+        # PHÁT HIỆN KẸT XE THỰC TẾ (CHỐNG KẸT BÁNH VÀO TƯỜNG)
         if is_op and pose is not None:
             if not hasattr(self, '_recent_pos_history'):
-                self._recent_pos_history = deque(maxlen=40)
+                self._recent_pos_history = deque(maxlen=50)
             self._recent_pos_history.append((now, pose[0], pose[1]))
             oldest = self._recent_pos_history[0]
-            if now - oldest[0] >= 2.2:
+            if now - oldest[0] >= 5.0:
                 disp = math.hypot(pose[0] - oldest[1], pose[1] - oldest[2])
-                if disp < 0.08:  # Di chuyển dưới 8cm trong hơn 2.2s -> Bị kẹt hoặc lắc đảo tại chỗ!
+                is_pure_spin = getattr(self, '_is_pure_spinning', False)
+                turn_latch_active = getattr(self, '_turn_latch_until', 0) > now
+                # Chỉ xử lý kẹt nếu xe đứng yên hoàn toàn (< 3cm) trong hơn 5s và cản phía trước sát (< 28cm)
+                if disp < 0.03 and not is_pure_spin and not turn_latch_active and f_dist < 0.28:
                     self._stuck_spin_count = getattr(self, '_stuck_spin_count', 0) + 1
                     if self._stuck_spin_count >= 2:
-                        if self.goal is not None:
-                            self._exclude_goal(now, failed=True)
-                            self.goal = None
                         self._turn_latch_until = 0
-                        self._is_pure_spinning = False
                         self._escape_index = (getattr(self, '_escape_index', 0) + 1) % 8
                         self._try_escape()
                         self._stuck_spin_count = 0
@@ -1468,10 +1464,6 @@ class AGVROSNode(Node):
 
                 w = turn_w if choose_left else -turn_w
 
-                if self.goal is not None and f_dist < 0.22:
-                    self._exclude_goal(now, failed=True)
-                    self.goal = None
-
                 ok, reason = self.send_cmd(f'V 0.000 {w:.3f}', autonomous=True)
                 if not ok:
                     self._try_escape()
@@ -1517,13 +1509,14 @@ class AGVROSNode(Node):
                         self.goal = None
                         return
 
-                # Coi mục tiêu ĐÃ ĐẠT nếu cách <= 0.30m, hoặc cách <= 0.45m khi phía trước đã gần vật cản
-                goal_satisfied = (dist_to_goal <= 0.30) or (dist_to_goal <= 0.45 and f_dist < 0.40)
+                # Chỉ ngắt mục tiêu khi robot THẬT SỰ ĐẾN NƠI (dist_to_goal <= 0.22m),
+                # hoặc khi xe đã tới rất sát (dist <= 0.26m) và cản trước chạm sát (< 0.25m):
+                goal_satisfied = (dist_to_goal <= 0.22) or (dist_to_goal <= 0.26 and f_dist < 0.25)
                 if goal_satisfied:
                     self._exclude_goal(now, failed=False)
                     self.goal = None
                     self._goal_blocked_count = 0
-                elif goal_age > 15.0:
+                elif goal_age > 60.0:  # Cho phép xe chạy tới 60 giây để bám tới cùng mục tiêu, không ngắt giữa chừng!
                     self._exclude_goal(now, failed=True)
                     self.goal = None
                     self._goal_blocked_count = 0
@@ -1669,15 +1662,16 @@ class AGVROSNode(Node):
                 target_yaw = math.atan2(dy, dx)
                 heading_err = (target_yaw - pose[2] + math.pi) % (2 * math.pi) - math.pi
 
-            # Nhận diện nếu mục tiêu bị cản phía trước liên tục (ví dụ mép cửa hẹp) -> Blacklist sớm để đổi vùng
-            if self.goal is not None and f_dist < 0.38:
+            # Chỉ hủy mục tiêu nếu bị cản trực diện sát (< 25cm) liên tục hơn 4.0 giây mà không thể lách qua
+            dist_to_tgt = math.hypot(dx, dy) if target_pt is not None else 9.99
+            if self.goal is not None and f_dist < 0.25 and dist_to_tgt < 0.35:
                 self._goal_blocked_count = getattr(self, '_goal_blocked_count', 0) + 1
-                if self._goal_blocked_count >= 6:
+                if self._goal_blocked_count >= 40:
                     self._exclude_goal(now, failed=True)
                     self.goal = None
                     self._goal_blocked_count = 0
-            elif self.goal is not None and f_dist >= 0.40:
-                self._goal_blocked_count = max(0, getattr(self, '_goal_blocked_count', 0) - 1)
+            else:
+                self._goal_blocked_count = 0
 
             l_pts = [ranges[d % 360] for d in range(25, 90) if ranges[d % 360] > 0]
             l_dist = min(l_pts) if l_pts else 9.99
