@@ -5,13 +5,16 @@
 
 [![Python Version](https://img.shields.io/badge/Python-3.10%20%7C%203.12-blue)](https://www.python.org/)
 [![ROS 2](https://img.shields.io/badge/ROS%202-Jazzy%20Jalisco-green)](https://docs.ros.org/en/jazzy/)
-[![Unit Tests](https://img.shields.io/badge/Unit%20Tests-136%2F136%20PASS%20(100%25)-brightgreen)](tests/)
-[![Platform](https://img.shields.io/badge/Hardware-Raspberry%20Pi%204%20(8GB)-red)](https://www.raspberrypi.com/)
+[![Unit Tests](https://img.shields.io/badge/Unit%20Tests-193%2F193%20PASS%20(100%25)-brightgreen)](tests/)
+[![Platform](https://img.shields.io/badge/Hardware-Raspberry%20Pi%204%2F5%20%2B%20ESP32-red)](https://www.raspberrypi.com/)
 [![License](https://img.shields.io/badge/License-MIT-purple.svg)](LICENSE)
+
+> 📖 **TÀI LIỆU KỸ THUẬT & BÁO CÁO TOÀN DIỆN:** Xem tài liệu đầy đủ tại **[BAO_CAO_KIEN_TRUC_LUU_DO_VAN_HANH_AGV.md](docs/BAO_CAO_KIEN_TRUC_LUU_DO_VAN_HANH_AGV.md)** (Bao gồm Sơ đồ nối dây chân GPIO ESP32, Sơ đồ khối phần cứng, Lưu đồ thuật toán né vật cản qua khe hẹp, Giải thuật PID vòng kín và Hướng dẫn vận hành chi tiết từ A-Z).
 
 ---
 
 ## 📌 MỤC LỤC
+0. [Tài Liệu Kỹ Thuật & Sơ Đồ Đấu Nối](docs/BAO_CAO_KIEN_TRUC_LUU_DO_VAN_HANH_AGV.md)
 1. [Tổng Quan Hệ Thống](#-1-tổng-quan-hệ-thống)
 2. [Sơ Đồ Khối Hệ Thống (Block Diagram)](#-2-sơ-đồ-khối-hệ-thống-block-diagram)
 3. [Lưu Đồ Thuật Toán Tự Hành (Flowchart)](#-3-lưu-đồ-thuật-toán-tự-hành-flowchart)
