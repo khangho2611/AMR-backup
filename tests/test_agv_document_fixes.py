@@ -22,9 +22,20 @@ class ManualSession(unittest.TestCase):
         self.s.watchdog_tick()
         self.assertEqual(self.s.fault,'SCAN_TIMEOUT')
 
+    def test_short_c1_scan_gap_is_tolerated_but_stale_scan_still_stops_auto(self):
+        self.assertTrue(self.arm()[0])
+        self.s.last_command = self.now
+        self.s.scan_time = self.now - .30
+        self.s.watchdog_tick()
+        self.assertIsNone(self.s.fault)
+        self.s.scan_time = self.now - .36
+        self.s.watchdog_tick()
+        self.assertEqual(self.s.fault, 'SCAN_TIMEOUT')
+
     def test_idle_session_keeps_mcu_alive_without_extending_motion(self):
         self.s.operator_idle_lease_s=2.
         self.assertTrue(self.arm()[0])
+        self.s.autonomy_allowed=False  # Manual session; AUTO owns control otherwise.
         self.assertTrue(self.s.drive('V 0.000 0.000')[0])
         self.now+=.21;self.s.ingest(self.d0(safety='ARMED'))
         self.s.watchdog_tick()
@@ -37,7 +48,8 @@ class ManualSession(unittest.TestCase):
 
     def test_expired_idle_lease_disarms_normally_without_invented_fault(self):
         self.s.operator_idle_lease_s=2.
-        self.assertTrue(self.arm()[0]);self.s.drive('V 0.000 0.000')
+        self.assertTrue(self.arm()[0]);self.s.autonomy_allowed=False
+        self.s.drive('V 0.000 0.000')
         self.now+=2.01;self.s.ingest(self.d0(safety='ARMED'))
         self.s.watchdog_tick()
         self.assertFalse(self.s.armed)
@@ -114,6 +126,7 @@ class NavigationDiagnostics(unittest.TestCase):
         self.node.initialize_navigation()
         pose=(2.525,2.525,0.)
         self.assertTrue(self.node._enter_cautious(pose))
+        self.m.state.ranges = [2.] * 360
         now=time.monotonic()
         with patch.object(self.m.time,'monotonic',return_value=now):
             self.node._restore_normal_clearance(pose)

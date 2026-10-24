@@ -69,6 +69,10 @@ class TestAGVFrontierLifecycle(unittest.TestCase):
 
     def test_reset_slam_map_clears_all_navigation_and_goals(self):
         node = AGVROSNode.__new__(AGVROSNode)
+        state.auto_mode = False
+        node.control = MagicMock()
+        node.control.health.return_value = {'d0_age_s': 0.01, 'latest_d0': {
+            'l_rpm': 0.0, 'r_rpm': 0.0, 'l_tgt': 0.0, 'r_tgt': 0.0}}
         node.goal = (2.0, 3.0)
         node.blocked_goals = [(2.0, 3.0, 0.35, time.monotonic() + 100)]
         node.blocked_regions = [(1.0, 1.0, 0.35, time.monotonic() + 100)]
@@ -77,7 +81,10 @@ class TestAGVFrontierLifecycle(unittest.TestCase):
         state.target_goal_y = 3.0
 
         node.get_logger = MagicMock()
-        node.reset_slam_map()
+        with unittest.mock.patch('subprocess.run') as mock_run:
+            mock_run.return_value.returncode = 0
+            ok, _ = node.reset_slam_map()
+        self.assertTrue(ok)
 
         self.assertIsNone(node.goal)
         self.assertEqual(len(node.blocked_goals), 0)

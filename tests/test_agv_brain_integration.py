@@ -122,6 +122,63 @@ class BrainIntegration(unittest.TestCase):
         return N(header=header('base_footprint',age),angle_min=-math.pi,
                  angle_increment=math.pi/180,range_min=.05,range_max=8.,ranges=[2.]*360)
 
+    def test_speed_config_defaults_and_telemetry_share_65_40_policy(self):
+        self.node.control.operator_rpm_profile=True
+        status,cfg=self.get('/api/auto_config')
+        self.assertEqual(status,200)
+        self.assertEqual((cfg['speed_rpm'],cfg['turn_rpm'],cfg['slow_rpm']),(65,65,40))
+        self.assertAlmostEqual(cfg['cruise_mps'],65*2*math.pi*.0366/60)
+        status,cfg=self.get('/api/auto_config?speed=40&turn=65')
+        self.assertEqual(status,200)
+        self.assertEqual(self.node.control.auto_speed_rpm,40)
+        status,t=self.get('/api/telemetry')
+        self.assertEqual(t['speed_config']['speed_rpm'],40)
+        self.assertEqual(t['speed_config']['turn_rpm'],65)
+        self.assertEqual(t['speed_config']['slow_rpm'],40)
+        self.assertEqual(self.uart.writes,[])
+
+    def test_invalid_speed_config_is_atomic_and_cannot_arm_or_drive(self):
+        for query in ['speed=nan&turn=65','speed=65&turn=inf','speed=10&turn=65','speed=65&turn=85']:
+            status,body=self.get('/api/auto_config?'+query)
+            self.assertEqual(status,400)
+            self.assertEqual(body['status'],'ERROR')
+            self.assertEqual(self.m.state.auto_target_speed_rpm,65)
+            self.assertEqual(self.m.state.auto_target_turn_rpm,65)
+        self.assertFalse(self.node.control.armed)
+        self.assertEqual(self.uart.writes,[])
+
+    def test_rpm_zero_from_idle_browser_cannot_cancel_auto(self):
+        c=self.node.control
+        c.strict_preflight=False;c.operator_rpm_profile=True
+        c.autonomy_allowed=True
+        self.m.state.auto_mode=True
+        status,body=self.get('/api/cmd?val=S%200%200')
+        self.assertEqual(status,409)
+        self.assertEqual(body['reason'],'AUTO_OWNS_CONTROL')
+        self.assertTrue(self.m.state.auto_mode)
+        self.assertEqual(self.uart.writes,[])
+
+    def test_missing_lidar_returns_cannot_falsely_enable_front_motion(self):
+        missing=self.scan()
+        missing.ranges=[math.inf]*360
+        self.node.scan_cb(missing)
+        self.assertEqual(self.m.state.valid_points,0)
+        self.assertFalse(self.node.control.scan_clear)
+        self.assertTrue(all(value == 0 for value in self.m.state.ranges))
+
+        # Only 29 actually measured front rays are insufficient for the gate.
+        partial=self.scan()
+        partial.ranges=[math.inf]*360
+        for deg in range(-14,15):
+            partial.ranges[180+deg]=2.
+        self.node.scan_cb(partial)
+        self.assertFalse(self.node.control.scan_clear)
+
+        # The 30th independently measured ray makes the front cone observable.
+        partial.ranges[180+15]=2.
+        self.node.scan_cb(partial)
+        self.assertTrue(self.node.control.scan_clear)
+
     def map(self,frame='map',age=0.):
         data=[0]*(70*50)
         for y in range(50):data[y*70]=data[y*70+69]=-1
@@ -158,8 +215,19 @@ class BrainIntegration(unittest.TestCase):
         self.assertIsNotNone(self.node.goal)
         first=self.node.goal;self.node._exclude_goal(time.monotonic())
         self.node.auto_nav_loop()
-        self.assertGreater(self.node.goal[0],3.)
-        self.assertGreater(math.dist(first,self.node.goal),2.)
+        # A frontier can wrap along an unknown boundary. The required
+        # invariant is that a just-excluded target is not immediately reused.
+        self.assertGreaterEqual(math.dist(first,self.node.goal),.35)
+        # Previously, the dashboard's late idle zero replaced AUTO ownership
+        # milliseconds after a successful START and stranded navigation.
+        prior_writes=list(self.uart.writes)
+        generation=self.node.control.generation
+        code, denied=self.get('/api/cmd?val='+urllib.parse.quote('V 0.000 0.000'))
+        self.assertEqual((code,denied['reason']),(409,'AUTO_OWNS_CONTROL'))
+        self.assertEqual(prior_writes,self.uart.writes)
+        self.assertEqual(generation,self.node.control.generation)
+        self.assertTrue(self.m.state.auto_mode)
+        self.assertEqual(self.node.control.health()['owner'],'AUTO')
         self.assertEqual(self.get('/api/cmd?val='+urllib.parse.quote('V 0.040 0.000'))[0],200)
         # Real product watchdog thread must stop a silent caller even though
         # the fake MCU and scan producer continue sending fresh data.

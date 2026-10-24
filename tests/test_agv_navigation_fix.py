@@ -387,6 +387,9 @@ class SessionRegression(unittest.TestCase):
         # Protocol tests isolate UART/session behavior from the node's map
         # validator. Geometry tests replace this callback with the actual seam.
         self.s.arc_validator=lambda v,w: w==0
+        # The harness explicitly opts into autonomous ownership for cases
+        # exercising autonomous drive; production requires START AUTO.
+        self.s.autonomy_allowed=True
         return result[0]
 
     def test_positive_diag_ten_seconds_ack_arm_then_drive(self):
@@ -564,6 +567,7 @@ class SessionRegression(unittest.TestCase):
 
     def test_independent_tick_stops_silent_caller(self):
         self.assertTrue(self.arm()[0])
+        self.s.autonomy_allowed = False
         self.s.scan_time=self.now
         self.now+=.21
         self.s.scan_time=self.now;self.s.last_d0=self.now
@@ -573,6 +577,7 @@ class SessionRegression(unittest.TestCase):
 
     def test_fresh_armed_d0_stream_does_not_keep_silent_caller_alive(self):
         self.assertTrue(self.arm()[0])
+        self.s.autonomy_allowed = False
         for _ in range(3):
             self.now+=.08
             self.s.scan_time=self.now
@@ -642,7 +647,7 @@ class TestReactiveAutoExploration(unittest.TestCase):
         self.node._restore_normal_clearance = lambda pose: None
         self.brain = brain
 
-    def test_no_frontier_triggers_forward_cruise_when_front_clear(self):
+    def test_no_frontier_holds_even_when_front_clear(self):
         with self.brain.state.lock:
             self.brain.state.auto_mode = True
             self.brain.state.scan_mono = time.monotonic()
@@ -658,9 +663,9 @@ class TestReactiveAutoExploration(unittest.TestCase):
         self.node.auto_nav_loop()
         self.assertEqual(self.node.explore_state, 'EXPLORING')
         self.assertTrue(len(sent) > 0)
-        self.assertTrue(sent[0].startswith('V 0.120'))
+        self.assertEqual(sent[0], 'V 0.000 0.000')
 
-    def test_no_frontier_steers_when_front_blocked(self):
+    def test_no_frontier_holds_when_front_blocked(self):
         ranges = [0.2] * 360
         for deg in range(-25, 26): ranges[deg % 360] = 0.35
         for deg in range(25, 90): ranges[deg % 360] = 1.0
@@ -680,7 +685,7 @@ class TestReactiveAutoExploration(unittest.TestCase):
         self.node.auto_nav_loop()
         self.assertEqual(self.node.explore_state, 'EXPLORING')
         self.assertTrue(len(sent) > 0)
-        self.assertTrue(sent[0].startswith('V 0.040 0.450'))
+        self.assertEqual(sent[0], 'V 0.000 0.000')
 
 
 if __name__ == '__main__':

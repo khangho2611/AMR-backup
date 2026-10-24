@@ -102,6 +102,7 @@
       <div class="view-tabs">
         <button class="tab-btn active" id="tabRadar" onclick="switchView('radar')">📡 RADAR QUÉT 360°</button>
         <button class="tab-btn" id="tabSlam" onclick="switchView('slam')">🗺 BẢN ĐỒ SLAM 2D</button>
+        <span id="navClickTip" style="display:none; font-size:11px; color:#fbbf24; font-family:'JetBrains Mono'; margin-left:10px; align-self:center; font-weight:bold;">📍 Nhấp vào bản đồ để xe chạy tới</span>
         <span style="margin-left:auto; font-size:11px; color:var(--cyan); font-family:'JetBrains Mono'; align-self:center;" id="distIndicator">VẬT CẢN: -- m</span>
       </div>
       <div class="canvas-container">
@@ -128,9 +129,9 @@
             <div style="font-size: 10px; font-weight: bold; color: var(--cyan); font-family: 'JetBrains Mono';">ĐỘ PHỦ PHÒNG (RAM)</div>
             <div style="font-size: 12px; font-weight: bold; color: #fff; font-family: 'JetBrains Mono';" id="valCoverage">0.0% (0 điểm)</div>
           </div>
-          <div class="tele-item" style="grid-column: span 3; display: flex; justify-content: space-between; align-items: center; padding: 6px 12px; background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 6px; margin-top: 4px;">
-            <div style="font-size: 10px; font-weight: bold; color: var(--green); font-family: 'JetBrains Mono';">🤖 AI 1 & AI 2 TRỰC TIẾP</div>
-            <div style="font-size: 11px; font-weight: bold; color: #fff; font-family: 'JetBrains Mono';" id="valAiStatus">SẴN SÀNG</div>
+          <div class="tele-item" style="grid-column: span 3; display: flex; flex-direction: column; align-items: flex-start; gap: 4px; padding: 6px 12px; background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 6px; margin-top: 4px;">
+            <div style="font-size: 10px; font-weight: bold; color: var(--green); font-family: 'JetBrains Mono';">🤖 VAI TRÒ AI <span style="font-weight: normal; color: var(--muted);">· rê chuột để xem chi tiết</span></div>
+            <div style="font-size: 11px; line-height: 1.5; min-height: 3em; width: 100%; font-weight: bold; color: #fff; font-family: 'JetBrains Mono';" id="valAiStatus">CHƯA CÓ TELEMETRY</div>
           </div>
         </div>
       </div>
@@ -150,6 +151,10 @@
             <span id="autoCoverageText">PHỦ KÍN MẶT SÀN</span>
           </button>
         </div>
+        <button class="btn-action" id="btnNavGoal" style="display:none; width:100%; background:rgba(245,158,11,0.18); border:2px solid #f59e0b; color:#fbbf24; font-weight:bold; margin-bottom:8px; padding:10px;" onclick="cancelNavGoal()">
+          <span style="font-size:16px;">📍</span>
+          <span id="navGoalText">ĐANG CHẠY TỚI ĐIỂM ĐÃ CHỌN (NHẤP ĐỂ DỪNG)</span>
+        </button>
         <div class="action-grid" style="grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px;">
           <button class="btn-action" id="btnArm" onclick="armControl()">SẴN SÀNG ĐIỀU KHIỂN</button>
           <button class="btn-action btn-estop" onclick="emergencyStop()">
@@ -175,17 +180,18 @@
           <div style="margin-bottom: 8px;">
             <div style="display: flex; justify-content: space-between; font-size: 9px; color: var(--text-muted); margin-bottom: 2px;">
               <span>Tốc độ tiến AUTO</span>
-              <span id="valAutoSpeedLbl" style="color: var(--cyan); font-weight:bold;">48 RPM (0.184 m/s)</span>
+              <span id="valAutoSpeedLbl" style="color: var(--cyan); font-weight:bold;">CHỜ CẤU HÌNH TỪ XE</span>
             </div>
-            <input type="range" id="sliderAutoSpeed" min="20" max="140" value="48" step="5" style="width: 100%; cursor: pointer;" oninput="updateAutoParams()">
+            <input type="range" id="sliderAutoSpeed" min="40" max="65" value="40" step="25" style="width: 100%; cursor: pointer;" oninput="updateAutoParams()">
           </div>
           <div>
             <div style="display: flex; justify-content: space-between; font-size: 9px; color: var(--text-muted); margin-bottom: 2px;">
               <span>Tốc độ quay AUTO</span>
-              <span id="valAutoTurnLbl" style="color: var(--cyan); font-weight:bold;">40 RPM (1.60 rad/s)</span>
+              <span id="valAutoTurnLbl" style="color: var(--cyan); font-weight:bold;">CHỜ CẤU HÌNH TỪ XE</span>
             </div>
-            <input type="range" id="sliderAutoTurn" min="15" max="85" value="40" step="1" style="width: 100%; cursor: pointer;" oninput="updateAutoParams()">
+            <input type="range" id="sliderAutoTurn" min="40" max="65" value="40" step="25" style="width: 100%; cursor: pointer;" oninput="updateAutoParams()">
           </div>
+          <div id="valAutoWheelTargets" style="font-size: 9px; line-height: 1.5; color: var(--text-muted); margin-top: 6px;">CHẬM: 40 RPM · Chờ tốc độ bánh từ MCU</div>
         </div>
 
         <div class="dpad-grid">
@@ -215,11 +221,11 @@
             </div>
             <div>
               <label style="font-size:9px; font-weight:bold; color:var(--green); display:block; margin-bottom:2px;">Ki (Tích phân)</label>
-              <input type="number" id="inputKiMini" step="0.10" value="2.50" style="width:100%; background:#070a10; border:1px solid #334155; color:#fff; padding:4px; border-radius:4px; font-family:'JetBrains Mono'; font-weight:bold; font-size:11px; box-sizing:border-box;">
+              <input type="number" id="inputKiMini" step="0.10" value="1.20" style="width:100%; background:#070a10; border:1px solid #334155; color:#fff; padding:4px; border-radius:4px; font-family:'JetBrains Mono'; font-weight:bold; font-size:11px; box-sizing:border-box;">
             </div>
             <div>
               <label style="font-size:9px; font-weight:bold; color:var(--yellow); display:block; margin-bottom:2px;">Kd (Vi phân)</label>
-              <input type="number" id="inputKdMini" step="0.005" value="0.010" style="width:100%; background:#070a10; border:1px solid #334155; color:#fff; padding:4px; border-radius:4px; font-family:'JetBrains Mono'; font-weight:bold; font-size:11px; box-sizing:border-box;">
+              <input type="number" id="inputKdMini" step="0.005" value="0.050" style="width:100%; background:#070a10; border:1px solid #334155; color:#fff; padding:4px; border-radius:4px; font-family:'JetBrains Mono'; font-weight:bold; font-size:11px; box-sizing:border-box;">
             </div>
           </div>
           <div style="display:flex; gap:6px; margin-bottom:8px;">
@@ -268,13 +274,19 @@
     const ctx = canvas.getContext('2d');
     let currentView = 'radar';
     let isAutoRunning = false;
+    let autoStartPending = false;
     let teleData = null;
+    let telemetryReceivedAt = 0;
     let mapData = null;
 
     function switchView(view) {
       currentView = view;
       document.getElementById('tabRadar').classList.toggle('active', view === 'radar');
       document.getElementById('tabSlam').classList.toggle('active', view === 'slam');
+
+      const tip = document.getElementById('navClickTip');
+      if (tip) tip.style.display = (view === 'slam') ? 'inline-block' : 'none';
+      canvas.style.cursor = (view === 'slam') ? 'crosshair' : 'default';
 
       if (view === 'slam') fetchMap();
     }
@@ -361,7 +373,7 @@
     function commandFailure(data) {
       const labels = {
         NOT_ARMED:'Chưa mở phiên điều khiển (Hãy nhấn MỞ ĐIỀU KHIỂN trước khi lái)',
-        LATCHED:'Phiên đang khóa an toàn (Nhấn ↺ RESET để mở khóa)',
+        LATCHED:'Phiên STOP đang khóa (Nếu không có FAULT, nhấn SẴN SÀNG ĐIỀU KHIỂN để ARM lại)',
         FAULT:'Đang có lỗi điều khiển', D0_STALE:'Dữ liệu MCU quá cũ',
         SCAN_STALE:'Dữ liệu LiDAR quá cũ', CALLER_STALE:'Mất nhịp lệnh từ người điều khiển',
         MAP_NOT_READY:'Bản đồ thiếu, quá cũ hoặc chưa hợp lệ',
@@ -402,8 +414,11 @@
             if (driveTimer) { clearInterval(driveTimer); driveTimer = null; }
             driveCmd = null;
           }
+        } else if (cmd === 'STOP' && data.reason !== 'STOP_CONFIRMED') {
+          showCommandMessage('ĐÃ GỬI DỪNG — CHƯA XÁC NHẬN MCU: ' + (data.reason || 'UNKNOWN'), data, true);
+          return false;
         } else if (cmd === 'RESET') {
-          showCommandMessage('ĐÃ RESET KHÓA AN TOÀN — SẴN SÀNG MỞ ĐIỀU KHIỂN', data);
+          showCommandMessage('ĐÃ GỬI RESET — CHỜ MCU XÁC NHẬN VÀ TELEMETRY DỪNG', data);
         } else if (cmd === 'ARM') {
           showCommandMessage(data.reason === 'ARM_CONFIRMED' ? 'MCU ĐÃ XÁC NHẬN MỞ PHIÊN' : 'ARM ĐÃ GỬI — ĐANG CHỜ ACK MCU', data);
         }
@@ -422,7 +437,9 @@
       if (ok) {
         if (sessionTimer) clearInterval(sessionTimer);
         sessionTimer = setInterval(() => {
-          if (!driveCmd && !isAutoRunning && teleData && teleData.control && teleData.control.armed) {
+          if (!driveCmd && !autoStartPending && !isAutoRunning && teleData &&
+              !teleData.auto && teleData.control && teleData.control.armed &&
+              teleData.control.owner !== 'AUTO') {
             sendCmd('V 0.000 0.000', true);
           }
         }, 120);
@@ -434,8 +451,11 @@
       driveOpId++;
       if (driveTimer) { clearInterval(driveTimer); driveTimer = null; }
       driveCmd = null;
+      activeKeys.clear();
+      pendingManualZero = false;
       if (sessionTimer) { clearInterval(sessionTimer); sessionTimer = null; }
-      showCommandMessage('ĐANG GỬI LỆNH RESET MỞ KHÓA LỖI...');
+      showCommandMessage('ĐANG DỪNG XE TRƯỚC KHI RESET...');
+      if (!await sendCmd('STOP')) return;
       await sendCmd('RESET');
     }
 
@@ -456,10 +476,14 @@
         }
       }
       if (act === 'START') {
+        // Freeze manual idle keepalives before ARM / AUTO HTTP round trips.
+        // The server separately rejects any old zero already in flight.
+        autoStartPending = true;
         currentAutoMode = mode;
         driveCmd = null;
         if (driveTimer) { clearInterval(driveTimer); driveTimer = null; }
         if (sessionTimer) { clearInterval(sessionTimer); sessionTimer = null; }
+        pendingManualZero = false;
         if (teleData && teleData.control && !teleData.control.armed) {
           await armControl();
         }
@@ -479,6 +503,8 @@
         updateAutoButtonUI(isAutoRunning, mode);
       } catch (_) {
         showCommandMessage('AUTO MẤT KẾT NỐI — CHƯA XÁC NHẬN AN TOÀN');
+      } finally {
+        autoStartPending = false;
       }
     }
 
@@ -539,10 +565,87 @@
         btnCov.style.boxShadow = '';
         if (txtCov) txtCov.innerText = 'PHỦ KÍN MẶT SÀN';
       }
+      if (mode !== 'NAV_TO_GOAL' || !running) {
+        updateNavGoalUI(false);
+      }
+    }
+
+    let userGoalTarget = null;
+    let navGoalPending = false;
+
+    async function sendNavGoal(worldX, worldY) {
+      if (navGoalPending) return;
+      navGoalPending = true;
+      userGoalTarget = [worldX, worldY];
+
+      showCommandMessage(`📍 ĐANG ĐẶT MỤC TIÊU: (${worldX.toFixed(2)}, ${worldY.toFixed(2)}) m...`);
+
+      // Tự động ARM xe nếu chưa ARM
+      if (teleData && teleData.control && !teleData.control.armed) {
+        await armControl();
+      }
+
+      try {
+        const url = `/api/set_goal?x=${worldX.toFixed(3)}&y=${worldY.toFixed(3)}`;
+        const res = await fetch(url, {signal: AbortSignal.timeout(2000)});
+        const d = await res.json();
+        if (!res.ok || d.status !== 'ok') {
+          showCommandMessage(`ĐẶT MỤC TIÊU THẤT BẠI: ${commandFailure(d)}`, d, true);
+          userGoalTarget = null;
+          return;
+        }
+        isAutoRunning = true;
+        currentAutoMode = 'NAV_TO_GOAL';
+        showCommandMessage(`📍 ĐÃ NHẬN ĐIỂM ĐÍCH: (${worldX.toFixed(2)}, ${worldY.toFixed(2)}) m. Xe đang tự chạy tới!`, d);
+        updateNavGoalUI(true, worldX, worldY);
+      } catch (err) {
+        showCommandMessage('MẤT KẾT NỐI KHI GỬI ĐIỂM ĐẾN', null, true);
+        userGoalTarget = null;
+      } finally {
+        navGoalPending = false;
+      }
+    }
+
+    async function cancelNavGoal() {
+      await fetch('/api/auto?act=STOP', {signal: AbortSignal.timeout(1000)}).catch(()=>{});
+      isAutoRunning = false;
+      userGoalTarget = null;
+      updateNavGoalUI(false);
+      showCommandMessage('ĐÃ HỦY ĐIỀU HƯỚNG ĐẾN ĐIỂM');
+    }
+
+    function updateNavGoalUI(active, x=0, y=0) {
+      const btn = document.getElementById('btnNavGoal');
+      const txt = document.getElementById('navGoalText');
+      if (!btn) return;
+      if (active) {
+        btn.style.display = 'block';
+        if (txt) txt.innerText = `ĐANG TỚI (${x.toFixed(2)}, ${y.toFixed(2)}) m — NHẤP ĐỂ DỪNG`;
+      } else {
+        btn.style.display = 'none';
+      }
     }
 
     let autoConfigDebounce = null;
+    let autoConfigPending = false;
+    let autoConfigVersion = 0;
+    function syncAutoSpeedConfig(d) {
+      const cfg = d.speed_config;
+      if (cfg && !autoConfigPending) {
+        document.getElementById('sliderAutoSpeed').value = cfg.speed_rpm;
+        document.getElementById('sliderAutoTurn').value = cfg.turn_rpm;
+        document.getElementById('valAutoSpeedLbl').innerText = `${cfg.speed_rpm} RPM (${Number(cfg.cruise_mps).toFixed(3)} m/s)`;
+        document.getElementById('valAutoTurnLbl').innerText = `${cfg.turn_rpm} RPM (${Number(cfg.turn_w).toFixed(2)} rad/s)`;
+      }
+      const live = document.getElementById('valAutoWheelTargets');
+      const wheels = d.control?.latest_d0;
+      if (live) live.innerText = wheels
+        ? `CHẬM: 40 RPM · Lệnh bánh T/P: ${Number(wheels.l_tgt).toFixed(1)} / ${Number(wheels.r_tgt).toFixed(1)} RPM`
+        : 'CHẬM: 40 RPM · Chờ tốc độ bánh từ MCU';
+    }
     function updateAutoParams() {
+      autoConfigPending = true;
+      const version = ++autoConfigVersion;
       const spd = parseFloat(document.getElementById('sliderAutoSpeed').value);
       const trn = parseFloat(document.getElementById('sliderAutoTurn').value);
       const spdMps = ((spd * 2.0 * Math.PI * 0.0366) / 60.0).toFixed(3);
@@ -556,13 +659,18 @@
         try {
           const res = await fetch(`/api/auto_config?speed=${spd}&turn=${trn}`);
           const d = await res.json();
+          if (version !== autoConfigVersion) return;
+          autoConfigPending = false;
           if (res.ok && d.status === 'OK') {
+            syncAutoSpeedConfig({speed_config:d});
             if (stLbl) { stLbl.innerText = 'ĐÃ LƯU'; stLbl.style.color = 'var(--green)'; }
             setTimeout(() => { if (stLbl) { stLbl.innerText = 'SẴN SÀNG'; stLbl.style.color = 'var(--text-muted)'; } }, 2000);
           } else {
             if (stLbl) { stLbl.innerText = 'LỖI CẤU HÌNH'; stLbl.style.color = 'var(--red)'; }
           }
         } catch (_) {
+          if (version !== autoConfigVersion) return;
+          autoConfigPending = false;
           if (stLbl) { stLbl.innerText = 'MẤT KẾT NỐI'; stLbl.style.color = 'var(--red)'; }
         }
       }, 300);
@@ -572,13 +680,7 @@
       // STOP endpoint also disables AUTO. One operation, one confirmation.
       stopDrive(true);
       isAutoRunning = false;
-      const btn = document.getElementById('btnAuto');
-      btn.classList.remove('active');
-      document.getElementById('autoText').innerText = 'BẬT TỰ ĐỘNG QUÉT MAP';
-      btn.style.background = '#064e3b';
-      btn.style.borderColor = '#059669';
-      btn.style.color = '';
-      btn.style.boxShadow = '';
+      updateAutoButtonUI(false, currentAutoMode);
     }
 
     async function resetMapAndRescan() {
@@ -634,14 +736,21 @@
         ctx.stroke();
 
         // 2. Vẽ đám mây điểm LaserScan (chuẩn hướng: Front = Trên, Left = Trái, Right = Phải)
-        if (teleData && teleData.ranges) {
+        const scanValid = Date.now() - telemetryReceivedAt <= 1500 &&
+          teleData?.lidar?.connected === true &&
+          Number(teleData?.lidar?.age_s) <= 0.5 &&
+          Array.isArray(teleData?.ranges) &&
+          teleData.ranges.some(d => Number.isFinite(d) && d > 0.05 && d < 16.0);
+        if (scanValid) {
           const scale = 75; // 75px = 1m (phạm vi ~3.5m)
           ctx.fillStyle = '#00f0ff';
           teleData.ranges.forEach((dist, deg) => {
-            if (dist > 0.05 && dist < 4.0) {
+            if (dist > 0.05 && dist < 16.0) {
               const rad = deg * Math.PI / 180.0;
-              const px = cx - dist * Math.sin(rad) * scale;
-              const py = cy - dist * Math.cos(rad) * scale;
+              // Distances beyond the 3.3m viewport appear on the perimeter.
+              const displayDist = Math.min(dist, 3.30);
+              const px = cx - displayDist * Math.sin(rad) * scale;
+              const py = cy - displayDist * Math.cos(rad) * scale;
               
               if (dist < 0.35) ctx.fillStyle = '#ef4444';
               else if (dist < 0.70) ctx.fillStyle = '#f59e0b';
@@ -650,6 +759,21 @@
               ctx.fillRect(px - 2, py - 2, 4, 4);
             }
           });
+          const visibleRays = teleData.ranges.filter(d => Number.isFinite(d) && d > 0.05 && d < 16.0).length;
+          ctx.fillStyle = '#34d399';
+          ctx.font = 'bold 12px monospace';
+          ctx.textAlign = 'left';
+          ctx.fillText(`SCAN: ${visibleRays}/360 GÓC | ${teleData.lidar.points} ĐIỂM | ${teleData.lidar.age_s}s`, 12, 24);
+        } else {
+          ctx.fillStyle = '#f59e0b';
+          ctx.font = 'bold 17px monospace';
+          ctx.textAlign = 'center';
+          ctx.fillText('CHƯA CÓ ĐIỂM QUÉT LIDAR HỢP LỆ', cx, cy + 185);
+          ctx.font = '13px monospace';
+          const age = teleData?.lidar?.age_s;
+          const telemetryStale = Date.now() - telemetryReceivedAt > 1500;
+          ctx.fillText(telemetryStale ? 'TELEMETRY NGẮT / QUÁ HẠN' :
+                       age == null ? 'ĐANG CHỜ SCAN' : `TUỔI SCAN: ${age}s`, cx, cy + 209);
         }
 
         // 3. Vẽ vị trí xe Robot ở tâm
@@ -706,32 +830,82 @@
             ctx.shadowBlur = 0;
           }
 
-          // VẼ MỤC TIÊU KHÁM PHÁ (Target Goal Frontier)
-          if (teleData && teleData.map_info && teleData.map_info.goal_x != null && teleData.map_info.goal_y != null && (teleData.map_info.goal_x !== 0 || teleData.map_info.goal_y !== 0)) {
-            const gx = (teleData.map_info.goal_x - mapData.ox) / mapData.res;
-            const gy = (teleData.map_info.goal_y - mapData.oy) / mapData.res;
-            const px = ox + gx * pSize;
-            const py = oy + (mh - 1 - gy) * pSize;
+          // VẼ MỤC TIÊU KHÁM PHÁ (Target Goal Frontier hoặc User Point Goal)
+          let targetPx = null, targetPy = null;
+          let goalX = teleData?.map_info?.goal_x;
+          let goalY = teleData?.map_info?.goal_y;
+          if ((goalX == null || (goalX === 0 && goalY === 0)) && userGoalTarget) {
+            goalX = userGoalTarget[0];
+            goalY = userGoalTarget[1];
+          }
+          if (goalX != null && goalY != null && (goalX !== 0 || goalY !== 0)) {
+            const gx = (goalX - mapData.ox) / mapData.res;
+            const gy = (goalY - mapData.oy) / mapData.res;
+            targetPx = ox + gx * pSize;
+            targetPy = oy + (mh - 1 - gy) * pSize;
             ctx.strokeStyle = '#f59e0b';
-            ctx.lineWidth = 1.5;
+            ctx.lineWidth = 2;
             ctx.beginPath();
-            ctx.arc(px, py, Math.max(6, pSize * 3), 0, Math.PI * 2);
+            ctx.arc(targetPx, targetPy, Math.max(7, pSize * 3), 0, Math.PI * 2);
             ctx.stroke();
             ctx.fillStyle = '#f59e0b';
             ctx.beginPath();
-            ctx.arc(px, py, 2.5, 0, Math.PI * 2);
+            ctx.arc(targetPx, targetPy, 3, 0, Math.PI * 2);
             ctx.fill();
+
+            ctx.font = 'bold 9px "JetBrains Mono", monospace';
+            ctx.fillStyle = '#fef08a';
+            ctx.fillText(`📍 (${goalX.toFixed(2)}, ${goalY.toFixed(2)})`, targetPx + 8, targetPy - 8);
           }
 
           // VẼ VỊ TRÍ XE ROBOT TRÊN BẢN ĐỒ SLAM VỚI MŨI TÊN HƯỚNG
-          if (teleData && teleData.robot) {
-            const rx = teleData.robot.x;
-            const ry = teleData.robot.y;
-            const rth = teleData.robot.th || 0;
+          if (Array.isArray(teleData?.map_info?.robot_pose)) {
+            const [rx, ry, rth] = teleData.map_info.robot_pose;
             const rgx = (rx - mapData.ox) / mapData.res;
             const rgy = (ry - mapData.oy) / mapData.res;
             const rpx = ox + rgx * pSize;
             const rpy = oy + (mh - 1 - rgy) * pSize;
+
+            // ĐƯỜNG CHỈ HƯỚNG TỪ XE ĐẾN MỤC TIÊU FRONTIER / GOAL
+            if (targetPx !== null && targetPy !== null) {
+              ctx.save();
+              ctx.strokeStyle = '#fbbf24'; // Màu vàng cam neon nổi bật
+              ctx.lineWidth = 2;
+              ctx.setLineDash([8, 5]);
+              ctx.shadowColor = '#f59e0b';
+              ctx.shadowBlur = 6;
+              ctx.beginPath();
+              ctx.moveTo(rpx, rpy);
+              ctx.lineTo(targetPx, targetPy);
+              ctx.stroke();
+
+              // Mũi tên chỉ hướng đến điểm đích
+              const gAngle = Math.atan2(targetPy - rpy, targetPx - rpx);
+              const arrowOffset = Math.max(8, pSize * 3.5);
+              const ax = targetPx - Math.cos(gAngle) * arrowOffset;
+              const ay = targetPy - Math.sin(gAngle) * arrowOffset;
+              ctx.fillStyle = '#fbbf24';
+              ctx.beginPath();
+              ctx.moveTo(ax, ay);
+              ctx.lineTo(ax - 9 * Math.cos(gAngle - Math.PI / 6), ay - 9 * Math.sin(gAngle - Math.PI / 6));
+              ctx.lineTo(ax - 9 * Math.cos(gAngle + Math.PI / 6), ay - 9 * Math.sin(gAngle + Math.PI / 6));
+              ctx.closePath();
+              ctx.fill();
+
+              // Hiển thị khoảng cách mét trực quan ngay trên đường line
+              const distToTarget = Math.hypot(goalX - rx, goalY - ry);
+              if (distToTarget > 0.05) {
+                const midX = (rpx + targetPx) / 2;
+                const midY = (rpy + targetPy) / 2;
+                ctx.font = 'bold 10px "JetBrains Mono", monospace';
+                ctx.fillStyle = '#fef08a';
+                ctx.shadowColor = '#000000';
+                ctx.shadowBlur = 4;
+                ctx.fillText(distToTarget.toFixed(2) + 'm', midX + 6, midY - 6);
+              }
+              ctx.restore();
+            }
+
             ctx.fillStyle = '#10b981';
             ctx.shadowColor = '#10b981';
             ctx.shadowBlur = 8;
@@ -807,11 +981,21 @@
       updateAutoButtonUI(isAutoRunning, currentAutoMode);
     }
 
-    // ĐỌC TELEMETRY LIÊN TỤC 10HZ
+    // Giữ tối đa một yêu cầu telemetry trên đường truyền để các phản hồi
+    // không thể vượt nhau rồi ghi đè dữ liệu LiDAR mới bằng scan cũ.
+    let telemetryFetchInFlight = false;
+    // ĐỌC TELEMETRY LIÊN TỤC, TỐI ĐA 10HZ
     setInterval(() => {
-      fetch('/api/telemetry').then(r=>r.json()).then(d=>{
+      if (telemetryFetchInFlight) return;
+      telemetryFetchInFlight = true;
+      fetch('/api/telemetry', {cache:'no-store', signal:AbortSignal.timeout(1200)}).then(r=>{
+        if (!r.ok) throw new Error('TELEMETRY_HTTP_' + r.status);
+        return r.json();
+      }).then(d=>{
+        telemetryReceivedAt = Date.now();
         teleData = d;
         updateTrialUI(d);
+        syncAutoSpeedConfig(d);
         document.getElementById('valX').innerText = d.robot.x.toFixed(3);
         document.getElementById('valY').innerText = d.robot.y.toFixed(3);
         document.getElementById('valTh').innerText = (d.robot.th * 180 / Math.PI).toFixed(1) + '°';
@@ -825,44 +1009,112 @@
           covEl.innerText = `${d.trajectory.coverage_pct}% (${d.trajectory.points_count} điểm)`;
         }
         const aiEl = document.getElementById('valAiStatus');
-        if (aiEl && d.ai) {
-          if (d.ai.ai1_active) {
-            aiEl.innerText = `AI 1: V=${d.ai.ai1_v.toFixed(2)} W=${d.ai.ai1_w.toFixed(2)}`;
-            aiEl.style.color = 'var(--cyan)';
-          } else if (d.ai.ai1_loaded) {
-            aiEl.innerText = d.ai.ai2_loaded ? 'AI 1 & AI 2 ĐÃ SẴN SÀNG' : 'AI 1 ĐÃ SẴN SÀNG';
-            aiEl.style.color = 'var(--green)';
-          } else {
-            aiEl.innerText = 'CHƯA NẠP AI';
-            aiEl.style.color = 'var(--yellow)';
-          }
+        if (aiEl) {
+          const ai = d.ai || {};
+          // Show each model's actual role. Per-scan counters belong in the
+          // details, so fluctuating LiDAR bins cannot resize this status card.
+          const role = n => {
+            const mode = ai[`ai${n}_mode`];
+            if (mode === 'off') return 'TẮT';
+            if (!mode) return 'CHƯA BÁO CÁO';
+            if (!ai[`ai${n}_loaded`]) return 'CHƯA NẠP';
+            if (mode === 'shadow') return 'QUAN SÁT';
+            if (mode !== 'control') return 'CHƯA BÁO CÁO';
+            if (n === 1 && ai.ai1_active) return 'ĐANG LÁI';
+            if (ai[`ai${n}_error`]) return n === 1 && String(ai.ai1_error).includes('AI1_LIDAR_')
+              ? 'A* DỰ PHÒNG' : 'TẠM NGƯNG';
+            return n === 1 ? 'CHỜ ĐIỀU KHIỂN' : 'CHỌN ĐIỂM';
+          };
+          const text = `AI1: ${role(1)} · AI2: ${role(2)}`;
+          if (aiEl.innerText !== text) aiEl.innerText = text;
+          aiEl.style.color = ai.ai1_mode === 'control' && ai.ai1_active ? 'var(--cyan)' : 'var(--yellow)';
+          aiEl.title = [
+            'QUAN SÁT: mô hình chỉ tính thử, không điều khiển xe.',
+            `AI1: ${ai.ai1_loaded ? 'đã nạp mô hình' : 'chưa nạp mô hình'}.`,
+            `LiDAR cho AI1: ${ai.ai1_scan_valid_bins ?? '?'}/360 tia; ${ai.ai1_scan_ready ? 'đủ dữ liệu' : (ai.ai1_scan_blocker || 'chưa đủ dữ liệu')}.`,
+            ai.ai1_error ? `AI1: ${ai.ai1_error}` : '',
+            ai.ai1_mode === 'control' && ai.ai1_active ? `Lệnh AI1: V=${Number(ai.ai1_v || 0).toFixed(2)} W=${Number(ai.ai1_w || 0).toFixed(2)}` : '',
+            `AI2: ${ai.ai2_loaded ? 'đã nạp mô hình' : 'chưa nạp mô hình'}; dùng chọn điểm khi chạy phủ sàn.`,
+            ai.ai2_error ? `AI2: ${ai.ai2_error}` : ''
+          ].filter(Boolean).join('\n');
         }
-        document.getElementById('distIndicator').innerText = `VẬT CẢN: ${d.min_m.toFixed(2)}m (${d.min_ang}°)`;
+        const lidarReady = d.lidar?.connected === true &&
+          Number(d.lidar?.age_s) <= 0.75 &&
+          Array.isArray(d.ranges) &&
+          d.ranges.some(v => Number.isFinite(v) && v > 0.05 && v < 16.0);
+        const d0Age = d.control?.d0_age_s;
+        const d0Fresh = typeof d0Age === 'number' && d0Age >= 0 && d0Age <= 0.25;
+        document.getElementById('distIndicator').innerText = lidarReady
+          ? `VẬT CẢN: ${Number(d.min_m || 9.99).toFixed(2)}m (${d.min_ang}°) · SCAN ${d.ranges.filter(v => Number.isFinite(v) && v > 0.05 && v < 16.0).length}/360`
+          : 'LIDAR: KHÔNG CÓ ĐIỂM QUÉT HỢP LỆ';
 
         const badge = document.getElementById('statusBadge');
-        if (d.control && d.control.fault) {
+        if (!d0Fresh) {
+          badge.className = 'status-badge badge-danger';
+          badge.innerText = 'MẤT D0 TỪ MCU — CHƯA XÁC NHẬN TRẠNG THÁI XE';
+        } else if (d.control && d.control.fault) {
           badge.className = 'status-badge badge-danger';
           badge.innerText = `LỖI ĐIỀU KHIỂN: ${d.control.fault} — NHẤN MỞ KHÓA LỖI (RESET)`;
         } else if (d.status === 'OBSERVE_ONLY') {
           badge.className = 'status-badge badge-warn';
           badge.innerText = 'ĐANG XEM DỮ LIỆU XE — CHƯA BẬT CHẠY';
+        } else if (d.auto && d.control?.scan_holding) {
+          badge.className = 'status-badge badge-warn';
+          badge.innerText = 'CHỜ LIDAR — TỰ TIẾP TỤC KHI CÓ SCAN MỚI';
+        } else if (d.auto && !lidarReady) {
+          badge.className = 'status-badge badge-danger';
+          badge.innerText = 'AUTO: LIDAR CHƯA CÓ SCAN HỢP LỆ';
         } else if (d.auto) {
           badge.className = 'status-badge badge-safe';
           badge.innerText = (d.map_info && d.map_info.phase) ? d.map_info.phase : 'ĐANG TỰ ĐỘNG KHÁM PHÁ';
+        } else if (!d.auto) {
+          if (userGoalTarget) {
+            userGoalTarget = null;
+            updateNavGoalUI(false);
+          }
+          if (d.control?.armed) {
+            badge.className = 'status-badge badge-safe';
+            badge.innerText = 'MANUAL — ĐÃ MỞ ĐIỀU KHIỂN (WASD / PHÍM MŨI TÊN)';
+          } else if (d.control?.latched) {
+            badge.className = 'status-badge badge-warn';
+            badge.innerText = 'MANUAL — NHẤN SẴN SÀNG ĐIỀU KHIỂN ĐỂ MỞ PHIÊN';
+          } else {
+            badge.className = 'status-badge badge-warn';
+            badge.innerText = 'MANUAL — SẴN SÀNG MỞ PHIÊN KHI NHẤN LÁI';
+          }
         } else if (d.status === 'DANGER_STOP') {
           badge.className = 'status-badge badge-danger';
           badge.innerText = 'CẢNH BÁO: QUÁ GẦN!';
         } else if (d.status === 'WARNING') {
           badge.className = 'status-badge badge-warn';
           badge.innerText = 'CẢNH BÁO VA CHẠM';
+        } else if (d.control?.armed) {
+          badge.className = 'status-badge badge-warn';
+          badge.innerText = 'MCU ARMED — ĐANG CHỜ LỆNH, AUTO CHƯA CHẠY';
         } else {
-          badge.className = 'status-badge badge-safe';
-          badge.innerText = 'HỆ THỐNG SẴN SÀNG';
+          badge.className = 'status-badge badge-warn';
+          badge.innerText = 'MCU CHƯA ARM — CHỜ LỆNH ĐIỀU KHIỂN';
         }
       }).catch(()=>{
-        document.getElementById('statusBadge').innerText = 'MẤT TELEMETRY — CHƯA XÁC NHẬN AN TOÀN';
+        teleData = null;
+        document.getElementById('valAutoSpeedLbl').innerText = 'MẤT TELEMETRY';
+        document.getElementById('valAutoTurnLbl').innerText = 'MẤT TELEMETRY';
+        document.getElementById('valAutoWheelTargets').innerText = 'CHƯA CÓ LỆNH BÁNH MỚI TỪ MCU';
+        telemetryReceivedAt = 0;
+        const badge = document.getElementById('statusBadge');
+        badge.className = 'status-badge badge-danger';
+        badge.innerText = 'MẤT TELEMETRY — CHƯA XÁC NHẬN AN TOÀN';
+        document.getElementById('distIndicator').innerText = 'LIDAR: TELEMETRY NGẮT';
+        const aiStatus = document.getElementById('valAiStatus');
+        if (aiStatus) {
+          aiStatus.innerText = 'AI: CHƯA CÓ TELEMETRY';
+          aiStatus.title = '';
+          aiStatus.style.color = 'var(--red)';
+        }
         ['valLRpm','valRRpm','valX','valY','valTh'].forEach(id => document.getElementById(id).innerText = '--');
         if (driveCmd) stopDrive();
+      }).finally(()=>{
+        telemetryFetchInFlight = false;
       });
     }, 100);
 
@@ -878,15 +1130,17 @@
     let driveCmd = null;
     let driveOpId = 0;
     let isDrivingHttpInFlight = false;
+    let pendingManualZero = false;
+    let manualArmPromise = null;
     const activeKeys = new Set();
 
     const CMD_SPEED = {
-      W: 'M 200 200',
-      S: 'M -190 -190',
-      A: 'M -180 180',
-      D: 'M 180 -180',
-      Q: 'M -180 180',
-      E: 'M 180 -180'
+      W: 'S 85 85',
+      S: 'S -85 -85',
+      A: 'S -45 45',
+      D: 'S 45 -45',
+      Q: 'S -45 45',
+      E: 'S 45 -45'
     };
 
     const KEY_COMMANDS = {
@@ -903,26 +1157,77 @@
     };
 
     async function sendDriveFast(c) {
-      if (isDrivingHttpInFlight) return;
+      if (isDrivingHttpInFlight) {
+        if (c === 'V 0.000 0.000') pendingManualZero = true;
+        return false;
+      }
       isDrivingHttpInFlight = true;
       try {
-        await fetch('/api/cmd?val=' + encodeURIComponent(c), { cache: 'no-store' });
-      } catch (_) {}
-      finally {
+        const response = await fetch('/api/cmd?val=' + encodeURIComponent(c), {
+          cache: 'no-store', signal: AbortSignal.timeout(1000)
+        });
+        if (!response.ok) {
+          const data = await response.json().catch(() => ({}));
+          if (c !== 'V 0.000 0.000') {
+            // A rejection must be visible: silently retrying M commands made
+            // a DISARMED MCU look like an arbitrary LiDAR block.
+            stopDrive(false);
+            showCommandMessage('LỆNH LÁI TAY BỊ TỪ CHỐI: ' + commandFailure(data), data, true);
+          }
+          return false;
+        }
+        return true;
+      } catch (_) {
+        if (c !== 'V 0.000 0.000') {
+          stopDrive(false);
+          showCommandMessage('MẤT KẾT NỐI ĐIỀU KHIỂN — XE DỪNG KHI HẾT WATCHDOG', null, true);
+        }
+        return false;
+      } finally {
         isDrivingHttpInFlight = false;
+        if (pendingManualZero) {
+          pendingManualZero = false;
+          // Release-zero must not be lost while a previous M request is in flight.
+          void sendDriveFast('V 0.000 0.000');
+        }
       }
     }
 
-    function startDrive(c) {
+    async function startDrive(c) {
       const opId = ++driveOpId;
       isAutoRunning = false;
       driveCmd = c;
-      sendDriveFast(c);
       if (driveTimer) clearInterval(driveTimer);
-      // Gửi duy trì liên tục mỗi 75ms: cực kỳ mượt mà, không bao giờ bị khựng hay delay
+      // Opening a fresh manual session is explicit user intent. An emergency
+      // STOP latch still requires a separate press on the ARM button.
+      const ctrl = teleData?.control;
+      if (!ctrl || ctrl.fault || Date.now() - telemetryReceivedAt > 1000 ||
+          ctrl.d0_age_s == null || ctrl.d0_age_s < 0 || ctrl.d0_age_s > .25) {
+        driveCmd = null;
+        showCommandMessage('MANUAL CHƯA SẴN SÀNG: KIỂM TRA TELEMETRY MCU / LỖI', null, true);
+        return;
+      }
+      if (!ctrl.armed || ctrl.latched) {
+        if (!manualArmPromise) {
+          manualArmPromise = armControl().finally(() => { manualArmPromise = null; });
+        }
+        const ok = await manualArmPromise;
+        // The operator may have released key while the ARM ACK was pending.
+        if (!ok || opId !== driveOpId || driveCmd !== c) {
+          if (!ok && opId === driveOpId) driveCmd = null;
+          return;
+        }
+        if (teleData?.control) {
+          teleData.control.armed = true;
+          teleData.control.latched = false;
+        }
+      }
+      if (opId !== driveOpId || driveCmd !== c) return;
+      void sendDriveFast(c);
+      // Refresh only while the button/key remains pressed.
       driveTimer = setInterval(() => {
         if (opId === driveOpId && driveCmd) {
-          sendDriveFast(driveCmd);
+          void sendDriveFast(driveCmd);
         }
       }, 75);
     }
@@ -936,21 +1241,24 @@
       if (force === true) {
         sendCmd('STOP');
       } else if (active) {
-        sendDriveFast('V 0.000 0.000');
-        setTimeout(() => sendDriveFast('V 0.000 0.000'), 80);
+        pendingManualZero = true;
+        if (!isDrivingHttpInFlight) {
+          pendingManualZero = false;
+          void sendDriveFast('V 0.000 0.000');
+        }
       }
       document.querySelectorAll('.dpad-btn').forEach(b => b.classList.remove('pressed'));
     }
 
     function getCombinedKeyCommand() {
       if (activeKeys.has('KeyW') || activeKeys.has('ArrowUp')) {
-        if (activeKeys.has('KeyA') || activeKeys.has('ArrowLeft')) return 'M 120 200';
-        if (activeKeys.has('KeyD') || activeKeys.has('ArrowRight')) return 'M 200 120';
+        if (activeKeys.has('KeyA') || activeKeys.has('ArrowLeft')) return 'S 50 85';
+        if (activeKeys.has('KeyD') || activeKeys.has('ArrowRight')) return 'S 85 50';
         return CMD_SPEED.W;
       }
       if (activeKeys.has('KeyS') || activeKeys.has('ArrowDown')) {
-        if (activeKeys.has('KeyA') || activeKeys.has('ArrowLeft')) return 'M -120 -190';
-        if (activeKeys.has('KeyD') || activeKeys.has('ArrowRight')) return 'M -190 -120';
+        if (activeKeys.has('KeyA') || activeKeys.has('ArrowLeft')) return 'S -50 -85';
+        if (activeKeys.has('KeyD') || activeKeys.has('ArrowRight')) return 'S -85 -50';
         return CMD_SPEED.S;
       }
       if (activeKeys.has('KeyA') || activeKeys.has('ArrowLeft') || activeKeys.has('KeyQ')) return CMD_SPEED.A;
@@ -1017,6 +1325,57 @@
     window.addEventListener('blur', focusLost);
     document.addEventListener('visibilitychange', () => { if (document.hidden) focusLost(); });
     window.addEventListener('pointerup', () => { if (driveCmd && activeKeys.size === 0) stopDrive(); });
+
+    canvas.addEventListener('mousemove', (event) => {
+      if (currentView !== 'slam' || !mapData) return;
+      const rect = canvas.getBoundingClientRect();
+      const scaleX = canvas.width / rect.width;
+      const scaleY = canvas.height / rect.height;
+      const clickPx = (event.clientX - rect.left) * scaleX;
+      const clickPy = (event.clientY - rect.top) * scaleY;
+
+      const mw = mapData.w;
+      const mh = mapData.h;
+      const pSize = Math.max(1, Math.min(canvas.width / mw, canvas.height / mh));
+      const ox = (canvas.width - mw * pSize) / 2;
+      const oy = (canvas.height - mh * pSize) / 2;
+
+      const gx = (clickPx - ox) / pSize;
+      const gy = (mh - 1) - (clickPy - oy) / pSize;
+
+      if (gx >= 0 && gx < mw && gy >= 0 && gy < mh) {
+        const wx = mapData.ox + gx * mapData.res;
+        const wy = mapData.oy + gy * mapData.res;
+        const ind = document.getElementById('distIndicator');
+        if (ind) ind.innerText = `CON TRỎ: (${wx.toFixed(2)}, ${wy.toFixed(2)}) m`;
+      }
+    });
+
+    canvas.addEventListener('click', async (event) => {
+      if (currentView !== 'slam' || !mapData) return;
+      const rect = canvas.getBoundingClientRect();
+      const scaleX = canvas.width / rect.width;
+      const scaleY = canvas.height / rect.height;
+      const clickPx = (event.clientX - rect.left) * scaleX;
+      const clickPy = (event.clientY - rect.top) * scaleY;
+
+      const mw = mapData.w;
+      const mh = mapData.h;
+      const pSize = Math.max(1, Math.min(canvas.width / mw, canvas.height / mh));
+      const ox = (canvas.width - mw * pSize) / 2;
+      const oy = (canvas.height - mh * pSize) / 2;
+
+      const gx = (clickPx - ox) / pSize;
+      const gy = (mh - 1) - (clickPy - oy) / pSize;
+
+      if (gx < 0 || gx >= mw || gy < 0 || gy >= mh) return;
+
+      const worldX = mapData.ox + gx * mapData.res;
+      const worldY = mapData.oy + gy * mapData.res;
+
+      await sendNavGoal(worldX, worldY);
+    });
+
     fetchMap();
     render();
   </script>

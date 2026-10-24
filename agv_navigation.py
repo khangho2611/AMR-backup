@@ -21,7 +21,7 @@ def valid_body_bounds(bounds, radius):
             max(math.hypot(x,y) for x in (bounds[0],bounds[2]) for y in (bounds[1],bounds[3]))<=radius+1e-9)
 
 
-def twist_centres(v, w, horizon=.5, spatial_step=.005, max_v=.55, max_w=1.5):
+def twist_centres(v, w, horizon=.5, spatial_step=.005, max_v=.55, max_w=2.60):
     """Sample the centre's constant-twist path in the current base frame.
 
     Half the distance between samples is added to the enclosing footprint by
@@ -195,7 +195,7 @@ class GridPlanner:
         deadline=time.monotonic()+min(self.budget_s,.025)
         start_colliding = set()
         for i,(bx,by) in enumerate(centres):
-            if skip_start and i == 0 and len(centres) > 1: continue
+            if skip_start and i == 0 and len(centres) > 1 and not allow_start_overlap: continue
             wx,wy=pose[0]+pc*bx-ps*by,pose[1]+ps*bx+pc*by
             px,py=c*(wx-ox)+s*(wy-oy),-s*(wx-ox)+c*(wy-oy)
             angle=pose[2]-yaw+w*.5*i/max(1,len(centres)-1)
@@ -230,7 +230,7 @@ class GridPlanner:
                         return False
         return True
 
-    def escape_swept_clear(self, pose, v, w, bounds=None):
+    def escape_swept_clear(self, pose, v, w, bounds=None, require_progress=False):
         """Leave an existing clearance-margin violation without entering collision.
 
         The normal A* margin stays unchanged. This recovery is available only
@@ -268,8 +268,10 @@ class GridPlanner:
             clearances.append(clearance)
         if abs(v) < 1e-9:
             return clearances[0] >= (self.body_radius if bounds is None else min(abs(b) for b in bounds)) + padding
+        if require_progress and clearances[-1] <= clearances[0] + .0001:
+            return False
         if v < 0:
-            return clearances[0] < self.radius and clearances[-1] >= clearances[0] - 1e-7
+            return (clearances[0] < self.radius and clearances[-1] >= clearances[0] - 1e-7) or clearances[-1] >= self.radius
         if bounds is not None:
             return clearances[-1] > clearances[0] + .0001
         return clearances[0]<self.radius and clearances[-1]>clearances[0]+.0001
@@ -285,19 +287,64 @@ class GridPlanner:
                 continue
             yield nxt, math.hypot(dx,dy)
 
-    def path(self, start_world, goal_world):
+    def path(self, start_world, goal_world, goal_tolerance=0., start_tolerance=0.):
+        """Route to the exact goal, or a safe arrival cell if it became inflated.
+
+        A small arrival tolerance preserves a SLAM goal across cell jitter.
+        Every endpoint and path cell still uses the full inflated footprint.
+        """
+        if not finite(goal_tolerance) or not 0 <= goal_tolerance <= .20:
+            raise ValueError('Invalid goal tolerance')
+        if not finite(start_tolerance) or not 0 <= start_tolerance <= .30:
+            raise ValueError('Invalid start tolerance')
         start, goal = self.world_to_cell(*start_world), self.world_to_cell(*goal_world)
-        if not self.traversable(start) or not self.traversable(goal):
-            return None
+        if not self.traversable(start):
+            if start is not None and start_tolerance > 0:
+                cells = math.ceil(start_tolerance / self.res)
+                best_s, best_d = None, float('inf')
+                for dy in range(-cells, cells + 1):
+                    for dx in range(-cells, cells + 1):
+                        cell = (start[0] + dx, start[1] + dy)
+                        if self.traversable(cell):
+                            d = math.hypot(dx, dy)
+                            if d < best_d:
+                                best_d = d
+                                best_s = cell
+                if best_s is not None:
+                    start = best_s
+            if not self.traversable(start):
+                self.last_path_status = 'START_OUT_OF_MAP' if start is None else 'START_BLOCKED'
+                return None
+        targets = {goal}
+        tolerance_cells = 0.
+        if not self.traversable(goal):
+            targets = set()
+            if goal is not None and goal_tolerance > 0:
+                cells = math.ceil(goal_tolerance / self.res)
+                for dy in range(-cells, cells + 1):
+                    for dx in range(-cells, cells + 1):
+                        cell = (goal[0] + dx, goal[1] + dy)
+                        if (self.traversable(cell) and
+                                math.dist(self.cell_to_world(*cell), goal_world) <= goal_tolerance):
+                            targets.add(cell)
+                # Include the requested point's offset from its cell centre
+                # so the heuristic stays admissible for every arrival cell.
+                tolerance_cells = goal_tolerance / self.res + math.sqrt(.5)
+            if not targets:
+                self.last_path_status = 'GOAL_OUT_OF_MAP' if goal is None else 'GOAL_BLOCKED'
+                return None
+        self.last_path_status = 'SEARCHING'
         deadline = time.monotonic()+self.budget_s
         heap, cost, parent = [(0., 0., start)], {start: 0.}, {}
         while heap:
             if time.monotonic() > deadline:
+                self.last_path_status = 'SEARCH_TIMEOUT'
                 return None
             _, g, here = heapq.heappop(heap)
             if g > cost[here]:
                 continue
-            if here == goal:
+            if here in targets:
+                self.last_path_status = 'OK'
                 result = [here]
                 while here in parent:
                     here = parent[here]
@@ -307,8 +354,9 @@ class GridPlanner:
                 ng = g+step
                 if ng < cost.get(nxt, math.inf):
                     cost[nxt], parent[nxt] = ng, here
-                    heuristic = math.hypot(nxt[0]-goal[0], nxt[1]-goal[1])
+                    heuristic = max(0., math.hypot(nxt[0]-goal[0], nxt[1]-goal[1]) - tolerance_cells)
                     heapq.heappush(heap, (ng+heuristic, ng, nxt))
+        self.last_path_status = 'NO_ROUTE'
         return None
 
     def frontiers(self, start_world, excluded=(), rejected=()):
@@ -327,9 +375,9 @@ class GridPlanner:
             if time.monotonic() > deadline:
                 return None
             here = q.popleft()
-            for nxt, _ in self.neighbours(here):
+            for nxt, step in self.neighbours(here):
                 if nxt not in reachable:
-                    reachable.add(nxt); costs[nxt] = costs[here]+1; q.append(nxt)
+                    reachable.add(nxt); costs[nxt] = costs[here]+step; q.append(nxt)
         raw_seen, raw_q, boundary = {start}, deque([start]), []
         while raw_q:
             if time.monotonic() > deadline:
@@ -369,33 +417,63 @@ class GridPlanner:
             # A frontier can wrap around several walls as one connected ring.
             # Split that component by viewing direction rather than rejecting
             # the whole perimeter when one direction gets stuck.
-            if hi_x-lo_x > 2*max_cells and hi_y-lo_y > 2*max_cells:
+            # Split a bent/perimeter frontier even in a long, thin corridor.
+            # A straight wall remains one rejected region, preventing retries
+            # at the next pixel of that same wall.
+            if ((hi_x-lo_x > 2*max_cells and hi_y-lo_y >= 2) or
+                    (hi_y-lo_y > 2*max_cells and hi_x-lo_x >= 2)):
                 wide_regions.add(region)
             region += 1
+        region_centroids = {}
+        region_counts = {}
+        for bp in boundary:
+            rid = regions[bp]
+            cx, cy = self.cell_to_world(*bp)
+            if rid not in region_centroids:
+                region_centroids[rid] = [0.0, 0.0]
+                region_counts[rid] = 0
+            region_centroids[rid][0] += cx
+            region_centroids[rid][1] += cy
+            region_counts[rid] += 1
+        for rid in region_centroids:
+            region_centroids[rid][0] /= region_counts[rid]
+            region_centroids[rid][1] /= region_counts[rid]
         candidates = {}
-        # Multi-source wave avoids scanning a footprint-sized square for every
-        # frontier pixel on every ROS tick.
         wave = deque((p,p,0) for p in boundary)
-        seen = set(boundary)
+        seen = {}  # cell -> best cost so far
         while wave:
             if time.monotonic() > deadline:
                 return None
             p,bound,depth = wave.popleft()
             if p in reachable:
                 wx,wy = self.cell_to_world(*p)
-                if (math.hypot(wx-start_world[0],wy-start_world[1]) >= max(self.res*2,.10) and
+                if (math.hypot(wx-start_world[0],wy-start_world[1]) >= max(self.res*2,.30) and
                         self.segment_known_free(p,bound)):
                     rid=regions[bound]
-                    sector=round(math.atan2(wy-start_world[1],wx-start_world[0])/(math.pi/4))%8 if rid in wide_regions else None
-                    candidates[p] = (costs[p],(rid,sector))
+                    centroid = region_centroids.get(rid, [start_world[0], start_world[1]])
+                    sector=round(math.atan2(wy-centroid[1],wx-centroid[0])/(math.pi/4))%8 if rid in wide_regions else None
+                    cost = costs[p]
+                    if p not in candidates or cost < candidates[p][0]:
+                        candidates[p] = (cost,(rid,sector))
             if depth >= max_cells:
                 continue
             for dx,dy in ((1,0),(-1,0),(0,1),(0,-1)):
                 nxt=(p[0]+dx,p[1]+dy)
-                if nxt in raw_seen and nxt not in seen:
-                    seen.add(nxt);wave.append((nxt,bound,depth+1))
-        rejected_regions = {rid for p,(cost,rid) in candidates.items()
-                            if any(math.dist(self.cell_to_world(*p),(x,y)) < r for x,y,r in rejected)}
+                if nxt in raw_seen:
+                    nxt_cost = costs.get(nxt, 999999)
+                    if nxt not in seen or nxt_cost < seen[nxt]:
+                        seen[nxt] = nxt_cost
+                        wave.append((nxt,bound,depth+1))
+        rejected_regions = set()
+        for p,(cost,rid) in candidates.items():
+            if any(math.dist(self.cell_to_world(*p),(x,y)) < r for x,y,r in rejected):
+                rejected_regions.add(rid)
+        for bp in boundary:
+            if any(math.hypot(self.cell_to_world(*bp)[0]-x,self.cell_to_world(*bp)[1]-y) < r for x,y,r in rejected):
+                bp_rid = regions[bp]
+                bp_centroid = region_centroids.get(bp_rid, [start_world[0], start_world[1]])
+                bp_sector = round(math.atan2(self.cell_to_world(*bp)[1]-bp_centroid[1],self.cell_to_world(*bp)[0]-bp_centroid[0])/(math.pi/4))%8 if bp_rid in wide_regions else None
+                rejected_regions.add((bp_rid, bp_sector))
         def priority(p):
             wx,wy=self.cell_to_world(*p)
             heading=math.atan2(wy-start_world[1],wx-start_world[0])

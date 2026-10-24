@@ -21,6 +21,8 @@ except Exception:
 
 from agv_preflight_static_collector import EXACT_BOOT_BANNER, EXACT_I2C_SCAN_BANNER
 from agv_navigation import finite
+from agv_speed_profile import (NORMAL_RPM, SLOW_RPM, running_wheels,
+                               twist_to_wheels, wheels_to_twist, rpm_to_speed)
 
 NUMERIC = ('l_tgt','r_tgt','l_rpm','r_rpm','l_pwm','r_pwm','x','y','th','v','w')
 ZERO = ('l_tgt','r_tgt','l_rpm','r_rpm','l_pwm','r_pwm','v','w')
@@ -33,6 +35,11 @@ class CommandSession:
         self.ser, self.clock = serial_stream, clock
         self.motion_window_s = motion_window_s
         self.strict_preflight = strict_preflight
+        # Enabled explicitly by the production operator node. Bench trials
+        # retain their independently bounded protocol and speed limits.
+        self.operator_rpm_profile = False
+        self.auto_speed_rpm = self.auto_turn_rpm = NORMAL_RPM
+        self.slow_speed_requested = None
         if not finite(operator_idle_lease_s) or not 0 <= operator_idle_lease_s <= 15:
             raise ValueError('Invalid operator idle lease')
         self.operator_idle_lease_s = operator_idle_lease_s
@@ -48,7 +55,9 @@ class CommandSession:
         self.last_d0 = None
         self.latest = None
         self.scan_time = None
-        self.scan_max_age_s = float(os.environ.get('AGV_SCAN_MAX_AGE_S', '0.25'))
+        self.scan_holding = False
+        self.scan_hold_reason = None
+        self.scan_max_age_s = float(os.environ.get('AGV_SCAN_MAX_AGE_S', '0.65' if not strict_preflight else '0.35'))
         self.scan_clear = False
         self.rotation_clear = False
         # Bound by the ROS node to fresh map/TF/scan geometry. Front clearance
@@ -78,12 +87,22 @@ class CommandSession:
         self.stop_confirmed = False
         self.stop_observed_zero = False
         self.stop_deadline = None
+        self.clear_fault_pending = False
+        self.clear_fault_acked_at = None
+        self.clear_fault_until = None
+        self.clear_fault_write_at = None
         self.arm_event, self.stop_event, self.pid_event = (threading.Event() for _ in range(3))
         self.pid_pending = None
         self.pid_uncertain = False
         self.history = []
         self.tuning_sequence = 0
         self.settling_lines = 0
+        # Operator mode can receive ordinary D0 telemetry before the firmware's
+        # one-time I2C diagnostic (emitted about 1.5 s after MCU boot). Preserve
+        # the initial stage-3 D0 stream without classifying that exact, bounded
+        # startup sequence as an unsolicited packet.
+        self.operator_i2c_scan_seen = False
+        self.operator_i2c_found_seen = False
         # In-memory only: UART/watchdog paths never wait on disk or network IO.
         self.events = deque(maxlen=256)
         self.command_events = deque(maxlen=512)
@@ -141,13 +160,61 @@ class CommandSession:
                                     **self._ages(self.clock()))
             self._event('fault', reason=reason)
             self.first_fault_events = copy.deepcopy(list(self.events))
-        self.latched = self.strict_preflight
+        self.latched = True
         self.armed = False
         self.motion = False
+
+    def _operator_boot_diag_allowed(self, now):
+        """Accept startup I2C reports only while safely stopped and early."""
+        return (not self.strict_preflight and self.stage == 3 and
+                0 <= now - self.opened <= 3.5 and
+                not self.armed and not self.motion and self.arm_sent is None and
+                not self.fault and not self.latched and
+                self.latest is not None and
+                self.latest.get('safety') == 'DISARMED' and
+                all(self.latest.get(k) == 0 for k in ZERO) and
+                self.last_d0 is not None and 0 <= now - self.last_d0 <= 0.5)
 
     def send_raw(self, payload):
         with self.writer:
             return self._write(payload)
+
+    def request_clear_fault(self):
+        """Explicit recovery; an ACK followed by fresh zero D0 completes it.
+
+        Recovery never arms the MCU and never fabricates a STOP confirmation.
+        """
+        if not self.writer.acquire(timeout=.2):
+            return False, 'WRITER_BUSY'
+        try:
+            with self.lock:
+                if self.clear_fault_pending:
+                    return False, 'CLEAR_FAULT_PENDING'
+                if self.armed or self.motion:
+                    return False, 'MOTION_SESSION_ACTIVE'
+                now = self.clock()
+                if (self.stage != 3 or self.last_d0 is None or
+                        not 0 <= now - self.last_d0 <= .25 or
+                        self.latest is None or self.latest.get('safety') not in ('FAULT', 'DISARMED') or
+                        any(self.latest.get(k) != 0 for k in ZERO)):
+                    return False, 'MCU_ZERO_DISARMED_OR_FAULT_REQUIRED'
+                self.clear_fault_pending = True
+                self.clear_fault_acked_at = None
+                self.latched = True
+                self.clear_fault_until = now + 1.2
+                self.clear_fault_write_at = None
+                # Commit the write timestamp before RX can associate an ACK.
+                ok = self._write(b'CLEAR_FAULT\n')
+                if ok:
+                    self.clear_fault_write_at = self.clock()
+                else:
+                    self.clear_fault_pending = False
+                    self.clear_fault_until = None
+                    self._fault('CLEAR_FAULT_WRITE_FAILED')
+                    return False, 'CLEAR_FAULT_WRITE_FAILED'
+            return True, 'RESET_SENT_AWAIT_ACK_AND_ZERO_D0'
+        finally:
+            self.writer.release()
 
     def _write(self, payload):
         started = self.clock()
@@ -180,52 +247,55 @@ class CommandSession:
                     self.pid_event.set()
                 else:
                     err_msg = str(packet['error'])
-                    if not self.strict_preflight:
-                        self.fault = err_msg
-                        self.latched = False
-                        self.armed = False
-                    else:
-                        self._fault(err_msg)
-                        must_stop = self.fault
+                    self._fault(err_msg)
+                    must_stop = self.fault
             elif 'ack' in packet:
                 ack = packet['ack']
                 self._event('rx_ack', ack=str(ack)[:160])
                 if ack == 'CLEAR_FAULT' and packet.get('state') == 'DISARMED':
-                    self.fault = None
-                    self.latched = False
-                    self.clear_fault_until = 0
-                    self.stable_start = now
-                    self.stable_count = 80
+                    if (self.clear_fault_pending and self.clear_fault_write_at is not None
+                            and self.clear_fault_until is not None and
+                            self.clear_fault_write_at <= now <= self.clear_fault_until):
+                        self.clear_fault_acked_at = now
+                    else:
+                        self._event('unexpected_clear_fault_ack')
                 if (ack == 'STOP' and packet.get('state') == 'DISARMED' and
                         self.sync_complete is not None and now > self.sync_complete and
                         self.sync_generation == self.generation):
                     self.sync_ack = True
                 if ack == 'ARM' and packet.get('state') == 'ARMED':
-                    self.arm_ack = True
-                    if not self.strict_preflight:
-                        self.armed = True
-                        self.latched = False
-                        self.fault = None
+                    if self.arm_sent is not None and not self.fault:
+                        self.arm_ack = True
+                    else:
+                        self._event('unexpected_arm_ack')
                 elif isinstance(ack, str) and ack.startswith('TUNING ') and self.pid_pending is not None:
                     if (ack == self.pid_pending['cmd'] and self.pid_pending.get('write_complete') is not None and now > self.pid_pending['write_complete']):
                         self.pid_pending.update(status='APPLIED', reason='MCU_ACK_MATCHED')
                         self.pid_event.set()
             elif packet == {'info': EXACT_BOOT_BANNER}:
-                if self.strict_preflight and (self.stage != 0 or now-self.opened > 3.5):
+                if self.stage != 0 or now-self.opened > 3.5 or self.fault:
                     self._fault('UNEXPECTED_OR_LATE_BOOT'); must_stop = self.fault
                 else:
                     self.stage = 1
-                    self.fault = None
-                    self.latched = False
                     self.stable_start, self.stable_count = now, 80
-            elif packet == {'info': EXACT_I2C_SCAN_BANNER} and self.stage == 1:
-                self.stage = 2
-            elif 'i2c_found' in packet and self.stage == 2:
+            elif packet == {'info': EXACT_I2C_SCAN_BANNER} and (
+                    self.stage == 1 or
+                    (self._operator_boot_diag_allowed(now) and not self.operator_i2c_scan_seen)):
+                self.operator_i2c_scan_seen = True
+                if self.stage == 1:
+                    self.stage = 2
+                self._event('rx_startup_diag', part='i2c_scan')
+            elif 'i2c_found' in packet and (
+                    self.stage == 2 or
+                    (self._operator_boot_diag_allowed(now) and
+                     self.operator_i2c_scan_seen and not self.operator_i2c_found_seen)):
                 try:
                     addr = int(packet['i2c_found'],16)
                     if len(packet) != 1 or not 1 <= addr <= 127:
                         raise ValueError()
                     self.stage, self.diag_time = 3, now
+                    self.operator_i2c_found_seen = True
+                    self._event('rx_startup_diag', part='i2c_found', addr=addr)
                 except (ValueError, TypeError):
                     self._fault('INVALID_I2C_DIAGNOSTIC'); must_stop = self.fault
             elif 'vin_mv' in packet:
@@ -253,20 +323,15 @@ class CommandSession:
                     else:
                         self.stable_start, self.stable_count = None, 0
                         stopping=self.stop_op>0 and not self.stop_confirmed and self.stop_deadline is not None
-                        clearing=getattr(self, 'clear_fault_until', 0) > now
+                        clearing=self.clear_fault_pending and self.clear_fault_until is not None and self.clear_fault_until > now
                         if self.strict_preflight and self.stage == 3 and not clean and not self.armed and self.arm_sent is None and not stopping and not clearing:
                             self._fault('UNSAFE_PREFLIGHT_D0'); must_stop = self.fault
                     if packet['safety'] == 'FAULT':
                         if self.strict_preflight:
-                            if not (getattr(self, 'clear_fault_until', 0) > now):
+                            if not (self.clear_fault_pending and self.clear_fault_until is not None and self.clear_fault_until > now):
                                 self._fault('MCU_FAULT'); must_stop = self.fault
                         else:
-                            self.fault = 'MCU_FAULT'
-                            self.latched = False
-                            self.armed = False
-                    elif not self.strict_preflight and packet['safety'] in ('DISARMED', 'ARMED'):
-                        if self.fault in ('MCU_FAULT', 'DRIVER_OFF_OR_FAULT', 'STARTUP_DEADLINE'):
-                            self.fault = None
+                            self._fault('MCU_FAULT'); must_stop = self.fault
                     if (self.motion_window_s is not None and self.armed and
                             max(abs(packet['l_rpm']),abs(packet['r_rpm'])) > 35.):
                         self._fault('TRIAL_OVERSPEED'); must_stop = self.fault
@@ -278,13 +343,21 @@ class CommandSession:
                         if self.motion_window_s is not None and self.trial_deadline is None:
                             self.trial_deadline = now+self.motion_window_s
                         self.arm_event.set()
-                    elif not self.strict_preflight and packet['safety'] == 'ARMED' and not self.fault:
-                        self.armed, self.latched = True, False
                     elif self.armed and packet['safety'] != 'ARMED':
                         if self.strict_preflight:
                             self._fault('MCU_DISARMED_DURING_SESSION'); must_stop = self.fault
                         else:
-                            self.armed = False
+                            # MCU closed the operator session (e.g. its own
+                            # command watchdog). Retire the entire old session,
+                            # not only armed: stale motion blocked RESET and a
+                            # retained arm_sent blocked every subsequent ARM.
+                            # Invalidate queued writes and old ACKs; a new
+                            # explicit ARM still needs fresh MCU confirmation.
+                            self.armed, self.motion = False, False
+                            self.arm_sent, self.arm_ack = None, False
+                            self.last_command, self.last_manual_input = None, None
+                            self.generation += 1
+                            self._event('mcu_session_closed', safety=packet['safety'])
                     if (clean and self.sync_ack and self.sync_complete is not None and
                             now > self.sync_complete and self.sync_generation == self.generation):
                         self.sync_event.set()
@@ -296,8 +369,20 @@ class CommandSession:
                         if self.fault == 'STOP_UNCONFIRMED':
                             self.fault = None
                         self.stop_event.set()
+                    if (clean and self.clear_fault_pending and self.clear_fault_acked_at is not None
+                            and now > self.clear_fault_acked_at):
+                        self.fault = None
+                        self.latched = True
+                        self.armed = False
+                        self.clear_fault_pending = False
+                        self.clear_fault_acked_at = None
+                        self.clear_fault_until = None
+                        self.clear_fault_write_at = None
+                        self.stable_start, self.stable_count = now, 1
+                        self._event('clear_fault_confirmed', state='DISARMED_ZERO')
             else:
                 if self.stage == 3 or self.armed:
+                    self._event('rx_unclassified', payload=repr(packet)[:200])
                     self._fault('UNCLASSIFIED_PACKET'); must_stop = self.fault
         if must_stop:
             self.request_stop(must_stop, wait=False)
@@ -346,11 +431,6 @@ class CommandSession:
         finally:self.arm_request_lock.release()
 
     def _request_arm(self):
-        if self.fault == 'STOP_UNCONFIRMED' and self.latest and self.latest.get('safety') == 'DISARMED' and all(self.latest.get(k) == 0 for k in ZERO):
-            with self.lock:
-                self.fault = None
-                self.latched = False
-                self.stop_confirmed = True
         if self.require_transport_sync:
             ok,reason=self._synchronize_before_arm()
             if not ok:return False,reason
@@ -363,7 +443,11 @@ class CommandSession:
                     return False, 'TRIAL_ALREADY_USED'
                 if self.strict_preflight and (not self.preflight_ready(now) or self.arm_sent is not None or self.pid_pending is not None):
                     return False, 'PREFLIGHT_NOT_READY'
-                if not self.strict_preflight and (bool(self.fault) or self.arm_sent is not None or self.pid_pending is not None):
+                if not self.strict_preflight and (self.stage != 3 or bool(self.fault)
+                        or self.clear_fault_pending or self.arm_sent is not None or self.pid_pending is not None
+                        or self.last_d0 is None or not 0 <= now-self.last_d0 <= .25
+                        or self.latest is None or self.latest.get('safety') != 'DISARMED'
+                        or any(self.latest.get(k) != 0 for k in ZERO)):
                     return False, 'PREFLIGHT_NOT_READY'
                 self.arm_event.clear()
                 self.arm_ack = False
@@ -390,7 +474,8 @@ class CommandSession:
 
     def drive(self, command, autonomous=False, escape=False):
         parts = command.split()
-        if len(parts) != 3 or parts[0] not in ('M','V'):
+        rpm_profile = self.operator_rpm_profile and not self.strict_preflight and self.motion_window_s is None
+        if len(parts) != 3 or parts[0] not in (('M','V','S') if rpm_profile else ('M','V')):
             return self._drive_result(command, False, 'INVALID_DRIVE')
         try:
             values = [float(p) for p in parts[1:]]
@@ -398,7 +483,7 @@ class CommandSession:
             return self._drive_result(command, False, 'INVALID_DRIVE')
         if not all(math.isfinite(v) for v in values):
             return self._drive_result(command, False, 'INVALID_DRIVE')
-        max_escape_v = .10
+        max_escape_v = rpm_to_speed(SLOW_RPM) if rpm_profile else .10
         if escape and (not autonomous or parts[0]!='V' or abs(values[0])>max_escape_v):
             return self._drive_result(command,False,'INVALID_ESCAPE_CALLER_OR_COMMAND')
         if self.motion_window_s is not None and (parts[0]=='M' or abs(values[0])>.04):
@@ -407,71 +492,78 @@ class CommandSession:
         max_v = .55 if is_op else .35
         max_w = 3.50 if is_op else 1.80
         max_m = 220 if is_op else 140
-        if (parts[0] == 'M' and ((autonomous and not is_op) or any(abs(v)>max_m or v != int(v) for v in values)) or
+        max_s = NORMAL_RPM if (autonomous or not is_op) else 100.0
+        if (parts[0] == 'M' and (autonomous or any(abs(v)>max_m or v != int(v) for v in values)) or
+                parts[0] == 'S' and any(abs(v)>max_s for v in values) or
                 parts[0] == 'V' and (abs(values[0]) > max_v or abs(values[1]) > max_w)):
             return self._drive_result(command, False, 'DRIVE_LIMIT')
+        if rpm_profile:
+            wheels=twist_to_wheels(*values) if parts[0]=='V' else tuple(values)
+            normal=(self.auto_speed_rpm if abs(sum(wheels))>1e-8 else self.auto_turn_rpm) if autonomous else (max(NORMAL_RPM, min(max_s, max(abs(w) for w in wheels))) if (is_op and parts[0] == 'S') else NORMAL_RPM)
+            slow=escape or (autonomous and callable(self.slow_speed_requested) and self.slow_speed_requested())
+            left,right=running_wheels(*wheels,normal_rpm=normal,slow=slow)
+            command=f'S {left:.3f} {right:.3f}'
+            # All ownership/sensor/sweep checks below use the actual targets,
+            # never the weaker, pre-conversion request. Only the wire format
+            # is S; the existing geometric gates continue to use SI units.
+            values=list(wheels_to_twist(left,right))
+            parts=['V',str(values[0]),str(values[1])]
         with self.lock:
             if not autonomous:
+                # Browser idle heartbeats and delayed key-release zeros must
+                # never seize ownership after AUTO_START. STOP is a separate,
+                # always-available high-priority command.
+                if (self.autonomy_allowed is True and parts[0] == 'V'
+                        and values[0] == 0.0 and values[1] == 0.0):
+                    return self._drive_result(command, False, 'AUTO_OWNS_CONTROL')
                 if self.autonomy_allowed is True:self.generation += 1
                 self.autonomy_allowed = False
             generation = self.generation
-        if not self.writer.acquire(timeout=.1):
-            self.request_stop('WRITER_BUSY',wait=False)
+        is_arc = autonomous and parts[0] == 'V' and values[0] > 0
+        arc_ok = False
+        escape_ok = False
+        if escape:
+            try:
+                escape_ok = self.escape_validator is not None and self.escape_validator(*values) is True
+            except Exception as exc:
+                self._event('escape_validation_error',error=type(exc).__name__)
+        elif is_arc:
+            try:
+                arc_ok = self.arc_validator is not None and self.arc_validator(*values) is True
+            except Exception as exc:
+                self._event('arc_validation_error',error=type(exc).__name__)
+        with self.lock:
+            now = self.clock()
+            if parts[0] == 'V':
+                needs_forward = values[0] > 0
+                needs_sweep = values[0] <= 0 and (values[0] < 0 or values[1] != 0)
+            else:
+                needs_forward = values[0] > 0 and values[1] > 0
+                needs_sweep = (not needs_forward or values[0] != values[1]) and any(v != 0 for v in values)
+            checks = (
+                    ('LATCHED',bool(self.latched)), ('NOT_ARMED',not self.armed),
+                    ('FAULT',bool(self.fault) or (self.latest is not None and self.latest.get('safety') == 'FAULT')),
+                    ('CANCELLED_GENERATION',generation != self.generation),
+                    ('AUTONOMY_CANCELLED',autonomous and self.autonomy_allowed is not True),
+                    ('TRIAL_EXPIRED',self.trial_deadline is not None and now >= self.trial_deadline),
+                    ('D0_STALE',self.last_d0 is None or not 0 <= now-self.last_d0 <= .25),
+                    ('MCU_NOT_ARMED',self.latest is None or self.latest.get('safety') != 'ARMED'),
+                    ('SCAN_STALE',autonomous and any(values) and (self.scan_time is None or not -0.10 <= now-self.scan_time <= (max(0.65, self.scan_max_age_s) if not self.strict_preflight else self.scan_max_age_s))),
+                    ('FORWARD_NOT_CLEAR',autonomous and not escape and needs_forward and not self.scan_clear),
+                    ('ARC_NOT_VALIDATED',not escape and is_arc and not arc_ok),
+                    ('SWEEP_NOT_CLEAR',autonomous and not escape and needs_sweep and not self.rotation_clear),
+                    ('ESCAPE_NOT_VALIDATED',escape and not escape_ok))
+            blockers = [name for name,blocked in checks if blocked]
+            if blockers:
+                return self._drive_result(command,False,'SESSION_OR_SENSOR_NOT_READY',blockers)
+        # Acquire writer only for the actual serial write, never over geometry/TF calculation
+        if not self.writer.acquire(timeout=.25):
             return self._drive_result(command, False, 'WRITER_BUSY')
         try:
-            is_arc = autonomous and parts[0] == 'V' and values[0] > 0
-            arc_ok = False
-            escape_ok = False
-            if escape:
-                try:
-                    escape_ok = self.escape_validator is not None and self.escape_validator(*values) is True
-                except Exception as exc:
-                    self._event('escape_validation_error',error=type(exc).__name__)
-            elif is_arc:
-                # No state lock across geometry/TF work: STOP must be able to
-                # cancel this generation while it waits for the sole writer.
-                try:
-                    arc_ok = self.arc_validator is not None and self.arc_validator(*values) is True
-                except Exception as exc:
-                    self._event('arc_validation_error',error=type(exc).__name__)
             with self.lock:
-                now = self.clock()
-                if parts[0] == 'V':
-                    needs_forward = values[0] > 0
-                    needs_sweep = values[0] <= 0 and (values[0] < 0 or values[1] != 0)
-                else:
-                    needs_forward = values[0] > 0 and values[1] > 0
-                    needs_sweep = (not needs_forward or values[0] != values[1]) and any(v != 0 for v in values)
-                if not self.strict_preflight:
-                    self.armed = True
-                    self.latched = False
-                    self.fault = None
-                if not self.strict_preflight and not autonomous:
-                    blockers = []
-                else:
-                    checks = (
-                        ('LATCHED',self.strict_preflight and self.latched), ('NOT_ARMED',self.strict_preflight and not self.armed),
-                        ('FAULT',self.strict_preflight and bool(self.fault)), ('CANCELLED_GENERATION',generation != self.generation),
-                        ('AUTONOMY_CANCELLED',autonomous and self.autonomy_allowed is False),
-                        ('TRIAL_EXPIRED',self.trial_deadline is not None and now >= self.trial_deadline),
-                        ('D0_STALE',self.strict_preflight and (self.last_d0 is None or not 0 <= now-self.last_d0 <= .25)),
-                        ('SCAN_STALE',self.strict_preflight and autonomous and (self.scan_time is None or not -0.10 <= now-self.scan_time <= self.scan_max_age_s)),
-                        ('FORWARD_NOT_CLEAR',self.strict_preflight and autonomous and not escape and needs_forward and not self.scan_clear),
-                        ('ARC_NOT_VALIDATED',self.strict_preflight and not escape and is_arc and not arc_ok),
-                        ('SWEEP_NOT_CLEAR',self.strict_preflight and autonomous and not escape and needs_sweep and not self.rotation_clear),
-                        ('ESCAPE_NOT_VALIDATED',escape and not escape_ok))
-                    blockers = [name for name,blocked in checks if blocked]
-                if blockers:
-                    return self._drive_result(command,False,'SESSION_OR_SENSOR_NOT_READY',blockers)
-            # The state mutex must remain available to STOP while a physical
-            # write is in flight; STOP owns the next write, queued drives expire.
-            if not self.strict_preflight:
-                if getattr(self, 'latest', None) and self.latest.get('safety') == 'FAULT':
-                    cmd_payload = b'CLEAR_FAULT\nARM\n' + (command+'\n').encode('ascii')
-                else:
-                    cmd_payload = b'ARM\n' + (command+'\n').encode('ascii')
-            else:
-                cmd_payload = (command+'\n').encode('ascii')
+                if generation != self.generation or self.latched:
+                    return self._drive_result(command, False, 'CANCELLED_BY_STOP')
+            cmd_payload = (command+'\n').encode('ascii')
             wrote = self._write(cmd_payload)
             with self.lock:
                 if not wrote:
@@ -494,9 +586,10 @@ class CommandSession:
         # Invalidate queued drives BEFORE waiting for the writer. No auto reARM.
         with self.lock:
             self._event('stop_requested', reason=reason, **self._ages(self.clock()))
-            self.latched = self.strict_preflight
+            self.latched = True
             self.armed, self.motion = False, False
-            if reason not in ('USER_STOP','HOME_STOP','IDLE_SESSION_EXPIRED'):
+            self.scan_holding, self.scan_hold_reason = False, None
+            if reason not in ('USER_STOP','HOME_STOP','GOAL_REACHED','GOAL_STALLED','IDLE_SESSION_EXPIRED'):
                 self.stable_start, self.stable_count = None, 0
             self.generation += 1
             self.stop_op += 1
@@ -504,12 +597,16 @@ class CommandSession:
             self.stop_complete, self.stop_write_ok, self.stop_confirmed = None, False, False
             self.stop_observed_zero = False
             self.stop_event.clear()
-            self.stop_deadline = self.clock()+.25
-            if self.strict_preflight and reason not in ('USER_STOP','HOME_STOP','IDLE_SESSION_EXPIRED'):
-                self._fault(reason)
-            elif not self.strict_preflight and reason in ('MCU_FAULT', 'DRIVER_OFF_OR_FAULT'):
+            self.stop_deadline = self.clock() + (.50 if not self.strict_preflight else .25)
+            if reason not in ('USER_STOP','HOME_STOP','GOAL_REACHED','GOAL_STALLED','IDLE_SESSION_EXPIRED'):
                 self._fault(reason)
             self.arm_sent = None
+            # A STOP cancels any outstanding reset transaction. Late ACKs
+            # cannot clear a fault or recover an unrelated session.
+            self.clear_fault_pending = False
+            self.clear_fault_until = None
+            self.clear_fault_write_at = None
+            self.clear_fault_acked_at = None
         if not self.writer.acquire(timeout=.2):
             with self.lock: self._fault('STOP_WRITER_TIMEOUT')
             return False, 'STOP_WRITER_TIMEOUT'
@@ -529,18 +626,11 @@ class CommandSession:
             return False, 'STOP_WRITE_FAILED'
         if not wait:
             return False, 'STOP_PENDING'
-        self.stop_event.wait(.40 if not self.strict_preflight else .25)
+        self.stop_event.wait(.50 if not self.strict_preflight else .25)
         with self.lock:
             confirmed = op == self.stop_op and self.stop_confirmed
             if not confirmed:
-                already_safe = (self.latest is not None and
-                                self.latest.get('safety') == 'DISARMED' and
-                                all(self.latest.get(k) == 0 for k in ZERO))
-                if already_safe or not self.strict_preflight:
-                    confirmed = True
-                    self.stop_confirmed = True
-                else:
-                    self._fault('STOP_UNCONFIRMED')
+                self._fault('STOP_UNCONFIRMED')
             return confirmed, 'STOP_CONFIRMED' if confirmed else 'STOP_UNCONFIRMED'
 
     def _idle_keepalive(self):
@@ -552,7 +642,8 @@ class CommandSession:
             with self.lock:
                 now=self.clock()
                 if not self.strict_preflight:
-                    if not self.armed or self.fault or self.motion: return
+                    if (not self.armed or self.latched or self.fault or self.motion
+                            or self.last_d0 is None or not 0 <= now-self.last_d0 <= .25): return
                 else:
                     if (not self.armed or self.latched or self.fault or self.motion or
                             self.autonomy_allowed is not False or self.last_manual_input is None or
@@ -567,21 +658,55 @@ class CommandSession:
             self.writer.release()
         if failed:self.request_stop('IDLE_WRITE_FAILED',wait=False)
 
+    def hold_for_scan(self, reason='SCAN_TIMEOUT'):
+        """Keep the operator's mission, commanding only zero until scan returns."""
+        if self.strict_preflight:
+            return self.request_stop(reason, wait=False)
+        with self.lock:
+            if not self.armed or self.latched or self.fault or self.autonomy_allowed is False:
+                return False, 'NO_ACTIVE_AUTO_SESSION'
+            now = self.clock()
+            if not self.scan_holding:
+                self.generation += 1  # Cancel queued motion from the old scan.
+                self.scan_holding, self.scan_hold_reason = True, reason
+                self._event('scan_hold_started', reason=reason, **self._ages(now))
+            elif (not self.motion and self.last_command is not None and
+                  0 <= now - self.last_command < .10):
+                return True, 'SCAN_HOLD'
+        return self.drive('V 0.000 0.000', autonomous=True)
+
     def watchdog_tick(self):
         keepalive=False
+        scan_pause=False
         with self.lock:
             now = self.clock()
+            scan_max = max(0.65, self.scan_max_age_s) if not self.strict_preflight else self.scan_max_age_s
+            scan_fresh = self.scan_time is not None and -0.10 <= now-self.scan_time <= scan_max
+            if self.scan_holding and (scan_fresh or self.autonomy_allowed is False):
+                self.scan_holding, self.scan_hold_reason = False, None
+                self._event('scan_hold_released', scan_fresh=scan_fresh)
+            if (self.clear_fault_pending and self.clear_fault_until is not None
+                    and now >= self.clear_fault_until):
+                self.clear_fault_pending = False
+                self.clear_fault_write_at = None
+                self.clear_fault_acked_at = None
+                self.clear_fault_until = None
+                self._fault('CLEAR_FAULT_TIMEOUT')
+                self._event('clear_fault_timeout')
             reason = None
             if self.strict_preflight and self.stage < 3 and not self.fault and now-self.opened > 3.5:
                 reason = 'STARTUP_DEADLINE'
             if self.armed:
                 if self.trial_deadline is not None and now >= self.trial_deadline:
                     reason = 'TRIAL_WINDOW_COMPLETE'
-                elif self.strict_preflight and (self.last_d0 is None or not 0 <= now-self.last_d0 <= .25):
+                elif (self.last_d0 is None or not 0 <= now-self.last_d0 <= .25):
                     reason = 'TELEMETRY_TIMEOUT'
-                elif (self.strict_preflight and self.autonomy_allowed is not False and
-                        (self.scan_time is None or not -0.10 <= now-self.scan_time <= self.scan_max_age_s)):
-                    reason = 'SCAN_TIMEOUT'
+                elif (self.autonomy_allowed is not False and
+                        (self.scan_time is None or not -0.10 <= now-self.scan_time <= scan_max)):
+                    if self.strict_preflight:
+                        reason = 'SCAN_TIMEOUT'
+                    else:
+                        scan_pause = True
                 elif (self.operator_idle_lease_s > 0 and self.motion_window_s is None and
                         self.autonomy_allowed is False and not self.motion):
                     if self.strict_preflight and (self.last_manual_input is None or not 0 <= now-self.last_manual_input <= self.operator_idle_lease_s):
@@ -590,20 +715,16 @@ class CommandSession:
                         keepalive=self.last_command is None or now-self.last_command>=.10
                 elif self.strict_preflight and (self.last_command is None or not 0 <= now-self.last_command <= (.50 if self.autonomy_allowed else .20)):
                     reason = 'CALLER_TIMEOUT'
-                elif not self.strict_preflight and self.motion and (self.last_command is None or not 0 <= now-self.last_command <= (.50 if self.autonomy_allowed else 1.00)):
+                elif not self.strict_preflight and self.motion and (self.last_command is None or not 0 <= now-self.last_command <= (2.00 if self.autonomy_allowed else 1.00)):
                     reason = 'CALLER_TIMEOUT'
                 elif not self.strict_preflight and not self.motion and not self.fault:
                     keepalive = self.last_command is None or now-self.last_command >= .12
             if self.stop_deadline is not None and now > self.stop_deadline and not self.stop_confirmed:
-                already_safe = (self.latest is not None and
-                                self.latest.get('safety') == 'DISARMED' and
-                                all(self.latest.get(k) == 0 for k in ZERO))
-                if already_safe or not self.strict_preflight:
-                    self.stop_confirmed = True
-                else:
-                    self._fault('STOP_UNCONFIRMED')
+                self._fault('STOP_UNCONFIRMED')
         if reason:
             self.request_stop(reason,wait=False)
+        elif scan_pause:
+            self.hold_for_scan()
         elif keepalive:self._idle_keepalive()
 
     def tuning(self, kp, ki, kd, kf=0.45):
@@ -667,6 +788,8 @@ class CommandSession:
     def health(self):
         with self.lock:
             return {'latched':self.latched,'armed':self.armed,'fault':self.fault,
+                    'rpm_profile_enabled':self.operator_rpm_profile,
+                    'scan_holding':self.scan_holding,'scan_hold_reason':self.scan_hold_reason,
                     'owner':'AUTO' if self.autonomy_allowed is True else 'MANUAL',
                     'idle_lease_remaining_s':None if self.last_manual_input is None or not self.operator_idle_lease_s else max(0.,self.operator_idle_lease_s-(self.clock()-self.last_manual_input)),
                     'motion_window_s':self.motion_window_s,

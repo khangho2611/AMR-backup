@@ -59,7 +59,7 @@ EXACT_I2C_SCAN_BANNER: str = "Scanning I2C bus..."
 STARTUP_DEADLINE_S: float = 3.5  # Firmware quét I2C lúc 1.5s, dành tối đa 3.5s cho startup phase
 MAX_STARTUP_LINES: int = 35
 
-DEFAULT_PORT: str = "/dev/ttyUSB0"
+DEFAULT_PORT: str = "/dev/serial/by-id/usb-1a86_USB_Serial-if00-port0"
 DEFAULT_BAUD: int = 115200
 WALL_TIMEOUT_S: float = 15.0
 MIN_OBSERVATION_S: float = 10.0

@@ -78,7 +78,7 @@ class CruiseNavigation(unittest.TestCase):
         self.sent=[]
         self.node.send_cmd=lambda cmd,autonomous=False:(self.sent.append(cmd) or (True,'SENT'))
         self.assertTrue(self.node._follow((1.025,1.025,0.),(2.025,1.025)))
-        self.assertIn('V 0.200 0.000',self.sent)
+        self.assertIn('V 0.249 0.000',self.sent)
 
     def missing_mount(self,armed):
         session=fixtures.SessionRegression();session.setUp()

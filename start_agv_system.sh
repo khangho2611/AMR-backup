@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -eo pipefail
 cd /home/khangho/agv_codex_reader_20261003_0652
+MCU_PORT="/dev/serial/by-id/usb-1a86_USB_Serial-if00-port0"
+LIDAR_PORT="/dev/serial/by-id/usb-Silicon_Labs_CP2102N_USB_to_UART_Bridge_Controller_76815f48566eef11bd64dec2c169b110-if00-port0"
 
 echo "=== KHOI DONG HE THONG AGV CODEX ==="
 
@@ -8,18 +10,18 @@ echo "=== KHOI DONG HE THONG AGV CODEX ==="
 bash ./stop_agv_system.sh
 
 # 2. Kiem tra thiet bi phan cung
-if [ ! -e /dev/ttyUSB0 ]; then
-  echo "LOI: Khong tim thay /dev/ttyUSB0 (STM32 MCU)"
+if [ ! -e "$MCU_PORT" ]; then
+  echo "LOI: Khong tim thay ESP32 CH340 ($MCU_PORT)"
   exit 1
 fi
-if [ ! -e /dev/ttyUSB1 ]; then
-  echo "LOI: Khong tim thay /dev/ttyUSB1 (RPLiDAR C1)"
+if [ ! -e "$LIDAR_PORT" ]; then
+  echo "LOI: Khong tim thay RPLiDAR C1 CP2102N ($LIDAR_PORT)"
   exit 1
 fi
 
-if fuser /dev/ttyUSB0 /dev/ttyUSB1 >/dev/null 2>&1; then
+if fuser "$MCU_PORT" "$LIDAR_PORT" >/dev/null 2>&1; then
   echo "Canh bao: Cong serial dang bi chiem, tien hanh giai phong..."
-  fuser -k /dev/ttyUSB0 /dev/ttyUSB1 || true
+  fuser -k "$MCU_PORT" "$LIDAR_PORT" || true
   sleep 1
 fi
 
@@ -43,8 +45,8 @@ ros2 run tf2_ros static_transform_publisher --x 0 --y 0 --z 0 \
 printf '%s\n' "$!" >runtime/static_tf.pid
 
 # 5. Chay RPLiDAR C1 Driver
-echo "[2/4] Khoi dong RPLiDAR C1 Driver (/dev/ttyUSB1)..."
-ros2 launch sllidar_ros2 sllidar_c1_launch.py serial_port:=/dev/ttyUSB1 \
+echo "[2/4] Khoi dong RPLiDAR C1 Driver ($LIDAR_PORT)..."
+ros2 launch sllidar_ros2 sllidar_c1_launch.py serial_port:="$LIDAR_PORT" \
     serial_baudrate:=460800 frame_id:=laser inverted:=false angle_compensate:=true \
     >runtime/lidar.log 2>&1 < /dev/null &
 printf '%s\n' "$!" >runtime/lidar.pid
@@ -67,7 +69,7 @@ sleep 2
 
 # 7. Chay AGV Unified Brain
 echo "[4/4] Khoi dong AGV Unified Brain Node & Cyberpunk Web UI (Port 8080)..."
-AGV_BODY_RADIUS_M=0.20 AGV_BODY_BOUNDS_M=-0.16,-0.12,0.10,0.12 python3 -B -u agv_unified_brain.py --operator-control \
+AGV_WALL_MARGIN_M=0.00 AGV_AUTO_SPEED_RPM=40.0 AGV_BODY_RADIUS_M=0.20 AGV_BODY_BOUNDS_M=-0.16,-0.12,0.10,0.12 AGV_PROGRESS_TIMEOUT_S=3.5 AGV_AUTO_TURN_RPM=35.0 python3 -B -u agv_unified_brain.py --operator-control \
     >runtime/brain.log 2>&1 < /dev/null &
 printf '%s\n' "$!" >runtime/brain.pid
 

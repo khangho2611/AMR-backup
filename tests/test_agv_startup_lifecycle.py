@@ -124,7 +124,7 @@ class Lifecycle(unittest.TestCase):
              patch.object(m.AGVROSNode,'_watchdog_worker'):
             node=m.AGVROSNode()
         self.assertTrue(hasattr(node,'pub_slam_scan'))
-        self.assertEqual(events,[('open','/dev/ttyUSB0',False,False)])
+        self.assertEqual(events,[('open',m.SERIAL_PORT,False,False)])
         node.ser.close()
 
     def test_failed_open_releases_owner_and_closes_stream(self):

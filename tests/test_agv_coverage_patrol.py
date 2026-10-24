@@ -67,9 +67,10 @@ class TestAGVCoveragePatrol(unittest.TestCase):
         goal_cell = planner.world_to_cell(*goal)
         self.assertNotIn(goal_cell, state.visited_cells)
 
-    def test_transition_to_coverage_patrol_when_frontier_exhausted(self):
+    def test_coverage_mode_selects_coverage_goal_when_frontier_exhausted(self):
         node = AGVROSNode.__new__(AGVROSNode)
         node.initialize_navigation()
+        node._auto_task_mode = 'COVERAGE'
         node.explore_state = 'EXPLORING'
         node.home = (1.0, 1.0, 0.0)
         node._auto_start_time = time.monotonic() - 20.0
@@ -85,8 +86,9 @@ class TestAGVCoveragePatrol(unittest.TestCase):
         node.find_best_frontier = lambda rx, ry: None
 
         sent_cmds = []
-        node.send_cmd = lambda cmd, autonomous=False: (sent_cmds.append(cmd) or (True, 'SENT'))
+        node.send_cmd = lambda cmd, autonomous=False, planned_turn=False: (sent_cmds.append(cmd) or (True, 'SENT'))
 
+        state.scan_mono = time.monotonic()
         node.auto_nav_loop()
 
         self.assertEqual(node.explore_state, 'COVERAGE_PATROL')
@@ -112,8 +114,9 @@ class TestAGVCoveragePatrol(unittest.TestCase):
         node.find_best_coverage_goal = lambda rx, ry: None  # No unvisited cells left!
 
         sent_cmds = []
-        node.send_cmd = lambda cmd, autonomous=False: (sent_cmds.append(cmd) or (True, 'SENT'))
+        node.send_cmd = lambda cmd, autonomous=False, planned_turn=False: (sent_cmds.append(cmd) or (True, 'SENT'))
 
+        state.scan_mono = time.monotonic()
         node.auto_nav_loop()
 
         # Should transition to RETURNING_HOME
@@ -143,8 +146,9 @@ class TestAGVCoveragePatrol(unittest.TestCase):
         node.find_best_coverage_goal = lambda rx, ry: (2.0, 2.0)  # Coverage goal exists, but should be ignored!
 
         sent_cmds = []
-        node.send_cmd = lambda cmd, autonomous=False: (sent_cmds.append(cmd) or (True, 'SENT'))
+        node.send_cmd = lambda cmd, autonomous=False, planned_turn=False: (sent_cmds.append(cmd) or (True, 'SENT'))
 
+        state.scan_mono = time.monotonic()
         node.auto_nav_loop()
 
         # In EXPLORE mode, it must return to HOME, NEVER COVERAGE_PATROL
@@ -173,8 +177,9 @@ class TestAGVCoveragePatrol(unittest.TestCase):
         node.find_best_coverage_goal = lambda rx, ry: (2.2, 2.2)
 
         sent_cmds = []
-        node.send_cmd = lambda cmd, autonomous=False: (sent_cmds.append(cmd) or (True, 'SENT'))
+        node.send_cmd = lambda cmd, autonomous=False, planned_turn=False: (sent_cmds.append(cmd) or (True, 'SENT'))
 
+        state.scan_mono = time.monotonic()
         node.auto_nav_loop()
 
         self.assertEqual(node.explore_state, 'COVERAGE_PATROL')

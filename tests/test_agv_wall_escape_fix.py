@@ -31,7 +31,7 @@ class WallEscapeRegression(unittest.TestCase):
             def traversable(self, cell): return True
             def world_to_cell(self, x, y): return (0, 0)
             def swept_clear_result(self, pose, v, w): return True, 'CLEAR'
-            def escape_swept_clear(self, pose, v, w, bounds=None): return True
+            def escape_swept_clear(self, pose, v, w, bounds=None, require_progress=False): return True
             def frontiers(self, origin, goals, regions): return {'goals': [(1.0, 1.0)], 'reachable_frontiers': 1, 'unknown_cells': 500}
             def path(self, start, goal): return [(0.0, 0.0), (0.1, 0.1)]
         now = time.monotonic()
@@ -134,8 +134,8 @@ class WallEscapeRegression(unittest.TestCase):
         self.node.auto_nav_loop()
         self.assertEqual(len(escape_calls), 1)
 
-    def test_operator_mode_drive_clears_stop_unconfirmed(self):
-        """In operator mode, accepting a drive command clears stale STOP_UNCONFIRMED fault."""
+    def test_operator_mode_drive_cannot_clear_stop_unconfirmed(self):
+        """An unconfirmed STOP always blocks motion, including manual mode."""
         class MockSer:
             is_open = True
             def write(self, b): return len(b)
@@ -147,8 +147,8 @@ class WallEscapeRegression(unittest.TestCase):
         session.opened = time.monotonic() - 10.0
 
         ok, reason = session.drive('V 0.040 0.000', autonomous=False)
-        self.assertTrue(ok)
-        self.assertIsNone(session.fault)
+        self.assertFalse(ok)
+        self.assertEqual(session.fault, 'STOP_UNCONFIRMED')
 
     def test_operator_mode_accepts_map_age_up_to_5s(self):
         """In operator mode (strict_preflight=False), map age up to 5s is valid."""
@@ -170,8 +170,8 @@ class WallEscapeRegression(unittest.TestCase):
         grid = node._grid()
         self.assertIsNotNone(grid)
 
-    def test_reactive_nav_fallbacks_to_turn_when_forward_blocked(self):
-        """When forward drive is rejected by safety/arc, reactive nav immediately falls back to turning."""
+    def test_rejected_arc_aligns_to_astar_not_the_more_open_side(self):
+        """When forward drive is rejected by safety/arc, the follower may align only toward its waypoint."""
         with self.brain.state.lock:
             self.brain.state.auto_mode = True
             self.brain.state.min_dist_m = 0.80
@@ -180,17 +180,17 @@ class WallEscapeRegression(unittest.TestCase):
             self.brain.state.body_bounds_m = (-0.16, -0.11, 0.10, 0.11)
             # Front clear in ranges, but left is more open than right
             ranges = [1.0] * 360
-            for deg in range(25, 90): ranges[deg] = 1.5
-            for deg in range(-90, -25): ranges[deg] = 0.5
+            for deg in range(25, 90): ranges[deg] = .5
+            for deg in range(-90, -25): ranges[deg] = 1.5
             self.brain.state.ranges = ranges
             self.brain.state.scan_mono = time.monotonic()
 
-        self.node.goal = None
-        self.node.find_best_frontier = lambda *a: None
+        # Reactive safety remains available only with a planned A* target.
+        self.node.goal = (1.0, 1.0)
         cmd_history = []
-        def mock_send(cmd_str, autonomous=False):
+        def mock_send(cmd_str, autonomous=False, planned_turn=False):
             cmd_history.append(cmd_str)
-            if cmd_str.startswith('V 0.120') or cmd_str.startswith('V 0.040'):
+            if float(cmd_str.split()[1]) > 0:
                 return False, 'SESSION_OR_SENSOR_NOT_READY'
             return True, 'SENT'
 
@@ -204,12 +204,14 @@ class WallEscapeRegression(unittest.TestCase):
         )
 
         self.node.auto_nav_loop()
-        # First command was V 0.120 (forward), which failed
-        self.assertTrue(cmd_history[0].startswith('V 0.120'))
+        # First command is forward along the A* carrot, which failed.
+        self.assertGreater(float(cmd_history[0].split()[1]), 0)
         # Second command was turning in place (w > 0 since left is more open)
         self.assertTrue(len(cmd_history) >= 2)
         self.assertTrue(cmd_history[1].startswith('V 0.000'))
-        self.assertIn('TỰ HÀNH: đổi hướng', self.brain.state.explore_phase)
+        self.assertGreater(float(cmd_history[1].split()[2]), 0.)
+        self.assertEqual(self.node.goal, (1., 1.))
+
 
     def test_command_session_accepts_raised_escape_velocities(self):
         """CommandSession must accept escape commands up to 0.090 m/s and reject excessive speeds."""
@@ -223,6 +225,9 @@ class WallEscapeRegression(unittest.TestCase):
         session = CommandSession(ser, strict_preflight=False)
         session.armed = True
         session.autonomy_allowed = True
+        session.latest = {'safety': 'ARMED'}
+        session.last_d0 = session.clock()
+        session.scan_time = session.clock()
         session.escape_validator = lambda v, w: True
         
         ok, reason = session.drive('V -0.090 0.000', autonomous=True, escape=True)
@@ -238,8 +243,8 @@ class WallEscapeRegression(unittest.TestCase):
         self.assertFalse(ok)
         self.assertEqual(reason, 'INVALID_ESCAPE_CALLER_OR_COMMAND')
 
-    def test_side_buffer_allows_slow_crawl_instead_of_zero_velocity(self):
-        """When front has space (35cm) but side wall is close (32cm), drive must steer away with v=0.050 instead of stopping."""
+    def test_side_buffer_cannot_override_the_validated_astar_bearing(self):
+        """When front has space (35cm) but side wall is close (32cm), side proximity cannot replace the path heading."""
         with self.brain.state.lock:
             self.brain.state.auto_mode = True
             self.brain.state.min_dist_m = 0.32
@@ -257,8 +262,7 @@ class WallEscapeRegression(unittest.TestCase):
             self.brain.state.ranges = ranges
             self.brain.state.scan_mono = time.monotonic()
 
-        self.node.goal = None
-        self.node.find_best_frontier = lambda *a: None
+        self.node.goal = (1.0, 1.0)
         cmd_history = []
         self.node.send_cmd = lambda cmd, **kw: (cmd_history.append(cmd) or True, 'SENT')
         self.node.control = types.SimpleNamespace(
@@ -271,11 +275,11 @@ class WallEscapeRegression(unittest.TestCase):
 
         self.node.auto_nav_loop()
         self.assertTrue(len(cmd_history) > 0)
-        # Must crawl forward at 0.050 m/s to escape wall, NOT freeze at 0.000
-        self.assertTrue(cmd_history[0].startswith('V 0.050'), f"Expected V 0.050, got {cmd_history[0]}")
-        # Must steer right (negative w) away from left wall
-        w_val = float(cmd_history[0].split()[2])
-        self.assertLess(w_val, 0.0)
+        self.assertEqual(len(cmd_history), 1)
+        self.assertGreater(float(cmd_history[0].split()[1]), 0.)
+        self.assertGreater(float(cmd_history[0].split()[2]), 0.,
+                           'Waypoint is left even though left wall is nearer')
+
 
     def test_heading_alignment_rolls_arc_when_front_open(self):
         """When front is clear (>=50cm) and heading error is large (>45°), robot rolls forward arc at v=0.050 instead of dead pivot."""
@@ -305,8 +309,12 @@ class WallEscapeRegression(unittest.TestCase):
 
         self.node.auto_nav_loop()
         self.assertTrue(len(cmd_history) > 0)
-        # With clear front (1.2m >= 0.50m), must roll arc at 0.050 m/s
-        self.assertTrue(cmd_history[0].startswith('V 0.050'), f"Expected V 0.050, got {cmd_history[0]}")
+        # With the A* carrot at (+0.1,+0.1), turn toward the local path
+        # (+45 degrees) rather than the distant global goal (+90 degrees).
+        v, w = map(float, cmd_history[0].split()[1:])
+        self.assertGreater(v, 0.0)
+        self.assertGreater(w, 0.0)
+        self.assertLess(w, 1.0)
 
     def test_escape_latch_clears_early_when_front_open(self):
         """If escape latch is active but front clearance is restored (>=40cm), latch clears early."""
@@ -338,35 +346,27 @@ class WallEscapeRegression(unittest.TestCase):
         # Latch must have been cancelled
         self.assertEqual(self.node._escape_latch_until, 0)
 
-    def test_in_place_dodge_turn_40_rpm_and_latch(self):
-        """Danger close (<26cm) must trigger 40 RPM in-place spin (~1.60 rad/s) and latch for 1.15s (~105 deg)."""
+    def test_danger_close_cannot_force_an_unvalidated_in_place_turn(self):
+        """Actual writer rejection must produce zero only, never a guessed U-turn."""
+        from test_agv_rpm_profile import ready
         now = time.monotonic()
-        with self.brain.state.lock:
-            self.brain.state.auto_mode = True
-            self.brain.state.min_dist_m = 0.22
-            self.brain.state.min_angle_deg = 0
-            self.brain.state.safety_status = "SAFE"
-            self.brain.state.ranges = [0.22] * 360  # All close (22cm)
-            self.brain.state.scan_mono = now
-
-        cmd_history = []
-        self.node.send_cmd = lambda cmd, **kw: (cmd_history.append(cmd) or True, 'SENT')
-        self.node.control = types.SimpleNamespace(
-            strict_preflight=False,
-            clock=lambda: now,
-            last_command=now,
-            armed=True,
-            drive=lambda cmd, **kw: (cmd_history.append(cmd) or True, 'SENT'),
-            latest={'l_rpm': 0.0, 'r_rpm': 0.0, 'l_tgt': 0.0, 'r_tgt': 0.0}
-        )
-
+        ranges = [.22] * 360
+        self.brain.state.auto_mode = True
+        self.brain.state.ranges = ranges
+        self.brain.state.scan_mono = now
+        self.node.goal = (1., 1.)
+        self.node.control, uart = ready()
+        self.node.control.arc_validator = lambda v, w: False
+        self.node.control.rotation_clear = False
+        self.node._rotation_clear = lambda: False
+        self.node._enter_cautious = lambda pose: False
+        self.node.send_cmd = lambda cmd, **kw: self.brain.AGVROSNode.send_cmd(self.node, cmd, **kw)
         self.node.auto_nav_loop()
-        self.assertTrue(len(cmd_history) > 0)
-        # Must turn in place at 40 RPM (~1.60 rad/s)
-        self.assertTrue('V 0.000 1.600' in cmd_history[0] or 'V 0.000 -1.600' in cmd_history[0],
-                        f"Expected 40 RPM turn (1.600 rad/s), got {cmd_history[0]}")
-        # Must latch for 1.15s (90° - 120°)
-        self.assertGreater(self.node._turn_latch_until, now + 1.0)
+        self.assertTrue(uart.writes)
+        self.assertTrue(all(line == b'S 0.000 0.000\n' for line in uart.writes))
+        self.assertIn('HOLD', self.brain.state.explore_phase)
+        self.assertIsNone(self.node.goal)
+
 
     def test_in_place_turn_latch_early_clear_at_50cm(self):
         """Active turn latch must immediately clear when front clearance reaches >= 50cm."""
@@ -403,43 +403,32 @@ class WallEscapeRegression(unittest.TestCase):
         self.assertEqual(self.node._turn_latch_until, 0)
 
 
-    def test_narrow_corridor_dead_end_executes_pure_in_place_u_turn(self):
-        """In a narrow corridor dead-end (walls on both sides, obstacle ahead), must execute pure in-place turn (v=0.000)."""
+    def test_narrow_corridor_cannot_force_a_u_turn_when_geometry_rejects_it(self):
+        """Actual writer rejection must produce zero only, never a guessed U-turn."""
+        from test_agv_rpm_profile import ready
         now = time.monotonic()
-        ranges = [0.22] * 360  # Walls on sides at 22cm
-        for deg in range(-25, 26):
-            ranges[deg % 360] = 0.36  # Front obstacle at 36cm (< 42cm)
-        for deg in range(155, 206):
-            ranges[deg % 360] = 2.50  # Rear is open hallway
-
-        with self.brain.state.lock:
-            self.brain.state.auto_mode = True
-            self.brain.state.auto_target_speed_rpm = 38.0
-            self.brain.state.min_dist_m = 0.22
-            self.brain.state.min_angle_deg = 90
-            self.brain.state.safety_status = "SAFE"
-            self.brain.state.ranges = ranges
-            self.brain.state.scan_mono = now
-
-        cmd_history = []
-        self.node.send_cmd = lambda cmd, **kw: (cmd_history.append(cmd) or True, 'SENT')
-        self.node.control = types.SimpleNamespace(
-            strict_preflight=False,
-            clock=lambda: now,
-            last_command=now,
-            armed=True,
-            drive=lambda cmd, **kw: (cmd_history.append(cmd) or True, 'SENT'),
-            latest={'l_rpm': 0.0, 'r_rpm': 0.0, 'l_tgt': 0.0, 'r_tgt': 0.0}
-        )
-
+        ranges = [.22] * 360
+        for deg in range(-25, 26): ranges[deg % 360] = .36
+        for deg in range(155, 206): ranges[deg % 360] = 2.5
+        self.brain.state.auto_mode = True
+        self.brain.state.ranges = ranges
+        self.brain.state.scan_mono = now
+        self.node.goal = (1., 1.)
+        self.node.control, uart = ready()
+        self.node.control.arc_validator = lambda v, w: False
+        self.node.control.rotation_clear = False
+        self.node._rotation_clear = lambda: False
+        self.node._enter_cautious = lambda pose: False
+        self.node.send_cmd = lambda cmd, **kw: self.brain.AGVROSNode.send_cmd(self.node, cmd, **kw)
         self.node.auto_nav_loop()
-        self.assertTrue(len(cmd_history) > 0)
-        # Must be strictly pure in-place rotation v = 0.000
-        self.assertTrue(cmd_history[0].startswith('V 0.000'), f"Expected V 0.000, got {cmd_history[0]}")
-        self.assertIn('QUAY ĐẦU: Xoay tại chỗ 180° thoát ngõ cụt', self.brain.state.explore_phase)
+        self.assertTrue(uart.writes)
+        self.assertTrue(all(line == b'S 0.000 0.000\n' for line in uart.writes))
+        self.assertIn('HOLD', self.brain.state.explore_phase)
+        self.assertEqual(self.node.goal, (1., 1.))
+
 
     def test_operational_speed_profile_cruises_at_80_rpm(self):
-        """When running in operational mode at 80 RPM, forward cruise must run at 0.307 m/s without crawl bottlenecks."""
+        """Requested speed is an upper bound; path curvature can reduce cruise speed."""
         now = time.monotonic()
         with self.brain.state.lock:
             self.brain.state.auto_mode = True
@@ -466,7 +455,39 @@ class WallEscapeRegression(unittest.TestCase):
 
         self.node.auto_nav_loop()
         self.assertTrue(len(cmd_history) > 0)
-        self.assertTrue(cmd_history[0].startswith('V 0.307'), f"Expected V 0.307, got {cmd_history[0]}")
+        _, v, w = cmd_history[0].split()
+        self.assertGreater(float(v), 0.0)
+        self.assertLessEqual(float(v), 0.307)
+        self.assertLessEqual(abs(float(w)), self.brain.state.turn_w_rads)
+
+    def test_operator_mode_triggers_escape_on_danger_close(self):
+        """Operator mode (strict_preflight=False) must call _try_escape when front obstacle < 25cm."""
+        with self.brain.state.lock:
+            self.brain.state.auto_mode = True
+            self.brain.state.min_dist_m = 0.16
+            self.brain.state.min_angle_deg = 4
+            self.brain.state.safety_status = "DANGER_STOP"
+            self.brain.state.body_bounds_m = (-0.16, -0.11, 0.10, 0.11)
+            ranges = [2.0] * 360
+            for deg in range(-20, 21):
+                ranges[deg % 360] = 0.16
+            self.brain.state.ranges = ranges
+            self.brain.state.scan_mono = time.monotonic()
+
+        calls = []
+        self.node.control = types.SimpleNamespace(
+            drive=lambda command, **kw: (calls.append((command, kw)) or True, 'SENT'),
+            _event=lambda *a, **kw: None,
+            clock=lambda: time.monotonic(),
+            last_command=time.monotonic(),
+            armed=True,
+            strict_preflight=False,
+            operator_rpm_profile=False,
+            autonomy_allowed=True,
+        )
+        self.node.auto_nav_loop()
+        self.assertTrue(len(calls) > 0, "Operator mode must issue escape command when danger_close")
+        self.assertTrue(calls[0][0].startswith('V -0.09'), f"First command must be reverse, got: {calls[0][0]}")
 
 
 if __name__ == '__main__':

@@ -46,11 +46,11 @@ graph TD
         MCU["Vi điều khiển STM32F103 / ESP32 (Điều khiển PID)"]
         PI4["Raspberry Pi 4 Model B (Cortex-A72 4 lõi, 8GB RAM)"]
         
-        LIDAR -->|USB UART /dev/ttyUSB1| PI4
+        LIDAR -->|USB UART CP2102N /dev/ttyUSB0| PI4
         BATTERY --> MCU
         ENCODERS -->|Ngắt phần cứng đếm xung| MCU
         MCU -->|Cầu H L298N/TB6612 PWM| MOTORS
-        MCU <-->|USB UART 115200 /dev/ttyUSB0| PI4
+        MCU <-->|USB UART CH340 115200 /dev/ttyUSB1| PI4
     end
 
     subgraph MIDDLEWARE_LAYER ["2. TẦNG ROS 2 & SLAM MIDDLEWARE"]
@@ -65,7 +65,7 @@ graph TD
     end
 
     subgraph BRAIN_LAYER ["3. BỘ NÃO ĐIỀU KHIỂN TRUNG TÂM (AGV UNIFIED BRAIN)"]
-        SESSION["CommandSession & Serial Protocol (/dev/ttyUSB0)"]
+        SESSION["CommandSession & Serial Protocol (ESP32 CH340 by-id)"]
         GRID_MAP["GridPlanner & Clearance Sweeper (Lưới 5cm)"]
         FSM["StateMachine: IDLE -> EXPLORE / COVERAGE -> RETURNING_HOME"]
         ASTAR["A* Path Planner & Lookahead Waypoints Tracker"]
